@@ -9,7 +9,7 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>其他操作 :: Yunion Onecloud Documentation</title>
+    <title>物理机 :: Yunion Onecloud Documentation</title>
 
     
     <link href="/css/nucleus.css?1563541263" rel="stylesheet">
@@ -35,7 +35,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/howto/server/others/">
+  <body class="" data-url="/howto/baremetal/">
     <nav id="sidebar" class="showVisitedLinks">
 
 
@@ -403,7 +403,7 @@
   
     
     <li data-nav-id="/howto/server/" title="云主机" class="dd-item 
-        parent
+        
         
         
         ">
@@ -476,7 +476,7 @@
  
   
     
-      <li data-nav-id="/howto/server/others/" title="其他操作" class="dd-item active">
+      <li data-nav-id="/howto/server/others/" title="其他操作" class="dd-item ">
         <a href="/howto/server/others/">
         其他操作
         <i class="fas fa-check read-icon"></i>
@@ -617,8 +617,8 @@
   
     
     <li data-nav-id="/howto/baremetal/" title="物理机" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="/howto/baremetal/">
@@ -934,7 +934,7 @@
                   
                   
                   <div id="top-github-link">
-                    <a class="github-link" title='' href="https://github.com/yunionio/docs/edit/master/content/howto/server/others.md" target="blank">
+                    <a class="github-link" title='' href="https://github.com/yunionio/docs/edit/master/content/howto/baremetal/_index.md" target="blank">
                       <i class="fas fa-code-branch"></i>
                       <span id="top-github-link-text"></span>
                     </a>
@@ -965,13 +965,7 @@
             
           
           
-            
-            
-          
-          
-            <a href='/'>OneCloud 文档</a> > <a href='/howto/'>操作管理</a> > <a href='/howto/server/'>云主机</a> > 其他操作
-          
-         
+            <a href='/'>OneCloud 文档</a> > <a href='/howto/'>操作管理</a> > 物理机
           
          
           
@@ -986,15 +980,7 @@
     <div class="wrapper">
 <nav id="TableOfContents">
 <ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#开关机">开关机</a></li>
-<li><a href="#删除">删除</a></li>
-<li><a href="#重装密码">重装密码</a></li>
-</ul></li>
-</ul></li>
+<li><a href="#术语解释">术语解释</a></li>
 </ul>
 </nav>
     </div>
@@ -1012,7 +998,7 @@
           
             <h1>
               
-              其他操作
+              物理机
             </h1>
           
 
@@ -1021,34 +1007,40 @@
 
 
 
+	
 
-<h3 id="开关机">开关机</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 开机</span>
-$ climc server-start &lt;server_id&gt;
+<h1 id="术语解释">术语解释</h1>
 
-<span class="c1"># 关机</span>
-$ climc server-stop &lt;server_id&gt;
+<ul>
+<li>Baremetal: 指尚未安装操作系统的服务器， 也叫作物理机</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%A2%84%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83">PXE (Preboot eXecution Environment)</a>: 使用网络接口启动计算机的机制。这种机制不依赖本地数据存储设备（如硬盘）或本地已安装的操作系统，使用 DHCP 协议查找引导服务器并获取 IP，再通过 TFTP 协议下载初始引导程序和附加文件启动</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E8%AE%BE%E7%BD%AE%E5%8D%8F%E8%AE%AE">DHCP (Dynamic Host Configuration Protocol)</a>: 动态主机设置协议是一个局域网的网络协议，使用UDP协议工作，为机器分配 IP</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%B0%8F%E5%9E%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">TFTP (Trivial File Transfer Protocol)</a>: 小型文件传输协议，使用UDP协议传输文件</li>
+<li>DHCP Relay: 在不同子网和物理网段之间处理和转发dhcp信息的功能</li>
+<li><a href="https://zh.wikipedia.org/wiki/IPMI">IPMI (Intelligent Platform Management Interface)</a>：管理服务器硬件的标准，特性是独立于操作系统外自行运行，即使在缺少操作系统或系统管理软件、或受监控的系统关机但有接电源的情况下仍能远程管理系统，也能在操作系统引导后运行</li>
+<li><a href="https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller">BMC (Baseboard management controller)</a>: 基板管理控制器，支持行业标准的 IPMI 规范</li>
+<li><a href="https://zh.wikipedia.org/wiki/Secure_Shell">SSH (Secure Shell)</a>: 用于远程登录控制服务器</li>
 
-<span class="c1"># 强制关机</span>
-$ climc server-stop --is-force &lt;server_id&gt;
+<li><p><a href="https://zh.wikipedia.org/wiki/RAID">RAID (Redundant Array of Independent Disks)</a>: 磁盘阵列，把多个硬盘组合成为一个逻辑扇区，操作系统只会把它当作一个硬盘</p></li>
 
-<span class="c1"># 重启</span>
-$ climc server-restart &lt;server_id&gt;</code></pre></div>
-<h3 id="删除">删除</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 删除至回收站</span>
-$ climc server-delete &lt;server_id&gt;
+<li><p>Region Service: 云平台控制服务，提供 baremetal 相关 API</p></li>
 
-<span class="c1"># 彻底删除</span>
-$ climc server-delete -f &lt;server_id&gt;</code></pre></div>
-<h3 id="重装密码">重装密码</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc server-deploy --reset-password --password &lt;your_password&gt; &lt;server_id&gt;</code></pre></div>
-<p>TODO</p>
+<li><p>Baremetal Agent: 云平台管理 baremetal 的服务</p></li>
+
+<li><p>Glance Service: 云平台镜像服务，提供物理机装机的 Image 镜像</p></li>
+
+<li><p>裸金属服务器: baremetal 物理机安装操作系统后，在云平台创建的 server 的记录</p></li>
+
+<li><p>宿主机: 可以运行云平台虚拟机的节点</p></li>
+</ul>
+
+
+
 
 
 <footer class=" footline" >
 	
 </footer>
-
 
         
         </div> 
@@ -1311,7 +1303,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
                 
                     
-                    
                 
                 
 
@@ -1326,9 +1317,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
-                    
-                        
-                        
                     
                 
                 
@@ -1362,7 +1350,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
                 
                     
-                    
                 
                 
 
@@ -1378,9 +1365,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
-                    
-                        
-                        
                     
                 
                 
@@ -1465,6 +1449,7 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
                 
                     
+                    
                 
                 
 
@@ -1477,6 +1462,9 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -1632,10 +1620,10 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
 	 
 	 
 		
-			<a class="nav nav-prev" href="/howto/server/connect/" title="登录云主机"> <i class="fa fa-chevron-left"></i></a>
+			<a class="nav nav-prev" href="/howto/host/kvm/" title="KVM 宿主机"> <i class="fa fa-chevron-left"></i></a>
 		
 		
-			<a class="nav nav-next" href="/howto/server/gpu/" title="GPU相关" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+			<a class="nav nav-next" href="/howto/baremetal/intro/" title="介绍" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>
@@ -1666,4 +1654,3 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
 
   </body>
 </html>
-

@@ -9,7 +9,7 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>其他操作 :: Yunion Onecloud Documentation</title>
+    <title>KVM 宿主机 :: Yunion Onecloud Documentation</title>
 
     
     <link href="/css/nucleus.css?1563541263" rel="stylesheet">
@@ -35,7 +35,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/howto/server/others/">
+  <body class="" data-url="/howto/host/kvm/">
     <nav id="sidebar" class="showVisitedLinks">
 
 
@@ -403,7 +403,7 @@
   
     
     <li data-nav-id="/howto/server/" title="云主机" class="dd-item 
-        parent
+        
         
         
         ">
@@ -476,7 +476,7 @@
  
   
     
-      <li data-nav-id="/howto/server/others/" title="其他操作" class="dd-item active">
+      <li data-nav-id="/howto/server/others/" title="其他操作" class="dd-item ">
         <a href="/howto/server/others/">
         其他操作
         <i class="fas fa-check read-icon"></i>
@@ -562,7 +562,7 @@
   
     
     <li data-nav-id="/howto/host/" title="宿主机" class="dd-item 
-        
+        parent
         
         
         ">
@@ -588,7 +588,7 @@
  
   
     
-      <li data-nav-id="/howto/host/kvm/" title="KVM 宿主机" class="dd-item ">
+      <li data-nav-id="/howto/host/kvm/" title="KVM 宿主机" class="dd-item active">
         <a href="/howto/host/kvm/">
         KVM 宿主机
         <i class="fas fa-check read-icon"></i>
@@ -934,7 +934,7 @@
                   
                   
                   <div id="top-github-link">
-                    <a class="github-link" title='' href="https://github.com/yunionio/docs/edit/master/content/howto/server/others.md" target="blank">
+                    <a class="github-link" title='' href="https://github.com/yunionio/docs/edit/master/content/howto/host/kvm.md" target="blank">
                       <i class="fas fa-code-branch"></i>
                       <span id="top-github-link-text"></span>
                     </a>
@@ -969,7 +969,7 @@
             
           
           
-            <a href='/'>OneCloud 文档</a> > <a href='/howto/'>操作管理</a> > <a href='/howto/server/'>云主机</a> > 其他操作
+            <a href='/'>OneCloud 文档</a> > <a href='/howto/'>操作管理</a> > <a href='/howto/host/'>宿主机</a> > KVM 宿主机
           
          
           
@@ -988,11 +988,11 @@
 <ul>
 <li>
 <ul>
-<li>
+<li><a href="#宿主机操作">宿主机操作</a>
 <ul>
-<li><a href="#开关机">开关机</a></li>
-<li><a href="#删除">删除</a></li>
-<li><a href="#重装密码">重装密码</a></li>
+<li><a href="#查询">查询</a></li>
+<li><a href="#启用">启用</a></li>
+<li><a href="#禁用">禁用</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1012,7 +1012,7 @@
           
             <h1>
               
-              其他操作
+              KVM 宿主机
             </h1>
           
 
@@ -1022,28 +1022,33 @@
 
 
 
-<h3 id="开关机">开关机</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 开机</span>
-$ climc server-start &lt;server_id&gt;
+<p>OneCloud 原生提供基于 kvm 的私有云虚拟机管理功能，运行 kvm 虚拟机的机器叫做宿主机，这种宿主机也叫作 &ldquo;计算节点&rdquo;，上面会运行管理虚拟机、网络和存储的一系列服务，如何部署并上线宿主机请参考: <a href="/setup/host/">安装部署/计算节点</a>。</p>
 
-<span class="c1"># 关机</span>
-$ climc server-stop &lt;server_id&gt;
+<h2 id="宿主机操作">宿主机操作</h2>
 
-<span class="c1"># 强制关机</span>
-$ climc server-stop --is-force &lt;server_id&gt;
+<h3 id="查询">查询</h3>
 
-<span class="c1"># 重启</span>
-$ climc server-restart &lt;server_id&gt;</code></pre></div>
-<h3 id="删除">删除</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 删除至回收站</span>
-$ climc server-delete &lt;server_id&gt;
+<p>通过 <code>host-list</code> 查询宿主机列表，<code>host-show</code> 查询宿主机详情。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 查询 kvm 这种类型的宿主机</span>
+$ climc host-list --hypervisor kvm
 
-<span class="c1"># 彻底删除</span>
-$ climc server-delete -f &lt;server_id&gt;</code></pre></div>
-<h3 id="重装密码">重装密码</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc server-deploy --reset-password --password &lt;your_password&gt; &lt;server_id&gt;</code></pre></div>
-<p>TODO</p>
+<span class="c1"># 查询被禁用的 kvm 宿主机</span>
+$ climc host-list --hypervisor kvm --disabled
 
+<span class="c1"># 查询启用的 kvm 宿主机</span>
+$ climc host-list --hypervisor kvm --enabled</code></pre></div>
+<h3 id="启用">启用</h3>
+
+<p>kvm 宿主机上线后，默认是禁用的状态，需要启用才能创建虚拟机。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 找到禁用的宿主机</span>
+$ climc host-list --disabled
+
+<span class="c1"># 启用</span>
+$ climc host-enable &lt;host_id&gt;</code></pre></div>
+<h3 id="禁用">禁用</h3>
+
+<p>如果完全不想让宿主机创建虚拟机，可以禁用它。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc host-disable &lt;host_id&gt;</code></pre></div>
 
 <footer class=" footline" >
 	
@@ -1311,7 +1316,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
                 
                     
-                    
                 
                 
 
@@ -1326,9 +1330,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
-                    
-                        
-                        
                     
                 
                 
@@ -1362,7 +1363,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
                 
                     
-                    
                 
                 
 
@@ -1378,9 +1378,6 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
-                    
-                        
-                        
                     
                 
                 
@@ -1433,6 +1430,7 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
                 
                     
+                    
                 
                 
 
@@ -1445,6 +1443,7 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
+                    
                     
                 
                 
@@ -1464,6 +1463,9 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -1632,10 +1634,10 @@ $ climc server-delete -f &lt;server_id&gt;</code></pre></div>
 	 
 	 
 		
-			<a class="nav nav-prev" href="/howto/server/connect/" title="登录云主机"> <i class="fa fa-chevron-left"></i></a>
+			<a class="nav nav-prev" href="/howto/host/" title="宿主机"> <i class="fa fa-chevron-left"></i></a>
 		
 		
-			<a class="nav nav-next" href="/howto/server/gpu/" title="GPU相关" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+			<a class="nav nav-next" href="/howto/baremetal/" title="物理机" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>

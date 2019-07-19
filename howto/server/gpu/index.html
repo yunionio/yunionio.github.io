@@ -9,7 +9,7 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>制作镜像 :: Yunion Onecloud Documentation</title>
+    <title>GPU相关 :: Yunion Onecloud Documentation</title>
 
     
     <link href="/css/nucleus.css?1563534327" rel="stylesheet">
@@ -35,7 +35,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/howto/image/create/">
+  <body class="" data-url="/howto/server/gpu/">
     <nav id="sidebar" class="showVisitedLinks">
 
 
@@ -291,7 +291,7 @@
   
     
     <li data-nav-id="/howto/image/" title="镜像" class="dd-item 
-        parent
+        
         
         
         ">
@@ -355,7 +355,7 @@
  
   
     
-      <li data-nav-id="/howto/image/create/" title="制作镜像" class="dd-item active">
+      <li data-nav-id="/howto/image/create/" title="制作镜像" class="dd-item ">
         <a href="/howto/image/create/">
         制作镜像
         <i class="fas fa-check read-icon"></i>
@@ -403,7 +403,7 @@
   
     
     <li data-nav-id="/howto/server/" title="云主机" class="dd-item 
-        
+        parent
         
         
         ">
@@ -495,7 +495,7 @@
  
   
     
-      <li data-nav-id="/howto/server/gpu/" title="GPU相关" class="dd-item ">
+      <li data-nav-id="/howto/server/gpu/" title="GPU相关" class="dd-item active">
         <a href="/howto/server/gpu/">
         GPU相关
         <i class="fas fa-check read-icon"></i>
@@ -649,7 +649,7 @@
                   
                   
                   <div id="top-github-link">
-                    <a class="github-link" title='' href="https://github.com/yunionio/docs/edit/master/content/howto/image/create.md" target="blank">
+                    <a class="github-link" title='' href="https://github.com/yunionio/docs/edit/master/content/howto/server/gpu.md" target="blank">
                       <i class="fas fa-code-branch"></i>
                       <span id="top-github-link-text"></span>
                     </a>
@@ -684,7 +684,7 @@
             
           
           
-            <a href='/'>OneCloud 文档</a> > <a href='/howto/'>操作管理</a> > <a href='/howto/image/'>镜像</a> > 制作镜像
+            <a href='/'>OneCloud 文档</a> > <a href='/howto/'>操作管理</a> > <a href='/howto/server/'>云主机</a> > GPU相关
           
          
           
@@ -699,7 +699,20 @@
                 
                     <div class="progress">
     <div class="wrapper">
-
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#相关操作">相关操作</a>
+<ul>
+<li><a href="#创建-gpu-云主机">创建 GPU 云主机</a></li>
+<li><a href="#查询-gpu-云主机">查询 GPU 云主机</a></li>
+<li><a href="#关联-gpu">关联 GPU</a></li>
+<li><a href="#卸载-gpu">卸载 GPU</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
     </div>
 </div>
 
@@ -715,7 +728,7 @@
           
             <h1>
               
-              制作镜像
+              GPU相关
             </h1>
           
 
@@ -723,14 +736,40 @@
 
 
 
-<p>你可能需要自己定制发行版的镜像，用于给不同的业务使用。本文介绍如何制作镜像。</p>
 
-<p>可以通过下载发行版操作系统的 iso , 然后本地启动虚拟机，将 iso 安装到虚拟机的磁盘，然后保存该磁盘，这个磁盘就可以作为镜像上传到 glance，但是这种方法人工参与的步骤太多，容易出错。</p>
 
-<p>推荐使用 <a href="https://www.packer.io/intro/getting-started/install.html">packer</a> 这个工具来自动化制作镜像，详细操作可以参考对应的文档 <a href="https://www.packer.io/docs/index.html">https://www.packer.io/docs/index.html</a> 。</p>
+<p>目前仅支持 OneCloud kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。</p>
 
-<p><a href="https://github.com/yunionio/service-images">https://github.com/yunionio/service-images</a> 仓库包含了一些我们使用 packer 制作镜像的配置，可以参考使用。</p>
+<h2 id="相关操作">相关操作</h2>
 
+<h3 id="创建-gpu-云主机">创建 GPU 云主机</h3>
+
+<ul>
+<li>查询 gpu 列表</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc isolated-device-list --gpu
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+<span class="p">|</span>                  ID                  <span class="p">|</span> Dev_type <span class="p">|</span>        Model        <span class="p">|</span>  Addr   <span class="p">|</span> Vendor_device_id <span class="p">|</span>               Host_id                <span class="p">|</span>
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+<span class="p">|</span> 273f4f72-06b6-49aa-8456-4beceec44997 <span class="p">|</span> GPU-HPC  <span class="p">|</span> GeForce GTX <span class="m">1050</span> Ti <span class="p">|</span> <span class="m">41</span>:00.0 <span class="p">|</span> 10de:1c82        <span class="p">|</span> 3bce9607-2597-469f-8d9b-977345456739 <span class="p">|</span>
+<span class="p">|</span> a77333e9-08d9-45c6-87eb-a7d8d902c5f5 <span class="p">|</span> GPU-HPC  <span class="p">|</span> Quadro FX <span class="m">580</span>       <span class="p">|</span> <span class="m">05</span>:00.0 <span class="p">|</span> 10de:0659        <span class="p">|</span> 3bce9607-2597-469f-8d9b-977345456739 <span class="p">|</span>
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+</code></pre></div>
+<ul>
+<li>创建 server</li>
+</ul>
+
+<p>server-create 中的 <code>--isolated-device</code> 参数指定透传的设备到云主机，可以重复使用多次，透传多个 gpu 到云主机，但要求透传到同一云主机的 gpu 必须在同一宿主机。其余创建参数和创建普通云主机是一样的。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc server-create --hypervisor kvm --isolated-device 273f4f72-06b6-49aa-8456-4beceec44997 ...</code></pre></div>
+<h3 id="查询-gpu-云主机">查询 GPU 云主机</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc server-list --gpu</code></pre></div>
+<h3 id="关联-gpu">关联 GPU</h3>
+
+<p>如果云主机所在的宿主机有可用的 gpu，在主机关机的情况下，可以通过 <code>server-attach-isolated-device</code> 命令将 gpu 和云主机关联起来，下次主机启动后就可以使用该 gpu 。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc server-attach-isolated-device &lt;server_id&gt; &lt;device_id&gt;</code></pre></div>
+<h3 id="卸载-gpu">卸载 GPU</h3>
+
+<p>如果云主机关联了 gpu，可以通过 <code>server-detach-isolated-device</code> 卸载主机的某一 gpu。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ climc server-detach-isolated-device &lt;server_id&gt; &lt;device_id&gt;</code></pre></div>
 
 <footer class=" footline" >
 	
@@ -918,100 +957,10 @@
             
                 
                     
-                    
                 
                 
 
                     
-                    
-                    
-
-                    
-                        
-            
-            
-                
-                    
-                        
-                        
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                        
-                        
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                        
                     
                     
 
@@ -1080,10 +1029,100 @@
             
         
                     
+            
+        
+                    
                         
             
             
                 
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
                     
                 
                 
@@ -1143,10 +1182,10 @@
 	 
 	 
 		
-			<a class="nav nav-prev" href="/howto/image/query/" title="查询镜像"> <i class="fa fa-chevron-left"></i></a>
+			<a class="nav nav-prev" href="/howto/server/others/" title="其他操作"> <i class="fa fa-chevron-left"></i></a>
 		
 		
-			<a class="nav nav-next" href="/howto/image/operation/" title="其他操作" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+			<a class="nav nav-next" href="/howto/server/migrate/" title="迁移相关" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>

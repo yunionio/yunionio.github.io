@@ -12,20 +12,20 @@
     <title>命令行工具 :: Yunion Onecloud Documentation</title>
 
     
-    <link href="/css/nucleus.css?1563543847" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1563543847" rel="stylesheet">
-    <link href="/css/hybrid.css?1563543847" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1563543847" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1563543847" rel="stylesheet">
-    <link href="/css/auto-complete.css?1563543847" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1563543847" rel="stylesheet">
-    <link href="/css/theme.css?1563543847" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1563543847" rel="stylesheet">
+    <link href="/css/nucleus.css?1564019069" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1564019069" rel="stylesheet">
+    <link href="/css/hybrid.css?1564019069" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1564019069" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1564019069" rel="stylesheet">
+    <link href="/css/auto-complete.css?1564019069" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1564019069" rel="stylesheet">
+    <link href="/css/theme.css?1564019069" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1564019069" rel="stylesheet">
     
-      <link href="/css/theme-blue.css?1563543847" rel="stylesheet">
+      <link href="/css/theme-blue.css?1564019069" rel="stylesheet">
     
 
-    <script src="/js/jquery-3.3.1.min.js?1563543847"></script>
+    <script src="/js/jquery-3.3.1.min.js?1564019069"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -54,14 +54,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1563543847"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1563543847"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1564019069"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1564019069"></script>
 <script type="text/javascript">
     
         var baseurl = "\/";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1563543847"></script>
+<script type="text/javascript" src="/js/search.js?1564019069"></script>
 
     
   </div>
@@ -997,6 +997,7 @@
 <li><a href="#debug-模式">Debug 模式</a>
 <ul>
 <li><a href="#颜色约定">颜色约定</a></li>
+<li><a href="#在bash或zsh下的命令行参数提示补全">在bash或zsh下的命令行参数提示补全</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -1028,11 +1029,11 @@
 
 	
 
-<p>云平台的命令行管理工具叫 <code>climc</code>, 可以通过该工具向后端各个服务发送请求, 操作各种资源。</p>
+<p>云平台的命令行管理工具是 <code>climc</code>, 可以通过该工具向后端各个服务发送API请求, 实现对资源的操控。</p>
 
 <h2 id="安装">安装</h2>
 
-<p>可以通过 yum 或者源码编译的方式安装。</p>
+<p>可以通过 yum 或者源码编译的方式安装climc。</p>
 
 <h3 id="rpm-安装">RPM 安装</h3>
 
@@ -1083,10 +1084,14 @@ $ climc --help</code></pre></div>
 $ cat <span class="s">&lt;&lt;EOF &gt; ~/test_rc_admin
 </span><span class="s"># 用户名
 </span><span class="s">export OS_USERNAME=sysadmin
+</span><span class="s"># 用户所属域名称(如果为Default域,可以省略)
+</span><span class="s">export OS_DOMAIN_NAME=Default
 </span><span class="s"># 用户密码
 </span><span class="s">export OS_PASSWORD=***
-</span><span class="s"># 用户所属项目
+</span><span class="s"># 用户所属项目名称
 </span><span class="s">export OS_PROJECT_NAME=system
+</span><span class="s"># 项目所属域名称(如果为Default域,可以省略)
+</span><span class="s">export OS_PROJECT_DOMAIN=Default
 </span><span class="s"># keystone 认证地址
 </span><span class="s">export OS_AUTH_URL=https://192.168.0.246:5000/v3
 </span><span class="s"># 对应的 region
@@ -1096,7 +1101,7 @@ $ cat <span class="s">&lt;&lt;EOF &gt; ~/test_rc_admin
 <span class="c1"># source 认证环境变量</span>
 $ <span class="nb">source</span> ~/test_rc_admin
 
-<span class="c1"># 查看虚拟机列表</span>
+<span class="c1"># 执行climc。例如，查看虚拟机列表</span>
 $ climc server-list</code></pre></div>
 <p>注意: 如果执行 climc 时出现 <em>Error: Missing OS_AUTH_URL</em> 的错误提示时，请 source 或设置认证云平台的环境变量。</p>
 
@@ -1215,6 +1220,17 @@ Optional arguments:
 <li>CURL 使用蓝绿色</li>
 <li>根据状态码显示不同颜色，可参考代码: <a href="https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234">https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234</a></li>
 </ul>
+
+<h4 id="在bash或zsh下的命令行参数提示补全">在bash或zsh下的命令行参数提示补全</h4>
+
+<p>climc支持bash或zsh的命令行参数自动提示补全。</p>
+
+<p>下面以bash为例说明，在使用climc之前，执行如下命令初始化环境。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 启用bash命令行参数自动补全</span>
+<span class="nb">source</span> &lt;<span class="o">(</span>climc --completion bash<span class="o">)</span></code></pre></div>
+<p>之后在bash中可以在输入climc命令后，通过tab获得命令行参数的提示。</p>
+
+<p>为了方便使用，推荐将该命令放到$HOME/.bashrc或$HOME/.bash_profile中自动初始化环境。</p>
 
 
 
@@ -1812,20 +1828,20 @@ Optional arguments:
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1563543847"></script>
-    <script src="/js/perfect-scrollbar.min.js?1563543847"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1563543847"></script>
-    <script src="/js/jquery.sticky.js?1563543847"></script>
-    <script src="/js/featherlight.min.js?1563543847"></script>
-    <script src="/js/html5shiv-printshiv.min.js?1563543847"></script>
-    <script src="/js/highlight.pack.js?1563543847"></script>
+    <script src="/js/clipboard.min.js?1564019069"></script>
+    <script src="/js/perfect-scrollbar.min.js?1564019069"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1564019069"></script>
+    <script src="/js/jquery.sticky.js?1564019069"></script>
+    <script src="/js/featherlight.min.js?1564019069"></script>
+    <script src="/js/html5shiv-printshiv.min.js?1564019069"></script>
+    <script src="/js/highlight.pack.js?1564019069"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1563543847"></script>
-    <script src="/js/learn.js?1563543847"></script>
-    <script src="/js/hugo-learn.js?1563543847"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1564019069"></script>
+    <script src="/js/learn.js?1564019069"></script>
+    <script src="/js/hugo-learn.js?1564019069"></script>
 
-    <link href="/mermaid/mermaid.css?1563543847" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1563543847"></script>
+    <link href="/mermaid/mermaid.css?1564019069" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1564019069"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.55.6" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<title>介绍 | Yunion Onecloud Documentation</title><meta property="og:title" content="介绍" />
+<meta property="og:description" content="功能介绍 云平台支持 Baremetal(物理机) 管理，提供的功能如下:
+ 自动化上架: 物理机上架加电启动后，自动注册到云管平台，自动分配BMC IP地址，初始化IPMI账号密码，自动上报物理机硬件配置（CPU、内存、序列号、网卡、磁盘等）
+ 自动化装机: 根据配置要求自动配置 RAID，自动分区格式化磁盘，自动部署操作系统镜像，自动初始化操作系统账号密码，自动分配IP地址，可以植入配置文件
+ 生命周期管理: 支持物理机自动化开机，关机，重装系统，远程带外管理，卸载操作系统等操作
+ 与虚拟机共享镜像: 使用虚拟机镜像部署物理机，便于虚拟机和物理机统一操作系统运行环境
+ API 支持: 以上操作均支持API操作，便于与其他系统的自动化流程集成
+ 服务器型号支持: 支持Dell、HP、华为、浪潮、联想、超微等主流x86服务器厂商和机型
+ RAID 控制器支持: LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等
+ 转换为宿主机: 直接将物理机转换为运行虚拟机的宿主机
+ 托管已有服务器： 托管已有并装好系统的物理机
+  服务架构 物理机管理服务架构如下:
+ Baremetal &lt;-&gt; DHCP Relay： 处理 PXE 网络启动 DHCP Relay &lt;-&gt; Baremetal Agent:  转发 PXE Boot 请求，获取网络启动相关的信息 通过 DHCP 和 TFTP 服务下发 PXE 配置  云平台定制的网络启动小系统(yunionos) kernel 和 initramfs: 运行 SSH 服务，制作 RAID，收集硬件信息等   Baremetal Agent &lt;-&gt; Region Server:  通过 Region Server 注册物理机记录 获取网络 IP 地址  Baremetal Agent &lt;-&gt; Baremetal:  Baremetal 通知 Agent SSH 相关的登录信息 Agent 通过 SSH 配置 Baremetal 的 IPMI Agent 通过 IPMI 控制 Baremetal 开关机等操作 Agent 通过 SSH 执行做 RAID，装机，销毁等操作  Glance Server -&gt; Baremetal: Baremetal 从 Glance server 下载装机镜像" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/howto/baremetal/intro/" />
+<meta property="article:published_time" content="2019-07-19T20:28:13&#43;08:00"/>
+<meta property="article:modified_time" content="2019-07-30T14:08:01&#43;08:00"/><meta property="og:site_name" content="Yunion Onecloud Documentation" />
+
+<meta itemprop="name" content="介绍">
+<meta itemprop="description" content="功能介绍 云平台支持 Baremetal(物理机) 管理，提供的功能如下:
+ 自动化上架: 物理机上架加电启动后，自动注册到云管平台，自动分配BMC IP地址，初始化IPMI账号密码，自动上报物理机硬件配置（CPU、内存、序列号、网卡、磁盘等）
+ 自动化装机: 根据配置要求自动配置 RAID，自动分区格式化磁盘，自动部署操作系统镜像，自动初始化操作系统账号密码，自动分配IP地址，可以植入配置文件
+ 生命周期管理: 支持物理机自动化开机，关机，重装系统，远程带外管理，卸载操作系统等操作
+ 与虚拟机共享镜像: 使用虚拟机镜像部署物理机，便于虚拟机和物理机统一操作系统运行环境
+ API 支持: 以上操作均支持API操作，便于与其他系统的自动化流程集成
+ 服务器型号支持: 支持Dell、HP、华为、浪潮、联想、超微等主流x86服务器厂商和机型
+ RAID 控制器支持: LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等
+ 转换为宿主机: 直接将物理机转换为运行虚拟机的宿主机
+ 托管已有服务器： 托管已有并装好系统的物理机
+  服务架构 物理机管理服务架构如下:
+ Baremetal &lt;-&gt; DHCP Relay： 处理 PXE 网络启动 DHCP Relay &lt;-&gt; Baremetal Agent:  转发 PXE Boot 请求，获取网络启动相关的信息 通过 DHCP 和 TFTP 服务下发 PXE 配置  云平台定制的网络启动小系统(yunionos) kernel 和 initramfs: 运行 SSH 服务，制作 RAID，收集硬件信息等   Baremetal Agent &lt;-&gt; Region Server:  通过 Region Server 注册物理机记录 获取网络 IP 地址  Baremetal Agent &lt;-&gt; Baremetal:  Baremetal 通知 Agent SSH 相关的登录信息 Agent 通过 SSH 配置 Baremetal 的 IPMI Agent 通过 IPMI 控制 Baremetal 开关机等操作 Agent 通过 SSH 执行做 RAID，装机，销毁等操作  Glance Server -&gt; Baremetal: Baremetal 从 Glance server 下载装机镜像">
+
+
+<meta itemprop="datePublished" content="2019-07-19T20:28:13&#43;08:00" />
+<meta itemprop="dateModified" content="2019-07-30T14:08:01&#43;08:00" />
+<meta itemprop="wordCount" content="378">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="介绍"/>
+<meta name="twitter:description" content="功能介绍 云平台支持 Baremetal(物理机) 管理，提供的功能如下:
+ 自动化上架: 物理机上架加电启动后，自动注册到云管平台，自动分配BMC IP地址，初始化IPMI账号密码，自动上报物理机硬件配置（CPU、内存、序列号、网卡、磁盘等）
+ 自动化装机: 根据配置要求自动配置 RAID，自动分区格式化磁盘，自动部署操作系统镜像，自动初始化操作系统账号密码，自动分配IP地址，可以植入配置文件
+ 生命周期管理: 支持物理机自动化开机，关机，重装系统，远程带外管理，卸载操作系统等操作
+ 与虚拟机共享镜像: 使用虚拟机镜像部署物理机，便于虚拟机和物理机统一操作系统运行环境
+ API 支持: 以上操作均支持API操作，便于与其他系统的自动化流程集成
+ 服务器型号支持: 支持Dell、HP、华为、浪潮、联想、超微等主流x86服务器厂商和机型
+ RAID 控制器支持: LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等
+ 转换为宿主机: 直接将物理机转换为运行虚拟机的宿主机
+ 托管已有服务器： 托管已有并装好系统的物理机
+  服务架构 物理机管理服务架构如下:
+ Baremetal &lt;-&gt; DHCP Relay： 处理 PXE 网络启动 DHCP Relay &lt;-&gt; Baremetal Agent:  转发 PXE Boot 请求，获取网络启动相关的信息 通过 DHCP 和 TFTP 服务下发 PXE 配置  云平台定制的网络启动小系统(yunionos) kernel 和 initramfs: 运行 SSH 服务，制作 RAID，收集硬件信息等   Baremetal Agent &lt;-&gt; Region Server:  通过 Region Server 注册物理机记录 获取网络 IP 地址  Baremetal Agent &lt;-&gt; Baremetal:  Baremetal 通知 Agent SSH 相关的登录信息 Agent 通过 SSH 配置 Baremetal 的 IPMI Agent 通过 IPMI 控制 Baremetal 开关机等操作 Agent 通过 SSH 执行做 RAID，装机，销毁等操作  Glance Server -&gt; Baremetal: Baremetal 从 Glance server 下载装机镜像"/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.74a6a8b51cdf6d9c6a325f53ecd62d21ed577ff0f22278548355db518a48a32a.css" as="style">
+<link href="/scss/main.min.74a6a8b51cdf6d9c6a325f53ecd62d21ed577ff0f22278548355db518a48a32a.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>介绍 | Yunion Onecloud Documentation</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-light  nav-shadow flex-column flex-md-row td-navbar">
+
+	<a href="/" class="logo flex-shrink-0 navbar-brand">
+		<span><svg t="1564477376822" class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="7293" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style/></defs><path d="M498.372923 573.085538c-.196923 2.363077-.354462 4.765538-.472615 7.128616-.196923 3.032615-.393846 6.065231-.669539 9.058461-2.205538 22.409846-15.753846 34.934154-38.203077 35.249231a4428.8 4428.8.0 0 1-97.28.0c-23.394462-.236308-39.030154-14.926769-38.912-36.470154.118154-21.661538 15.281231-35.249231 39.620923-35.406769l18.628923-.039385 44.11077.039385 3.150769-11.579077c28.238769-105.117538 93.144615-167.187692 198.380308-189.794461l20.873846-4.489847-10.555077-18.432c-19.692308-34.500923-74.397538-60.494769-127.212308-60.494769-9.294769.0-18.235077.827077-26.663384 2.441846-75.539692 14.336-123.313231 66.284308-138.712616 150.449231l-1.142154.196923a282.505846 282.505846.0 0 0-28.356923 5.710769c-82.313846 22.291692-132.647385 98.225231-122.486154 184.635077 9.294769 78.611692 80.541538 141.587692 162.225231 143.36a2571.894154 2571.894154.0 0 0 111.340308.0 167.660308 167.660308.0 0 0 163.209846-161.831384c.866462-25.166769 14.454154-40.172308 36.352-40.172308h.748308c10.003692.157538 18.510769 3.544615 24.615384 9.846154 7.207385 7.364923 10.870154 18.313846 10.633846 31.625846a232.448 232.448.0 0 1-32.571076 114.372923c-2.599385 4.411077-5.238154 8.743385-8.349539 13.784616l-5.238154 8.546461-14.966154 24.536615 28.829539-.866461c47.261538-1.457231 86.646154-18.550154 117.051077-50.806154 48.088615-51.121231 60.494769-111.891692 35.761231-175.773538-24.930462-64.512-75.697231-101.612308-146.747077-107.204923a154.387692 154.387692.0 0 0-12.091077-.472616c-84.125538.0-158.089846 68.568615-164.903385 152.851692m-136.664615 253.873231c-116.696615-.512-214.567385-77.508923-237.922462-187.273846-24.418462-114.412308 32.137846-224.019692 140.642462-272.738461 12.406154-5.553231 21.858462-17.723077 26.54523-27.293539C337.683692 244.972308 411.963077 196.923077 511.881846 196.923077h1.496616c100.115692.472615 174.198154 48.679385 220.16 143.36 5.592615 11.421538 16.147692 21.937231 26.978461 26.820923 96.886154 43.716923 152.300308 135.995077 144.620308 240.797538-8.625231 118.153846-107.52 213.976615-225.083077 218.112-18.589538.669538-38.439385.984615-62.424616.984616-17.408.0-34.816-.157538-52.263384-.315077-17.486769-.157538-35.012923-.354462-52.499692-.354462h-15.714462v.669539L465.526154 827.076923H418.146462c-18.825846.0-37.612308.0-56.39877-.118154" fill="#fff" p-id="7294"/></svg></span>
+	</a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="/docs">文档</a>
+			</li>
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="https://github.com/yunionio">Github</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <div class="td-sidebar__search d-flex align-items-center">
+    
+ <input type="input" class="form-control search-input" placeholder="&#xf002 " aria-label="" autocomplete="off">
+
+
+ 
+  
+ 
+
+
+<script type="text/javascript" src="/js/search.js"></script>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </div>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-setup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-intro" href="/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-host" href="/docs/setup/host/">计算节点</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发贡献</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-contribute">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-howto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-climc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-image">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-upload" href="/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-query" href="/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-create" href="/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-operation" href="/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server-create">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-connect" href="/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-others" href="/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-gpu" href="/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-migrate" href="/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-backup" href="/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-host">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-host-kvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/baremetal/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-howto-baremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-howto-baremetal-intro" href="/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-operator" href="/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-network">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-lb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-storage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-multicloud">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-auth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-container">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-scheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+    
+    
+    
+    
+    <a href="https://github.com/yunionio/docs/howto/baremetal/intro.md" target="_blank"><i class="fa fa-edit fa-fw"></i>  Edit this page</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=%e4%bb%8b%e7%bb%8d&amp;body=https://www.kubeflow.org/docs/howto/baremetal/intro/" target="_blank"><i class="fab fa-github fa-fw"></i>  Create issue</a>
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#功能介绍">功能介绍</a></li>
+<li><a href="#服务架构">服务架构</a></li>
+<li><a href="#技术细节">技术细节</a>
+<ul>
+<li><a href="#注册物理机">注册物理机</a></li>
+<li><a href="#yunionos-网络启动小系统">yunionos 网络启动小系统</a></li>
+<li><a href="#ssh-管理">SSH 管理</a></li>
+<li><a href="#raid-配置">RAID 配置</a></li>
+<li><a href="#安装操作系统">安装操作系统</a></li>
+<li><a href="#开关机">开关机</a></li>
+<li><a href="#重装操作系统">重装操作系统</a></li>
+<li><a href="#远程访问">远程访问</a></li>
+<li><a href="#删除操作系统">删除操作系统</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/howto/">操作管理</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/howto/baremetal/">物理机</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/docs/howto/baremetal/intro/">介绍</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>介绍</h1>
+	
+	
+
+<h2 id="功能介绍">功能介绍</h2>
+
+<p>云平台支持 Baremetal(物理机) 管理，提供的功能如下:</p>
+
+<ol>
+<li><p>自动化上架: 物理机上架加电启动后，自动注册到云管平台，自动分配BMC IP地址，初始化IPMI账号密码，自动上报物理机硬件配置（CPU、内存、序列号、网卡、磁盘等）</p></li>
+
+<li><p>自动化装机: 根据配置要求自动配置 RAID，自动分区格式化磁盘，自动部署操作系统镜像，自动初始化操作系统账号密码，自动分配IP地址，可以植入配置文件</p></li>
+
+<li><p>生命周期管理: 支持物理机自动化开机，关机，重装系统，远程带外管理，卸载操作系统等操作</p></li>
+
+<li><p>与虚拟机共享镜像: 使用虚拟机镜像部署物理机，便于虚拟机和物理机统一操作系统运行环境</p></li>
+
+<li><p>API 支持: 以上操作均支持API操作，便于与其他系统的自动化流程集成</p></li>
+
+<li><p>服务器型号支持: 支持Dell、HP、华为、浪潮、联想、超微等主流x86服务器厂商和机型</p></li>
+
+<li><p>RAID 控制器支持: LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等</p></li>
+
+<li><p>转换为宿主机: 直接将物理机转换为运行虚拟机的宿主机</p></li>
+
+<li><p>托管已有服务器： 托管已有并装好系统的物理机</p></li>
+</ol>
+
+<h2 id="服务架构">服务架构</h2>
+
+<p>物理机管理服务架构如下:</p>
+
+<p><img src="../images/baremetal-arch.png" alt="物理机管理架构" /></p>
+
+<ul>
+<li>Baremetal &lt;-&gt; DHCP Relay： 处理 PXE 网络启动</li>
+<li>DHCP Relay &lt;-&gt; Baremetal Agent:
+
+<ul>
+<li>转发 PXE Boot 请求，获取网络启动相关的信息</li>
+<li>通过 DHCP 和 TFTP 服务下发 PXE 配置
+
+<ul>
+<li>云平台定制的<a href="https://github.com/yunionio/yunionos" target="_blank">网络启动小系统(yunionos)</a> kernel 和 initramfs: 运行 SSH 服务，制作 RAID，收集硬件信息等</li>
+</ul></li>
+</ul></li>
+<li>Baremetal Agent &lt;-&gt; Region Server:
+
+<ul>
+<li>通过 Region Server 注册物理机记录</li>
+<li>获取网络 IP 地址</li>
+</ul></li>
+<li>Baremetal Agent &lt;-&gt; Baremetal:
+
+<ul>
+<li>Baremetal 通知 Agent SSH 相关的登录信息</li>
+<li>Agent 通过 SSH 配置 Baremetal 的 IPMI</li>
+<li>Agent 通过 IPMI 控制 Baremetal 开关机等操作</li>
+<li>Agent 通过 SSH 执行做 RAID，装机，销毁等操作</li>
+</ul></li>
+
+<li><p>Glance Server -&gt; Baremetal: Baremetal 从 Glance server 下载装机镜像</p></li>
+
+<li><p>在交换机上开启 DHCP Relay 功能(或者使用 DHCP Relay软件)，relay 指向 Baremetal Agent</p>
+
+<ul>
+<li>物理机上架通电后，设置 PXE 网络启动，DHCP Relay 会将 PXE Boot 请求转发到 Baremetal Agent，Baremetal Agent 收到 PXE Boot 请求，向 Region Server 注册物理机记录</li>
+</ul></li>
+</ul>
+
+<h2 id="技术细节">技术细节</h2>
+
+<h3 id="注册物理机">注册物理机</h3>
+
+<p>注册物理机有自动注册和手动注册两种方式，如果 Baremetal Agent 开启了自动注册功能，就会自动在云平台创建 baremetal 记录；如果为手动注册方式，就需要先调用物理机创建接口把对应的 PXE 网卡对应的 MAC 地址注册到平台。</p>
+
+<p>注册的流程如下:</p>
+
+<ol>
+<li>物理机 PXE 启动时会发送 DHCP PXE boot 的请求，通过 DHCP Relay 请求会到 Baremetal Agent;</li>
+<li>Baremetal Agent 从 DHCP 请求中取出网卡 MAC 地址，拿 MAC 地址向 Region Server 过滤物理机记录;</li>
+<li>Region Server 告诉 Baremetal Agent 改 MAC 地址没有物理机，Baremetal Agent 就会新建记录，并从 Region Server 获取分配对应网段的 IP 地址, 通过内置 DHCP 服务回包给物理机;</li>
+<li>物理机 PXE DHCP 请求获得分配的 IP 地址后，会通过 TFTP 从 Baremetal Agent 下载启动引导文件(kernel 和 initramfs)，然后使用 ramdisk 机制进入我们定制的 initramfs 小系统;</li>
+<li>initramfs 小系统启动后，会启动 sshd 服务，然后修改 root 用户密码，将这些登录信息通知回 Baremetal Agent;</li>
+<li>Baremetal Agent 收到通知后，记录 ssh 登录的信息，开始进行准备工作;</li>
+<li>准备工作包括配置 IPMI，收集硬件信息等，当这些操作完成后，将所有信息上报给 Region Server 完成注册</li>
+</ol>
+
+<h3 id="yunionos-网络启动小系统">yunionos 网络启动小系统</h3>
+
+<p>yunionos(<a href="https://github.com/yunionio/yunionos" target="_blank">https://github.com/yunionio/yunionos</a>) 是我们使用 <a href="https://buildroot.org/" target="_blank">Buildroot</a> 工具定制的用于 PXE 启动和管理物理机的小型 Linux 系统，作用如下:</p>
+
+<ol>
+<li>运行 sshd 服务，提供 Baremetal Agent 远程执行命令</li>
+<li>包含 LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等驱动和工具，用于制作 RAID</li>
+<li>包含 ipmitool 和相关 driver，用于配置和调用 IPMI BMC 管理物理机</li>
+<li>包含 qemu-img, sgdisk, parted 等磁盘分区工具，用于创建操作系统</li>
+</ol>
+
+<h3 id="ssh-管理">SSH 管理</h3>
+
+<p>当物理机通过 PXE 进入 yunionos 小系统后会启动 sshd 服务，并将 ssh login 信息通知给 Baremetal Agent，Baremetal Agent 会更新 ssh 相关的登录信息</p>
+
+<h3 id="raid-配置">RAID 配置</h3>
+
+<p>RAID 配置由 Baremetal Agent 根据用户的配置，生成 raid 配置命令，通过 ssh 远程控制 yunionos 在物理机上制作 RAID</p>
+
+<h3 id="安装操作系统">安装操作系统</h3>
+
+<p>RAID 做完后，Baremetal Agent 会通过 ssh 远程控制 yunionos 安装操作系统和分区，流程如下:</p>
+
+<ol>
+<li><p>调用 <a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/rootcreate.sh" target="_blank">/lib/mos/rootcreate.sh</a> 将系统创建到磁盘:</p>
+
+<ul>
+<li>通过 wget 从 Glance Server 下载用户指定的 image 镜像</li>
+<li>通过 qemu-img convert 命名将 image 写入到磁盘</li>
+</ul></li>
+
+<li><p>创建好系统后，会根据用户的配置将系统盘 resize 分区</p></li>
+
+<li><p>创建其它分区并格式化</p></li>
+
+<li><p>Baremetal Agent 进行一些网络，磁盘配置的设置：比如 bonding，ip 设置, /etc/fstab, 改变 hostname 等</p></li>
+</ol>
+
+<h3 id="开关机">开关机</h3>
+
+<p>注册好的的物理机会配置好 IPMI, IPMI 相关的信息会记录在数据库，Baremetal Agent 通过 ipmitool 控制开关机</p>
+
+<h3 id="重装操作系统">重装操作系统</h3>
+
+<p>类似于安装操作系统，流程上会让安装了操作系统的物理机重新进入 yunionos 小系统，然后重新安装操作系统</p>
+
+<h3 id="远程访问">远程访问</h3>
+
+<p>Baremetal Agent 通过 ipmitool sol 接口提供串口控制界面</p>
+
+<h3 id="删除操作系统">删除操作系统</h3>
+
+<p>对正在运行操作系统的物理机重启进入 PXE 网络启动，进入 yunionos 小系统，调用 <a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/partdestroy.sh" target="_blank">/lib/mos/partdestory.sh</a> 销毁磁盘分区和相应的 raid 命令销毁 raid 配置</p>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/USERNAME/REPOSITORY/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/USERNAME/REPOSITORY/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top"> 30.07.2019: <a  href="https://github.com/yunionio/commit/61a5e0c8caf98ca74b477bbebe4113c295c79cec">update theme to docsy (61a5e0c)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src="/js/main.min.7237633796b2069cf2de3a9ab1459986ddf318b55a55af93666c0a777a96aa21.js" integrity="sha256-cjdjN5ayBpzy3jqasUWZht3zGLVaVa&#43;TZmwKd3qWqiE="></script>
+
+
+
+  </body>
+</html>

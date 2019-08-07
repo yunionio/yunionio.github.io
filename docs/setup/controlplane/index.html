@@ -14,7 +14,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57&#43;08:00"/>
-<meta property="article:modified_time" content="2019-07-31T17:03:14&#43;08:00"/><meta property="og:site_name" content="Yunion Onecloud Documentation" />
+<meta property="article:modified_time" content="2019-08-07T05:25:03&#43;08:00"/><meta property="og:site_name" content="Yunion Onecloud Documentation" />
 
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
@@ -22,8 +22,8 @@
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-07-31T17:03:14&#43;08:00" />
-<meta itemprop="wordCount" content="763">
+<meta itemprop="dateModified" content="2019-08-07T05:25:03&#43;08:00" />
+<meta itemprop="wordCount" content="818">
 
 
 
@@ -737,11 +737,13 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/my.cnf
 $ mysql -uroot -p<span style="color:#000">$MYSQL_PASSWD</span> <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  -e <span style="color:#4e9a06">&#34;GRANT ALL ON *.* to &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39; with grant option; FLUSH PRIVILEGES;&#34;</span></code></pre></div>
 <h3 id="安装配置-docker">安装配置 docker</h3>
+
+<p>安装 docker</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y yum-utils
 $ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-$ yum install -y docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io
-
-$ mkdir /etc/docker
+$ yum install -y docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io</code></pre></div>
+<p>配置 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir /etc/docker
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
 </span><span style="color:#4e9a06">{
 </span><span style="color:#4e9a06">  &#34;bridge&#34;: &#34;none&#34;,
@@ -765,9 +767,12 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
 </span><span style="color:#4e9a06">    ],
 </span><span style="color:#4e9a06">  &#34;storage-driver&#34;: &#34;overlay2&#34;
 </span><span style="color:#4e9a06">}
-</span><span style="color:#4e9a06">EOF</span>
-$ systemctl <span style="color:#204a87">enable</span> --now docker</code></pre></div>
+</span><span style="color:#4e9a06">EOF</span></code></pre></div>
+<p>启动 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> --now docker</code></pre></div>
 <h3 id="安装配置-kubelet">安装配置 kubelet</h3>
+
+<p>从 aliyun 的 yum 源安装 kubernetes 1.14.3，并设置 kubelet 开机自启动</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/kubernetes.repo
 </span><span style="color:#4e9a06">[kubernetes]
 </span><span style="color:#4e9a06">name=Kubernetes
@@ -777,8 +782,12 @@ $ systemctl <span style="color:#204a87">enable</span> --now docker</code></pre><
 </span><span style="color:#4e9a06">repo_gpgcheck=0
 </span><span style="color:#4e9a06">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 </span><span style="color:#4e9a06">EOF</span>
-$ yum install --assumeyes bridge-utils conntrack-tools jq kubelet-1.14.3-0 kubectl-1.14.3-0 kubeadm-1.14.3-0
-$ systemctl <span style="color:#204a87">enable</span> kubelet
+$ yum install -y bridge-utils ipvsadm conntrack-tools jq kubelet-1.14.3-0 kubectl-1.14.3-0 kubeadm-1.14.3-0
+$ systemctl <span style="color:#204a87">enable</span> kubelet</code></pre></div>
+<p>安装完 kubernetes 相关的二进制后，还需要对系统做一些配置并启用 ipvs 作为 kube-proxy 内部的 service 负载均衡</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 禁用 swap</span>
+$ swapoff -a
+<span style="color:#8f5902;font-style:italic"># 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行</span>
 
 <span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysctl.d/bridge.conf
@@ -786,13 +795,27 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysctl.d/bridge.conf
 </span><span style="color:#4e9a06">net.bridge.bridge-nf-call-ip6tables=1
 </span><span style="color:#4e9a06">EOF</span>
 
-$ sudo modprobe br_netfilter
+$ modprobe br_netfilter
 
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysctl.d/ip_forward.conf
 </span><span style="color:#4e9a06">net.ipv4.ip_forward=1
 </span><span style="color:#4e9a06">EOF</span>
 
-$ sysctl -p</code></pre></div>
+$ sysctl -p
+
+<span style="color:#8f5902;font-style:italic"># 配置并开启 ipvs</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysconfig/modules/ipvs.modules
+</span><span style="color:#4e9a06">#!/bin/bash
+</span><span style="color:#4e9a06">ipvs_modules=&#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&#34;
+</span><span style="color:#4e9a06">for kernel_module in \${ipvs_modules}; do
+</span><span style="color:#4e9a06">    /sbin/modinfo -F filename \${kernel_module} &gt; /dev/null 2&gt;&amp;1
+</span><span style="color:#4e9a06">    if [ $? -eq 0 ]; then
+</span><span style="color:#4e9a06">        /sbin/modprobe \${kernel_module}
+</span><span style="color:#4e9a06">    fi
+</span><span style="color:#4e9a06">done
+</span><span style="color:#4e9a06">EOF</span>
+
+$ chmod <span style="color:#0000cf;font-weight:bold">755</span> /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> bash /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> lsmod <span style="color:#000;font-weight:bold">|</span> grep ip_vs</code></pre></div>
 <h2 id="部署集群">部署集群</h2>
 
 <h3 id="安装部署工具">安装部署工具</h3>
@@ -805,7 +828,7 @@ $ yum install -y yunion-climc
 $ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;export PATH=$PATH:/opt/yunion/bin&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc
 
 <span style="color:#8f5902;font-style:italic"># 安装 ocadm</span>
-$ wget https://github.com/Zexi/ocadm/releases/download/v0.0.1/ocadm -P /opt/yunion/bin
+$ wget https://github.com/yunionio/ocadm/releases/download/v0.0.1/ocadm -P /opt/yunion/bin
 $ chmod a+x /opt/yunion/bin/ocadm</code></pre></div>
 <h3 id="部署-kubernetes-集群">部署 kubernetes 集群</h3>
 
@@ -843,17 +866,25 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         <span style="col
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建集群</span>
 $ ocadm cluster create</code></pre></div>
 <p>执行完 <code>ocadm cluster create</code> 命令后，<strong>onecloud-operator</strong> 会自动创建各个服务组件对应的 pod，等待一段时间后，确保 onecloud namespace 里面的 keystone, region 和 glance 等 pod 都处于 running 状态。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get pods --namespace onecloud
-NAME                                  READY   STATUS    RESTARTS   AGE
-default-climc-6c4888fb55-9729z        <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-default-glance-59449b8c8d-bhwgf       <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-default-influxdb-5cd895746c-5w5s9     <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-default-keystone-5d59bf668f-8j9wv     <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          133m
-default-logger-69cfb8dc85-qwmhs       <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-default-region-69dbbbb487-s9knd       <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-default-scheduler-6fd8c979bd-wqd6v    <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-default-webconsole-6ff98d4f8b-p7h8v   <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          132m
-onecloud-operator-6d4bddb8c4-tkjkh    <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          3h43m</code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 可以通过 watch 的方式查看各个服务 pod 的创建过程</span>
+$ kubectl get pods --namespace onecloud -w
+
+<span style="color:#8f5902;font-style:italic"># 当发现 web 相关的 pod 创建完成后，就可通过前端 web 界面访问云平台了</span>
+$ kubectl get pods --namespace onecloud <span style="color:#000;font-weight:bold">|</span> egrep <span style="color:#4e9a06">&#39;apigateway|web&#39;</span>
+default-apigateway-f657c55c8-9tzpm     <span style="color:#0000cf;font-weight:bold">2</span>/2     Running   <span style="color:#0000cf;font-weight:bold">0</span>          118m
+default-web-7778d95cb8-2xv6n           <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          118m
+default-webconsole-5855c8b64f-jtqwn    <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          119m</code></pre></div>
+<p>等待 <strong>default-web-</strong> 相关的 pod 状态变为 Running 后，就可以通过访问 &lsquo;https://本机IP:443&rsquo; 登入前端界面。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取本机 IP</span>
+$ ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span>
+<span style="color:#0000cf;font-weight:bold">10</span>.168.222.218
+
+<span style="color:#8f5902;font-style:italic"># 测试连通性</span>
+$ curl -k https://10.168.222.218</code></pre></div>
+<p>用浏览器访问 &lsquo;https://本机IP&rsquo; 会跳转到 web 界面，如果是第一次访问需要注册设置 cloudadmin 用户的密码，注册完成后登录的界面如下:</p>
+
+<p><img src="../images/web.png" alt="nnn" /></p>
+
 <h3 id="环境检查">环境检查</h3>
 
 <p>当控制节点部署完成后，云平台的管理员认证信息由 <code>ocadm cluster rcadmin</code> 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。</p>
@@ -877,11 +908,6 @@ $ climc endpoint-list
 <span style="color:#000;font-weight:bold">|</span> ba59f23951e6452984b9d2036d303ade <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 106f7cf2410b4187879d4a44a737df0b <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8086      <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
 <span style="color:#000;font-weight:bold">|</span> 5b2981d751624c6b86a757e30676c528 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> ee302d70e261452282ca66c86f85f2f7 <span style="color:#000;font-weight:bold">|</span> https://default-webconsole:8899  <span style="color:#000;font-weight:bold">|</span> internal  <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
 <span style="color:#000;font-weight:bold">|</span> 81c79509449f4f4581140adc030e5e57 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> ee302d70e261452282ca66c86f85f2f7 <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8899      <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> 9623a61a904e4ea78347b05afa08f239 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 7716623b738d4a3282fc076e46f96627 <span style="color:#000;font-weight:bold">|</span> https://default-glance:9292/v1   <span style="color:#000;font-weight:bold">|</span> internal  <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> a7ee01e0f4a94f908fc68e2de5990065 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 7716623b738d4a3282fc076e46f96627 <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:9292/v1   <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> 28f7a82402d847308dd7b09dbc4faead <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 8c0c3b14e9904d7485b986836334fbbb <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8897      <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> 83405b6973354e4287e9b61c1f2af668 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 8c0c3b14e9904d7485b986836334fbbb <span style="color:#000;font-weight:bold">|</span> https://default-scheduler:8897   <span style="color:#000;font-weight:bold">|</span> internal  <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> 6a08a98f8071492287976ac788e2f424 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> acc01b6df2ed442280e9f8f716bd006f <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8889      <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
 ...</code></pre></div>
 <h3 id="删除环境">删除环境</h3>
 
@@ -949,7 +975,7 @@ $ climc endpoint-list
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 31.07.2019: <a  href="https://github.com/yunionio/docs/commit/3ccbedb62b04a3dae62f8cdc0827bdb364e2119e">update content for docsy (3ccbedb)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 07.08.2019: <a  href="https://github.com/yunionio/docs/commit/b63538f4bffc56b466e9ed504a3cb3b8967056d5">add ocadm ipvs setup (b63538f)</a>
 </div>
 </div>
 

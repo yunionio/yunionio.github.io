@@ -449,11 +449,13 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 $ mysql -uroot -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;GRANT ALL ON *.* to &amp;#39;root&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39; with grant option; FLUSH PRIVILEGES;&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装配置-docker&#34;&gt;安装配置 docker&lt;/h3&gt;
+
+&lt;p&gt;安装 docker&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y yum-utils
 $ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-$ yum install -y docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io
-
-$ mkdir /etc/docker
+$ yum install -y docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;配置 docker&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir /etc/docker
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;{
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;bridge&amp;#34;: &amp;#34;none&amp;#34;,
@@ -477,9 +479,12 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    ],
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;storage-driver&amp;#34;: &amp;#34;overlay2&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;}
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now docker&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;启动 docker&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now docker&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装配置-kubelet&#34;&gt;安装配置 kubelet&lt;/h3&gt;
+
+&lt;p&gt;从 aliyun 的 yum 源安装 kubernetes 1.14.3，并设置 kubelet 开机自启动&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[kubernetes]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Kubernetes
@@ -489,8 +494,12 @@ $ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now 
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;repo_gpgcheck=0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-$ yum install --assumeyes bridge-utils conntrack-tools jq kubelet-1.14.3-0 kubectl-1.14.3-0 kubeadm-1.14.3-0
-$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; kubelet
+$ yum install -y bridge-utils ipvsadm conntrack-tools jq kubelet-1.14.3-0 kubectl-1.14.3-0 kubeadm-1.14.3-0
+$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; kubelet&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;安装完 kubernetes 相关的二进制后，还需要对系统做一些配置并启用 ipvs 作为 kube-proxy 内部的 service 负载均衡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用 swap&lt;/span&gt;
+$ swapoff -a
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行&lt;/span&gt;
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 做一些 sysctl 的配置, kubernetes 要求&lt;/span&gt;
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/bridge.conf
@@ -498,13 +507,27 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /et
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;net.bridge.bridge-nf-call-ip6tables=1
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
 
-$ sudo modprobe br_netfilter
+$ modprobe br_netfilter
 
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/ip_forward.conf
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;net.ipv4.ip_forward=1
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
 
-$ sysctl -p&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+$ sysctl -p
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 配置并开启 ipvs&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysconfig/modules/ipvs.modules
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;ipvs_modules=&amp;#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;for kernel_module in \${ipvs_modules}; do
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    /sbin/modinfo -F filename \${kernel_module} &amp;gt; /dev/null 2&amp;gt;&amp;amp;1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    if [ $? -eq 0 ]; then
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;        /sbin/modprobe \${kernel_module}
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    fi
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;done
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+
+$ chmod &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;755&lt;/span&gt; /etc/sysconfig/modules/ipvs.modules &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; bash /etc/sysconfig/modules/ipvs.modules &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; lsmod &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep ip_vs&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;部署集群&#34;&gt;部署集群&lt;/h2&gt;
 
 &lt;h3 id=&#34;安装部署工具&#34;&gt;安装部署工具&lt;/h3&gt;
@@ -517,7 +540,7 @@ $ yum install -y yunion-climc
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;export PATH=$PATH:/opt/yunion/bin&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 ocadm&lt;/span&gt;
-$ wget https://github.com/Zexi/ocadm/releases/download/v0.0.1/ocadm -P /opt/yunion/bin
+$ wget https://github.com/yunionio/ocadm/releases/download/v0.0.1/ocadm -P /opt/yunion/bin
 $ chmod a+x /opt/yunion/bin/ocadm&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;部署-kubernetes-集群&#34;&gt;部署 kubernetes 集群&lt;/h3&gt;
 
@@ -555,17 +578,25 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         &lt;span style=&
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建集群&lt;/span&gt;
 $ ocadm cluster create&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;执行完 &lt;code&gt;ocadm cluster create&lt;/code&gt; 命令后，&lt;strong&gt;onecloud-operator&lt;/strong&gt; 会自动创建各个服务组件对应的 pod，等待一段时间后，确保 onecloud namespace 里面的 keystone, region 和 glance 等 pod 都处于 running 状态。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get pods --namespace onecloud
-NAME                                  READY   STATUS    RESTARTS   AGE
-default-climc-6c4888fb55-9729z        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-default-glance-59449b8c8d-bhwgf       &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-default-influxdb-5cd895746c-5w5s9     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-default-keystone-5d59bf668f-8j9wv     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          133m
-default-logger-69cfb8dc85-qwmhs       &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-default-region-69dbbbb487-s9knd       &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-default-scheduler-6fd8c979bd-wqd6v    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-default-webconsole-6ff98d4f8b-p7h8v   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          132m
-onecloud-operator-6d4bddb8c4-tkjkh    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          3h43m&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以通过 watch 的方式查看各个服务 pod 的创建过程&lt;/span&gt;
+$ kubectl get pods --namespace onecloud -w
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 当发现 web 相关的 pod 创建完成后，就可通过前端 web 界面访问云平台了&lt;/span&gt;
+$ kubectl get pods --namespace onecloud &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; egrep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;apigateway|web&amp;#39;&lt;/span&gt;
+default-apigateway-f657c55c8-9tzpm     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;/2     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          118m
+default-web-7778d95cb8-2xv6n           &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          118m
+default-webconsole-5855c8b64f-jtqwn    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          119m&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;等待 &lt;strong&gt;default-web-&lt;/strong&gt; 相关的 pod 状态变为 Running 后，就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 获取本机 IP&lt;/span&gt;
+$ ip route get &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; awk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;{print $NF;exit}&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.218
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试连通性&lt;/span&gt;
+$ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;用浏览器访问 &amp;lsquo;https://本机IP&amp;rsquo; 会跳转到 web 界面，如果是第一次访问需要注册设置 cloudadmin 用户的密码，注册完成后登录的界面如下:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/web.png&#34; alt=&#34;nnn&#34; /&gt;&lt;/p&gt;
+
 &lt;h3 id=&#34;环境检查&#34;&gt;环境检查&lt;/h3&gt;
 
 &lt;p&gt;当控制节点部署完成后，云平台的管理员认证信息由 &lt;code&gt;ocadm cluster rcadmin&lt;/code&gt; 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p&gt;
@@ -589,11 +620,6 @@ $ climc endpoint-list
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ba59f23951e6452984b9d2036d303ade &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 106f7cf2410b4187879d4a44a737df0b &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:8086      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 5b2981d751624c6b86a757e30676c528 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ee302d70e261452282ca66c86f85f2f7 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://default-webconsole:8899  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; internal  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 81c79509449f4f4581140adc030e5e57 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ee302d70e261452282ca66c86f85f2f7 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:8899      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 9623a61a904e4ea78347b05afa08f239 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 7716623b738d4a3282fc076e46f96627 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://default-glance:9292/v1   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; internal  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; a7ee01e0f4a94f908fc68e2de5990065 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 7716623b738d4a3282fc076e46f96627 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:9292/v1   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 28f7a82402d847308dd7b09dbc4faead &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 8c0c3b14e9904d7485b986836334fbbb &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:8897      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 83405b6973354e4287e9b61c1f2af668 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 8c0c3b14e9904d7485b986836334fbbb &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://default-scheduler:8897   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; internal  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 6a08a98f8071492287976ac788e2f424 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; acc01b6df2ed442280e9f8f716bd006f &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:8889      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
 ...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;删除环境&#34;&gt;删除环境&lt;/h3&gt;
 

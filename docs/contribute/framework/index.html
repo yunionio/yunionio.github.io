@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.56.3" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<title>后端服务框架 | Yunion Onecloud Documentation</title><meta property="og:title" content="后端服务框架" />
+<meta property="og:description" content="介绍云平台后端服务所用的框架和相关库的使用方法
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/contribute/framework/" />
+<meta property="article:modified_time" content="2019-08-13T17:01:05+08:00" /><meta property="og:site_name" content="Yunion Onecloud Documentation" />
+<meta itemprop="name" content="后端服务框架">
+<meta itemprop="description" content="介绍云平台后端服务所用的框架和相关库的使用方法
+">
+
+
+<meta itemprop="dateModified" content="2019-08-13T17:01:05&#43;08:00" />
+<meta itemprop="wordCount" content="1094">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="后端服务框架"/>
+<meta name="twitter:description" content="介绍云平台后端服务所用的框架和相关库的使用方法
+"/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.27e681223735aeec3e06c090e21d3a44d1070a2c3a42528a75f13d0140c8388f.css" as="style">
+<link href="/scss/main.min.27e681223735aeec3e06c090e21d3a44d1070a2c3a42528a75f13d0140c8388f.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>后端服务框架 | Yunion Onecloud Documentation</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-light  nav-shadow flex-column flex-md-row td-navbar">
+
+	<a href="/" class="logo flex-shrink-0 navbar-brand">
+		<img src="/images/logo.svg" alt="">
+		<b>OneCloud</b>
+	</a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-lg-0">
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="/docs/setup/controlplane/">快速开始</a>
+			</li>
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="/docs">文档</a>
+			</li>
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="https://github.com/yunionio/onecloud">Github</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <div class="td-sidebar__search d-flex align-items-center">
+    
+ <input type="input" class="form-control search-input" placeholder="&#xf002 Search this site…" aria-label="Search this site…" autocomplete="off">
+
+
+ 
+  
+ 
+
+
+<script type="text/javascript" src="/js/search.js"></script>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </div>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-setup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-intro" href="/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-host" href="/docs/setup/host/">计算节点</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/contribute/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-contribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-contrib" href="/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-services" href="/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-contribute-framework" href="/docs/contribute/framework/">后端服务框架</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-climc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-image">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-upload" href="/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-query" href="/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-create" href="/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-operation" href="/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server-create">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-connect" href="/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-others" href="/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-gpu" href="/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-migrate" href="/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-backup" href="/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-host">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-host-kvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-baremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-intro" href="/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-operator" href="/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-network">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-lb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-storage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-multicloud">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-auth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-container">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-scheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+    
+    
+    
+    
+    
+    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/contribute/framework.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=%e5%90%8e%e7%ab%af%e6%9c%8d%e5%8a%a1%e6%a1%86%e6%9e%b6" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    
+    
+    <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
+    
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#后端服务框架">后端服务框架</a></li>
+<li><a href="#onecloud-代码结构">onecloud 代码结构</a></li>
+<li><a href="#认证部分">认证部分</a></li>
+<li><a href="#model-dispatcher">Model Dispatcher</a></li>
+<li><a href="#数据库-orm-模型">数据库 ORM 模型</a>
+<ul>
+<li><a href="#举例">举例</a></li>
+</ul></li>
+<li><a href="#数据库锁">数据库锁</a>
+<ul>
+<li><a href="#举例-1">举例</a></li>
+</ul></li>
+<li><a href="#worker队列管理">worker队列管理</a></li>
+<li><a href="#task-机制">Task 机制</a>
+<ul>
+<li><a href="#举例-2">举例</a></li>
+</ul></li>
+<li><a href="#如何增加一个新的服务">如何增加一个新的服务</a></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/contribute/">开发相关</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/docs/contribute/framework/">后端服务框架</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>后端服务框架</h1>
+	<div class="lead">介绍云平台后端服务所用的框架和相关库的使用方法</div>
+	
+
+<p>介绍云平台后端服务所用的框架和相关库的使用方法，建议先阅读 <a href="/docs/contribute/services/">&ldquo;开发相关/服务组件介绍&rdquo;</a> 了解各个服务大概的功能。</p>
+
+<h2 id="后端服务框架">后端服务框架</h2>
+
+<p>keystone, region, glance 等后端服务，都是用的同一套后端服务框架，这个框架是我们自己定义实现的，核心模块如下:</p>
+
+<p><img src="../images/service_framework.png" alt="" /></p>
+
+<ul>
+<li><p>REST API: 负责解析客户端发送的 CRUD http 请求，将不同的请求对应到 Model Dispatcher 模块。</p></li>
+
+<li><p>Model Dispatcher: 将客户端的请求分发到对应资源的业务操作。</p></li>
+
+<li><p>Model: 定义云平台各种资源，会进行数据库读写相关操作，如果具体业务需要进行耗时操作，会通过 Task 机制来执行耗时任务。</p></li>
+
+<li><p>Task: 后台处理异步耗时任务的模块，会通过更新 Model 的状态来更新任务的执行结果。</p></li>
+</ul>
+
+<h2 id="onecloud-代码结构">onecloud 代码结构</h2>
+
+<ul>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/build" target="_blank">build</a>: 打包rpm脚本</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/cmd" target="_blank">cmd</a>: 可执行binary入口程序</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg" target="_blank">pkg</a>: 库
+
+<ul>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/appsrv" target="_blank">appsrv</a>: 通用http服务框架</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon" target="_blank">cloudcommon</a>: 云平台服务框架，基于appsrv扩展</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/options" target="_blank">cloudcommon/options</a>: 通用options</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/app" target="_blank">cloudcommon/app</a>: 通用服务初始化代码</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db" target="_blank">cloudcommon/db</a>: Model dispatcher和Models的基础实现</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db/lockman" target="_blank">cloudcommon/db/lockman</a>: 锁实现</li>
+<li><a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db/taskman" target="_blank">cloudcommon/db/taskman</a>: 异步任务框架</li>
+</ul></li>
+</ul>
+
+<h2 id="认证部分">认证部分</h2>
+
+<p><img src="../images/auth_framework.png" alt="" /></p>
+
+<ul>
+<li>客户端向服务发起请求前，需要从keystone获得token</li>
+<li>客户端通过携带用户名密码调用keystone的/v3/auth/tokens接口获得token</li>
+<li>客户端向服务发起的每次API请求都会在HTTP头携带该token，比如: X-Auth-Token: {token}</li>
+<li>后端服务向keystone验证该token，获得用户的身份信息，执行后续API的流程</li>
+<li>每个服务都有一个keystone注册的服务用户账号（user/password)，并且以admin角色加入system项目</li>
+<li>服务启动后，会向keystone发起认证，获得admin token</li>
+<li>用户通过API访问服务时，将在header携带token</li>
+<li>使用这个admin token访问keystone的token验证接口，验证这个token，获得用户的身份信息</li>
+</ul>
+
+<h2 id="model-dispatcher">Model Dispatcher</h2>
+
+<p>把 REST API 和 Model 的方法进行一一映射</p>
+
+<table>
+<thead>
+<tr>
+<th>REST 请求</th>
+<th>Model 方法</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>GET /&lt;resources&gt;</td>
+<td>AllowListItems</td>
+<td>List的权限判断</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>ListItemFilter</td>
+<td>过滤</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>GetCustomizeColumns</td>
+<td>获得扩展字段的信息</td>
+</tr>
+
+<tr>
+<td>GET /&lt;resources&gt;/&lt;res_id&gt;</td>
+<td>AllowGetDetails</td>
+<td>Get 的权限判断</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>GetExtraDetails</td>
+<td>获取扩展字段的信息</td>
+</tr>
+
+<tr>
+<td>GET /&lt;resources&gt;/&lt;res_id&gt;/&lt;spec&gt;</td>
+<td>AllowGetDetails&lt;Spec&gt;</td>
+<td>获取资源特定属性的权限判断</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>GetDetails&lt;Spec&gt;</td>
+<td>获取资源特定属性</td>
+</tr>
+
+<tr>
+<td>POST /&lt;resources&gt;</td>
+<td>AllowCreateItem</td>
+<td>创建操作的鉴权</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>ValidateCreateData</td>
+<td>校验和处理创建的数据</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>CustomizeCreate</td>
+<td>自定义的创建操作</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>PostCreate</td>
+<td>创建后的hook</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>OnCreateComplete</td>
+<td>创建完成的hook</td>
+</tr>
+
+<tr>
+<td>POST /&lt;resources&gt;/&lt;res_id&gt;/&lt;action&gt;</td>
+<td>AllowPerformAction&lt;Action&gt;</td>
+<td>某个资源执行特定操作的鉴权判断</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>Perform&lt;Action&gt;</td>
+<td>某个资源执行特定操作</td>
+</tr>
+
+<tr>
+<td>PUT /&lt;resources&gt;/&lt;res_id&gt;</td>
+<td>AllowUpdateItem</td>
+<td>对指定资源更新操作的鉴权</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>ValidateUpdateData</td>
+<td>校验和处理更新操作的数据</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>PreUpdate</td>
+<td>自定义的创建操作</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>PostUpdate</td>
+<td>创建后的hook</td>
+</tr>
+
+<tr>
+<td>DELETE /&lt;resources&gt;/&lt;res_id&gt;</td>
+<td>AllowDeleteItem</td>
+<td>删除指定资源的鉴权</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>CustomizeDelete</td>
+<td>自定义的删除操作</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>PreDelete</td>
+<td>删除前的hook</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>Delete</td>
+<td>执行删除操作</td>
+</tr>
+
+<tr>
+<td>-</td>
+<td>PostDelete</td>
+<td>删除后的hook</td>
+</tr>
+</tbody>
+</table>
+
+<p>具体 restful 请求的绑定函数在: <a href="https://github.com/yunionio/onecloud/blob/master/pkg/appsrv/dispatcher/dispatcher.go#L33" target="_blank">pkg/appsrv/dispatcher/dispatcher.go</a> 文件中的 <strong>AddModelDispatcher</strong> 函数。</p>
+
+<h2 id="数据库-orm-模型">数据库 ORM 模型</h2>
+
+<p>代码位于 <a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db" target="_blank">cloudcommon/db</a></p>
+
+<ul>
+<li>接口
+
+<ul>
+<li>IModelManager: 对应资源在数据库里面的表</li>
+<li>IModel: 对应资源在数据库里面的单条数据</li>
+</ul></li>
+<li>数据结构
+
+<ul>
+<li>SResourceBase: 基础资源
+
+<ul>
+<li>SStandaloneResourceBase: 基础设施的物理资源，没有具体ownerId的资源，如zone, host
+
+<ul>
+<li>SVirtualResourceBase: 虚拟资源，如虚拟机（guest)
+
+<ul>
+<li>SSharableVirtualResourceBase: 虚拟的可以共享的虚拟资源，如disk, network
+
+<ul>
+<li>SAdminSharableVirtualInfoBase: 管理配置用的可共享虚拟资源，如security group</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>SJointResourceBase: 联合数据类型，如虚拟网卡是虚拟机和网络的联合，虚拟磁盘挂在：虚拟机和虚拟磁盘的联合</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h3 id="举例">举例</h3>
+
+<p>用虚拟机的 model 来举例，代码在: <a href="https://github.com/yunionio/onecloud/blob/master/pkg/compute/models/guests.go" target="_blank">pkg/compute/models/guests.go</a>。</p>
+
+<p>GuestManager 对应数据库里面的 guests_tbl，该对象嵌套 db.SVirtualResourceBaseManager 表示是虚拟资源的 Manager，这样会默认实现 db.IModelManager 接口，然后根据业务需要重写一些方法会比较方便。</p>
+
+<p>SGuest 对应 guests_tbl 数据库里面的每一行数据，由 GuestManager 管理，嵌套 db.SVirtualResourceBase 结构，默认就会有虚拟资源所需要的表结构，然后再定义一些虚拟机独有的属性比如 VcpuCount 表示 cpu 核数，VmemSize 表示内存大小。 在代码抽象后表示虚拟机实例，该对象会绑定对虚拟机具体的业务操作实现函数。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#204a87;font-weight:bold">import</span> <span style="color:#4e9a06">&#34;yunion.io/x/onecloud/pkg/cloudcommon/db&#34;</span>
+
+<span style="color:#ce5c00;font-weight:bold">......</span>
+
+<span style="color:#204a87;font-weight:bold">type</span> <span style="color:#000">SGuestManager</span> <span style="color:#204a87;font-weight:bold">struct</span> <span style="color:#000;font-weight:bold">{</span>
+	<span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SVirtualResourceBaseManager</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">var</span> <span style="color:#000">GuestManager</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">SGuestManager</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000">init</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span>
+	<span style="color:#000">GuestManager</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">SGuestManager</span><span style="color:#000;font-weight:bold">{</span>
+		<span style="color:#000">SVirtualResourceBaseManager</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">NewVirtualResourceBaseManager</span><span style="color:#000;font-weight:bold">(</span>
+			<span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">{},</span>
+			<span style="color:#4e9a06">&#34;guests_tbl&#34;</span><span style="color:#000;font-weight:bold">,</span>
+			<span style="color:#4e9a06">&#34;server&#34;</span><span style="color:#000;font-weight:bold">,</span>
+			<span style="color:#4e9a06">&#34;servers&#34;</span><span style="color:#000;font-weight:bold">,</span>
+		<span style="color:#000;font-weight:bold">),</span>
+	<span style="color:#000;font-weight:bold">}</span>
+	<span style="color:#000">GuestManager</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetVirtualObject</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">GuestManager</span><span style="color:#000;font-weight:bold">)</span>
+	<span style="color:#000">GuestManager</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetAlias</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;guest&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;guests&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">type</span> <span style="color:#000">SGuest</span> <span style="color:#204a87;font-weight:bold">struct</span> <span style="color:#000;font-weight:bold">{</span>
+	<span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SVirtualResourceBase</span>
+
+	<span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SExternalizedResourceBase</span>
+
+	<span style="color:#000">SBillingResourceBase</span>
+
+	<span style="color:#000">VcpuCount</span> <span style="color:#204a87;font-weight:bold">int</span> <span style="color:#4e9a06">`nullable:&#34;false&#34; default:&#34;1&#34; list:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(TINYINT, nullable=False, default=1)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">VmemSize</span>  <span style="color:#204a87;font-weight:bold">int</span> <span style="color:#4e9a06">`nullable:&#34;false&#34; list:&#34;user&#34; create:&#34;required&#34;`</span>             <span style="color:#8f5902;font-style:italic">// Column(Integer, nullable=False)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">BootOrder</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;8&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; default:&#34;cdn&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(8, charset=&#39;ascii&#39;), nullable=True, default=&#39;cdn&#39;)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">DisableDelete</span>    <span style="color:#000">tristate</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TriState</span> <span style="color:#4e9a06">`nullable:&#34;false&#34; default:&#34;true&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span>           <span style="color:#8f5902;font-style:italic">// Column(Boolean, nullable=False, default=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">ShutdownBehavior</span> <span style="color:#204a87;font-weight:bold">string</span>            <span style="color:#4e9a06">`width:&#34;16&#34; charset:&#34;ascii&#34; default:&#34;stop&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(16, charset=&#39;ascii&#39;), default=SHUTDOWN_STOP)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">KeypairId</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">HostId</span>       <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;admin&#34; get:&#34;admin&#34; index:&#34;true&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">BackupHostId</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; get:&#34;user&#34;`</span>
+
+	<span style="color:#000">Vga</span>     <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">Vdi</span>     <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">Machine</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">Bios</span>    <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">OsType</span>  <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; update:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">FlavorId</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">SecgrpId</span>      <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; get:&#34;user&#34; create:&#34;optional&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#000">AdminSecgrpId</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; get:&#34;admin&#34;`</span>                  <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(36, charset=&#39;ascii&#39;), nullable=True)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">Hypervisor</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;16&#34; charset:&#34;ascii&#34; nullable:&#34;false&#34; default:&#34;kvm&#34; list:&#34;user&#34; create:&#34;required&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(16, charset=&#39;ascii&#39;), nullable=False, default=HYPERVISOR_DEFAULT)
+</span><span style="color:#8f5902;font-style:italic"></span>
+	<span style="color:#000">InstanceType</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;64&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34; list:&#34;user&#34; create:&#34;optional&#34;`</span>
+<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#ce5c00;font-weight:bold">......</span></code></pre></div>
+<h2 id="数据库锁">数据库锁</h2>
+
+<p>代码位于 cloudcommon/db/lockman:</p>
+
+<ul>
+<li>LockClass/ReleaseClass: 锁住一类实例，一般创建资源时候需要锁</li>
+<li>LockObject/ReleaseObject: 锁住一个实例，一般修改资源实例是需要锁</li>
+<li>LockRawObject/RelaseRawObject: 通用的锁</li>
+</ul>
+
+<h3 id="举例-1">举例</h3>
+
+<p><a href="https://github.com/yunionio/onecloud/blob/master/pkg/cloudcommon/db/db_dispatcher.go#L900" target="_blank">pkg/cloudcommon/db/db_dispatcher.go</a> 里面的 DoCreate 函数会创建对应 Model 的对象并插入数据到数据库，这个时候就需要加锁。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000">DoCreate</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">manager</span> <span style="color:#000">IModelManager</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span> <span style="color:#000">mcclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TokenCredential</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">query</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ownerId</span> <span style="color:#000">mcclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IIdentityProvider</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">IModel</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">error</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000">lockman</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">LockClass</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">manager</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">GetLockClassKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">manager</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ownerId</span><span style="color:#000;font-weight:bold">))</span>
+    <span style="color:#204a87;font-weight:bold">defer</span> <span style="color:#000">lockman</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ReleaseClass</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">manager</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">GetLockClassKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">manager</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ownerId</span><span style="color:#000;font-weight:bold">))</span>
+
+    <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">doCreateItem</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">manager</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ownerId</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span></code></pre></div>
+<h2 id="worker队列管理">worker队列管理</h2>
+
+<p>为了避免不可预期的并发度，所有异步执行的代码都应该在worker内执行，以便于管理并发度。</p>
+
+<p>代码位于 appsrv/workers.go</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#000">workerman</span> <span style="color:#ce5c00;font-weight:bold">:=</span> <span style="color:#000">appsrv</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">NewWorkerManager</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">parallel_cnt</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#a40000">…</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000">workerman</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Run</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">func</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span><span style="color:#a40000">…</span><span style="color:#000;font-weight:bold">},</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">)</span></code></pre></div>
+<h2 id="task-机制">Task 机制</h2>
+
+<p>云平台的异步耗时任务会放在 Task 机制里面去执行，比如创建虚拟机操作，用户提交了请求，region 控制器校验参数合格后，会记录数据到数据库，然后马上返回客户端对应的虚拟机记录，与此同时，会开始执行创建虚拟机的 task，这个 task 会立即在后台执行，会通过更新虚拟机 SGuest model 的状态和记录操作日志来表示执行的成功或失败。</p>
+
+<p>task 也是记录在数据库 tasks_tbl 里面的记录，对应的定义在: <a href="https://github.com/yunionio/onecloud/blob/master/pkg/cloudcommon/db/taskman/tasks.go" target="_blank">pkg/cloudcommon/db/taskman/tasks.go</a> 里面，数据结构如下:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#204a87;font-weight:bold">type</span> <span style="color:#000">STaskManager</span> <span style="color:#204a87;font-weight:bold">struct</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SResourceBaseManager</span>
+    
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">var</span> <span style="color:#000">TaskManager</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">STaskManager</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000">init</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#000">TaskManager</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">STaskManager</span><span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">SResourceBaseManager</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">NewResourceBaseManager</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">STask</span><span style="color:#000;font-weight:bold">{},</span> <span style="color:#4e9a06">&#34;tasks_tbl&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;task&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;tasks&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000">TaskManager</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetVirtualObject</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">TaskManager</span><span style="color:#000;font-weight:bold">)</span>
+    
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">type</span> <span style="color:#000">STask</span> <span style="color:#204a87;font-weight:bold">struct</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SResourceBase</span>
+
+    <span style="color:#000">Id</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;36&#34; charset:&#34;ascii&#34; primary:&#34;true&#34; list:&#34;user&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">36</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">charset</span><span style="color:#000;font-weight:bold">=</span><span style="color:#a40000">&#39;</span><span style="color:#000">ascii</span><span style="color:#a40000">&#39;</span><span style="color:#000;font-weight:bold">),</span> <span style="color:#000">primary_key</span><span style="color:#000;font-weight:bold">=</span><span style="color:#000">True</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">default</span><span style="color:#000;font-weight:bold">=</span><span style="color:#000">get_uuid</span><span style="color:#000;font-weight:bold">)</span>
+
+    <span style="color:#000">ObjName</span>  <span style="color:#204a87;font-weight:bold">string</span>                   <span style="color:#4e9a06">`width:&#34;128&#34; charset:&#34;utf8&#34; nullable:&#34;false&#34; list
+</span><span style="color:#4e9a06">:&#34;user&#34;`</span>               <span style="color:#8f5902;font-style:italic">//  Column(VARCHAR(128, charset=&#39;utf8&#39;), nullable=False)
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#000">ObjId</span>    <span style="color:#204a87;font-weight:bold">string</span>                   <span style="color:#4e9a06">`width:&#34;128&#34; charset:&#34;ascii&#34; nullable:&#34;false&#34; lis
+</span><span style="color:#4e9a06">t:&#34;user&#34; index:&#34;true&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(ID_LENGTH, charset=&#39;ascii&#39;), nullable=False)
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#000">TaskName</span> <span style="color:#204a87;font-weight:bold">string</span>                   <span style="color:#4e9a06">`width:&#34;64&#34; charset:&#34;ascii&#34; nullable:&#34;false&#34; list
+</span><span style="color:#4e9a06">:&#34;user&#34;`</span>               <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(64, charset=&#39;ascii&#39;), nullable=False)
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#000">UserCred</span> <span style="color:#000">mcclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TokenCredential</span> <span style="color:#4e9a06">`width:&#34;1024&#34; charset:&#34;utf8&#34; nullable:&#34;false&#34; get
+</span><span style="color:#4e9a06">:&#34;user&#34;`</span>               <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(1024, charset=&#39;ascii&#39;), nullable=False)
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#8f5902;font-style:italic">// OwnerCred string `width:&#34;512&#34; charset:&#34;ascii&#34; nullable:&#34;true&#34;` // Column(VARCHAR
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">512</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">charset</span><span style="color:#000;font-weight:bold">=</span><span style="color:#a40000">&#39;</span><span style="color:#000">ascii</span><span style="color:#a40000">&#39;</span><span style="color:#000;font-weight:bold">),</span> <span style="color:#000">nullable</span><span style="color:#000;font-weight:bold">=</span><span style="color:#000">True</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000">Params</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONDict</span> <span style="color:#4e9a06">`charset:&#34;utf8&#34; length:&#34;medium&#34; nullable:&#34;false&#34; get:&#34;us
+</span><span style="color:#4e9a06">er&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(MEDIUMTEXT(charset=&#39;ascii&#39;), nullable=False)
+</span><span style="color:#8f5902;font-style:italic"></span>
+    <span style="color:#000">Stage</span> <span style="color:#204a87;font-weight:bold">string</span> <span style="color:#4e9a06">`width:&#34;64&#34; charset:&#34;ascii&#34; nullable:&#34;false&#34; default:&#34;on_init&#34; list:&#34;u
+</span><span style="color:#4e9a06">ser&#34;`</span> <span style="color:#8f5902;font-style:italic">// Column(VARCHAR(64, charset=&#39;ascii&#39;), nullable=False, default=&#39;on_init&#39;)
+</span><span style="color:#8f5902;font-style:italic"></span>
+    <span style="color:#000">taskObject</span>  <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IStandaloneModel</span>   <span style="color:#4e9a06">`ignore:&#34;true&#34;`</span>
+    <span style="color:#000">taskObjects</span> <span style="color:#000;font-weight:bold">[]</span><span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IStandaloneModel</span> <span style="color:#4e9a06">`ignore:&#34;true&#34;`</span>
+<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#ce5c00;font-weight:bold">......</span></code></pre></div>
+<ul>
+<li>Id: STask 里面的 Id 是该 task 记录的 Id</li>
+<li>ObjId: 对应资源对象的 Id，用于记录执行该 task 的对应操作的资源，比如某台虚拟机、磁盘的 Id</li>
+<li>UserCred: 存储执行 task 的用户信息</li>
+<li>Params: 执行 task 的参数</li>
+<li>TaskName: 对应 task 的名称</li>
+<li>Stage: task 执行的阶段，默认为 OnInit</li>
+</ul>
+
+<h3 id="举例-2">举例</h3>
+
+<p>以虚拟机关机这个操作来举例:</p>
+
+<ul>
+<li><p>客户端发起 POST /servers/&lt;server_id&gt;/stop 请求后，通过服务框架会执行 <code>func (self *SGuest) PerformStop</code> 函数，代码片段如下(位于: <a href="https://github.com/yunionio/onecloud/blob/2003c44264f1a244f32fd0584e7ce0d23df78705/pkg/compute/models/guest_actions.go#L2357" target="_blank">pkg/compute/models/guest_actions.go</a>):</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">PerformStop</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span> <span style="color:#000">mcclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TokenCredential</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">query</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">,</span>
+	<span style="color:#000">data</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">error</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+	<span style="color:#8f5902;font-style:italic">// XXX if is force, force stop guest
+</span><span style="color:#8f5902;font-style:italic"></span>	<span style="color:#204a87;font-weight:bold">var</span> <span style="color:#000">isForce</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">QueryBoolean</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;is_force&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">false</span><span style="color:#000;font-weight:bold">)</span>
+	<span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">isForce</span> <span style="color:#ce5c00;font-weight:bold">||</span> <span style="color:#000">utils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IsInStringArray</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Status</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000;font-weight:bold">[]</span><span style="color:#204a87;font-weight:bold">string</span><span style="color:#000;font-weight:bold">{</span><span style="color:#000">api</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">VM_RUNNING</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">api</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">VM_STOP_FAILED</span><span style="color:#000;font-weight:bold">})</span> <span style="color:#000;font-weight:bold">{</span>
+		<span style="color:#204a87;font-weight:bold">return</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">StartGuestStopTask</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">isForce</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">)</span>
+	<span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">else</span> <span style="color:#000;font-weight:bold">{</span>
+		<span style="color:#204a87;font-weight:bold">return</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">httperrors</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">NewInvalidStatusError</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Cannot stop server in status %s&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Status</span><span style="color:#000;font-weight:bold">)</span>
+	<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span></code></pre></div></li>
+
+<li><p>SGuest 会执行 self.StartGuestStopTask 函数，该函数会去调用虚拟机不同的 Driver 执行关机操作</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#8f5902;font-style:italic">// pkg/compute/models/guest_actions.go
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">StartGuestStopTask</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span> <span style="color:#000">mcclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TokenCredential</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">isForce</span> <span style="color:#204a87;font-weight:bold">bool</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">parentTaskId</span> <span style="color:#204a87;font-weight:bold">string</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#204a87;font-weight:bold">error</span> <span style="color:#000;font-weight:bold">{</span>
+		<span style="color:#ce5c00;font-weight:bold">......</span>
+		<span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">GetDriver</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">StartGuestStopTask</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">params</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">parentTaskId</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#8f5902;font-style:italic">// pkg/compute/guestdrivers/virtualization.go
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">import</span> <span style="color:#4e9a06">&#34;yunion.io/x/onecloud/pkg/cloudcommon/db/taskman&#34;</span>
+<span style="color:#ce5c00;font-weight:bold">......</span>
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">SVirtualizedGuestDriver</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">StartGuestStopTask</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span> <span style="color:#000">mcclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TokenCredential</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">params</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONDict</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">parentTaskId</span> <span style="color:#204a87;font-weight:bold">string</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#204a87;font-weight:bold">error</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#000">task</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">err</span> <span style="color:#ce5c00;font-weight:bold">:=</span> <span style="color:#000">taskman</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TaskManager</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">NewTask</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;GuestStopTask&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">userCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">params</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">parentTaskId</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">err</span> <span style="color:#ce5c00;font-weight:bold">!=</span> <span style="color:#204a87;font-weight:bold">nil</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">err</span>
+<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000">task</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ScheduleRun</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#204a87;font-weight:bold">return</span> <span style="color:#204a87;font-weight:bold">nil</span>
+<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#ce5c00;font-weight:bold">......</span></code></pre></div></li>
+
+<li><p><strong>taskman.TaskManager.NewTask(ctx, &ldquo;GuestStopTask&rdquo;, &hellip;)</strong> 这里面的 GuestStopTask 对应 <a href="https://github.com/yunionio/onecloud/blob/master/pkg/compute/tasks/guest_stop_task.go" target="_blank">pkg/compute/tasks/guest_stop_task.go</a> 里面的 GuestStopTask，是通过 taskman 里面维护的一个 map 查找的。</p></li>
+
+<li><p><strong>task.ScheduleRun(nil)</strong> 会开始执行对应的 Task，默认会从 task 的默认 Stage OnInit 函数开始执行，所以通过 task 机制就会执行到 GuestStopTask.OnInit 函数。OnInit 函数最终会调用对应虚拟机的 driver 执行 RequestStopOnHost 函数并更新设置自己的 Stage 为 OnMasterStopTaskComplete。</p></li>
+
+<li><p>对于虚拟机来说 RequestStopOnHost 函数会请求虚拟机所在的 host agent 关闭虚拟机，关机成功后会回调 region task 框架，该框架会根据 taskId 从数据库 load 回来 GuestStopTask，接着它设置的 Stage OnMasterStopTaskComplete 执行。</p></li>
+</ul>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+<blockquote>
+<p>这里失败会自动调用 OnGuestStopTaskCompleteFailed 函数，所以编写对应 task stage 函数时如果写 &lt;OnSometingComplete&gt; 函数时，必须也同时写 &lt;OnSometingCompleteFailed&gt; 函数来处理失败情况。</p>
+</blockquote>
+</div>
+
+
+<ul>
+<li><p>如果成功关机，OnMasterStopTaskComplete 调用 OnGuestStopTaskComplete 函数，该函数会把虚拟机的状态设置为 ready，并记录一条关机操作日志；如果失败会调用 OnGuestStopTaskCompleteFailed 函数，该函数会虚拟机状态设置为关机失败，并记录失败的原因。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">GuestStopTask</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">OnInit</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">obj</span> <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IStandaloneModel</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">:=</span> <span style="color:#000">obj</span><span style="color:#000;font-weight:bold">.(</span><span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">OpsLog</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">LogEvent</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ACT_STOPPING</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">UserCred</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">stopGuest</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">GuestStopTask</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">stopGuest</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#000">host</span> <span style="color:#ce5c00;font-weight:bold">:=</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">GetHost</span><span style="color:#000;font-weight:bold">()</span>
+<span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">host</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#204a87;font-weight:bold">nil</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">OnGuestStopTaskCompleteFailed</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">NewString</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;no associated host&#34;</span><span style="color:#000;font-weight:bold">))</span>
+    <span style="color:#204a87;font-weight:bold">return</span>
+<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">!</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IsSubtask</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetStatus</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">UserCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">api</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">VM_STOPPING</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetStage</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;OnMasterStopTaskComplete&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">nil</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000">err</span> <span style="color:#ce5c00;font-weight:bold">:=</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">GetDriver</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">RequestStopOnHost</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">host</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#ce5c00;font-weight:bold">......</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">GuestStopTask</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">OnMasterStopTaskComplete</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+  <span style="color:#ce5c00;font-weight:bold">......</span>
+  <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">OnGuestStopTaskComplete</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">GuestStopTask</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">OnMasterStopTaskCompleteFailed</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">obj</span> <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">IStandaloneModel</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">reason</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">:=</span> <span style="color:#000">obj</span><span style="color:#000;font-weight:bold">.(</span><span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">OnGuestStopTaskCompleteFailed</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">reason</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">GuestStopTask</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">OnGuestStopTaskComplete</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#ce5c00;font-weight:bold">......</span>
+<span style="color:#000">guest</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetStatus</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">UserCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">api</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">VM_READY</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#ce5c00;font-weight:bold">......</span>
+<span style="color:#000">logclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">AddActionLogWithStartable</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">logclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ACT_VM_STOP</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Us</span>
+<span style="color:#000">erCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">true</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">func</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">GuestStopTask</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">OnGuestStopTaskCompleteFailed</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Context</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">models</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SGuest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">reason</span> <span style="color:#000">jsonutils</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">JSONObject</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#ce5c00;font-weight:bold">......</span>
+<span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">OpsLog</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">LogEvent</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">db</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ACT_STOP_FAIL</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">reason</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">String</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">UserCred</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">SetStageFailed</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ctx</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">reason</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">String</span><span style="color:#000;font-weight:bold">())</span>
+<span style="color:#000">logclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">AddActionLogWithStartable</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">self</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">guest</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">logclient</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ACT_VM_STOP</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">reason</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">String</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">self</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">UserCred</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">false</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span></code></pre></div></li>
+</ul>
+
+<h2 id="如何增加一个新的服务">如何增加一个新的服务</h2>
+
+<ul>
+<li>在keystone注册一个服务启用用的账户</li>
+<li>在keystone注册service和endpoint</li>
+<li>参考 onecloud/pkg/logger实现服务代码</li>
+<li>为服务准备一个配置文件，包含以下基础信息</li>
+</ul>
+
+<p>假设服务名为 svc，用户和密码为 svcuser, svcuserpassword，服务监听地址为: <a href="http://localhost:8866" target="_blank">http://localhost:8866</a>, region 为 LocalTest，对应操作如下:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建 service</span>
+$ climc service-create --enabled svc svc
+<span style="color:#8f5902;font-style:italic"># 创建 endpoint，对应的 service 为 svc</span>
+$ climc endpoint-create svc LocalTest internal http://localhost:8866
+<span style="color:#8f5902;font-style:italic"># 创建 user</span>
+$ climc user-create --password svcuserpassword --enabled svcuser
+<span style="color:#8f5902;font-style:italic"># 把 user 加入 system 项目</span>
+$ climc project-add-user system svcuser admin</code></pre></div>
+<p>配置信息如下</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">region<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>LocalTest<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">8866</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>auth_url<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>https<span style="color:#000;font-weight:bold">:</span>//&lt;keystone_url&gt;<span style="color:#000;font-weight:bold">:</span><span style="color:#0000cf;font-weight:bold">35357</span>/v3<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>admin_user<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>svcuser<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>admin_password<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>svcuserpassword<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>admin_tenant_name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>system</code></pre></div>
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 13.08.2019: <a  href="https://github.com/yunionio/docs/commit/6844a40af27768f5a9bb46c2782180c219fee3b1">添加 ha 部署，服务框架介绍的文档 (6844a40)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src="/js/main.min.7b50e46a4d678dead3e0004b8f665cd640085d2539954f51d57c7346b9a92d74.js" integrity="sha256-e1Dkak1njerT4ABLj2Zc1kAIXSU5lU9R1XxzRrmpLXQ="></script>
+
+
+
+  </body>
+</html>

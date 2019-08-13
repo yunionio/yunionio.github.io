@@ -14,15 +14,15 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57+08:00" />
-<meta property="article:modified_time" content="2019-08-07T05:25:03+08:00" /><meta property="og:site_name" content="Yunion Onecloud Documentation" />
+<meta property="article:modified_time" content="2019-08-13T17:01:05+08:00" /><meta property="og:site_name" content="Yunion Onecloud Documentation" />
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
 ">
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-08-07T05:25:03&#43;08:00" />
-<meta itemprop="wordCount" content="818">
+<meta itemprop="dateModified" content="2019-08-13T17:01:05&#43;08:00" />
+<meta itemprop="wordCount" content="893">
 
 
 
@@ -36,8 +36,8 @@
 
 
 
-<link rel="preload" href="/scss/main.min.9896a3afcf5821210b76a4496e79cc02c4d4b4c61245e13e18ac55becab8720a.css" as="style">
-<link href="/scss/main.min.9896a3afcf5821210b76a4496e79cc02c4d4b4c61245e13e18ac55becab8720a.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.27e681223735aeec3e06c090e21d3a44d1070a2c3a42528a75f13d0140c8388f.css" as="style">
+<link href="/scss/main.min.27e681223735aeec3e06c090e21d3a44d1070a2c3a42528a75f13d0140c8388f.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -145,6 +145,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
       
       
@@ -176,11 +182,29 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发贡献</a>
+    <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
   </li>
   <ul>
     <li class="collapse " id="docs-contribute">
       
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-contrib" href="/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-services" href="/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-framework" href="/docs/contribute/framework/">后端服务框架</a>
       
       
     </li>
@@ -823,6 +847,16 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysconfig/modules/ipvs.m
 $ chmod <span style="color:#0000cf;font-weight:bold">755</span> /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> bash /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> lsmod <span style="color:#000;font-weight:bold">|</span> grep ip_vs</code></pre></div>
 <h2 id="部署集群">部署集群</h2>
 
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+<blockquote>
+<p>如果要部署高可用集群，请先搭建负载均衡集群，参考 <a href="/docs/setup/controlplane-ha">部署 HA 环境</a>。</p>
+</blockquote>
+</div>
+
+
 <h3 id="安装部署工具">安装部署工具</h3>
 
 <p>先安装部署工具 ocadm 和云平台的命令行工具 climc:</p>
@@ -838,17 +872,43 @@ $ chmod a+x /opt/yunion/bin/ocadm</code></pre></div>
 <h3 id="部署-kubernetes-集群">部署 kubernetes 集群</h3>
 
 <p>接下来会现在当前节点启动 v1.14.3 的 kubernetes 服务，然后部署 OneCloud 控制节点相关的服务到 kubernetes 集群。</p>
+
+<p>拉取必要的 docker 镜像</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm config images pull</code></pre></div>
+<p>使用 ocadm 部署 kubernetes 集群</p>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+<blockquote>
+<p>如果要进行高可用部署，并已经搭建好了负载均衡集群，需要在 <code>ocadm init</code> 命令加上 <code>--control-plane-endpoint &lt;vip&gt;:6443</code> 参数，告诉 kubernetes 集群前端的 LoadBalancer vip，之后生成的配置就会都用这个 vip 当做控制节点的入口。</p>
+</blockquote>
+</div>
+
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 假设 mariadb 部署在本地，如果是使用已有的数据库，请改变对应的 ip</span>
 $ <span style="color:#000">MYSQL_HOST</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
 
-<span style="color:#8f5902;font-style:italic"># 拉取必要的 docker 镜像</span>
-$ ocadm config images pull
+<span style="color:#8f5902;font-style:italic"># 如果是高可用部署，记得在设置 EXTRA_OPT=&#39; --control-plane-endpoint 10.168.222.18:6443&#39;</span>
+$ <span style="color:#000">EXTRA_OPT</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;&#34;</span>
+$ <span style="color:#8f5902;font-style:italic">#EXTRA_OPT=&#39; --control-plane-endpoint 10.168.222.18:6443&#39;</span>
 
 <span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 onecloud 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成</span>
-$ ocadm init --mysql-host <span style="color:#000">$MYSQL_HOST</span> --mysql-user root --mysql-password <span style="color:#000">$MYSQL_PASSWD</span>
+$ ocadm init --mysql-host <span style="color:#000">$MYSQL_HOST</span> --mysql-user root --mysql-password <span style="color:#000">$MYSQL_PASSWD</span> <span style="color:#000">$EXTRA_OPT</span>
+
 ...
 Your Kubernetes and Onecloud control-plane has initialized successfully!
 ...</code></pre></div>
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+<blockquote>
+<p>kubernetes 高可用部署需要 3 个节点，主要是 etcd 需要至少 3 个节点组成高可用集群。如果是高可用部署，请在另外两个节点执行 <code>ocadm join --control-plane &lt;vip&gt;:6443</code> 部署控制服务，join 的另外两个节点会自动和当前的控制节点组成高可用集群。参考: <a href="/docs/setup/components/#%E5%8A%A0%E5%85%A5-controlplane">加入控制节点</a></p>
+</blockquote>
+</div>
+
+
 <p>kubernetes 集群部署完成后，通过以下命令来确保相关的 pod (容器) 都已经启动, 变成 running 的状态。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#204a87">export</span> <span style="color:#000">KUBECONFIG</span><span style="color:#ce5c00;font-weight:bold">=</span>/etc/kubernetes/admin.conf
 $ kubectl get pods --all-namespaces
@@ -901,10 +961,19 @@ $ ocadm cluster rcadmin
 <span style="color:#204a87">export</span> <span style="color:#000">OS_PROJECT_NAME</span><span style="color:#ce5c00;font-weight:bold">=</span>system
 <span style="color:#204a87">export</span> <span style="color:#000">YUNION_INSECURE</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87">true</span>
 <span style="color:#204a87">export</span> <span style="color:#000">OS_REGION_NAME</span><span style="color:#ce5c00;font-weight:bold">=</span>region0
-<span style="color:#204a87">export</span> <span style="color:#000">OS_ENDPOINT_TYPE</span><span style="color:#ce5c00;font-weight:bold">=</span>publicURL
+<span style="color:#204a87">export</span> <span style="color:#000">OS_ENDPOINT_TYPE</span><span style="color:#ce5c00;font-weight:bold">=</span>publicURL</code></pre></div>
 
-<span style="color:#8f5902;font-style:italic"># 测试链接</span>
-$ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>ocadm cluster rcadmin<span style="color:#ce5c00;font-weight:bold">)</span>
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+<blockquote>
+<p>如果是高可用部署，这些 endpoint 的 public url 会是 vip，如果要在 kubernetes 集群外访问需要到 haproxy 节点上添加对应的 frontend 和 backend，其中frontend的端口对应 endpoint 里面的端口，backend 对应 3 个 controlplane node 的 ip 和对应端口。</p>
+</blockquote>
+</div>
+
+
+<p>测试链接</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>ocadm cluster rcadmin<span style="color:#ce5c00;font-weight:bold">)</span>
 $ climc endpoint-list
 +----------------------------------+-----------+----------------------------------+----------------------------------+-----------+---------+
 <span style="color:#000;font-weight:bold">|</span>                ID                <span style="color:#000;font-weight:bold">|</span> Region_ID <span style="color:#000;font-weight:bold">|</span>            Service_ID            <span style="color:#000;font-weight:bold">|</span>               URL                <span style="color:#000;font-weight:bold">|</span> Interface <span style="color:#000;font-weight:bold">|</span> Enabled <span style="color:#000;font-weight:bold">|</span>
@@ -980,7 +1049,7 @@ $ climc endpoint-list
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 07.08.2019: <a  href="https://github.com/yunionio/docs/commit/25c8c3f1e528964a20b688d0f7b2b648e642d4a8">add ocadm ipvs setup (25c8c3f)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 13.08.2019: <a  href="https://github.com/yunionio/docs/commit/6844a40af27768f5a9bb46c2782180c219fee3b1">添加 ha 部署，服务框架介绍的文档 (6844a40)</a>
 </div>
 </div>
 
@@ -988,52 +1057,7 @@ $ climc endpoint-list
           </main>
         </div>
       </div>
-      <footer class="home-footer">
-   <div class="items">
-       <div>
-           融合云
-       </div>
-       <span>
-           =
-       </span>
-
-       <div>
-           Embedded<br/>
-           Private Cloud
-       </div>
-       <span>
-           +
-       </span>
-
-       <div>
-           Unified API<br/>
-           统一API
-       </div>
-       <span>
-           +
-       </span>
-
-       <div>
-           Unified Identity<br/>
-           统一认证
-       </div>
-       <span>
-           +
-       </span>
-
-       <div>
-           Unified Networking<br/>
-           融合网络
-       </div>
-       <span>
-           +
-       </span>
-
-       <div>
-           Kubernetes
-       </div>
-   </div>
-</footer>
+      
 
     </div>
     

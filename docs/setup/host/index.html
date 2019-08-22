@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.56.3" />
+<meta name="generator" content="Hugo 0.57.2" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -13,14 +13,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/setup/host/" />
-<meta property="article:modified_time" content="2019-07-31T17:03:14+08:00" /><meta property="og:site_name" content="Yunion Onecloud Documentation" />
+<meta property="article:modified_time" content="2019-08-22T18:06:01+08:00" /><meta property="og:site_name" content="Yunion Onecloud Documentation" />
 <meta itemprop="name" content="计算节点">
 <meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2019-07-31T17:03:14&#43;08:00" />
-<meta itemprop="wordCount" content="824">
+<meta itemprop="dateModified" content="2019-08-22T18:06:01&#43;08:00" />
+<meta itemprop="wordCount" content="828">
 
 
 
@@ -599,6 +599,52 @@
 
       
       
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/monitor/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Monitor</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-monitor">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/meter/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Meter</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-meter">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
     </li>
   </ul>
 </ul>
@@ -808,29 +854,31 @@ $ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/g
 </span><span style="color:#4e9a06"></span>  oniguruma parted pciutils spice spice-protocol sshpass sysstat <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  tcpdump telegraf usbredir vmware-vddk xfsprogs <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-host yunion-host-image yunion-sdnagent <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kernel-3.10.0-862.14.4.el7.yn20190116 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-862.14.4.el7.yn20190116 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-862.14.4.el7.yn20190116 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kmod-openvswitch-2.9.3-1.el7 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  openvswitch-2.9.3-1
+</span><span style="color:#4e9a06"></span>  kernel-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kmod-openvswitch-2.9.5-1.el7 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  openvswitch-2.9.5-1
 
 <span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核</span>
 $ reboot
 
 <span style="color:#8f5902;font-style:italic"># 重启完成后，查看当前节点内核信息，确保为 yn 内核</span>
 $ uname -r
-<span style="color:#0000cf;font-weight:bold">3</span>.10.0-862.14.4.el7.yn20190116.x86_64</code></pre></div>
+<span style="color:#0000cf;font-weight:bold">3</span>.10.0-862.14.4.el7.yn20190712.x86_64</code></pre></div>
 <h2 id="控制节点操作">控制节点操作</h2>
 
-<h3 id="创建-host-服务的认证用户">创建 host 服务的认证用户</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#204a87">source</span> /etc/yunion/rc_admin
+<p>以下操作在控制节点进行。</p>
 
-$ cat /etc/yunion/rc_admin
+<h3 id="创建-host-服务的认证用户">创建 host 服务的认证用户</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm cluster rcadmin
 <span style="color:#8f5902;font-style:italic"># 这个是云平台 keystone 的认证地址，后面配置会用到</span>
 <span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://10.168.222.216:5000/v3
 ...
 <span style="color:#8f5902;font-style:italic"># 这个 region0 也会在配置中用到</span>
 <span style="color:#204a87">export</span> <span style="color:#000">OS_REGION_NAME</span><span style="color:#ce5c00;font-weight:bold">=</span>region0
+
+$ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>ocadm cluster rcadmin<span style="color:#ce5c00;font-weight:bold">)</span>
 
 <span style="color:#8f5902;font-style:italic"># 这里记住自己的用户密码，后面配置会用到</span>
 $ climc user-create --enabled --password hostadminpasswd hostadmin
@@ -1040,7 +1088,7 @@ https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;fon
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 31.07.2019: <a  href="https://github.com/yunionio/docs/commit/3ccbedb62b04a3dae62f8cdc0827bdb364e2119e">update content for docsy (3ccbedb)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 22.08.2019: <a  href="https://github.com/yunionio/docs/commit/e5228684a6cb0fdb0a132f01c5487cc969f5aa9e">update host setup kernel docs (e522868)</a>
 </div>
 </div>
 

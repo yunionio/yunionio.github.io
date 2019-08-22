@@ -807,29 +807,31 @@ $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma parted pciutils spice spice-protocol sshpass sysstat &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  tcpdump telegraf usbredir vmware-vddk xfsprogs &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-host yunion-host-image yunion-sdnagent &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-862.14.4.el7.yn20190116 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-862.14.4.el7.yn20190116 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-862.14.4.el7.yn20190116 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.3-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.3-1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-862.14.4.el7.yn20190712 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-862.14.4.el7.yn20190712 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-862.14.4.el7.yn20190712 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.5-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.5-1
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装完成后需要重启进入我们的内核&lt;/span&gt;
 $ reboot
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启完成后，查看当前节点内核信息，确保为 yn 内核&lt;/span&gt;
 $ uname -r
-&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-862.14.4.el7.yn20190116.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-862.14.4.el7.yn20190712.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;控制节点操作&#34;&gt;控制节点操作&lt;/h2&gt;
 
-&lt;h3 id=&#34;创建-host-服务的认证用户&#34;&gt;创建 host 服务的认证用户&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; /etc/yunion/rc_admin
+&lt;p&gt;以下操作在控制节点进行。&lt;/p&gt;
 
-$ cat /etc/yunion/rc_admin
+&lt;h3 id=&#34;创建-host-服务的认证用户&#34;&gt;创建 host 服务的认证用户&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ ocadm cluster rcadmin
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这个是云平台 keystone 的认证地址，后面配置会用到&lt;/span&gt;
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_AUTH_URL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;https://10.168.222.216:5000/v3
 ...
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这个 region0 也会在配置中用到&lt;/span&gt;
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_REGION_NAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;region0
+
+$ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;ocadm cluster rcadmin&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这里记住自己的用户密码，后面配置会用到&lt;/span&gt;
 $ climc user-create --enabled --password hostadminpasswd hostadmin

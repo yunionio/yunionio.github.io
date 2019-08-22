@@ -1,0 +1,565 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Yunion Onecloud Documentation – 操作管理</title>
+    <link>/docs/howto/</link>
+    <description>Recent content in 操作管理 on Yunion Onecloud Documentation</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/howto/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: 命令行工具</title>
+      <link>/docs/howto/climc/</link>
+      <pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate>
+      
+      <guid>/docs/howto/climc/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;云平台的命令行管理工具是 &lt;code&gt;climc&lt;/code&gt;, 可以通过该工具向后端各个服务发送API请求, 实现对资源的操控。&lt;/p&gt;
+
+&lt;h2 id=&#34;安装&#34;&gt;安装&lt;/h2&gt;
+
+&lt;p&gt;可以通过 yum 或者源码编译的方式安装climc。&lt;/p&gt;
+
+&lt;h3 id=&#34;rpm-安装&#34;&gt;RPM 安装&lt;/h3&gt;
+
+&lt;p&gt;添加 yunion 的 yum 源，如果已经添加可以忽略这一步。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[yunion]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Packages for Yunion Multi-Cloud Platform
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-2.10
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;sslverify=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;failovermethod=priority
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgcheck=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;安装 climc&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo yum install -y yunion-climc
+$ ls -alh /opt/yunion/bin/climc
+-rwxr-xr-x &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root 24M Jul &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;18&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;19&lt;/span&gt;:04 /opt/yunion/bin/climc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;源码编译安装&#34;&gt;源码编译安装&lt;/h3&gt;
+
+&lt;p&gt;首先需要搭建 go 的开发环境，然后 clone 代码，参考: &lt;a href=&#34;/contribute/&#34;&gt;开发贡献&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 climc&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
+$ make cmd/climc
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 等待编译完成后，climc 在 _output/bin 目录下&lt;/span&gt;
+$ ls -alh _output/bin/climc
+-rwxr-xr-x &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; lzx lzx 25M Jul &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;15&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;17&lt;/span&gt;:10 _output/bin/climc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;可以根据自己的需要，将编译好的 climc 放到对应的目录，或者直接写 alias 对应到 $GOPATH/src/yunion.io/x/onecloud/_output/bin/climc 。&lt;/p&gt;
+
+&lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
+
+&lt;p&gt;安装好 climc 后，可以将对应的可执行目录加入到 PATH 环境变量，下面假设 climc 所在的目录是 /opt/yunion/bin 。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 根据自己的需要加到 bash 或者 zsh 配置文件里面&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;export PATH=$PATH:/opt/yunion/bin&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc
+$ climc --help&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;认证配置&#34;&gt;认证配置&lt;/h3&gt;
+
+&lt;p&gt;climc 请求云平台后端服务的流程如下:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;通过配置信息，使用用户名密码从 keystone 获取 token&lt;/li&gt;
+&lt;li&gt;token 中包含了后端服务的 endpoint 地址&lt;/li&gt;
+&lt;li&gt;climc 将对应资源的 CURD 请求发往所属的后端服务&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;所以在操作资源前，我们需要通过环境变量告诉 climc 想要操作的云平台。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将认证信息保存到文件中，方便 source 使用&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_admin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户名
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_USERNAME=sysadmin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户所属域名称(如果为Default域,可以省略)
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_DOMAIN_NAME=Default
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PASSWORD=***
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户所属项目名称
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PROJECT_NAME=system
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 项目所属域名称(如果为Default域,可以省略)
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PROJECT_DOMAIN=Default
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# keystone 认证地址
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_AUTH_URL=https://192.168.0.246:5000/v3
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 对应的 region
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_REGION_NAME=Beijing
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# source 认证环境变量&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/test_rc_admin
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 执行climc。例如，查看虚拟机列表&lt;/span&gt;
+$ climc server-list&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;注意: 如果执行 climc 时出现 &lt;em&gt;Error: Missing OS_AUTH_URL&lt;/em&gt; 的错误提示时，请 source 或设置认证云平台的环境变量。&lt;/p&gt;
+
+&lt;p&gt;可以通过查看 climc 的版本号来获取构建的信息。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc --version
+Yunion API client version:
+ &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;major&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;minor&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;gitVersion&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;v2.10.20190527.0-652-g80287c2e365949&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;gitBranch&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;feature/service-pprof&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;gitCommit&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;80287c2e3&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;gitTreeState&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;clean&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;buildDate&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;2019-07-15T09:10:07Z&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;goVersion&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;go1.12.7&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;compiler&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;gc&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;platform&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;linux/amd64&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;运行模式&#34;&gt;运行模式&lt;/h3&gt;
+
+&lt;p&gt;climc 有命令行运行和交互两种运行模式。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;命令行运行: 执行完对应的资源操作命令就退出，这种模式你知道自己在做什么，并且可以作为 bash function/script 的一部分。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 删除 server1, server2, server3&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; id in server1 server2 server3&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;do&lt;/span&gt;
+	climc server-update --delete &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$id&lt;/span&gt;
+	climc server-delete &lt;span style=&#34;color:#000&#34;&gt;$id&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;交互模式: 在 shell 输入 climc，就会进入交互模式，这种模式下有自动补全和参数提示。
+&lt;img src=&#34;images/climc-repl.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;子命令语法&#34;&gt;子命令语法&lt;/h3&gt;
+
+&lt;p&gt;云平台有很多资源，对应 climc 的子命令, 比如 &lt;code&gt;climc server-list&lt;/code&gt; 中的 &lt;code&gt;server-list&lt;/code&gt; 就是子命令，可以查询虚拟机的列表。通用格式如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;lt;Resource&amp;gt;-&amp;lt;Action&amp;gt;: Resource 表示资源, Action 表示行为&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;语法举例:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;server-delete: 删除虚拟机
+
+&lt;ul&gt;
+&lt;li&gt;server 是资源, delete 是行为&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;host-list: 查询宿主机列表
+
+&lt;ul&gt;
+&lt;li&gt;host 是资源, list 是行为&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;CRUD 举例:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;C&lt;/em&gt;: server-create, disk-create 创建资源&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;R&lt;/em&gt;: server-show, disk-list 查询资源&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;U&lt;/em&gt;: server-update, host-update 更新资源&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;D&lt;/em&gt;: server-delete, image-delete 删除资源&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;行为举例:&lt;/p&gt;
+
+&lt;p&gt;&lt;Resource&gt;-&lt;Action&gt; 中的 Action 会对应资源的操作，不同的资源会根据可进行的操作进行命名。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;server-migrate: migrate 表示迁移虚拟机&lt;/li&gt;
+&lt;li&gt;server-change-config: change-config 表示调整虚拟机配置&lt;/li&gt;
+&lt;li&gt;host-ipmi: ipmi 表示查询宿主机的 IPMI 信息&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;想要知道资源有哪些操作，可以进入交互模式补全查询。&lt;/p&gt;
+
+&lt;h3 id=&#34;使用帮助-help&#34;&gt;使用帮助 help&lt;/h3&gt;
+
+&lt;p&gt;climc 的子命令有很多参数，参数分为必填参数和可选参数，使用 &lt;code&gt;climc help &amp;lt;subcommand&amp;gt;&lt;/code&gt; 这种格式，&lt;strong&gt;help&lt;/strong&gt; 子命令会获取 &lt;subcommand&gt; 提供的参数和各个参数的解释。&lt;/p&gt;
+
+&lt;p&gt;比如我要查看 &lt;code&gt;image-upload&lt;/code&gt; 命令的参数和解释:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc &lt;span style=&#34;color:#204a87&#34;&gt;help&lt;/span&gt; image-upload
+...
+Upload a &lt;span style=&#34;color:#204a87&#34;&gt;local&lt;/span&gt; image
+
+Positional arguments:
+    &amp;lt;NAME&amp;gt;
+        Image Name
+    &amp;lt;FILE&amp;gt;
+        The &lt;span style=&#34;color:#204a87&#34;&gt;local&lt;/span&gt; image filename to Upload
+
+Optional arguments:
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;--private&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt;
+        Make image private
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;--format &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;raw,qcow2,iso,vmdk,docker,vhd&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}]&lt;/span&gt;
+        Image format
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;--protected&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt;
+...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;高级过滤-filter&#34;&gt;高级过滤 filter&lt;/h3&gt;
+
+&lt;p&gt;TODO&lt;/p&gt;
+
+&lt;h3 id=&#34;debug-模式&#34;&gt;Debug 模式&lt;/h3&gt;
+
+&lt;p&gt;如果想要知道 climc 操作资源时究竟和服务端发生了哪些请求，可以在子命令前面使用 &lt;em&gt;&amp;ndash;debug&lt;/em&gt; 参数，使用方式如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc --debug &amp;lt;Resource&amp;gt;-&amp;lt;Action&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;加上 &amp;ndash;debug 参数后，终端会有彩色的输出提示，比如 &lt;code&gt;climc --debug server-list&lt;/code&gt; 输出如下:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;images/climc-debug.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中 CURL 部分是可以直接粘贴出来在命令行执行的。&lt;/p&gt;
+
+&lt;h4 id=&#34;颜色约定&#34;&gt;颜色约定&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Request 使用黄色&lt;/li&gt;
+&lt;li&gt;CURL 使用蓝绿色&lt;/li&gt;
+&lt;li&gt;根据状态码显示不同颜色，可参考代码: &lt;a href=&#34;https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234&#34; target=&#34;_blank&#34;&gt;https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;在bash或zsh下的命令行参数提示补全&#34;&gt;在bash或zsh下的命令行参数提示补全&lt;/h4&gt;
+
+&lt;p&gt;climc支持bash或zsh的命令行参数自动提示补全。&lt;/p&gt;
+
+&lt;p&gt;下面以bash为例说明，在使用climc之前，执行如下命令初始化环境。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用bash命令行参数自动补全&lt;/span&gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;climc --completion bash&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;之后在bash中可以在输入climc命令后，通过tab获得命令行参数的提示。&lt;/p&gt;
+
+&lt;p&gt;为了方便使用，推荐将该命令放到$HOME/.bashrc或$HOME/.bash_profile中自动初始化环境。&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 镜像</title>
+      <link>/docs/howto/image/</link>
+      <pubDate>Fri, 19 Jul 2019 10:27:28 +0800</pubDate>
+      
+      <guid>/docs/howto/image/</guid>
+      <description>
+        
+        
+        &lt;ul&gt;
+&lt;li&gt;&lt;p&gt;镜像(image): 是用于新建云服务器(虚拟机)、裸金属(物理机)使用的模板文件，常用类型为 qcow2, vmdk, raw, vhd, iso。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;镜像服务(glance): 云平台的镜像服务叫做 glance，用于存储转换用户上传或外部导入的镜像，提供下载功能。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;缓存镜像(cached-image): 创建公/私有云虚拟机时，可以直接使用各个云平台已有的镜像，这些镜像不会存储在 glance，云平台只是保存元信息，创建机器时会直接使用。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;image 和 cached-image 两种资源的区别如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;image: glance 管理的镜像，由用户上传或者外部导入;&lt;/li&gt;
+&lt;li&gt;cached-image:
+
+&lt;ul&gt;
+&lt;li&gt;包括公有云和其他私有云的镜像，不由 glance 管理，一般在创建 OneCloud 之外的公/私有云主机的时候用到;&lt;/li&gt;
+&lt;li&gt;不提供创建接口，只能查询，刷新和删除;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 云主机</title>
+      <link>/docs/howto/server/</link>
+      <pubDate>Fri, 19 Jul 2019 10:26:40 +0800</pubDate>
+      
+      <guid>/docs/howto/server/</guid>
+      <description>
+        
+        
+        &lt;p&gt;云主机(server)指云平台管理的虚拟机和裸金属服务器。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;虚拟机: 又叫做云服务器，包括我们提供的 kvm 虚拟机、vmware、openstack 和各个公有云的虚拟机。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;裸金属: 云平台提供物理机(baremetal)装机功能，安装完操作系统并被云平台管理的服务器称为裸金属服务器。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;现在支持的主机和平台的对应关系如下：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;平台&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;kvm&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;onecloud 私有云虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;baremetal&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;onecloud 私有云裸金属&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;esxi&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;vmware 虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;openstack&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;openstack 私有云虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;zstack&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;zstack 私有云虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;aliyun&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;阿里云虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;qcloud&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;腾讯云虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;aws&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;AWS 虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;azure&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Azure 虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;huawei&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;华为云虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ucloud&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;UCloud 虚拟机&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 宿主机</title>
+      <link>/docs/howto/host/</link>
+      <pubDate>Wed, 17 Jul 2019 11:35:12 +0800</pubDate>
+      
+      <guid>/docs/howto/host/</guid>
+      <description>
+        
+        
+        &lt;p&gt;宿主机(host): 指运行虚拟机的机器，云平台的抽象的宿主机根据 hypervisor 字段判断不同平台的宿主机。现在支持的类型如下：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;平台&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;hypervisor&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;onecloud 私有云宿主机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;baremetal&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;onecloud 私有云物理机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;esxi&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;vmware 宿主机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;openstack&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;openstack 私有云宿主机&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;zstack&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;zstack 私有云宿主机&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 物理机</title>
+      <link>/docs/howto/baremetal/</link>
+      <pubDate>Wed, 10 Jul 2019 10:16:53 +0800</pubDate>
+      
+      <guid>/docs/howto/baremetal/</guid>
+      <description>
+        
+        
+        
+
+&lt;h1 id=&#34;术语解释&#34;&gt;术语解释&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Baremetal: 指尚未安装操作系统的服务器， 也叫作物理机&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E9%A2%84%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83&#34; target=&#34;_blank&#34;&gt;PXE (Preboot eXecution Environment)&lt;/a&gt;: 使用网络接口启动计算机的机制。这种机制不依赖本地数据存储设备（如硬盘）或本地已安装的操作系统，使用 DHCP 协议查找引导服务器并获取 IP，再通过 TFTP 协议下载初始引导程序和附加文件启动&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E8%AE%BE%E7%BD%AE%E5%8D%8F%E8%AE%AE&#34; target=&#34;_blank&#34;&gt;DHCP (Dynamic Host Configuration Protocol)&lt;/a&gt;: 动态主机设置协议是一个局域网的网络协议，使用UDP协议工作，为机器分配 IP&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E5%B0%8F%E5%9E%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE&#34; target=&#34;_blank&#34;&gt;TFTP (Trivial File Transfer Protocol)&lt;/a&gt;: 小型文件传输协议，使用UDP协议传输文件&lt;/li&gt;
+&lt;li&gt;DHCP Relay: 在不同子网和物理网段之间处理和转发dhcp信息的功能&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/IPMI&#34; target=&#34;_blank&#34;&gt;IPMI (Intelligent Platform Management Interface)&lt;/a&gt;：管理服务器硬件的标准，特性是独立于操作系统外自行运行，即使在缺少操作系统或系统管理软件、或受监控的系统关机但有接电源的情况下仍能远程管理系统，也能在操作系统引导后运行&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller&#34; target=&#34;_blank&#34;&gt;BMC (Baseboard management controller)&lt;/a&gt;: 基板管理控制器，支持行业标准的 IPMI 规范&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/Secure_Shell&#34; target=&#34;_blank&#34;&gt;SSH (Secure Shell)&lt;/a&gt;: 用于远程登录控制服务器&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/RAID&#34; target=&#34;_blank&#34;&gt;RAID (Redundant Array of Independent Disks)&lt;/a&gt;: 磁盘阵列，把多个硬盘组合成为一个逻辑扇区，操作系统只会把它当作一个硬盘&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Region Service: 云平台控制服务，提供 baremetal 相关 API&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Baremetal Agent: 云平台管理 baremetal 的服务&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Glance Service: 云平台镜像服务，提供物理机装机的 Image 镜像&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;裸金属服务器: baremetal 物理机安装操作系统后，在云平台创建的 server 的记录&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;宿主机: 可以运行云平台虚拟机的节点&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 网络</title>
+      <link>/docs/howto/network/</link>
+      <pubDate>Fri, 19 Jul 2019 10:27:40 +0800</pubDate>
+      
+      <guid>/docs/howto/network/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 负载均衡</title>
+      <link>/docs/howto/lb/</link>
+      <pubDate>Fri, 19 Jul 2019 10:27:52 +0800</pubDate>
+      
+      <guid>/docs/howto/lb/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 存储</title>
+      <link>/docs/howto/storage/</link>
+      <pubDate>Fri, 19 Jul 2019 20:48:20 +0800</pubDate>
+      
+      <guid>/docs/howto/storage/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 多云管理</title>
+      <link>/docs/howto/multicloud/</link>
+      <pubDate>Fri, 19 Jul 2019 20:54:24 +0800</pubDate>
+      
+      <guid>/docs/howto/multicloud/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 认证与权限</title>
+      <link>/docs/howto/auth/</link>
+      <pubDate>Fri, 19 Jul 2019 20:51:23 +0800</pubDate>
+      
+      <guid>/docs/howto/auth/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 容器集群</title>
+      <link>/docs/howto/container/</link>
+      <pubDate>Fri, 19 Jul 2019 20:56:33 +0800</pubDate>
+      
+      <guid>/docs/howto/container/</guid>
+      <description>
+        
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 资源调度</title>
+      <link>/docs/howto/scheduler/</link>
+      <pubDate>Thu, 11 Jul 2019 20:50:28 +0800</pubDate>
+      
+      <guid>/docs/howto/scheduler/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Monitor</title>
+      <link>/docs/howto/monitor/</link>
+      <pubDate>Fri, 19 Jul 2019 20:59:00 +0800</pubDate>
+      
+      <guid>/docs/howto/monitor/</guid>
+      <description>
+        
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Meter</title>
+      <link>/docs/howto/meter/</link>
+      <pubDate>Fri, 19 Jul 2019 20:58:54 +0800</pubDate>
+      
+      <guid>/docs/howto/meter/</guid>
+      <description>
+        
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

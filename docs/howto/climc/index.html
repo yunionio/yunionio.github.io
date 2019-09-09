@@ -715,17 +715,17 @@
 <li><a href="#使用">使用</a>
 <ul>
 <li><a href="#认证配置">认证配置</a></li>
-<li><a href="#运行模式">运行模式</a></li>
-<li><a href="#子命令语法">子命令语法</a></li>
-<li><a href="#使用帮助-help">使用帮助 help</a></li>
-<li><a href="#高级过滤-filter">高级过滤 filter</a></li>
-<li><a href="#debug-模式">Debug 模式</a>
-<ul>
-<li><a href="#颜色约定">颜色约定</a></li>
-<li><a href="#在bash或zsh下的命令行参数提示补全">在bash或zsh下的命令行参数提示补全</a></li>
 </ul></li>
 </ul></li>
-</ul></li>
+<li><a href="#将认证信息保存到文件中-方便-source-使用">将认证信息保存到文件中，方便 source 使用</a></li>
+<li><a href="#access-key">Access Key</a></li>
+<li><a href="#secret">Secret</a></li>
+<li><a href="#keystone-认证地址">keystone 认证地址</a></li>
+<li><a href="#对应的-region">对应的 region</a></li>
+<li><a href="#source-认证环境变量">source 认证环境变量</a></li>
+<li><a href="#执行climc-例如-查看虚拟机列表">执行climc。例如，查看虚拟机列表</a></li>
+<li><a href="#删除-server1-server2-server3">删除 server1, server2, server3</a></li>
+<li><a href="#启用bash命令行参数自动补全">启用bash命令行参数自动补全</a></li>
 </ul>
 </nav>
 
@@ -824,7 +824,16 @@ $ climc --help</code></pre></div>
 <li>climc 将对应资源的 CURD 请求发往所属的后端服务</li>
 </ol>
 
-<p>所以在操作资源前，我们需要通过环境变量告诉 climc 想要操作的云平台。</p>
+<p>所以在操作资源前，我们需要通过环境变量告诉 climc 想要操作的云平台和认证信息。</p>
+
+<p>目前climc支持两种认证方式：</p>
+
+<ul>
+<li>通过用户名／密码认证</li>
+<li>通过Access Key／Secret认证（从2.11开始支持）</li>
+</ul>
+
+<p>以下为用户名／密码认证的配置文件模板，通过OS_USERNAME, OS_DOMAIN_NAME, OS_PASSWORD, OS_PROJECT_NAME, OS_PROJECT_DOMAIN等字段指定用户的信息和项目的信息。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; ~/test_rc_admin
 </span><span style="color:#4e9a06"># 用户名
@@ -843,135 +852,189 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; ~/test_rc_admin
 </span><span style="color:#4e9a06">export OS_REGION_NAME=Beijing
 </span><span style="color:#4e9a06">EOF</span>
 
-<span style="color:#8f5902;font-style:italic"># source 认证环境变量</span>
-$ <span style="color:#204a87">source</span> ~/test_rc_admin
+以下为Access Key/Secret认证的配置文件模板，通过OS_ACCESS_KEY, OS_SECRET_KEY等两个字段指定用户的Access Key/secret。</code></pre></div>
+<p>bash</p>
 
-<span style="color:#8f5902;font-style:italic"># 执行climc。例如，查看虚拟机列表</span>
-$ climc server-list</code></pre></div>
-<p>注意: 如果执行 climc 时出现 <em>Error: Missing OS_AUTH_URL</em> 的错误提示时，请 source 或设置认证云平台的环境变量。</p>
+<h1 id="将认证信息保存到文件中-方便-source-使用">将认证信息保存到文件中，方便 source 使用</h1>
 
-<p>可以通过查看 climc 的版本号来获取构建的信息。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc --version
+<p>$ cat &lt;<EOF > ~/test_rc_admin</p>
+
+<h1 id="access-key">Access Key</h1>
+
+<p>export OS_ACCESS_KEY=0eaef71c5e804b468215982b11dcb4d3</p>
+
+<h1 id="secret">Secret</h1>
+
+<p>export OS_SECRET_KEY=RV******6bXo=</p>
+
+<h1 id="keystone-认证地址">keystone 认证地址</h1>
+
+<p>export OS_AUTH_URL=<a href="https://192.168.0.246:5000/v3" target="_blank">https://192.168.0.246:5000/v3</a></p>
+
+<h1 id="对应的-region">对应的 region</h1>
+
+<p>export OS_REGION_NAME=Beijing
+EOF</p>
+
+<p>获取用户在一个项目中的Access Key/Secret的方式有两种：
+1. 在web控制台，选择用户的Access Key管理页面新建
+2. 通过climc credential-create-aksk创建</p>
+
+<h1 id="source-认证环境变量">source 认证环境变量</h1>
+
+<p>$ source ~/test_rc_admin</p>
+
+<h1 id="执行climc-例如-查看虚拟机列表">执行climc。例如，查看虚拟机列表</h1>
+
+<p>$ climc server-list</p>
+
+<pre><code>
+注意: 如果执行 climc 时出现 *Error: Missing OS_AUTH_URL* 的错误提示时，请 source 或设置认证云平台的环境变量。
+
+可以通过查看 climc 的版本号来获取构建的信息。
+
+</code></pre>
+
+<p>bash
+$ climc &ndash;version
 Yunion API client version:
- <span style="color:#ce5c00;font-weight:bold">{</span>
-  <span style="color:#4e9a06">&#34;major&#34;</span>: <span style="color:#4e9a06">&#34;0&#34;</span>,
-  <span style="color:#4e9a06">&#34;minor&#34;</span>: <span style="color:#4e9a06">&#34;0&#34;</span>,
-  <span style="color:#4e9a06">&#34;gitVersion&#34;</span>: <span style="color:#4e9a06">&#34;v2.10.20190527.0-652-g80287c2e365949&#34;</span>,
-  <span style="color:#4e9a06">&#34;gitBranch&#34;</span>: <span style="color:#4e9a06">&#34;feature/service-pprof&#34;</span>,
-  <span style="color:#4e9a06">&#34;gitCommit&#34;</span>: <span style="color:#4e9a06">&#34;80287c2e3&#34;</span>,
-  <span style="color:#4e9a06">&#34;gitTreeState&#34;</span>: <span style="color:#4e9a06">&#34;clean&#34;</span>,
-  <span style="color:#4e9a06">&#34;buildDate&#34;</span>: <span style="color:#4e9a06">&#34;2019-07-15T09:10:07Z&#34;</span>,
-  <span style="color:#4e9a06">&#34;goVersion&#34;</span>: <span style="color:#4e9a06">&#34;go1.12.7&#34;</span>,
-  <span style="color:#4e9a06">&#34;compiler&#34;</span>: <span style="color:#4e9a06">&#34;gc&#34;</span>,
-  <span style="color:#4e9a06">&#34;platform&#34;</span>: <span style="color:#4e9a06">&#34;linux/amd64&#34;</span>
-<span style="color:#ce5c00;font-weight:bold">}</span></code></pre></div>
-<h3 id="运行模式">运行模式</h3>
+ {
+  &ldquo;major&rdquo;: &ldquo;0&rdquo;,
+  &ldquo;minor&rdquo;: &ldquo;0&rdquo;,
+  &ldquo;gitVersion&rdquo;: &ldquo;v2.10.20190527.0-652-g80287c2e365949&rdquo;,
+  &ldquo;gitBranch&rdquo;: &ldquo;feature/service-pprof&rdquo;,
+  &ldquo;gitCommit&rdquo;: &ldquo;80287c2e3&rdquo;,
+  &ldquo;gitTreeState&rdquo;: &ldquo;clean&rdquo;,
+  &ldquo;buildDate&rdquo;: &ldquo;2019-07-15T09:10:07Z&rdquo;,
+  &ldquo;goVersion&rdquo;: &ldquo;go1.12.7&rdquo;,
+  &ldquo;compiler&rdquo;: &ldquo;gc&rdquo;,
+  &ldquo;platform&rdquo;: &ldquo;linux/amd64&rdquo;
+}</p>
 
-<p>climc 有命令行运行和交互两种运行模式。</p>
+<pre><code>
+### 运行模式
 
-<ul>
-<li><p>命令行运行: 执行完对应的资源操作命令就退出，这种模式你知道自己在做什么，并且可以作为 bash function/script 的一部分。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 删除 server1, server2, server3</span>
-<span style="color:#204a87;font-weight:bold">for</span> id in server1 server2 server3<span style="color:#000;font-weight:bold">;</span> <span style="color:#204a87;font-weight:bold">do</span>
-	climc server-update --delete <span style="color:#204a87">enable</span> <span style="color:#000">$id</span>
-	climc server-delete <span style="color:#000">$id</span>
-<span style="color:#204a87;font-weight:bold">done</span></code></pre></div></li>
+climc 有命令行运行和交互两种运行模式。
 
-<li><p>交互模式: 在 shell 输入 climc，就会进入交互模式，这种模式下有自动补全和参数提示。
-<img src="images/climc-repl.png" alt="" /></p></li>
-</ul>
+- 命令行运行: 执行完对应的资源操作命令就退出，这种模式你知道自己在做什么，并且可以作为 bash function/script 的一部分。
 
-<h3 id="子命令语法">子命令语法</h3>
+</code></pre>
 
-<p>云平台有很多资源，对应 climc 的子命令, 比如 <code>climc server-list</code> 中的 <code>server-list</code> 就是子命令，可以查询虚拟机的列表。通用格式如下:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">&lt;Resource&gt;-&lt;Action&gt;: Resource 表示资源, Action 表示行为</code></pre></div>
-<p>语法举例:</p>
+<p>bash</p>
 
-<ul>
-<li>server-delete: 删除虚拟机
+<h1 id="删除-server1-server2-server3">删除 server1, server2, server3</h1>
 
-<ul>
-<li>server 是资源, delete 是行为</li>
-</ul></li>
-<li>host-list: 查询宿主机列表
+<p>for id in server1 server2 server3; do
+    climc server-update &ndash;delete enable $id
+    climc server-delete $id
+done</p>
 
-<ul>
-<li>host 是资源, list 是行为</li>
-</ul></li>
-</ul>
+<pre><code>
+- 交互模式: 在 shell 输入 climc，就会进入交互模式，这种模式下有自动补全和参数提示。
+![](images/climc-repl.png)
 
-<p>CRUD 举例:</p>
+### 子命令语法
 
-<ul>
-<li><em>C</em>: server-create, disk-create 创建资源</li>
-<li><em>R</em>: server-show, disk-list 查询资源</li>
-<li><em>U</em>: server-update, host-update 更新资源</li>
-<li><em>D</em>: server-delete, image-delete 删除资源</li>
-</ul>
+云平台有很多资源，对应 climc 的子命令, 比如 `climc server-list` 中的 `server-list` 就是子命令，可以查询虚拟机的列表。通用格式如下:
 
-<p>行为举例:</p>
+</code></pre>
 
-<p><Resource>-<Action> 中的 Action 会对应资源的操作，不同的资源会根据可进行的操作进行命名。</p>
+<p>bash
+<Resource>-<Action>: Resource 表示资源, Action 表示行为</p>
 
-<ul>
-<li>server-migrate: migrate 表示迁移虚拟机</li>
-<li>server-change-config: change-config 表示调整虚拟机配置</li>
-<li>host-ipmi: ipmi 表示查询宿主机的 IPMI 信息</li>
-</ul>
+<pre><code>
+语法举例:
 
-<p>想要知道资源有哪些操作，可以进入交互模式补全查询。</p>
+- server-delete: 删除虚拟机
+  - server 是资源, delete 是行为
+- host-list: 查询宿主机列表
+  - host 是资源, list 是行为
 
-<h3 id="使用帮助-help">使用帮助 help</h3>
+CRUD 举例:
 
-<p>climc 的子命令有很多参数，参数分为必填参数和可选参数，使用 <code>climc help &lt;subcommand&gt;</code> 这种格式，<strong>help</strong> 子命令会获取 <subcommand> 提供的参数和各个参数的解释。</p>
+- *C*: server-create, disk-create 创建资源
+- *R*: server-show, disk-list 查询资源
+- *U*: server-update, host-update 更新资源
+- *D*: server-delete, image-delete 删除资源
 
-<p>比如我要查看 <code>image-upload</code> 命令的参数和解释:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc <span style="color:#204a87">help</span> image-upload
-...
-Upload a <span style="color:#204a87">local</span> image
+行为举例:
 
-Positional arguments:
-    &lt;NAME&gt;
+&lt;Resource&gt;-&lt;Action&gt; 中的 Action 会对应资源的操作，不同的资源会根据可进行的操作进行命名。
+
+- server-migrate: migrate 表示迁移虚拟机
+- server-change-config: change-config 表示调整虚拟机配置
+- host-ipmi: ipmi 表示查询宿主机的 IPMI 信息
+
+想要知道资源有哪些操作，可以进入交互模式补全查询。
+
+### 使用帮助 help
+
+climc 的子命令有很多参数，参数分为必填参数和可选参数，使用 `climc help &lt;subcommand&gt;` 这种格式，**help** 子命令会获取 &lt;subcommand&gt; 提供的参数和各个参数的解释。
+
+比如我要查看 `image-upload` 命令的参数和解释:
+
+</code></pre>
+
+<p>bash
+$ climc help image-upload
+&hellip;
+Upload a local image</p>
+
+<p>Positional arguments:
+    <NAME>
         Image Name
-    &lt;FILE&gt;
-        The <span style="color:#204a87">local</span> image filename to Upload
+    <FILE>
+        The local image filename to Upload</p>
 
-Optional arguments:
-    <span style="color:#ce5c00;font-weight:bold">[</span>--private<span style="color:#ce5c00;font-weight:bold">]</span>
+<p>Optional arguments:
+    [&ndash;private]
         Make image private
-    <span style="color:#ce5c00;font-weight:bold">[</span>--format <span style="color:#ce5c00;font-weight:bold">{</span>raw,qcow2,iso,vmdk,docker,vhd<span style="color:#ce5c00;font-weight:bold">}]</span>
+    [&ndash;format {raw,qcow2,iso,vmdk,docker,vhd}]
         Image format
-    <span style="color:#ce5c00;font-weight:bold">[</span>--protected<span style="color:#ce5c00;font-weight:bold">]</span>
-...</code></pre></div>
-<h3 id="高级过滤-filter">高级过滤 filter</h3>
+    [&ndash;protected]
+&hellip;</p>
 
-<p>TODO</p>
+<pre><code>
+### 高级过滤 filter
 
-<h3 id="debug-模式">Debug 模式</h3>
+TODO
 
-<p>如果想要知道 climc 操作资源时究竟和服务端发生了哪些请求，可以在子命令前面使用 <em>&ndash;debug</em> 参数，使用方式如下:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc --debug &lt;Resource&gt;-&lt;Action&gt;</code></pre></div>
-<p>加上 &ndash;debug 参数后，终端会有彩色的输出提示，比如 <code>climc --debug server-list</code> 输出如下:</p>
+### Debug 模式
 
-<p><img src="images/climc-debug.png" alt="" /></p>
+如果想要知道 climc 操作资源时究竟和服务端发生了哪些请求，可以在子命令前面使用 *--debug* 参数，使用方式如下:
 
-<p>其中 CURL 部分是可以直接粘贴出来在命令行执行的。</p>
+</code></pre>
 
-<h4 id="颜色约定">颜色约定</h4>
+<p>bash
+climc &ndash;debug <Resource>-<Action></p>
 
-<ul>
-<li>Request 使用黄色</li>
-<li>CURL 使用蓝绿色</li>
-<li>根据状态码显示不同颜色，可参考代码: <a href="https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234" target="_blank">https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234</a></li>
-</ul>
+<pre><code>
+加上 --debug 参数后，终端会有彩色的输出提示，比如 `climc --debug server-list` 输出如下:
 
-<h4 id="在bash或zsh下的命令行参数提示补全">在bash或zsh下的命令行参数提示补全</h4>
+![](images/climc-debug.png)
 
-<p>climc支持bash或zsh的命令行参数自动提示补全。</p>
+其中 CURL 部分是可以直接粘贴出来在命令行执行的。
 
-<p>下面以bash为例说明，在使用climc之前，执行如下命令初始化环境。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 启用bash命令行参数自动补全</span>
-<span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>climc --completion bash<span style="color:#ce5c00;font-weight:bold">)</span></code></pre></div>
+#### 颜色约定
+
+- Request 使用黄色
+- CURL 使用蓝绿色
+- 根据状态码显示不同颜色，可参考代码: https://github.com/yunionio/onecloud/blob/master/pkg/util/httputils/httputils.go#L234
+
+#### 在bash或zsh下的命令行参数提示补全
+climc支持bash或zsh的命令行参数自动提示补全。
+
+下面以bash为例说明，在使用climc之前，执行如下命令初始化环境。
+
+</code></pre>
+
+<p>bash</p>
+
+<h1 id="启用bash命令行参数自动补全">启用bash命令行参数自动补全</h1>
+
+<p>source &lt;(climc &ndash;completion bash)
+```</p>
+
 <p>之后在bash中可以在输入climc命令后，通过tab获得命令行参数的提示。</p>
 
 <p>为了方便使用，推荐将该命令放到$HOME/.bashrc或$HOME/.bash_profile中自动初始化环境。</p>
@@ -1126,7 +1189,7 @@ Optional arguments:
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 30.07.2019: <a  href="https://github.com/yunionio/docs/commit/61a5e0c8caf98ca74b477bbebe4113c295c79cec">update theme to docsy (61a5e0c)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 06.09.2019: <a  href="https://github.com/yunionio/docs/commit/8d1d075a0d83eded5e829bb1bc05de9a8ebb875d">climc Access key/secret support (8d1d075)</a>
 </div>
 </div>
 

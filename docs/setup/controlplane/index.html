@@ -14,15 +14,15 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57+08:00" />
-<meta property="article:modified_time" content="2019-09-21T15:31:24+08:00" />
+<meta property="article:modified_time" content="2019-09-21T17:15:02+08:00" />
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
 ">
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-09-21T15:31:24&#43;08:00" />
-<meta itemprop="wordCount" content="895">
+<meta itemprop="dateModified" content="2019-09-21T17:15:02&#43;08:00" />
+<meta itemprop="wordCount" content="887">
 
 
 
@@ -931,15 +931,11 @@ $ chmod <span style="color:#0000cf;font-weight:bold">755</span> /etc/sysconfig/m
 <h3 id="安装部署工具">安装部署工具</h3>
 
 <p>先安装部署工具 ocadm 和云平台的命令行工具 climc:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 安装 climc 云平台命令行工具</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 安装 climc 云平台命令行工具 和 ocadm 部署工具</span>
 $ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-2.10/yunion.repo
-$ yum install -y yunion-climc
+$ yum install -y yunion-climc yunion-ocadm
 <span style="color:#8f5902;font-style:italic"># climc 在 /opt/yunion/bin 目录下，根据自己的需要加到 bash 或者 zsh 配置文件里面</span>
-$ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;export PATH=$PATH:/opt/yunion/bin&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc
-
-<span style="color:#8f5902;font-style:italic"># 安装 ocadm</span>
-$ wget https://github.com/yunionio/ocadm/releases/download/v0.0.2/ocadm -P /opt/yunion/bin
-$ chmod a+x /opt/yunion/bin/ocadm</code></pre></div>
+$ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;export PATH=$PATH:/opt/yunion/bin&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc</code></pre></div>
 <h3 id="部署-kubernetes-集群">部署 kubernetes 集群</h3>
 
 <p>接下来会现在当前节点启动 v1.14.3 的 kubernetes 服务，然后部署 OneCloud 控制节点相关的服务到 kubernetes 集群。</p>
@@ -1120,7 +1116,7 @@ $ climc endpoint-list
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 21.09.2019: <a  href="https://github.com/yunionio/docs/commit/49cdb8006dc8e678c8f1ce8de965a6181af5f431">fix baseURL link incorrect (49cdb80)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 21.09.2019: <a  href="https://github.com/yunionio/docs/commit/3266873eefa334db7ddc9cf05cfa5568663f26ec">use yum install ocadm (3266873)</a>
 </div>
 </div>
 

@@ -9,25 +9,25 @@
 
 
 <title>计算节点 | OneCloud</title><meta property="og:title" content="计算节点" />
-<meta property="og:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，介绍如何部署相应组件
+<meta property="og:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/host/" />
-<meta property="article:modified_time" content="2019-08-22T18:06:01+08:00" />
+<meta property="article:modified_time" content="2019-09-23T13:23:15+08:00" />
 <meta itemprop="name" content="计算节点">
-<meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，介绍如何部署相应组件
+<meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2019-08-22T18:06:01&#43;08:00" />
-<meta itemprop="wordCount" content="828">
+<meta itemprop="dateModified" content="2019-09-23T13:23:15&#43;08:00" />
+<meta itemprop="wordCount" content="887">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="计算节点"/>
-<meta name="twitter:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，介绍如何部署相应组件
+<meta name="twitter:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 "/>
 
 
@@ -722,9 +722,12 @@
 <li><a href="#创建-host-服务的认证用户">创建 host 服务的认证用户</a></li>
 <li><a href="#创建计算节点所在的网段">创建计算节点所在的网段</a></li>
 </ul></li>
+<li><a href="#计算节点-host-操作">计算节点(host)操作</a>
+<ul>
 <li><a href="#配置-host-服务">配置 host 服务</a></li>
 <li><a href="#启动-host">启动 host</a></li>
-<li><a href="#控制节点启动-host">控制节点启动 host</a></li>
+</ul></li>
+<li><a href="#控制节点启用-host">控制节点启用 host</a></li>
 <li><a href="#创建虚拟机测试">创建虚拟机测试</a>
 <ul>
 <li><a href="#上传-cirrors-测试镜像">上传 cirrors 测试镜像</a></li>
@@ -777,7 +780,7 @@
             
 <div class="td-content">
 	<h1>计算节点</h1>
-	<div class="lead">如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，介绍如何部署相应组件</div>
+	<div class="lead">如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件</div>
 	
 
 <p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:</p>
@@ -874,10 +877,10 @@ $ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/g
 <p>安装 rpm 包</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  epel-release chntpw dosfstools ethtool fetchclient fuse fuse-devel fuse-libs gdisk <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  libaio jq libusb lvm2 lxcfs lz4 nc ntfs-3g_ntfsprogs zerofree <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  libaio jq libusb lvm2 lxcfs nc ntfs-3g_ntfsprogs zerofree <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  oniguruma parted pciutils spice spice-protocol sshpass sysstat <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  tcpdump telegraf usbredir vmware-vddk xfsprogs <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-host yunion-host-image yunion-sdnagent <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-host yunion-host-deployer yunion-host-image yunion-sdnagent <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
@@ -897,7 +900,7 @@ $ uname -r
 <h3 id="创建-host-服务的认证用户">创建 host 服务的认证用户</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm cluster rcadmin
 <span style="color:#8f5902;font-style:italic"># 这个是云平台 keystone 的认证地址，后面配置会用到</span>
-<span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://10.168.222.216:5000/v3
+<span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://10.168.222.218:5000/v3
 ...
 <span style="color:#8f5902;font-style:italic"># 这个 region0 也会在配置中用到</span>
 <span style="color:#204a87">export</span> <span style="color:#000">OS_REGION_NAME</span><span style="color:#ce5c00;font-weight:bold">=</span>region0
@@ -909,7 +912,15 @@ $ climc user-create --enabled --password hostadminpasswd hostadmin
 $ climc project-add-user system hostadmin admin</code></pre></div>
 <h3 id="创建计算节点所在的网段">创建计算节点所在的网段</h3>
 
-<p>我的环境控制节点的 ip 为 10.168.222.218，就创建一个对应的 host 网段。需要根据自己的环境创建对应的网段。</p>
+<p>我的环境<strong>计算节点</strong>的 ip 为 10.168.222.140，就创建一个对应的 <strong>计算节点(host)网段</strong>。</p>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+需要根据自己的计算节点环境创建对应的网段，如果不创建该网段，计算节点就没发注册进来。
+</div>
+
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看当前环境的 zone</span>
 $ climc zone-list
 +--------------------------------------+-------+--------+----------------+
@@ -922,18 +933,29 @@ $ climc zone-list
 $ climc wire-create zone0 bcast0 <span style="color:#0000cf;font-weight:bold">1000</span>
 
 <span style="color:#8f5902;font-style:italic"># 在 wire bcast0 之上创建一个计算节点的网络，计算节点的 host 服务注册会用到，如果 host 注册时没有在云平台找到对应的网络，将会注册失败</span>
-$ climc network-create --gateway <span style="color:#0000cf;font-weight:bold">10</span>.168.222.1 --server-type baremetal bcast0 inf0 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.218 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.218 <span style="color:#0000cf;font-weight:bold">24</span></code></pre></div>
-<h2 id="配置-host-服务">配置 host 服务</h2>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir -p /etc/yunion
+$ climc network-create --gateway <span style="color:#0000cf;font-weight:bold">10</span>.168.222.1 --server-type baremetal bcast0 inf0 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#0000cf;font-weight:bold">24</span></code></pre></div>
+<h2 id="计算节点-host-操作">计算节点(host)操作</h2>
+
+<p>以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。</p>
+
+<h3 id="配置-host-服务">配置 host 服务</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取计算节点 IP</span>
+$ <span style="color:#000">host_addr</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
+$ <span style="color:#204a87">echo</span> <span style="color:#000">$host_addr</span>
+<span style="color:#0000cf;font-weight:bold">10</span>.168.222.140
+
+$ mkdir -p /etc/yunion
+
+ <span style="color:#8f5902;font-style:italic"># 记得把这些认证信息参考控制节点的 rc_amdin 配置对应过来</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yunion/host.conf
-</span><span style="color:#4e9a06">region = &#39;region0&#39;   # 记得把这些认证信息参考控制节点的 rc_amdin 配置对应过来
-</span><span style="color:#4e9a06">address =  &#39;10.168.222.218&#39;
+</span><span style="color:#4e9a06">region = &#39;region0&#39;
+</span><span style="color:#4e9a06">address =  &#39;$host_addr&#39; # 计算节点服务监听的地址
 </span><span style="color:#4e9a06">port = 8885
-</span><span style="color:#4e9a06">auth_uri = &#39;https://10.168.222.216:5000/v3&#39;
-</span><span style="color:#4e9a06">admin_user = &#39;hostadmin&#39;
-</span><span style="color:#4e9a06">admin_password = &#39;hostadminpasswd&#39;
-</span><span style="color:#4e9a06">admin_tenant_name = &#39;system&#39;
-</span><span style="color:#4e9a06">networks = [&#39;eth0/br0/10.168.222.218&#39;]
+</span><span style="color:#4e9a06">auth_uri = &#39;https://10.168.222.218:5000/v3&#39; # 控制节点 keystone 服务的认证地址
+</span><span style="color:#4e9a06">admin_user = &#39;hostadmin&#39;  # 计算节点认证用户
+</span><span style="color:#4e9a06">admin_password = &#39;hostadminpasswd&#39; # 计算节点认证用户密码
+</span><span style="color:#4e9a06">admin_tenant_name = &#39;system&#39; # 计算节点用户所在的项目
+</span><span style="color:#4e9a06">networks = [&#39;eth0/br0/$host_addr&#39;]  # 计算节点网桥配置
 </span><span style="color:#4e9a06">hostname = &#39;$(hostname -s)&#39;
 </span><span style="color:#4e9a06">
 </span><span style="color:#4e9a06">bridge_driver = &#39;openvswitch&#39;
@@ -959,31 +981,31 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yunion/host.conf
 </span><span style="color:#4e9a06">
 </span><span style="color:#4e9a06">default_qemu_version = &#39;2.12.1&#39;
 </span><span style="color:#4e9a06">EOF</span></code></pre></div>
-<h2 id="启动-host">启动 host</h2>
+<h3 id="启动-host">启动 host</h3>
 
 <p>配置完成后就可以使用 systemctl 启动 host 服务了，命令如下:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 启动</span>
-$ systemctl <span style="color:#204a87">enable</span> yunion-host --now
+$ systemctl <span style="color:#204a87">enable</span> yunion-host yunion-host-deployer --now
 
 <span style="color:#8f5902;font-style:italic"># 观察启动日志</span>
 $ journalctl -u yunion-host -f
 ...
-Jul <span style="color:#0000cf;font-weight:bold">09</span> <span style="color:#0000cf;font-weight:bold">18</span>:23:34 lzx-ocadm-test2 host<span style="color:#ce5c00;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">4216</span><span style="color:#ce5c00;font-weight:bold">]</span>: <span style="color:#ce5c00;font-weight:bold">[</span>I <span style="color:#0000cf;font-weight:bold">190709</span> <span style="color:#0000cf;font-weight:bold">18</span>:23:34 metadata.StartService<span style="color:#ce5c00;font-weight:bold">(</span>metadatahandler.go:268<span style="color:#ce5c00;font-weight:bold">)]</span> Host Metadata Start listen on http://10.168.222.218:9885
+Jul <span style="color:#0000cf;font-weight:bold">09</span> <span style="color:#0000cf;font-weight:bold">18</span>:23:34 lzx-ocadm-test2 host<span style="color:#ce5c00;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">4216</span><span style="color:#ce5c00;font-weight:bold">]</span>: <span style="color:#ce5c00;font-weight:bold">[</span>I <span style="color:#0000cf;font-weight:bold">190709</span> <span style="color:#0000cf;font-weight:bold">18</span>:23:34 metadata.StartService<span style="color:#ce5c00;font-weight:bold">(</span>metadatahandler.go:268<span style="color:#ce5c00;font-weight:bold">)]</span> Host Metadata Start listen on http://10.168.222.140:9885
 <span style="color:#8f5902;font-style:italic"># 出现上述信息表示 host 已经成功注册到了控制节点</span></code></pre></div>
-<h2 id="控制节点启动-host">控制节点启动 host</h2>
+<h2 id="控制节点启用-host">控制节点启用 host</h2>
 
-<p>回到控制节点，启用刚才上报的计算节点</p>
+<p>回到控制节点，启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 climc 查看注册的 host 列表</span>
 $ climc host-list
-+--------------------------------------+-----------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-----------------+--------------+
-<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>      Name       <span style="color:#000;font-weight:bold">|</span>    Access_mac     <span style="color:#000;font-weight:bold">|</span>   Access_ip    <span style="color:#000;font-weight:bold">|</span>        Manager_URI         <span style="color:#000;font-weight:bold">|</span> Status  <span style="color:#000;font-weight:bold">|</span> enabled <span style="color:#000;font-weight:bold">|</span> host_status <span style="color:#000;font-weight:bold">|</span> mem_size <span style="color:#000;font-weight:bold">|</span> cpu_count <span style="color:#000;font-weight:bold">|</span> node_count <span style="color:#000;font-weight:bold">|</span>      sn       <span style="color:#000;font-weight:bold">|</span> storage_type <span style="color:#000;font-weight:bold">|</span> host_type  <span style="color:#000;font-weight:bold">|</span>     version     <span style="color:#000;font-weight:bold">|</span> storage_size <span style="color:#000;font-weight:bold">|</span>
-+--------------------------------------+-----------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-----------------+--------------+
-<span style="color:#000;font-weight:bold">|</span> cc053d7c-1456-4c72-8198-adc1f487df9d <span style="color:#000;font-weight:bold">|</span> lzx-ocadm-test2 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">00</span>:22:1b:c4:a4:81 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">10</span>.168.222.218 <span style="color:#000;font-weight:bold">|</span> http://10.168.222.218:8885 <span style="color:#000;font-weight:bold">|</span> running <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> online      <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">4096</span>     <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">4</span>         <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">4</span>          <span style="color:#000;font-weight:bold">|</span> Not Specified <span style="color:#000;font-weight:bold">|</span> rotate       <span style="color:#000;font-weight:bold">|</span> hypervisor <span style="color:#000;font-weight:bold">|</span> HEAD<span style="color:#ce5c00;font-weight:bold">(</span>5c8f4b19a<span style="color:#ce5c00;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">29982</span>        <span style="color:#000;font-weight:bold">|</span>
-+--------------------------------------+-----------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-----------------+--------------+
-***  Total: <span style="color:#0000cf;font-weight:bold">1</span> Pages: <span style="color:#0000cf;font-weight:bold">1</span> Limit: <span style="color:#0000cf;font-weight:bold">20</span> Offset: <span style="color:#0000cf;font-weight:bold">0</span> Page: <span style="color:#0000cf;font-weight:bold">1</span>  ***
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>          Name           <span style="color:#000;font-weight:bold">|</span>    Access_mac     <span style="color:#000;font-weight:bold">|</span>   Access_ip    <span style="color:#000;font-weight:bold">|</span>        Manager_URI         <span style="color:#000;font-weight:bold">|</span> Status  <span style="color:#000;font-weight:bold">|</span> enabled <span style="color:#000;font-weight:bold">|</span> host_status <span style="color:#000;font-weight:bold">|</span> mem_size <span style="color:#000;font-weight:bold">|</span> cpu_count <span style="color:#000;font-weight:bold">|</span> node_count <span style="color:#000;font-weight:bold">|</span>      sn       <span style="color:#000;font-weight:bold">|</span> storage_type <span style="color:#000;font-weight:bold">|</span> host_type  <span style="color:#000;font-weight:bold">|</span>         version         <span style="color:#000;font-weight:bold">|</span> storage_size <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+<span style="color:#000;font-weight:bold">|</span> 3830870e-a499-459d-89df-bb6979b5e1ff <span style="color:#000;font-weight:bold">|</span> lzx-allinone-standalone <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">00</span>:22:39:4c:6c:e9 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#000;font-weight:bold">|</span> http://10.168.222.140:8885 <span style="color:#000;font-weight:bold">|</span> running <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> online      <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">8192</span>     <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">4</span>         <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">1</span>          <span style="color:#000;font-weight:bold">|</span> Not Specified <span style="color:#000;font-weight:bold">|</span> rotate       <span style="color:#000;font-weight:bold">|</span> hypervisor <span style="color:#000;font-weight:bold">|</span> master<span style="color:#ce5c00;font-weight:bold">(</span>7ab047419092301<span style="color:#ce5c00;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">50141</span>        <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+***  Total: <span style="color:#0000cf;font-weight:bold">0</span> Pages: <span style="color:#0000cf;font-weight:bold">0</span> Limit: <span style="color:#0000cf;font-weight:bold">20</span> Offset: <span style="color:#0000cf;font-weight:bold">0</span> Page: <span style="color:#0000cf;font-weight:bold">1</span>  ***
 
 <span style="color:#8f5902;font-style:italic"># 启动 host</span>
-$ climc host-enable lzx-ocadm-test2</code></pre></div>
+$ climc host-enable lzx-allinone-standalone</code></pre></div>
 <h2 id="创建虚拟机测试">创建虚拟机测试</h2>
 
 <h3 id="上传-cirrors-测试镜像">上传 cirrors 测试镜像</h3>
@@ -1010,44 +1032,46 @@ $ climc image-update --min-disk <span style="color:#0000cf;font-weight:bold">102
 $ climc network-public vnet0</code></pre></div>
 <h3 id="创建虚拟机">创建虚拟机</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建虚拟机 testvm01，512M内存, 1个CPU, 系统盘 10g, 第二块磁盘 5g 格式化为 ext4 并挂载到 /opt 的虚拟机</span>
-$ climc server-create --disk cirros-0.4.0-x86_64-disk.qcow2:10g --disk 5g:ext4:/opt --net vnet0 --auto-start --allow-delete --ncpu <span style="color:#0000cf;font-weight:bold">1</span> testvm01 512M
+$ climc server-create  --auto-start --allow-delete <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>		--disk cirros-0.4.0-x86_64-disk.qcow2:10g --disk 5g:ext4:/opt <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>		--net vnet0 --ncpu <span style="color:#0000cf;font-weight:bold">1</span> --mem-spec 512M testvm01
 
 <span style="color:#8f5902;font-style:italic"># 查看创建的虚拟机，1分钟后应该会变为 running 状态</span>
 $ climc server-list --details
-+--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-----------------+--------+-----------+
-<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>   Name   <span style="color:#000;font-weight:bold">|</span> Billing_type <span style="color:#000;font-weight:bold">|</span>     IPs      <span style="color:#000;font-weight:bold">|</span> Disk  <span style="color:#000;font-weight:bold">|</span> Status  <span style="color:#000;font-weight:bold">|</span> vcpu_count <span style="color:#000;font-weight:bold">|</span> vmem_size <span style="color:#000;font-weight:bold">|</span> Secgroup <span style="color:#000;font-weight:bold">|</span>         Created_at          <span style="color:#000;font-weight:bold">|</span> Hypervisor <span style="color:#000;font-weight:bold">|</span> os_type <span style="color:#000;font-weight:bold">|</span>      Host       <span style="color:#000;font-weight:bold">|</span> Tenant <span style="color:#000;font-weight:bold">|</span> is_system <span style="color:#000;font-weight:bold">|</span>
-+--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-----------------+--------+-----------+
-<span style="color:#000;font-weight:bold">|</span> f10c0083-9ee8-4353-86e2-67b9ac16f732 <span style="color:#000;font-weight:bold">|</span> testvm01 <span style="color:#000;font-weight:bold">|</span> postpaid     <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">10</span>.20.30.253 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">30720</span> <span style="color:#000;font-weight:bold">|</span> running <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">1</span>          <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">512</span>       <span style="color:#000;font-weight:bold">|</span> Default  <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">2019</span>-07-09T13:12:16.000000Z <span style="color:#000;font-weight:bold">|</span> kvm        <span style="color:#000;font-weight:bold">|</span> Linux   <span style="color:#000;font-weight:bold">|</span> lzx-ocadm-test2 <span style="color:#000;font-weight:bold">|</span> system <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>     <span style="color:#000;font-weight:bold">|</span>
-+--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-----------------+--------+-----------+
++--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-------------------------+--------+-----------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>   Name   <span style="color:#000;font-weight:bold">|</span> Billing_type <span style="color:#000;font-weight:bold">|</span>     IPs      <span style="color:#000;font-weight:bold">|</span> Disk  <span style="color:#000;font-weight:bold">|</span> Status  <span style="color:#000;font-weight:bold">|</span> vcpu_count <span style="color:#000;font-weight:bold">|</span> vmem_size <span style="color:#000;font-weight:bold">|</span> Secgroup <span style="color:#000;font-weight:bold">|</span>         Created_at          <span style="color:#000;font-weight:bold">|</span> Hypervisor <span style="color:#000;font-weight:bold">|</span> os_type <span style="color:#000;font-weight:bold">|</span>          Host           <span style="color:#000;font-weight:bold">|</span> Tenant <span style="color:#000;font-weight:bold">|</span> is_system <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-------------------------+--------+-----------+
+<span style="color:#000;font-weight:bold">|</span> bcda7d18-decc-4b5f-8654-2d201a84d1fb <span style="color:#000;font-weight:bold">|</span> testvm01 <span style="color:#000;font-weight:bold">|</span> postpaid     <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">10</span>.20.30.254 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">35840</span> <span style="color:#000;font-weight:bold">|</span> running <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">1</span>          <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">512</span>       <span style="color:#000;font-weight:bold">|</span> Default  <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">2019</span>-09-23T05:08:49.000000Z <span style="color:#000;font-weight:bold">|</span> kvm        <span style="color:#000;font-weight:bold">|</span> Linux   <span style="color:#000;font-weight:bold">|</span> lzx-allinone-standalone <span style="color:#000;font-weight:bold">|</span> system <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>     <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-------------------------+--------+-----------+
+***  Total: <span style="color:#0000cf;font-weight:bold">0</span> Pages: <span style="color:#0000cf;font-weight:bold">0</span> Limit: <span style="color:#0000cf;font-weight:bold">20</span> Offset: <span style="color:#0000cf;font-weight:bold">0</span> Page: <span style="color:#0000cf;font-weight:bold">1</span>  ***
 
 <span style="color:#8f5902;font-style:italic"># 获取虚拟机登录信息</span>
 $ climc server-logininfo testvm01
-+----------+-----------------------------+
-<span style="color:#000;font-weight:bold">|</span>  Field   <span style="color:#000;font-weight:bold">|</span>            Value            <span style="color:#000;font-weight:bold">|</span>
-+----------+-----------------------------+
-<span style="color:#000;font-weight:bold">|</span> password <span style="color:#000;font-weight:bold">|</span> Bs5Zn6%Ry?9h                <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> updated  <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">2019</span>-07-09T13:12:22.785767Z <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> username <span style="color:#000;font-weight:bold">|</span> root                        <span style="color:#000;font-weight:bold">|</span>
-+----------+-----------------------------+
++-----------+------------------------------------------+
+<span style="color:#000;font-weight:bold">|</span>   Field   <span style="color:#000;font-weight:bold">|</span>                  Value                   <span style="color:#000;font-weight:bold">|</span>
++-----------+------------------------------------------+
+<span style="color:#000;font-weight:bold">|</span> login_key <span style="color:#000;font-weight:bold">|</span> <span style="color:#000">49wqh5OWGW3jSr1A8RfrMoH69iRRECzaMZITBA</span><span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> password  <span style="color:#000;font-weight:bold">|</span> zS27FwwUFr96                             <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> updated   <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">2019</span>-09-23T05:11:29.306403Z              <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> username  <span style="color:#000;font-weight:bold">|</span> root                                     <span style="color:#000;font-weight:bold">|</span>
++-----------+------------------------------------------+
 
 <span style="color:#8f5902;font-style:italic"># 在计算节点联通测试网络(如果你是直接用的二层网络，应该能直接 ping 通虚拟机的 ip 了，不需要做这一步)</span>
 $ ip address add <span style="color:#0000cf;font-weight:bold">10</span>.20.30.1/24 dev br0
-$ ping <span style="color:#0000cf;font-weight:bold">10</span>.20.30.253
-PING <span style="color:#0000cf;font-weight:bold">10</span>.20.30.253 <span style="color:#ce5c00;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">10</span>.20.30.253<span style="color:#ce5c00;font-weight:bold">)</span> <span style="color:#0000cf;font-weight:bold">56</span><span style="color:#ce5c00;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">84</span><span style="color:#ce5c00;font-weight:bold">)</span> bytes of data.
-<span style="color:#0000cf;font-weight:bold">64</span> bytes from <span style="color:#0000cf;font-weight:bold">10</span>.20.30.253: <span style="color:#000">icmp_seq</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000">ttl</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">64</span> <span style="color:#000">time</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">0</span>.984 ms
 
 <span style="color:#8f5902;font-style:italic"># 用之前 server-logininfo 命令获取的用户名密码，直接登录到虚拟机里面</span>
-$ ssh root@10.20.30.253
+$ ssh root@10.20.30.254
+PING <span style="color:#0000cf;font-weight:bold">10</span>.20.30.254 <span style="color:#ce5c00;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">10</span>.20.30.254<span style="color:#ce5c00;font-weight:bold">)</span> <span style="color:#0000cf;font-weight:bold">56</span><span style="color:#ce5c00;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">84</span><span style="color:#ce5c00;font-weight:bold">)</span> bytes of data.
+<span style="color:#0000cf;font-weight:bold">64</span> bytes from <span style="color:#0000cf;font-weight:bold">10</span>.20.30.254: <span style="color:#000">icmp_seq</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000">ttl</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">64</span> <span style="color:#000">time</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">1</span>.31 ms
 
 <span style="color:#8f5902;font-style:italic"># 如果网络不通，也可以通过 vnc 的方式打开虚拟机的 tty 登录界面，操作如下</span>
 <span style="color:#8f5902;font-style:italic"># 打开 vnc 链接，用浏览器打开下面的链接</span>
 <span style="color:#8f5902;font-style:italic"># 打开 vnc 链接时会出现不安全认证，导致 websocket 无法握手，需要在浏览器信任 webconsole server 对应的 endpoint</span>
-$ climc endpoint-list --details <span style="color:#000;font-weight:bold">|</span> grep webconsole
-<span style="color:#000;font-weight:bold">|</span> 67dcd7e163524526867d2a67c2162389 <span style="color:#000;font-weight:bold">|</span> region0 <span style="color:#000;font-weight:bold">|</span> 0c79be9a91f840c38d02930e9aa24dce <span style="color:#000;font-weight:bold">|</span> webconsole <span style="color:#000;font-weight:bold">|</span> webconsole <span style="color:#000;font-weight:bold">|</span> https://10.168.222.216:8899 <span style="color:#000;font-weight:bold">|</span> internal <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span> <span style="color:#000;font-weight:bold">|</span>
+$ climc endpoint-list --details <span style="color:#000;font-weight:bold">|</span> grep webconsole <span style="color:#000;font-weight:bold">|</span> grep public
+<span style="color:#000;font-weight:bold">|</span> 3da1e476aa7b4ff68e206754aed72d8f <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 16120e8f3eec46dc86c59b3e426b0502 <span style="color:#000;font-weight:bold">|</span> webconsole      <span style="color:#000;font-weight:bold">|</span> webconsole      <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8899         <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#8f5902;font-style:italic"># 然后用浏览器访问下 https://10.168.222.218:8899 , 信任该链接即可</span>
 
-<span style="color:#8f5902;font-style:italic"># 然后用浏览器访问下 https://10.168.222.216:8899 , 信任该链接即可</span>
-
-<span style="color:#8f5902;font-style:italic"># 在通过 webconsole-server 命令获取 vnc web 界面的链接地址</span>
+<span style="color:#8f5902;font-style:italic"># 在通过 webconsole-server 命令获取 vnc web 界面的链接地址，然后用浏览器打开该地址</span>
 $ climc webconsole-server testvm01
 https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;font-weight:bold">=</span>FI-VXQSAonhzfSnxVTKCCbwHinp7swlRkmi-4p6s-4OfZpg6TG9YhWuwbHEUA1D7XoKu_w%3D%3D<span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000">api_server</span><span style="color:#ce5c00;font-weight:bold">=</span>https%3A%2F%2F10.168.222.216%3A8899<span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000">password</span><span style="color:#ce5c00;font-weight:bold">=</span>65xB2kaE<span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000">protocol</span><span style="color:#ce5c00;font-weight:bold">=</span>vnc</code></pre></div>
 	
@@ -1112,7 +1136,7 @@ https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;fon
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 22.08.2019: <a  href="https://github.com/yunionio/docs/commit/23c7b64d4a9ef61781025ac9a019c7e38ddace47">update host setup kernel docs (23c7b64)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 23.09.2019: <a  href="https://github.com/yunionio/docs/commit/5352159afd49f33ef8bf6ead31c6e63a0e67d127">update host operate (5352159)</a>
 </div>
 </div>
 

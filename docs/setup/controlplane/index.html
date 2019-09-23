@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.58.2" />
+<meta name="generator" content="Hugo 0.58.3" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -14,15 +14,15 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57+08:00" />
-<meta property="article:modified_time" content="2019-09-21T17:15:02+08:00" />
+<meta property="article:modified_time" content="2019-09-23T11:56:10+08:00" />
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
 ">
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-09-21T17:15:02&#43;08:00" />
-<meta itemprop="wordCount" content="887">
+<meta itemprop="dateModified" content="2019-09-23T11:56:10&#43;08:00" />
+<meta itemprop="wordCount" content="860">
 
 
 
@@ -728,7 +728,8 @@
 <li><a href="#安装部署工具">安装部署工具</a></li>
 <li><a href="#部署-kubernetes-集群">部署 kubernetes 集群</a></li>
 <li><a href="#创建-onecloud-集群">创建 onecloud 集群</a></li>
-<li><a href="#环境检查">环境检查</a></li>
+<li><a href="#创建登录用户">创建登录用户</a></li>
+<li><a href="#访问前端">访问前端</a></li>
 <li><a href="#删除环境">删除环境</a></li>
 </ul></li>
 </ul></li>
@@ -977,7 +978,9 @@ Your Kubernetes and Onecloud control-plane has initialized successfully!
 
 
 <p>kubernetes 集群部署完成后，通过以下命令来确保相关的 pod (容器) 都已经启动, 变成 running 的状态。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#204a87">export</span> <span style="color:#000">KUBECONFIG</span><span style="color:#ce5c00;font-weight:bold">=</span>/etc/kubernetes/admin.conf
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir -p <span style="color:#000">$HOME</span>/.kube
+$ sudo cp -i /etc/kubernetes/admin.conf <span style="color:#000">$HOME</span>/.kube/config
+$ sudo chown <span style="color:#204a87;font-weight:bold">$(</span>id -u<span style="color:#204a87;font-weight:bold">)</span>:<span style="color:#204a87;font-weight:bold">$(</span>id -g<span style="color:#204a87;font-weight:bold">)</span> <span style="color:#000">$HOME</span>/.kube/config
 $ kubectl get pods --all-namespaces
 NAMESPACE            NAME                                       READY   STATUS    RESTARTS   AGE
 kube-system          calico-kube-controllers-648bb4447c-57gjb   <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          5h1m
@@ -1007,19 +1010,10 @@ default-apigateway-f657c55c8-9tzpm     <span style="color:#0000cf;font-weight:bo
 default-web-7778d95cb8-2xv6n           <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          118m
 default-webconsole-5855c8b64f-jtqwn    <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          119m</code></pre></div>
 <p>等待 <strong>default-web-</strong> 相关的 pod 状态变为 Running 后，就可以通过访问 &lsquo;https://本机IP:443&rsquo; 登入前端界面。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取本机 IP</span>
-$ ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span>
-<span style="color:#0000cf;font-weight:bold">10</span>.168.222.218
 
-<span style="color:#8f5902;font-style:italic"># 测试连通性</span>
-$ curl -k https://10.168.222.218</code></pre></div>
-<p>用浏览器访问 &lsquo;https://本机IP&rsquo; 会跳转到 web 界面，如果是第一次访问需要注册设置 cloudadmin 用户的密码，注册完成后登录的界面如下:</p>
+<h3 id="创建登录用户">创建登录用户</h3>
 
-<p><img src="../images/web.png" alt="nnn" /></p>
-
-<h3 id="环境检查">环境检查</h3>
-
-<p>当控制节点部署完成后，云平台的管理员认证信息由 <code>ocadm cluster rcadmin</code> 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。</p>
+<p>当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 <code>ocadm cluster rcadmin</code> 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取连接 onecloud 集群的环境变量</span>
 $ ocadm cluster rcadmin
 <span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://10.168.222.218:35357/v3
@@ -1039,17 +1033,32 @@ $ ocadm cluster rcadmin
 </div>
 
 
-<p>测试链接</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>ocadm cluster rcadmin<span style="color:#ce5c00;font-weight:bold">)</span>
-$ climc endpoint-list
-+----------------------------------+-----------+----------------------------------+----------------------------------+-----------+---------+
-<span style="color:#000;font-weight:bold">|</span>                ID                <span style="color:#000;font-weight:bold">|</span> Region_ID <span style="color:#000;font-weight:bold">|</span>            Service_ID            <span style="color:#000;font-weight:bold">|</span>               URL                <span style="color:#000;font-weight:bold">|</span> Interface <span style="color:#000;font-weight:bold">|</span> Enabled <span style="color:#000;font-weight:bold">|</span>
-+----------------------------------+-----------+----------------------------------+----------------------------------+-----------+---------+
-<span style="color:#000;font-weight:bold">|</span> aa266549bbd743f4882fa1b1e98e409a <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 106f7cf2410b4187879d4a44a737df0b <span style="color:#000;font-weight:bold">|</span> https://default-influxdb:8086    <span style="color:#000;font-weight:bold">|</span> internal  <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> ba59f23951e6452984b9d2036d303ade <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 106f7cf2410b4187879d4a44a737df0b <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8086      <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> 5b2981d751624c6b86a757e30676c528 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> ee302d70e261452282ca66c86f85f2f7 <span style="color:#000;font-weight:bold">|</span> https://default-webconsole:8899  <span style="color:#000;font-weight:bold">|</span> internal  <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> 81c79509449f4f4581140adc030e5e57 <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> ee302d70e261452282ca66c86f85f2f7 <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8899      <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
-...</code></pre></div>
+<p>创建用户</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 初始化连接集群的管理员认证信息</span>
+$ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>ocadm cluster rcadmin<span style="color:#ce5c00;font-weight:bold">)</span>
+
+<span style="color:#8f5902;font-style:italic"># 设置想要创建的用户名和密码</span>
+$ <span style="color:#000">OC_USERNAME</span><span style="color:#ce5c00;font-weight:bold">=</span>demo
+$ <span style="color:#000">OC_PASSWORD</span><span style="color:#ce5c00;font-weight:bold">=</span>demo
+
+<span style="color:#8f5902;font-style:italic"># 创建指定的用户</span>
+$ climc user-create --password <span style="color:#000">$OC_PASSWORD</span> --enabled <span style="color:#000">$OC_USERNAME</span>
+
+<span style="color:#8f5902;font-style:italic"># 将用户加入 system 项目并赋予 admin 角色</span>
+$ climc project-add-user system <span style="color:#000">$OC_USERNAME</span> admin</code></pre></div>
+<h3 id="访问前端">访问前端</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取本机 IP</span>
+$ ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span>
+<span style="color:#0000cf;font-weight:bold">10</span>.168.222.218
+
+<span style="color:#8f5902;font-style:italic"># 测试连通性</span>
+$ curl -k https://10.168.222.218</code></pre></div>
+<p>用浏览器访问 &lsquo;https://本机IP&rsquo; 会跳转到 web 界面，使用 <a href="/docs/setup/controlplane/#创建登录用户">创建登录用户</a> 里面指定的用户名和密码登录后，界面如下:</p>
+
+<p><img src="../images/web-login.png" alt="登录页" /></p>
+
+<p><img src="../images/web-dashboard.png" alt="首页" /></p>
+
 <h3 id="删除环境">删除环境</h3>
 
 <p>如果安装过程中失败，或者想清理环境，可执行以下命令删除 kubernetes 集群。</p>
@@ -1116,7 +1125,7 @@ $ climc endpoint-list
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 21.09.2019: <a  href="https://github.com/yunionio/docs/commit/3266873eefa334db7ddc9cf05cfa5568663f26ec">use yum install ocadm (3266873)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 23.09.2019: <a  href="https://github.com/yunionio/docs/commit/88e0ad8e89210883c9fbd8c340f4597805d7fde7">update dashboard images (88e0ad8)</a>
 </div>
 </div>
 

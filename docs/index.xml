@@ -787,7 +787,9 @@ Your Kubernetes and Onecloud control-plane has initialized successfully!
 
 
 &lt;p&gt;kubernetes 集群部署完成后，通过以下命令来确保相关的 pod (容器) 都已经启动, 变成 running 的状态。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;KUBECONFIG&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;/etc/kubernetes/admin.conf
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir -p &lt;span style=&#34;color:#000&#34;&gt;$HOME&lt;/span&gt;/.kube
+$ sudo cp -i /etc/kubernetes/admin.conf &lt;span style=&#34;color:#000&#34;&gt;$HOME&lt;/span&gt;/.kube/config
+$ sudo chown &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;id -u&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;:&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;id -g&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$HOME&lt;/span&gt;/.kube/config
 $ kubectl get pods --all-namespaces
 NAMESPACE            NAME                                       READY   STATUS    RESTARTS   AGE
 kube-system          calico-kube-controllers-648bb4447c-57gjb   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          5h1m
@@ -817,19 +819,10 @@ default-apigateway-f657c55c8-9tzpm     &lt;span style=&#34;color:#0000cf;font-we
 default-web-7778d95cb8-2xv6n           &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          118m
 default-webconsole-5855c8b64f-jtqwn    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          119m&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;等待 &lt;strong&gt;default-web-&lt;/strong&gt; 相关的 pod 状态变为 Running 后，就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 获取本机 IP&lt;/span&gt;
-$ ip route get &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; awk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;{print $NF;exit}&amp;#39;&lt;/span&gt;
-&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.218
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试连通性&lt;/span&gt;
-$ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;用浏览器访问 &amp;lsquo;https://本机IP&amp;rsquo; 会跳转到 web 界面，如果是第一次访问需要注册设置 cloudadmin 用户的密码，注册完成后登录的界面如下:&lt;/p&gt;
+&lt;h3 id=&#34;创建登录用户&#34;&gt;创建登录用户&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&#34;../images/web.png&#34; alt=&#34;nnn&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;环境检查&#34;&gt;环境检查&lt;/h3&gt;
-
-&lt;p&gt;当控制节点部署完成后，云平台的管理员认证信息由 &lt;code&gt;ocadm cluster rcadmin&lt;/code&gt; 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p&gt;
+&lt;p&gt;当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 &lt;code&gt;ocadm cluster rcadmin&lt;/code&gt; 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 获取连接 onecloud 集群的环境变量&lt;/span&gt;
 $ ocadm cluster rcadmin
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_AUTH_URL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;https://10.168.222.218:35357/v3
@@ -849,17 +842,32 @@ $ ocadm cluster rcadmin
 &lt;/div&gt;
 
 
-&lt;p&gt;测试链接&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;ocadm cluster rcadmin&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;
-$ climc endpoint-list
-+----------------------------------+-----------+----------------------------------+----------------------------------+-----------+---------+
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                ID                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Region_ID &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;            Service_ID            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;               URL                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Interface &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Enabled &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-+----------------------------------+-----------+----------------------------------+----------------------------------+-----------+---------+
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; aa266549bbd743f4882fa1b1e98e409a &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 106f7cf2410b4187879d4a44a737df0b &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://default-influxdb:8086    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; internal  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ba59f23951e6452984b9d2036d303ade &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 106f7cf2410b4187879d4a44a737df0b &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:8086      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 5b2981d751624c6b86a757e30676c528 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ee302d70e261452282ca66c86f85f2f7 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://default-webconsole:8899  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; internal  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 81c79509449f4f4581140adc030e5e57 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; region0   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ee302d70e261452282ca66c86f85f2f7 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; https://10.168.222.218:8899      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;创建用户&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 初始化连接集群的管理员认证信息&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;ocadm cluster rcadmin&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 设置想要创建的用户名和密码&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;OC_USERNAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;demo
+$ &lt;span style=&#34;color:#000&#34;&gt;OC_PASSWORD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;demo
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建指定的用户&lt;/span&gt;
+$ climc user-create --password &lt;span style=&#34;color:#000&#34;&gt;$OC_PASSWORD&lt;/span&gt; --enabled &lt;span style=&#34;color:#000&#34;&gt;$OC_USERNAME&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将用户加入 system 项目并赋予 admin 角色&lt;/span&gt;
+$ climc project-add-user system &lt;span style=&#34;color:#000&#34;&gt;$OC_USERNAME&lt;/span&gt; admin&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;访问前端&#34;&gt;访问前端&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 获取本机 IP&lt;/span&gt;
+$ ip route get &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; awk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;{print $NF;exit}&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.218
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试连通性&lt;/span&gt;
+$ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;用浏览器访问 &amp;lsquo;https://本机IP&amp;rsquo; 会跳转到 web 界面，使用 &lt;a href=&#34;https://docs.yunion.io/docs/setup/controlplane/#创建登录用户&#34;&gt;创建登录用户&lt;/a&gt; 里面指定的用户名和密码登录后，界面如下:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/web-login.png&#34; alt=&#34;登录页&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/web-dashboard.png&#34; alt=&#34;首页&#34; /&gt;&lt;/p&gt;
+
 &lt;h3 id=&#34;删除环境&#34;&gt;删除环境&lt;/h3&gt;
 
 &lt;p&gt;如果安装过程中失败，或者想清理环境，可执行以下命令删除 kubernetes 集群。&lt;/p&gt;

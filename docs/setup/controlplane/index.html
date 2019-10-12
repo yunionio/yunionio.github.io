@@ -14,15 +14,15 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57+08:00" />
-<meta property="article:modified_time" content="2019-09-23T13:23:15+08:00" />
+<meta property="article:modified_time" content="2019-10-12T15:29:30+08:00" />
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
 ">
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-09-23T13:23:15&#43;08:00" />
-<meta itemprop="wordCount" content="864">
+<meta itemprop="dateModified" content="2019-10-12T15:29:30&#43;08:00" />
+<meta itemprop="wordCount" content="979">
 
 
 
@@ -732,7 +732,12 @@
 <li><a href="#访问前端">访问前端</a></li>
 <li><a href="#删除环境">删除环境</a></li>
 </ul></li>
-<li><a href="#后续">后续</a></li>
+<li><a href="#后续">后续</a>
+<ul>
+<li><a href="#添加计算节点">添加计算节点</a></li>
+<li><a href="#切换企业版前端">切换企业版前端</a></li>
+<li><a href="#额外插件">额外插件</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -1066,8 +1071,97 @@ $ curl -k https://10.168.222.218</code></pre></div>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm reset --force</code></pre></div>
 <h2 id="后续">后续</h2>
 
+<p>如果没有意外，现在应该已经部署好了 onecloud on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。</p>
+
+<h3 id="添加计算节点">添加计算节点</h3>
+
 <p>当控制节点搭建完成后，可以参考 <a href="/docs/setup/host/">计算节点</a> 一节的内容，添加计算节点，组建一套私有云集群。</p>
 
+<h3 id="切换企业版前端">切换企业版前端</h3>
+
+<p>默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 <code>ocadm component web</code> 命令来切换前端:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 切换到企业版的 web 前端</span>
+$ ocadm component web use-ee
+
+<span style="color:#8f5902;font-style:italic"># 切换到开源版的 web 前端</span>
+$ ocadm component web use-ce</code></pre></div>
+<p><code>ocadm component web use-ee/use-ce</code> 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。</p>
+
+<h3 id="额外插件">额外插件</h3>
+
+<p>onecloud 系统有一些非核心的额外组件可以通过 <code>ocadm component</code> 命令来启用或者禁用，对应组件列表说明如下:</p>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>cloudmon</td>
+<td>多云监控组件</td>
+</tr>
+
+<tr>
+<td>cloudwatcher</td>
+<td>优化建议组件</td>
+</tr>
+
+<tr>
+<td>itsm</td>
+<td>流程工单组件</td>
+</tr>
+
+<tr>
+<td>meter</td>
+<td>计费组件</td>
+</tr>
+
+<tr>
+<td>meter-cloud</td>
+<td>计费组件</td>
+</tr>
+
+<tr>
+<td>meter-service</td>
+<td>计费组件</td>
+</tr>
+
+<tr>
+<td>meter-traffic</td>
+<td>计费组件</td>
+</tr>
+
+<tr>
+<td>meteralert</td>
+<td>计费组件</td>
+</tr>
+</tbody>
+</table>
+
+<p>这些组件并不是必需的，如果有需要，可以使用下面命令来管理:</p>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">注意</h4>
+这些额外插件大部分是 java 编写，每个组件以 pod 的方式启动，会占用 1g 以上的内存，如果要启用，建议先参考 <a href="/docs/setup/components/">添加节点</a> 添加更多的 kubernetes node 节点然后再启用这些组件。
+</div>
+
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 启用所有组件，会占用更多 cpu/memory 的资源</span>
+$ ocadm component <span style="color:#204a87">enable</span> all
+
+<span style="color:#8f5902;font-style:italic"># 禁用所有组件</span>
+$ ocadm component disable all
+
+<span style="color:#8f5902;font-style:italic"># 启用某个组件，以 cloudmon 为例</span>
+$ ocadm component <span style="color:#204a87">enable</span> cloudmon
+
+<span style="color:#8f5902;font-style:italic"># 禁用某个组件，以 cloudwatcher 为例</span>
+$ ocadm component disable cloudwatcher</code></pre></div>
 	
 		<style>
   .feedback--answer {
@@ -1130,7 +1224,7 @@ $ curl -k https://10.168.222.218</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 23.09.2019: <a  href="https://github.com/yunionio/docs/commit/f33707d48eb00f2408ae2b2d0fffeb11d7000869">update host operate (f33707d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.10.2019: <a  href="https://github.com/yunionio/docs/commit/3d6737af33e8ee864de6e10601abab146a992f7e">add extra setup steps description (3d6737a)</a>
 </div>
 </div>
 

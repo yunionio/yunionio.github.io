@@ -699,6 +699,14 @@ $ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; kubele
 $ swapoff -a
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行&lt;/span&gt;
 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 关闭 selinux&lt;/span&gt;
+$ setenforce  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;
+$ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/SELINUX=permissive/&amp;#39;&lt;/span&gt; /etc/selinux/config
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用 firewalld&lt;/span&gt;
+$ systemctl stop firewalld
+$ systemctl disable firewalld
+
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 做一些 sysctl 的配置, kubernetes 要求&lt;/span&gt;
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/bridge.conf
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;net.bridge.bridge-nf-call-iptables=1

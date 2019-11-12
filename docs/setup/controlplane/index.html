@@ -22,7 +22,7 @@
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
 <meta itemprop="dateModified" content="2019-11-12T13:20:53&#43;08:00" />
-<meta itemprop="wordCount" content="1001">
+<meta itemprop="wordCount" content="1012">
 
 
 
@@ -904,6 +904,10 @@ $ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/&
 $ systemctl stop firewalld
 $ systemctl disable firewalld
 
+<span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager</span>
+$ systemctl stop NetworkManager
+$ systemctl disable NetworkManager
+
 <span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysctl.d/bridge.conf
 </span><span style="color:#4e9a06">net.bridge.bridge-nf-call-iptables=1
@@ -1053,7 +1057,7 @@ $ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-
 
 <span style="color:#8f5902;font-style:italic"># 设置想要创建的用户名和密码</span>
 $ <span style="color:#000">OC_USERNAME</span><span style="color:#ce5c00;font-weight:bold">=</span>demo
-$ <span style="color:#000">OC_PASSWORD</span><span style="color:#ce5c00;font-weight:bold">=</span>demo
+$ <span style="color:#000">OC_PASSWORD</span><span style="color:#ce5c00;font-weight:bold">=</span>demo@123
 
 <span style="color:#8f5902;font-style:italic"># 创建指定的用户</span>
 $ climc user-create --password <span style="color:#000">$OC_PASSWORD</span> --enabled <span style="color:#000">$OC_USERNAME</span>
@@ -1232,7 +1236,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.11.2019: <a  href="https://github.com/yunionio/docs/commit/395a52d4d404dccac48900ff842cfeb2065c268a">disable selinux and firewalld (395a52d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.11.2019: <a  href="https://github.com/yunionio/docs/commit/aa11ebd24af0c47190a44ba4a9df4e6f8a3a9bf7">disable selinux and firewalld (aa11ebd)</a>
 </div>
 </div>
 

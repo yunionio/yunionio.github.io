@@ -707,6 +707,10 @@ $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/
 $ systemctl stop firewalld
 $ systemctl disable firewalld
 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用 NetworkManager&lt;/span&gt;
+$ systemctl stop NetworkManager
+$ systemctl disable NetworkManager
+
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 做一些 sysctl 的配置, kubernetes 要求&lt;/span&gt;
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/bridge.conf
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;net.bridge.bridge-nf-call-iptables=1
@@ -856,7 +860,7 @@ $ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 设置想要创建的用户名和密码&lt;/span&gt;
 $ &lt;span style=&#34;color:#000&#34;&gt;OC_USERNAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;demo
-$ &lt;span style=&#34;color:#000&#34;&gt;OC_PASSWORD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;demo
+$ &lt;span style=&#34;color:#000&#34;&gt;OC_PASSWORD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;demo@123
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建指定的用户&lt;/span&gt;
 $ climc user-create --password &lt;span style=&#34;color:#000&#34;&gt;$OC_PASSWORD&lt;/span&gt; --enabled &lt;span style=&#34;color:#000&#34;&gt;$OC_USERNAME&lt;/span&gt;

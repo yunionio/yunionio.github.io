@@ -2490,6 +2490,72 @@ $ climc server-delete -f &amp;lt;server_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/
     </item>
     
     <item>
+      <title>Docs: libvirt管理虚机导入</title>
+      <link>https://docs.yunion.io/docs/howto/server/import/</link>
+      <pubDate>Tue, 26 Nov 2019 16:57:43 +0800</pubDate>
+      
+      <guid>https://docs.yunion.io/docs/howto/server/import/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;支持将libvirt管理的虚拟机导入到OneCloud&lt;/p&gt;
+
+&lt;h2 id=&#34;注意事项&#34;&gt;注意事项&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;首先需要在libvirt管理的宿主机上安装我们的计算节点&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;安装好计算节点后需要添加的虚拟机的网络到控制节点&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;确保libvirt服务关闭&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;相关操作&#34;&gt;相关操作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;准备好需要导入虚拟机的信息文件&lt;code&gt;servers.yaml&lt;/code&gt;， 格式如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hosts:
+- host_ip: 10.168.222.137
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+  - mac: 52:54:00:4A:19:AF
+    ip: 10.168.222.53
+  - mac: 52:54:00:4A:19:CC
+    ip: 10.168.222.54
+- host_ip: 10.168.222.130
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+  - mac: 53:54:00:4A:19:EC
+    ip: 11.168.222.50
+  - mac: 53:54:00:4A:19:EE
+    ip: 11.168.222.51
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;host_ip&lt;/code&gt; 是要导入的宿主机的ip&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xml_file_path&lt;/code&gt;是libvirt存储虚拟机xml文件的路径，&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;monitor_path&lt;/code&gt;是libvirt存储虚拟机monitor socket文件的路径，&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;servers&lt;/code&gt;是需要导入的虚拟机，里面描述了虚拟机的ip和mac对应关系&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;执行 climc servers-import-from-libvirt 开始导入&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 导入前确认libvirt服务关闭&lt;/span&gt;
+$ climc servers-import-from-libvirt servers.yaml&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: GPU相关</title>
       <link>https://docs.yunion.io/docs/howto/server/gpu/</link>
       <pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate>

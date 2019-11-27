@@ -14,15 +14,15 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57+08:00" />
-<meta property="article:modified_time" content="2019-11-12T13:20:53+08:00" />
+<meta property="article:modified_time" content="2019-11-27T12:12:58+08:00" />
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
 ">
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-11-12T13:20:53&#43;08:00" />
-<meta itemprop="wordCount" content="1012">
+<meta itemprop="dateModified" content="2019-11-27T12:12:58&#43;08:00" />
+<meta itemprop="wordCount" content="1016">
 
 
 
@@ -846,7 +846,9 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/my.cnf
 </span><span style="color:#4e9a06">EOF</span>
 
 $ mysql -uroot -p<span style="color:#000">$MYSQL_PASSWD</span> <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>-e <span style="color:#4e9a06">&#34;GRANT ALL ON *.* to &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39; with grant option; FLUSH PRIVILEGES;&#34;</span></code></pre></div></li>
+</span><span style="color:#4e9a06"></span>-e <span style="color:#4e9a06">&#34;GRANT ALL ON *.* to &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39; with grant option; FLUSH PRIVILEGES;&#34;</span>
+
+$ systemctl restart mariadb</code></pre></div></li>
 </ul>
 
 <h3 id="安装配置-docker">安装配置 docker</h3>
@@ -1242,7 +1244,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.11.2019: <a  href="https://github.com/yunionio/docs/commit/aa11ebd24af0c47190a44ba4a9df4e6f8a3a9bf7">disable selinux and firewalld (aa11ebd)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 27.11.2019: <a  href="https://github.com/yunionio/docs/commit/200b2733913ce7a6c3fd2c4e9a17b6fb56ef4094">restart mariadb after grant privileges (200b273)</a>
 </div>
 </div>
 

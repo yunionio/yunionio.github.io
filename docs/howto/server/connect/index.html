@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.55.5" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -16,21 +16,25 @@ $ climc webconsole-server &lt;server_id&gt; ssh 链接 查询 server 的 ip
 # 可通过 server-list --search --details 的方式找到主机的 ip $ climc server-list --search &lt;server_name&gt; --details # 或者通过 server-show &lt;server_id&gt; 的方式得到 ip $ climc server-show &lt;server_name&gt; | grep ip | ips | 10.168.222.226 | 查询 server 的登录信息" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/howto/server/connect/" />
-<meta property="article:published_time" content="2019-07-19T17:38:36+08:00" />
-<meta property="article:modified_time" content="2019-07-30T14:08:01+08:00" />
+<meta property="article:published_time" content="2019-07-19T17:38:36&#43;08:00"/>
+<meta property="article:modified_time" content="2019-07-30T14:08:01&#43;08:00"/>
+
 <meta itemprop="name" content="登录云主机">
 <meta itemprop="description" content="创建好主机后，登录的方式大概分为以下几种：
  ssh: linux 通用，要求主机网络可达; rdp: windows 远程桌面，要求主机网络可达； vnc: vnc 链接，对主机网络没有要求，只要能链接云平台 vnc proxy 即可; ipmi sol: 只对装有 BMC 的物理机可用;  针对以上的链接方式，我们提供以下接口链接云主机：
 vnc 链接 climc webconsole-server 命令提供通过 vnc 的方式链接虚拟机，该方式对裸金属服务器不可用。
 $ climc webconsole-server &lt;server_id&gt; ssh 链接 查询 server 的 ip
 # 可通过 server-list --search --details 的方式找到主机的 ip $ climc server-list --search &lt;server_name&gt; --details # 或者通过 server-show &lt;server_id&gt; 的方式得到 ip $ climc server-show &lt;server_name&gt; | grep ip | ips | 10.168.222.226 | 查询 server 的登录信息">
+
+
 <meta itemprop="datePublished" content="2019-07-19T17:38:36&#43;08:00" />
 <meta itemprop="dateModified" content="2019-07-30T14:08:01&#43;08:00" />
 <meta itemprop="wordCount" content="115">
 
 
 
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="登录云主机"/>
 <meta name="twitter:description" content="创建好主机后，登录的方式大概分为以下几种：
  ssh: linux 通用，要求主机网络可达; rdp: windows 远程桌面，要求主机网络可达； vnc: vnc 链接，对主机网络没有要求，只要能链接云平台 vnc proxy 即可; ipmi sol: 只对装有 BMC 的物理机可用;  针对以上的链接方式，我们提供以下接口链接云主机：
@@ -637,52 +641,6 @@ $ climc webconsole-server &lt;server_id&gt; ssh 链接 查询 server 的 ip
 
       
       
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/monitor/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Monitor</a>
-  </li>
-  <ul>
-    <li class="collapse " id="docs-howto-monitor">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/meter/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Meter</a>
-  </li>
-  <ul>
-    <li class="collapse " id="docs-howto-meter">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
     </li>
   </ul>
 </ul>
@@ -778,41 +736,52 @@ $ climc webconsole-server &lt;server_id&gt; ssh 链接 查询 server 的 ip
 <div class="td-content">
 	<h1>登录云主机</h1>
 	
-	<p>创建好主机后，登录的方式大概分为以下几种：</p>
+	
+
+<p>创建好主机后，登录的方式大概分为以下几种：</p>
+
 <ul>
 <li>ssh: linux 通用，要求主机网络可达;</li>
 <li>rdp: windows 远程桌面，要求主机网络可达；</li>
 <li>vnc: vnc 链接，对主机网络没有要求，只要能链接云平台 vnc proxy 即可;</li>
 <li>ipmi sol: 只对装有 BMC 的物理机可用;</li>
 </ul>
+
 <p>针对以上的链接方式，我们提供以下接口链接云主机：</p>
-<h3 id="vnc-">vnc 链接</h3>
+
+<h3 id="vnc-链接">vnc 链接</h3>
+
 <p><code>climc webconsole-server</code> 命令提供通过 vnc 的方式链接虚拟机，该方式对裸金属服务器不可用。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc webconsole-server &lt;server_id&gt;
-</code></pre></div><h3 id="ssh-">ssh 链接</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc webconsole-server &lt;server_id&gt;</code></pre></div>
+<h3 id="ssh-链接">ssh 链接</h3>
+
 <p>查询 server 的 ip</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 可通过 server-list --search --details 的方式找到主机的 ip</span>
 $ climc server-list --search &lt;server_name&gt; --details 
 
 <span style="color:#8f5902;font-style:italic"># 或者通过 server-show &lt;server_id&gt; 的方式得到 ip</span>
 $ climc server-show &lt;server_name&gt; <span style="color:#000;font-weight:bold">|</span> grep ip
-<span style="color:#000;font-weight:bold">|</span> ips                  <span style="color:#000;font-weight:bold">|</span> 10.168.222.226 <span style="color:#000;font-weight:bold">|</span>
-</code></pre></div><p>查询 server 的登录信息</p>
+<span style="color:#000;font-weight:bold">|</span> ips                  <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">10</span>.168.222.226 <span style="color:#000;font-weight:bold">|</span></code></pre></div>
+<p>查询 server 的登录信息</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc server-logininfo &lt;server_name&gt;
 +----------+-----------------------------+
 <span style="color:#000;font-weight:bold">|</span>  Field   <span style="color:#000;font-weight:bold">|</span>            Value            <span style="color:#000;font-weight:bold">|</span>
 +----------+-----------------------------+
 <span style="color:#000;font-weight:bold">|</span> password <span style="color:#000;font-weight:bold">|</span> @2aWXB6AmCbV                <span style="color:#000;font-weight:bold">|</span>
-<span style="color:#000;font-weight:bold">|</span> updated  <span style="color:#000;font-weight:bold">|</span> 2019-07-03T10:00:20.801716Z <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> updated  <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">2019</span>-07-03T10:00:20.801716Z <span style="color:#000;font-weight:bold">|</span>
 <span style="color:#000;font-weight:bold">|</span> username <span style="color:#000;font-weight:bold">|</span> root                        <span style="color:#000;font-weight:bold">|</span>
-+----------+-----------------------------+
-</code></pre></div><p>ssh 登录</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh root@10.168.222.226
-</code></pre></div><p>通过 webconsole 登录</p>
++----------+-----------------------------+</code></pre></div>
+<p>ssh 登录</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh root@10.168.222.226</code></pre></div>
+<p>通过 webconsole 登录</p>
+
 <pre><code>$ climc webconsole-ssh 10.168.222.226
 https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1vskIuVwB-aINfH4mm8MsZqwxKSfHqm2pCvY6O8bBA%3D%3D&amp;api_server=https%3A%2F%2Foffice.yunion.io&amp;protocol=tty
-</code></pre><p>在浏览器打开 webconsole 放回的 url ，就会到对应虚拟机的登录界面</p>
-<p><img src="../images/webssh.png" alt=""></p>
+</code></pre>
+
+<p>在浏览器打开 webconsole 放回的 url ，就会到对应虚拟机的登录界面</p>
+
+<p><img src="../images/webssh.png" alt="" /></p>
 
 	
 		<style>
@@ -895,7 +864,7 @@ https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1
 
 
 
-<script src="/js/main.min.dc5b749bca2267319c957bf046da78b018ca29475bcfe884ab5537d7c2e7401b.js" integrity="sha256-3Ft0m8oiZzGclXvwRtp4sBjKKUdbz&#43;iEq1U318LnQBs="></script>
+<script src="/js/main.min.c77fb6c0a0967a2e28fca20f002bc0ae85e2479d876a8107308f971df1e9d320.js" integrity="sha256-x3&#43;2wKCWei4o/KIPACvAroXiR52HaoEHMI&#43;XHfHp0yA="></script>
 
 
 

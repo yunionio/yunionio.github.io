@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.55.5" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -17,8 +17,9 @@
 $ climc image-show ubuntu-xenial-server.qcow2 | grep status | status | active | 上传参数 使用 climc help image-upload 获取各个参数解释。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/howto/image/upload/" />
-<meta property="article:published_time" content="2019-07-19T11:34:14+08:00" />
-<meta property="article:modified_time" content="2019-07-30T14:08:01+08:00" />
+<meta property="article:published_time" content="2019-07-19T11:34:14&#43;08:00"/>
+<meta property="article:modified_time" content="2019-07-30T14:08:01&#43;08:00"/>
+
 <meta itemprop="name" content="上传镜像">
 <meta itemprop="description" content="获取镜像 上传镜像之前需要先获取镜像，途径有多种，比如从发行版官网下载用于云平台的镜像，或者自己制作。
 发行版镜像 根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:
@@ -26,13 +27,16 @@ $ climc image-show ubuntu-xenial-server.qcow2 | grep status | status | active | 
 上传 下载或者制作完镜像后，使用 climc image-upload 上传到云平台的 glance 服务，下面以下载 ubuntu 提供的 xenial-server-cloudimg 举例:
 # 下载 ubuntu xenial-server-cloudimg-amd64-disk1.img $ wget https://cloud-images.ubuntu.com/xenial/20190716/xenial-server-cloudimg-amd64-disk1.img # 上传镜像到云平台并名为 ubuntu-xenial-server.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ubuntu-xenial-server.qcow2 ./xenial-server-cloudimg-amd64-disk1.img 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
 $ climc image-show ubuntu-xenial-server.qcow2 | grep status | status | active | 上传参数 使用 climc help image-upload 获取各个参数解释。">
+
+
 <meta itemprop="datePublished" content="2019-07-19T11:34:14&#43;08:00" />
 <meta itemprop="dateModified" content="2019-07-30T14:08:01&#43;08:00" />
 <meta itemprop="wordCount" content="70">
 
 
 
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="上传镜像"/>
 <meta name="twitter:description" content="获取镜像 上传镜像之前需要先获取镜像，途径有多种，比如从发行版官网下载用于云平台的镜像，或者自己制作。
 发行版镜像 根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:
@@ -640,52 +644,6 @@ $ climc image-show ubuntu-xenial-server.qcow2 | grep status | status | active | 
 
       
       
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/monitor/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Monitor</a>
-  </li>
-  <ul>
-    <li class="collapse " id="docs-howto-monitor">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/meter/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Meter</a>
-  </li>
-  <ul>
-    <li class="collapse " id="docs-howto-meter">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
     </li>
   </ul>
 </ul>
@@ -729,16 +687,18 @@ $ climc image-show ubuntu-xenial-server.qcow2 | grep status | status | active | 
 
 
 <nav id="TableOfContents">
-  <ul>
-    <li><a href="#heading">获取镜像</a>
-      <ul>
-        <li><a href="#heading1">发行版镜像</a></li>
-        <li><a href="#heading2">制作镜像</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading3">上传</a></li>
-    <li><a href="#heading4">上传参数</a></li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#获取镜像">获取镜像</a>
+<ul>
+<li><a href="#发行版镜像">发行版镜像</a></li>
+<li><a href="#制作镜像">制作镜像</a></li>
+</ul></li>
+<li><a href="#上传">上传</a></li>
+<li><a href="#上传参数">上传参数</a></li>
+</ul></li>
+</ul>
 </nav>
 
 
@@ -794,27 +754,38 @@ $ climc image-show ubuntu-xenial-server.qcow2 | grep status | status | active | 
 <div class="td-content">
 	<h1>上传镜像</h1>
 	
-	<h2 id="heading">获取镜像</h2>
+	
+
+<h2 id="获取镜像">获取镜像</h2>
+
 <p>上传镜像之前需要先获取镜像，途径有多种，比如从发行版官网下载用于云平台的镜像，或者自己制作。</p>
-<h3 id="heading1">发行版镜像</h3>
+
+<h3 id="发行版镜像">发行版镜像</h3>
+
 <p>根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:</p>
+
 <ul>
-<li><a href="http://cloud.centos.org/centos/7/images/">centos</a>: <a href="http://cloud.centos.org/centos/7/images/">http://cloud.centos.org/centos/7/images/</a></li>
-<li><a href="https://cloud-images.ubuntu.com/">ubuntu</a>: <a href="https://cloud-images.ubuntu.com/">https://cloud-images.ubuntu.com/</a></li>
+<li><a href="http://cloud.centos.org/centos/7/images/" target="_blank">centos</a>: <a href="http://cloud.centos.org/centos/7/images/" target="_blank">http://cloud.centos.org/centos/7/images/</a></li>
+<li><a href="https://cloud-images.ubuntu.com/" target="_blank">ubuntu</a>: <a href="https://cloud-images.ubuntu.com/" target="_blank">https://cloud-images.ubuntu.com/</a></li>
 </ul>
-<h3 id="heading2">制作镜像</h3>
+
+<h3 id="制作镜像">制作镜像</h3>
+
 <p>参考: <a href="/howto/image/create/">制作镜像</a></p>
-<h2 id="heading3">上传</h2>
+
+<h2 id="上传">上传</h2>
+
 <p>下载或者制作完镜像后，使用 <code>climc image-upload</code> 上传到云平台的 glance 服务，下面以下载 ubuntu 提供的 xenial-server-cloudimg 举例:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 下载 ubuntu xenial-server-cloudimg-amd64-disk1.img</span> 
 $ wget https://cloud-images.ubuntu.com/xenial/20190716/xenial-server-cloudimg-amd64-disk1.img
 
 <span style="color:#8f5902;font-style:italic"># 上传镜像到云平台并名为 ubuntu-xenial-server.qcow2</span>
-$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ubuntu-xenial-server.qcow2 ./xenial-server-cloudimg-amd64-disk1.img
-</code></pre></div><p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: <a href="/howto/image/query/">镜像查询</a> )</p>
+$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ubuntu-xenial-server.qcow2 ./xenial-server-cloudimg-amd64-disk1.img</code></pre></div>
+<p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: <a href="/howto/image/query/">镜像查询</a> )</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc image-show ubuntu-xenial-server.qcow2 <span style="color:#000;font-weight:bold">|</span> grep status
-<span style="color:#000;font-weight:bold">|</span> status          <span style="color:#000;font-weight:bold">|</span> active <span style="color:#000;font-weight:bold">|</span>
-</code></pre></div><h2 id="heading4">上传参数</h2>
+<span style="color:#000;font-weight:bold">|</span> status          <span style="color:#000;font-weight:bold">|</span> active <span style="color:#000;font-weight:bold">|</span></code></pre></div>
+<h2 id="上传参数">上传参数</h2>
+
 <p>使用 <code>climc help image-upload</code> 获取各个参数解释。</p>
 
 	
@@ -898,7 +869,7 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ub
 
 
 
-<script src="/js/main.min.dc5b749bca2267319c957bf046da78b018ca29475bcfe884ab5537d7c2e7401b.js" integrity="sha256-3Ft0m8oiZzGclXvwRtp4sBjKKUdbz&#43;iEq1U318LnQBs="></script>
+<script src="/js/main.min.c77fb6c0a0967a2e28fca20f002bc0ae85e2479d876a8107308f971df1e9d320.js" integrity="sha256-x3&#43;2wKCWei4o/KIPACvAroXiR52HaoEHMI&#43;XHfHp0yA="></script>
 
 
 

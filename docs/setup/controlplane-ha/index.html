@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.60.1" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -18,16 +18,13 @@
 <meta itemprop="name" content="部署 HA 环境">
 <meta itemprop="description" content="部署高可用负载均衡集群
 ">
-
-
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
 <meta itemprop="dateModified" content="2019-08-13T17:01:05&#43;08:00" />
 <meta itemprop="wordCount" content="496">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="部署 HA 环境"/>
 <meta name="twitter:description" content="部署高可用负载均衡集群
 "/>
@@ -36,8 +33,8 @@
 
 
 
-<link rel="preload" href="/scss/main.min.809880ff03d167d2177e2c7775385da2dabfd4bd38b4421aa4d3741acf90a7d0.css" as="style">
-<link href="/scss/main.min.809880ff03d167d2177e2c7775385da2dabfd4bd38b4421aa4d3741acf90a7d0.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
+<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -720,18 +717,15 @@
 
 
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#环境说明">环境说明</a></li>
-<li><a href="#部署">部署</a>
-<ul>
-<li><a href="#部署配置-keepalived">部署配置 keepalived</a></li>
-<li><a href="#部署配置-haproxy">部署配置 haproxy</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#部署-kubernetes-集群">部署 kubernetes 集群</a></li>
-</ul>
+  <ul>
+    <li><a href="#heading">环境说明</a></li>
+    <li><a href="#heading1">部署</a>
+      <ul>
+        <li><a href="#-keepalived">部署配置 keepalived</a></li>
+        <li><a href="#-haproxy">部署配置 haproxy</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 
 
@@ -777,43 +771,33 @@
 <div class="td-content">
 	<h1>部署 HA 环境</h1>
 	<div class="lead">部署高可用负载均衡集群</div>
-	
-
-<p>在部署生产可用的 kubernetes 集群之前，需要先部署 LoadBalancer 环境，这里使用 <strong>keepalived + haproxy</strong> 的方式实现负载均衡和高可用。</p>
-
-<h2 id="环境说明">环境说明</h2>
-
+	<p>在部署生产可用的 kubernetes 集群之前，需要先部署 LoadBalancer 环境，这里使用 <strong>keepalived + haproxy</strong> 的方式实现负载均衡和高可用。</p>
+<h2 id="heading">环境说明</h2>
 <p>单独拿两个节点部署 keepalived 和 haproxy 作为后端 kubernetes 控制平面的负载均衡器，拓扑结构如下:</p>
-
-<p><img src="../images/k8s.png" alt="" /></p>
-
+<p><img src="../images/k8s.png" alt=""></p>
 <p>两个节点上面分别部署 keepalived 和 haproxy 组成负载均衡集群，haproxy 的 backend 为后端的 kubernetes control plane node，vip(虚ip) 在这两个节点之间漂移形成高可用。</p>
-
-<h2 id="部署">部署</h2>
-
+<h2 id="heading1">部署</h2>
 <p>keepalived 的主要作用是为 haproxy 提供 vip，在2个 haproxy 实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。</p>
-
-<h3 id="部署配置-keepalived">部署配置 keepalived</h3>
-
+<h3 id="-keepalived">部署配置 keepalived</h3>
 <p>设置相关的环境变量，根据不同的环境自行配置。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># keepalived vip 地址</span>
-<span style="color:#204a87">export</span> <span style="color:#000">K8SHA_VIP</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">10</span>.168.222.18
+<span style="color:#204a87">export</span> <span style="color:#000">K8SHA_VIP</span><span style="color:#ce5c00;font-weight:bold">=</span>10.168.222.18
 
 <span style="color:#8f5902;font-style:italic"># keepalived auth toke</span>
 <span style="color:#204a87">export</span> <span style="color:#000">K8SHA_KA_AUTH</span><span style="color:#ce5c00;font-weight:bold">=</span>412f7dc3bfed32194d1600c483e10ad1d
 
 <span style="color:#8f5902;font-style:italic"># keepalived network interface</span>
-<span style="color:#204a87">export</span> <span style="color:#000">K8SHA_NETIF</span><span style="color:#ce5c00;font-weight:bold">=</span>eth0</code></pre></div>
-<p>设置 sysctl 选项</p>
+<span style="color:#204a87">export</span> <span style="color:#000">K8SHA_NETIF</span><span style="color:#ce5c00;font-weight:bold">=</span>eth0
+</code></pre></div><p>设置 sysctl 选项</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;&gt;/etc/sysctl.conf
 </span><span style="color:#4e9a06">net.ipv4.ip_forward = 1
 </span><span style="color:#4e9a06">net.ipv4.ip_nonlocal_bind = 1
 </span><span style="color:#4e9a06">EOF</span>
 
-$ sysctl -p</code></pre></div>
-<p>安装 keepalived</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y keepalived</code></pre></div>
-<p>添加配置</p>
+$ sysctl -p
+</code></pre></div><p>安装 keepalived</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y keepalived
+</code></pre></div><p>添加配置</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/keepalived/keepalived.conf
 </span><span style="color:#4e9a06">! Configuration File for keepalived
 </span><span style="color:#4e9a06">
@@ -846,29 +830,27 @@ $ sysctl -p</code></pre></div>
 </span><span style="color:#4e9a06">        check_haproxy
 </span><span style="color:#4e9a06">    }
 </span><span style="color:#4e9a06">}
-</span><span style="color:#4e9a06">EOF</span></code></pre></div>
-<p>启动 keepalived</p>
+</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><p>启动 keepalived</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> --now keepalived
 $ ip addr show <span style="color:#000">$K8SHA_NETIF</span>
-<span style="color:#0000cf;font-weight:bold">2</span>: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#0000cf;font-weight:bold">1500</span> qdisc mq state UP qlen <span style="color:#0000cf;font-weight:bold">1000</span>
-    link/ether <span style="color:#0000cf;font-weight:bold">00</span>:22:ff:95:87:f7 brd ff:ff:ff:ff:ff:ff
-    inet <span style="color:#0000cf;font-weight:bold">10</span>.168.222.189/24 brd <span style="color:#0000cf;font-weight:bold">10</span>.168.222.255 scope global eth0
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#0000cf;font-weight:bold">1500</span> qdisc mq state UP qlen <span style="color:#0000cf;font-weight:bold">1000</span>
+    link/ether 00:22:ff:95:87:f7 brd ff:ff:ff:ff:ff:ff
+    inet 10.168.222.189/24 brd 10.168.222.255 scope global eth0
        valid_lft forever preferred_lft forever
-    inet <span style="color:#0000cf;font-weight:bold">10</span>.168.222.18/32 scope global eth0
+    inet 10.168.222.18/32 scope global eth0
        valid_lft forever preferred_lft forever
     inet6 fe80::222:ffff:fe95:87f7/64 scope link
-       valid_lft forever preferred_lft forever</code></pre></div>
-<h3 id="部署配置-haproxy">部署配置 haproxy</h3>
-
+       valid_lft forever preferred_lft forever
+</code></pre></div><h3 id="-haproxy">部署配置 haproxy</h3>
 <p>此处的 haproxy 为 apiserver 提供反向代理，haproxy 将所有请求轮询转发到每个master节点上。</p>
-
 <p>系统配置</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#204a87">export</span> <span style="color:#000">K8S_MASTER0</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">10</span>.168.222.218
-<span style="color:#204a87">export</span> <span style="color:#000">K8S_MASTER1</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">10</span>.168.222.197
-<span style="color:#204a87">export</span> <span style="color:#000">K8S_MASTER2</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">10</span>.168.222.207</code></pre></div>
-<p>安装 haproxy</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y haproxy</code></pre></div>
-<p>配置 haproxy</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#204a87">export</span> <span style="color:#000">K8S_MASTER0</span><span style="color:#ce5c00;font-weight:bold">=</span>10.168.222.218
+<span style="color:#204a87">export</span> <span style="color:#000">K8S_MASTER1</span><span style="color:#ce5c00;font-weight:bold">=</span>10.168.222.197
+<span style="color:#204a87">export</span> <span style="color:#000">K8S_MASTER2</span><span style="color:#ce5c00;font-weight:bold">=</span>10.168.222.207
+</code></pre></div><p>安装 haproxy</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y haproxy
+</code></pre></div><p>配置 haproxy</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/haproxy/haproxy.cfg
 </span><span style="color:#4e9a06">#---------------------------------------------------------------------
 </span><span style="color:#4e9a06"># Global settings
@@ -949,15 +931,14 @@ $ ip addr show <span style="color:#000">$K8SHA_NETIF</span>
 </span><span style="color:#4e9a06">    stats refresh        5s
 </span><span style="color:#4e9a06">    stats realm          HAProxy\ Statistics
 </span><span style="color:#4e9a06">    stats uri            /admin?stats
-</span><span style="color:#4e9a06">EOF</span></code></pre></div>
-<p>启动并检测服务</p>
+</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><p>启动并检测服务</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> haproxy.service --now
 $ systemctl status haproxy.service
 $ netstat -tulnp <span style="color:#000;font-weight:bold">|</span> egrep <span style="color:#4e9a06">&#39;6443|1080&#39;</span>
-tcp        <span style="color:#0000cf;font-weight:bold">0</span>      <span style="color:#0000cf;font-weight:bold">0</span> <span style="color:#0000cf;font-weight:bold">0</span>.0.0.0:6443            <span style="color:#0000cf;font-weight:bold">0</span>.0.0.0:*               LISTEN      <span style="color:#0000cf;font-weight:bold">10033</span>/haproxy
-tcp        <span style="color:#0000cf;font-weight:bold">0</span>      <span style="color:#0000cf;font-weight:bold">0</span> <span style="color:#0000cf;font-weight:bold">0</span>.0.0.0:1080            <span style="color:#0000cf;font-weight:bold">0</span>.0.0.0:*               LISTEN      <span style="color:#0000cf;font-weight:bold">10033</span>/haproxy</code></pre></div>
-<h1 id="部署-kubernetes-集群">部署 kubernetes 集群</h1>
-
+tcp        <span style="color:#0000cf;font-weight:bold">0</span>      <span style="color:#0000cf;font-weight:bold">0</span> 0.0.0.0:6443            0.0.0.0:*               LISTEN      10033/haproxy
+tcp        <span style="color:#0000cf;font-weight:bold">0</span>      <span style="color:#0000cf;font-weight:bold">0</span> 0.0.0.0:1080            0.0.0.0:*               LISTEN      10033/haproxy
+</code></pre></div><h1 id="-kubernetes-">部署 kubernetes 集群</h1>
 <p>参考 <a href="/docs/setup/controlplane">部署集群</a> 。</p>
 
 	

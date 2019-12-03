@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.60.1" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -13,12 +13,9 @@
 <meta property="og:description" content="Documentation for onecloud" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://docs.yunion.io/docs/howto/baremetal/" />
-
 <meta property="og:updated_time" content="2019-07-10T10:16:53+08:00" />
 <meta itemprop="name" content="物理机">
-<meta itemprop="description" content="Documentation for onecloud">
-
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="description" content="Documentation for onecloud"><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="物理机"/>
 <meta name="twitter:description" content="Documentation for onecloud"/>
 
@@ -26,8 +23,8 @@
 
 
 
-<link rel="preload" href="/scss/main.min.809880ff03d167d2177e2c7775385da2dabfd4bd38b4421aa4d3741acf90a7d0.css" as="style">
-<link href="/scss/main.min.809880ff03d167d2177e2c7775385da2dabfd4bd38b4421aa4d3741acf90a7d0.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
+<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -752,31 +749,50 @@
 <div class="td-content">
 	<h1>物理机</h1>
 	
-	
-
-<h1 id="术语解释">术语解释</h1>
-
+	<h1 id="heading">术语解释</h1>
 <ul>
-<li>Baremetal: 指尚未安装操作系统的服务器， 也叫作物理机</li>
-<li><a href="https://zh.wikipedia.org/wiki/%E9%A2%84%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83" target="_blank">PXE (Preboot eXecution Environment)</a>: 使用网络接口启动计算机的机制。这种机制不依赖本地数据存储设备（如硬盘）或本地已安装的操作系统，使用 DHCP 协议查找引导服务器并获取 IP，再通过 TFTP 协议下载初始引导程序和附加文件启动</li>
-<li><a href="https://zh.wikipedia.org/wiki/%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E8%AE%BE%E7%BD%AE%E5%8D%8F%E8%AE%AE" target="_blank">DHCP (Dynamic Host Configuration Protocol)</a>: 动态主机设置协议是一个局域网的网络协议，使用UDP协议工作，为机器分配 IP</li>
-<li><a href="https://zh.wikipedia.org/wiki/%E5%B0%8F%E5%9E%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE" target="_blank">TFTP (Trivial File Transfer Protocol)</a>: 小型文件传输协议，使用UDP协议传输文件</li>
-<li>DHCP Relay: 在不同子网和物理网段之间处理和转发dhcp信息的功能</li>
-<li><a href="https://zh.wikipedia.org/wiki/IPMI" target="_blank">IPMI (Intelligent Platform Management Interface)</a>：管理服务器硬件的标准，特性是独立于操作系统外自行运行，即使在缺少操作系统或系统管理软件、或受监控的系统关机但有接电源的情况下仍能远程管理系统，也能在操作系统引导后运行</li>
-<li><a href="https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller" target="_blank">BMC (Baseboard management controller)</a>: 基板管理控制器，支持行业标准的 IPMI 规范</li>
-<li><a href="https://zh.wikipedia.org/wiki/Secure_Shell" target="_blank">SSH (Secure Shell)</a>: 用于远程登录控制服务器</li>
-
-<li><p><a href="https://zh.wikipedia.org/wiki/RAID" target="_blank">RAID (Redundant Array of Independent Disks)</a>: 磁盘阵列，把多个硬盘组合成为一个逻辑扇区，操作系统只会把它当作一个硬盘</p></li>
-
-<li><p>Region Service: 云平台控制服务，提供 baremetal 相关 API</p></li>
-
-<li><p>Baremetal Agent: 云平台管理 baremetal 的服务</p></li>
-
-<li><p>Glance Service: 云平台镜像服务，提供物理机装机的 Image 镜像</p></li>
-
-<li><p>裸金属服务器: baremetal 物理机安装操作系统后，在云平台创建的 server 的记录</p></li>
-
-<li><p>宿主机: 可以运行云平台虚拟机的节点</p></li>
+<li>
+<p>Baremetal: 指尚未安装操作系统的服务器， 也叫作物理机</p>
+</li>
+<li>
+<p><a href="https://zh.wikipedia.org/wiki/%E9%A2%84%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83">PXE (Preboot eXecution Environment)</a>: 使用网络接口启动计算机的机制。这种机制不依赖本地数据存储设备（如硬盘）或本地已安装的操作系统，使用 DHCP 协议查找引导服务器并获取 IP，再通过 TFTP 协议下载初始引导程序和附加文件启动</p>
+</li>
+<li>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E8%AE%BE%E7%BD%AE%E5%8D%8F%E8%AE%AE">DHCP (Dynamic Host Configuration Protocol)</a>: 动态主机设置协议是一个局域网的网络协议，使用UDP协议工作，为机器分配 IP</p>
+</li>
+<li>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%B0%8F%E5%9E%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">TFTP (Trivial File Transfer Protocol)</a>: 小型文件传输协议，使用UDP协议传输文件</p>
+</li>
+<li>
+<p>DHCP Relay: 在不同子网和物理网段之间处理和转发dhcp信息的功能</p>
+</li>
+<li>
+<p><a href="https://zh.wikipedia.org/wiki/IPMI">IPMI (Intelligent Platform Management Interface)</a>：管理服务器硬件的标准，特性是独立于操作系统外自行运行，即使在缺少操作系统或系统管理软件、或受监控的系统关机但有接电源的情况下仍能远程管理系统，也能在操作系统引导后运行</p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller">BMC (Baseboard management controller)</a>: 基板管理控制器，支持行业标准的 IPMI 规范</p>
+</li>
+<li>
+<p><a href="https://zh.wikipedia.org/wiki/Secure_Shell">SSH (Secure Shell)</a>: 用于远程登录控制服务器</p>
+</li>
+<li>
+<p><a href="https://zh.wikipedia.org/wiki/RAID">RAID (Redundant Array of Independent Disks)</a>: 磁盘阵列，把多个硬盘组合成为一个逻辑扇区，操作系统只会把它当作一个硬盘</p>
+</li>
+<li>
+<p>Region Service: 云平台控制服务，提供 baremetal 相关 API</p>
+</li>
+<li>
+<p>Baremetal Agent: 云平台管理 baremetal 的服务</p>
+</li>
+<li>
+<p>Glance Service: 云平台镜像服务，提供物理机装机的 Image 镜像</p>
+</li>
+<li>
+<p>裸金属服务器: baremetal 物理机安装操作系统后，在云平台创建的 server 的记录</p>
+</li>
+<li>
+<p>宿主机: 可以运行云平台虚拟机的节点</p>
+</li>
 </ul>
 
         <div class="section-index">

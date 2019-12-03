@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.60.1" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -15,9 +15,7 @@
 <meta property="og:url" content="https://docs.yunion.io/docs/howto/" />
 
 <meta itemprop="name" content="操作管理">
-<meta itemprop="description" content="结合应用场景介绍云平台各个资源的操作管理">
-
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="description" content="结合应用场景介绍云平台各个资源的操作管理"><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="操作管理"/>
 <meta name="twitter:description" content="结合应用场景介绍云平台各个资源的操作管理"/>
 
@@ -25,8 +23,8 @@
 
 
 
-<link rel="preload" href="/scss/main.min.809880ff03d167d2177e2c7775385da2dabfd4bd38b4421aa4d3741acf90a7d0.css" as="style">
-<link href="/scss/main.min.809880ff03d167d2177e2c7775385da2dabfd4bd38b4421aa4d3741acf90a7d0.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
+<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -709,6 +707,8 @@
 
 
 
+
+
           </div>
           <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
             <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
@@ -740,14 +740,11 @@
 	<h1>操作管理</h1>
 	<div class="lead">结合应用场景介绍云平台各个资源的操作管理</div>
 	<p>主要结合应用场景介绍云平台各个资源的操作管理，首先会介绍命令行工具 <strong>climc</strong> 的用法，然后再具体介绍每种资源的操作。建议先熟悉命令行工具 <strong>climc</strong> 的使用过后在看后面的章节。</p>
-
 <p>熟悉命令行工具后，会分不同的部分介绍各种资源的操作和一些概念，云平台的资源大概分为 <strong>&ldquo;虚拟资源&rdquo;</strong> 和 <strong>&ldquo;基础设施&rdquo;</strong> 两类，有了基础设施类型的资源才能在其之上构建虚拟化的资源，具体分类如下:</p>
-
 <ul>
 <li>infra: 表示基础设施类型</li>
 <li>virtual: 表示虚拟资源类型，属于具体的项目</li>
 </ul>
-
 <table>
 <thead>
 <tr>
@@ -757,7 +754,6 @@
 <th>类型</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>cloudregion</td>
@@ -765,77 +761,66 @@
 <td>标记数据中心所在地域</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>zone</td>
 <td>云平台数据中心</td>
 <td>标记数据中心</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>vpc</td>
 <td>逻辑隔离网络空间</td>
 <td>抽象虚拟化网络的集合</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>wire</td>
 <td>对应二层扁平网络的广播域</td>
 <td>抽象二层扁平网络广播域</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>storage</td>
 <td>存储</td>
 <td>标记存储，提供云硬盘能力</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>host</td>
 <td>服务器</td>
 <td>标记服务器，提供计算虚拟化</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>server</td>
 <td>云主机</td>
 <td>运行在 host 上，使用虚拟化技术提供计算能力</td>
 <td>virtual</td>
 </tr>
-
 <tr>
 <td>disk</td>
 <td>云硬盘</td>
 <td>创建在 storage 上，使用虚拟化技术提供存储能力</td>
 <td>virtual</td>
 </tr>
-
 <tr>
 <td>network</td>
 <td>网络</td>
 <td>创建在 vpc 中，使用虚拟化技术提供网络</td>
 <td>virtual</td>
 </tr>
-
 <tr>
 <td>image</td>
 <td>镜像</td>
 <td>安装了操作系统的虚拟机磁盘，也属于 disk 一类</td>
 <td>virtual</td>
 </tr>
-
 <tr>
 <td>eip</td>
 <td>外网浮动 ip</td>
 <td>对应外网可用 ip</td>
 <td>virtual</td>
 </tr>
-
 <tr>
 <td>loadbalancer</td>
 <td>负载均衡器</td>
@@ -844,9 +829,7 @@
 </tr>
 </tbody>
 </table>
-
 <p>除了上面介绍的常见资源外，为了做多云管理，我们还引入了以下的概念:</p>
-
 <table>
 <thead>
 <tr>
@@ -856,7 +839,6 @@
 <th>类型</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>cloudaccount</td>
@@ -864,21 +846,18 @@
 <td>对应各个云平台的认证信息</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>project</td>
 <td>项目</td>
 <td>OneCloud 内部对虚拟机资源的划分</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>schedtag</td>
 <td>调度标签</td>
 <td>可以标记多种资源，提供资源调度能力</td>
 <td>infra</td>
 </tr>
-
 <tr>
 <td>sku</td>
 <td>套餐信息</td>

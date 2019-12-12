@@ -425,14 +425,14 @@ $ systemctl restart mariadb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 $ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 $ yum install -y docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;配置 docker&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir /etc/docker
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir -p /etc/docker
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;{
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;bridge&amp;#34;: &amp;#34;none&amp;#34;,
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;iptables&amp;#34;: false,
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;exec-opts&amp;#34;:
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    [
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;      &amp;#34;native.cgroupdriver=cgroupfs&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;      &amp;#34;native.cgroupdriver=systemd&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    ],
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;data-root&amp;#34;: &amp;#34;/opt/docker&amp;#34;,
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  &amp;#34;live-restore&amp;#34;: true,

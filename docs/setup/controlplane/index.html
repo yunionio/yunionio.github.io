@@ -14,7 +14,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57&#43;08:00"/>
-<meta property="article:modified_time" content="2019-11-27T13:13:04&#43;08:00"/>
+<meta property="article:modified_time" content="2019-12-12T16:34:35&#43;08:00"/>
 
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
@@ -22,8 +22,8 @@
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2019-11-27T13:13:04&#43;08:00" />
-<meta itemprop="wordCount" content="1024">
+<meta itemprop="dateModified" content="2019-12-12T16:34:35&#43;08:00" />
+<meta itemprop="wordCount" content="1025">
 
 
 
@@ -822,14 +822,14 @@ $ systemctl restart mariadb</code></pre></div>
 $ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 $ yum install -y docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io</code></pre></div>
 <p>配置 docker</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir /etc/docker
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
 </span><span style="color:#4e9a06">{
 </span><span style="color:#4e9a06">  &#34;bridge&#34;: &#34;none&#34;,
 </span><span style="color:#4e9a06">  &#34;iptables&#34;: false,
 </span><span style="color:#4e9a06">  &#34;exec-opts&#34;:
 </span><span style="color:#4e9a06">    [
-</span><span style="color:#4e9a06">      &#34;native.cgroupdriver=cgroupfs&#34;
+</span><span style="color:#4e9a06">      &#34;native.cgroupdriver=systemd&#34;
 </span><span style="color:#4e9a06">    ],
 </span><span style="color:#4e9a06">  &#34;data-root&#34;: &#34;/opt/docker&#34;,
 </span><span style="color:#4e9a06">  &#34;live-restore&#34;: true,
@@ -1208,7 +1208,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 27.11.2019: <a  href="https://github.com/yunionio/docs/commit/6fe64660688e337e0efa0ea3d49eae77dc81faf4">更新网络访问要求 (6fe6466)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.12.2019: <a  href="https://github.com/yunionio/docs/commit/6ec086a88f898b0d29a1f670266e16e1355900a7">docker cgroupdriver use systemd (6ec086a)</a>
 </div>
 </div>
 

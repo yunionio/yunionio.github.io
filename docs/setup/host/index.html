@@ -13,15 +13,15 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/host/" />
-<meta property="article:modified_time" content="2019-09-23T13:23:15&#43;08:00"/>
+<meta property="article:modified_time" content="2019-12-24T17:52:31&#43;08:00"/>
 
 <meta itemprop="name" content="计算节点">
 <meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2019-09-23T13:23:15&#43;08:00" />
-<meta itemprop="wordCount" content="887">
+<meta itemprop="dateModified" content="2019-12-24T17:52:31&#43;08:00" />
+<meta itemprop="wordCount" content="742">
 
 
 
@@ -677,16 +677,17 @@
 <li>
 <ul>
 <li><a href="#环境">环境</a></li>
-<li><a href="#安装依赖">安装依赖</a></li>
+<li><a href="#安装依赖">安装依赖</a>
+<ul>
+<li><a href="#安装-docker-和-kubelet">安装 docker 和 kubelet</a></li>
+</ul></li>
 <li><a href="#控制节点操作">控制节点操作</a>
 <ul>
-<li><a href="#创建-host-服务的认证用户">创建 host 服务的认证用户</a></li>
 <li><a href="#创建计算节点所在的网段">创建计算节点所在的网段</a></li>
 </ul></li>
 <li><a href="#计算节点-host-操作">计算节点(host)操作</a>
 <ul>
 <li><a href="#配置-host-服务">配置 host 服务</a></li>
-<li><a href="#启动-host">启动 host</a></li>
 </ul></li>
 <li><a href="#控制节点启用-host">控制节点启用 host</a></li>
 <li><a href="#创建虚拟机测试">创建虚拟机测试</a>
@@ -760,8 +761,15 @@
 <tr>
 <td align="center">host</td>
 <td align="center">管理 kvm 虚拟机和存储</td>
-<td align="center">rpm</td>
-<td align="center">systemd</td>
+<td align="center">-</td>
+<td align="center">docker</td>
+</tr>
+
+<tr>
+<td align="center">host-deployer</td>
+<td align="center">虚拟机部署服务</td>
+<td align="center">-</td>
+<td align="center">docker</td>
 </tr>
 
 <tr>
@@ -802,7 +810,7 @@
 
 <ul>
 <li>Virtualization: CPU 要支持虚拟化，用于虚拟机 KVM 加速</li>
-<li>打开 iommu，VT-d: 用于 GPU 透传</li>
+<li>打开 iommu，VT-d: 用于 GPU 透传(不用GPU可以不开)</li>
 </ul></li>
 
 <li><p>网络:</p>
@@ -820,7 +828,7 @@
 
 <h2 id="安装依赖">安装依赖</h2>
 
-<p>计算节点所有的服务都以 rpm 的方式安装，因为虚拟机会用到内核 vfio 和 nbd 等特性，所以没有容器化部署。</p>
+<p>计算节点所需的依赖以 rpm 的方式安装</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 添加 yum 源</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/yunion.repo
 </span><span style="color:#4e9a06">[yunion]
@@ -837,16 +845,16 @@ $ systemctl disable firewalld
 $ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/g&#39;</span> /etc/selinux/config</code></pre></div>
 <p>安装 rpm 包</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  epel-release chntpw dosfstools ethtool fetchclient fuse fuse-devel fuse-libs gdisk <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  libaio jq libusb lvm2 lxcfs nc ntfs-3g_ntfsprogs zerofree <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  oniguruma parted pciutils spice spice-protocol sshpass sysstat <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  tcpdump telegraf usbredir vmware-vddk xfsprogs <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-host yunion-host-deployer yunion-host-image yunion-sdnagent <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kernel-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-862.14.4.el7.yn20190712 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  kmod-openvswitch-2.9.5-1.el7 <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  openvswitch-2.9.5-1
+</span><span style="color:#4e9a06"></span>  epel-release libaio jq libusb lvm2 nc <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-host-image yunion-sdnagent yunion-executor-server <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kmod-openvswitch-2.9.6-1.el7 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  openvswitch-2.9.6-1.el7
+
+$ systemctl <span style="color:#204a87">enable</span> --now yunion-host-sdnagent yunion-executor yunion-host-image
 
 <span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核</span>
 $ reboot
@@ -854,23 +862,14 @@ $ reboot
 <span style="color:#8f5902;font-style:italic"># 重启完成后，查看当前节点内核信息，确保为 yn 内核</span>
 $ uname -r
 <span style="color:#0000cf;font-weight:bold">3</span>.10.0-862.14.4.el7.yn20190712.x86_64</code></pre></div>
+<h3 id="安装-docker-和-kubelet">安装 docker 和 kubelet</h3>
+
+<p>参考 <a href="/docs/setup/controlplane/#安装配置-docker">&ldquo;部署集群/环境准备&rdquo;</a> 的流程，安装好 docker 和 kubelet。</p>
+
 <h2 id="控制节点操作">控制节点操作</h2>
 
 <p>以下操作在控制节点进行。</p>
 
-<h3 id="创建-host-服务的认证用户">创建 host 服务的认证用户</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm cluster rcadmin
-<span style="color:#8f5902;font-style:italic"># 这个是云平台 keystone 的认证地址，后面配置会用到</span>
-<span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://10.168.222.218:5000/v3
-...
-<span style="color:#8f5902;font-style:italic"># 这个 region0 也会在配置中用到</span>
-<span style="color:#204a87">export</span> <span style="color:#000">OS_REGION_NAME</span><span style="color:#ce5c00;font-weight:bold">=</span>region0
-
-$ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-weight:bold">(</span>ocadm cluster rcadmin<span style="color:#ce5c00;font-weight:bold">)</span>
-
-<span style="color:#8f5902;font-style:italic"># 这里记住自己的用户密码，后面配置会用到</span>
-$ climc user-create --enabled --password hostadminpasswd hostadmin
-$ climc project-add-user system hostadmin admin</code></pre></div>
 <h3 id="创建计算节点所在的网段">创建计算节点所在的网段</h3>
 
 <p>我的环境<strong>计算节点</strong>的 ip 为 10.168.222.140，就创建一个对应的 <strong>计算节点(host)网段</strong>。</p>
@@ -885,7 +884,7 @@ $ climc project-add-user system hostadmin admin</code></pre></div>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看当前环境的 zone</span>
 $ climc zone-list
 +--------------------------------------+-------+--------+----------------+
-<span style="color:#000;font-weight:bold">|</span> ID <span style="color:#000;font-weight:bold">|</span> Name <span style="color:#000;font-weight:bold">|</span> Status <span style="color:#000;font-weight:bold">|</span> Cloudregion_ID <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> ID                                   <span style="color:#000;font-weight:bold">|</span> Name  <span style="color:#000;font-weight:bold">|</span> Status <span style="color:#000;font-weight:bold">|</span> Cloudregion_ID <span style="color:#000;font-weight:bold">|</span>
 +--------------------------------------+-------+--------+----------------+
 <span style="color:#000;font-weight:bold">|</span> f73a2120-1206-45fa-8d43-de374ab0f494 <span style="color:#000;font-weight:bold">|</span> zone0 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">enable</span> <span style="color:#000;font-weight:bold">|</span> default        <span style="color:#000;font-weight:bold">|</span>
 +--------------------------------------+-------+--------+----------------+
@@ -900,59 +899,19 @@ $ climc network-create --gateway <span style="color:#0000cf;font-weight:bold">10
 <p>以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。</p>
 
 <h3 id="配置-host-服务">配置 host 服务</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取计算节点 IP</span>
+
+<p>参考 <a href="/docs/setup/components/#获取加入集群-token">&ldquo;添加节点/获取加入集群token&rdquo;</a> 的流程获取join所需的信息</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 ocadm join 来创建一台计算节点</span>
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-networks: 配置host服务的网络，example: &#39;eth0/br0/10.168.222.140&#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip</span>
+<span style="color:#8f5902;font-style:italic"># 获取计算节点 IP</span>
 $ <span style="color:#000">host_addr</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
 $ <span style="color:#204a87">echo</span> <span style="color:#000">$host_addr</span>
 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，example: &#39;/opt/cloud/workspace/disks&#39;</span>
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-hostname: 配置宿主机的hostname, example: &#39;node1&#39;</span>
+$ ./ocadm join <span style="color:#000">$api_server_addr</span> --token <span style="color:#000">$token</span> --discovery-token-ca-cert-hash <span style="color:#000">$token_hash</span> --enable-host-agent
 
-$ mkdir -p /etc/yunion
-
- <span style="color:#8f5902;font-style:italic"># 记得把这些认证信息参考控制节点的 rc_amdin 配置对应过来</span>
-$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yunion/host.conf
-</span><span style="color:#4e9a06">region = &#39;region0&#39;
-</span><span style="color:#4e9a06">address =  &#39;$host_addr&#39; # 计算节点服务监听的地址
-</span><span style="color:#4e9a06">port = 8885
-</span><span style="color:#4e9a06">auth_uri = &#39;https://10.168.222.218:5000/v3&#39; # 控制节点 keystone 服务的认证地址
-</span><span style="color:#4e9a06">admin_user = &#39;hostadmin&#39;  # 计算节点认证用户
-</span><span style="color:#4e9a06">admin_password = &#39;hostadminpasswd&#39; # 计算节点认证用户密码
-</span><span style="color:#4e9a06">admin_tenant_name = &#39;system&#39; # 计算节点用户所在的项目
-</span><span style="color:#4e9a06">networks = [&#39;eth0/br0/$host_addr&#39;]  # 计算节点网桥配置
-</span><span style="color:#4e9a06">hostname = &#39;$(hostname -s)&#39;
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">bridge_driver = &#39;openvswitch&#39;
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">servers_path = &#39;/opt/cloud/workspace/servers&#39;
-</span><span style="color:#4e9a06">snapshot_path = &#39;/opt/cloud/workspace/disks/snapshots&#39;
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">local_image_path = [&#39;/opt/cloud/workspace/disks&#39;]
-</span><span style="color:#4e9a06">image_cache_path = &#39;/opt/cloud/workspace/disks/image_cache&#39;
-</span><span style="color:#4e9a06">agent_temp_path = &#39;/opt/cloud/workspace/disks/agent_tmp&#39;
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">rack  = &#39;rack0&#39;
-</span><span style="color:#4e9a06">slots = &#39;slot0&#39;
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">linux_default_root_user = True
-</span><span style="color:#4e9a06">allow_inter_tenant_broadcast = True
-</span><span style="color:#4e9a06">allow_inter_tenant_multicast = True
-</span><span style="color:#4e9a06">allow_inter_tenant_unicast = True
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">block_io_scheduler = &#39;cfq&#39;
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">enable_template_backing = True
-</span><span style="color:#4e9a06">
-</span><span style="color:#4e9a06">default_qemu_version = &#39;2.12.1&#39;
-</span><span style="color:#4e9a06">EOF</span></code></pre></div>
-<h3 id="启动-host">启动 host</h3>
-
-<p>配置完成后就可以使用 systemctl 启动 host 服务了，命令如下:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 启动</span>
-$ systemctl <span style="color:#204a87">enable</span> yunion-host yunion-host-deployer --now
-
-<span style="color:#8f5902;font-style:italic"># 观察启动日志</span>
-$ journalctl -u yunion-host -f
-...
-Jul <span style="color:#0000cf;font-weight:bold">09</span> <span style="color:#0000cf;font-weight:bold">18</span>:23:34 lzx-ocadm-test2 host<span style="color:#ce5c00;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">4216</span><span style="color:#ce5c00;font-weight:bold">]</span>: <span style="color:#ce5c00;font-weight:bold">[</span>I <span style="color:#0000cf;font-weight:bold">190709</span> <span style="color:#0000cf;font-weight:bold">18</span>:23:34 metadata.StartService<span style="color:#ce5c00;font-weight:bold">(</span>metadatahandler.go:268<span style="color:#ce5c00;font-weight:bold">)]</span> Host Metadata Start listen on http://10.168.222.140:9885
-<span style="color:#8f5902;font-style:italic"># 出现上述信息表示 host 已经成功注册到了控制节点</span></code></pre></div>
+<span style="color:#8f5902;font-style:italic"># 然后等待宿主机上的host pod和host-deployer pod为running状态</span></code></pre></div>
 <h2 id="控制节点启用-host">控制节点启用 host</h2>
 
 <p>回到控制节点，启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。</p>
@@ -1097,7 +1056,7 @@ https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;fon
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 23.09.2019: <a  href="https://github.com/yunionio/docs/commit/f33707d48eb00f2408ae2b2d0fffeb11d7000869">update host operate (f33707d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 24.12.2019: <a  href="https://github.com/yunionio/docs/commit/2074f9a7b5c243fbe72206e3ebcfbb905dd13685">host setup (2074f9a)</a>
 </div>
 </div>
 

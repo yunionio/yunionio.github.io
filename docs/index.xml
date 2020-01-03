@@ -830,6 +830,7 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         &lt;span style=&
 
 &lt;p&gt;当 kubernetes 集群部署完成后，就可以通过 &lt;code&gt;ocadm cluster create&lt;/code&gt; 创建 onecloud 集群，该集群由 onecloud namespace 里面 &lt;strong&gt;onecloud-operator&lt;/strong&gt; deployment 自动部署和维护。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建集群&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果要部署企业版的组件可以在 cluster create 的时候加上 --use-ee 参数&lt;/span&gt;
 $ ocadm cluster create&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;执行完 &lt;code&gt;ocadm cluster create&lt;/code&gt; 命令后，&lt;strong&gt;onecloud-operator&lt;/strong&gt; 会自动创建各个服务组件对应的 pod，等待一段时间后，确保 onecloud namespace 里面的 keystone, region 和 glance 等 pod 都处于 running 状态。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以通过 watch 的方式查看各个服务 pod 的创建过程&lt;/span&gt;
@@ -904,13 +905,13 @@ $ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&#34;切换企业版前端&#34;&gt;切换企业版前端&lt;/h3&gt;
 
-&lt;p&gt;默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 &lt;code&gt;ocadm component web&lt;/code&gt; 命令来切换前端:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到企业版的 web 前端&lt;/span&gt;
-$ ocadm component web use-ee
+&lt;p&gt;默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令来切换前端:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到企业版&lt;/span&gt;
+$ ocadm cluster update use-ee
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到开源版的 web 前端&lt;/span&gt;
-$ ocadm component web use-ce&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;ocadm component web use-ee/use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
+$ ocadm cluster update use-ce&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;ocadm cluster update use-ee/use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
 
 &lt;h3 id=&#34;额外插件&#34;&gt;额外插件&lt;/h3&gt;
 
@@ -2211,7 +2212,7 @@ $ systemctl disable firewalld
 $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/SELINUX=disabled/g&amp;#39;&lt;/span&gt; /etc/selinux/config&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;安装 rpm 包&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  epel-release libaio jq libusb lvm2 nc &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  epel-release libaio jq libusb lvm2 nc ntp &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-host-image yunion-sdnagent yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
@@ -2274,6 +2275,7 @@ $ &lt;span style=&#34;color:#000&#34;&gt;host_addr&lt;/span&gt;&lt;span style=&#
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$host_addr&lt;/span&gt;
 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.140
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，example: &amp;#39;/opt/cloud/workspace/disks&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 注意：容器部署的host服务只会挂载/opt/cloud目录，如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&amp;#39;/src /opt/cloud/dst none defaults,bind 0 0&amp;#39;&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-hostname: 配置宿主机的hostname, example: &amp;#39;node1&amp;#39;&lt;/span&gt;
 $ ./ocadm join &lt;span style=&#34;color:#000&#34;&gt;$api_server_addr&lt;/span&gt; --token &lt;span style=&#34;color:#000&#34;&gt;$token&lt;/span&gt; --discovery-token-ca-cert-hash &lt;span style=&#34;color:#000&#34;&gt;$token_hash&lt;/span&gt; --enable-host-agent
 

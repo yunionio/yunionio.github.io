@@ -764,7 +764,7 @@ $ chmod &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;755&lt;/span&
 
 &lt;p&gt;先安装部署工具 ocadm 和云平台的命令行工具 climc:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 climc 云平台命令行工具 和 ocadm 部署工具&lt;/span&gt;
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-2.10/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-2.13/yunion.repo
 $ yum install -y yunion-climc yunion-ocadm
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# climc 在 /opt/yunion/bin 目录下，根据自己的需要加到 bash 或者 zsh 配置文件里面&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;export PATH=$PATH:/opt/yunion/bin&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -831,17 +831,8 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         &lt;span style=&
 &lt;p&gt;当 kubernetes 集群部署完成后，就可以通过 &lt;code&gt;ocadm cluster create&lt;/code&gt; 创建 onecloud 集群，该集群由 onecloud namespace 里面 &lt;strong&gt;onecloud-operator&lt;/strong&gt; deployment 自动部署和维护。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建集群&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果要部署企业版的组件可以在 cluster create 的时候加上 --use-ee 参数&lt;/span&gt;
-$ ocadm cluster create&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;执行完 &lt;code&gt;ocadm cluster create&lt;/code&gt; 命令后，&lt;strong&gt;onecloud-operator&lt;/strong&gt; 会自动创建各个服务组件对应的 pod，等待一段时间后，确保 onecloud namespace 里面的 keystone, region 和 glance 等 pod 都处于 running 状态。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以通过 watch 的方式查看各个服务 pod 的创建过程&lt;/span&gt;
-$ kubectl get pods --namespace onecloud -w
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 当发现 web 相关的 pod 创建完成后，就可通过前端 web 界面访问云平台了&lt;/span&gt;
-$ kubectl get pods --namespace onecloud &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; egrep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;apigateway|web&amp;#39;&lt;/span&gt;
-default-apigateway-f657c55c8-9tzpm     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;/2     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          118m
-default-web-7778d95cb8-2xv6n           &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          118m
-default-webconsole-5855c8b64f-jtqwn    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          119m&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;等待 &lt;strong&gt;default-web-&lt;/strong&gt; 相关的 pod 状态变为 Running 后，就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p&gt;
+$ ocadm cluster create --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;执行完 &lt;code&gt;ocadm cluster create --wait&lt;/code&gt; 命令后，&lt;strong&gt;onecloud-operator&lt;/strong&gt; 会自动创建各个服务组件对应的 pod，等待一段该命令执行完毕， 就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p&gt;
 
 &lt;h3 id=&#34;创建登录用户&#34;&gt;创建登录用户&lt;/h3&gt;
 
@@ -907,11 +898,11 @@ $ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令来切换前端:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到企业版&lt;/span&gt;
-$ ocadm cluster update use-ee
+$ ocadm cluster update --use-ee
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到开源版的 web 前端&lt;/span&gt;
-$ ocadm cluster update use-ce&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;ocadm cluster update use-ee/use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
+$ ocadm cluster update --use-ce&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;ocadm cluster update --use-ee/--use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
 
 &lt;h3 id=&#34;额外插件&#34;&gt;额外插件&lt;/h3&gt;
 
@@ -939,26 +930,6 @@ $ ocadm cluster update use-ce&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;tr&gt;
 &lt;td&gt;itsm&lt;/td&gt;
 &lt;td&gt;流程工单组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;meter&lt;/td&gt;
-&lt;td&gt;计费组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;meter-cloud&lt;/td&gt;
-&lt;td&gt;计费组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;meter-service&lt;/td&gt;
-&lt;td&gt;计费组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;meter-traffic&lt;/td&gt;
-&lt;td&gt;计费组件&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2200,7 +2171,7 @@ $ climc image-show ubuntu-xenial-server.qcow2
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[yunion]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Packages for Yunion Multi-Cloud Platform
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-2.10
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-2.13
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;sslverify=0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;failovermethod=priority
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
@@ -2214,14 +2185,14 @@ $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  epel-release libaio jq libusb lvm2 nc ntp &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-host-image yunion-sdnagent yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-sdnagent yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.6-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.6-1.el7
 
-$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-host-sdnagent yunion-executor yunion-host-image
+$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-host-sdnagent yunion-executor
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装完成后需要重启进入我们的内核&lt;/span&gt;
 $ reboot
@@ -2260,7 +2231,7 @@ $ climc zone-list
 $ climc wire-create zone0 bcast0 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1000&lt;/span&gt;
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 在 wire bcast0 之上创建一个计算节点的网络，计算节点的 host 服务注册会用到，如果 host 注册时没有在云平台找到对应的网络，将会注册失败&lt;/span&gt;
-$ climc network-create --gateway &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.1 --server-type baremetal bcast0 inf0 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.140 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.140 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;24&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+$ climc network-create --gateway &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.1 --server-type baremetal bcast0 adm0 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.140 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.140 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;24&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;计算节点-host-操作&#34;&gt;计算节点(host)操作&lt;/h2&gt;
 
 &lt;p&gt;以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。&lt;/p&gt;

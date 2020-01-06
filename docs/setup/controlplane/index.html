@@ -14,7 +14,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57&#43;08:00"/>
-<meta property="article:modified_time" content="2020-01-03T15:47:56&#43;08:00"/>
+<meta property="article:modified_time" content="2020-01-06T20:58:27&#43;08:00"/>
 
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
@@ -22,8 +22,8 @@
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2020-01-03T15:47:56&#43;08:00" />
-<meta itemprop="wordCount" content="1039">
+<meta itemprop="dateModified" content="2020-01-06T20:58:27&#43;08:00" />
+<meta itemprop="wordCount" content="970">
 
 
 
@@ -922,7 +922,7 @@ $ chmod <span style="color:#0000cf;font-weight:bold">755</span> /etc/sysconfig/m
 
 <p>先安装部署工具 ocadm 和云平台的命令行工具 climc:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 安装 climc 云平台命令行工具 和 ocadm 部署工具</span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-2.10/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-2.13/yunion.repo
 $ yum install -y yunion-climc yunion-ocadm
 <span style="color:#8f5902;font-style:italic"># climc 在 /opt/yunion/bin 目录下，根据自己的需要加到 bash 或者 zsh 配置文件里面</span>
 $ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;export PATH=$PATH:/opt/yunion/bin&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc</code></pre></div>
@@ -989,17 +989,8 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         <span style="col
 <p>当 kubernetes 集群部署完成后，就可以通过 <code>ocadm cluster create</code> 创建 onecloud 集群，该集群由 onecloud namespace 里面 <strong>onecloud-operator</strong> deployment 自动部署和维护。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建集群</span>
 <span style="color:#8f5902;font-style:italic"># 如果要部署企业版的组件可以在 cluster create 的时候加上 --use-ee 参数</span>
-$ ocadm cluster create</code></pre></div>
-<p>执行完 <code>ocadm cluster create</code> 命令后，<strong>onecloud-operator</strong> 会自动创建各个服务组件对应的 pod，等待一段时间后，确保 onecloud namespace 里面的 keystone, region 和 glance 等 pod 都处于 running 状态。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 可以通过 watch 的方式查看各个服务 pod 的创建过程</span>
-$ kubectl get pods --namespace onecloud -w
-
-<span style="color:#8f5902;font-style:italic"># 当发现 web 相关的 pod 创建完成后，就可通过前端 web 界面访问云平台了</span>
-$ kubectl get pods --namespace onecloud <span style="color:#000;font-weight:bold">|</span> egrep <span style="color:#4e9a06">&#39;apigateway|web&#39;</span>
-default-apigateway-f657c55c8-9tzpm     <span style="color:#0000cf;font-weight:bold">2</span>/2     Running   <span style="color:#0000cf;font-weight:bold">0</span>          118m
-default-web-7778d95cb8-2xv6n           <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          118m
-default-webconsole-5855c8b64f-jtqwn    <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          119m</code></pre></div>
-<p>等待 <strong>default-web-</strong> 相关的 pod 状态变为 Running 后，就可以通过访问 &lsquo;https://本机IP:443&rsquo; 登入前端界面。</p>
+$ ocadm cluster create --wait</code></pre></div>
+<p>执行完 <code>ocadm cluster create --wait</code> 命令后，<strong>onecloud-operator</strong> 会自动创建各个服务组件对应的 pod，等待一段该命令执行完毕， 就可以通过访问 &lsquo;https://本机IP:443&rsquo; 登入前端界面。</p>
 
 <h3 id="创建登录用户">创建登录用户</h3>
 
@@ -1065,11 +1056,11 @@ $ curl -k https://10.168.222.218</code></pre></div>
 
 <p>默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 <code>ocadm cluster update</code> 命令来切换前端:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 切换到企业版</span>
-$ ocadm cluster update use-ee
+$ ocadm cluster update --use-ee
 
 <span style="color:#8f5902;font-style:italic"># 切换到开源版的 web 前端</span>
-$ ocadm cluster update use-ce</code></pre></div>
-<p><code>ocadm cluster update use-ee/use-ce</code> 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。</p>
+$ ocadm cluster update --use-ce</code></pre></div>
+<p><code>ocadm cluster update --use-ee/--use-ce</code> 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。</p>
 
 <h3 id="额外插件">额外插件</h3>
 
@@ -1097,26 +1088,6 @@ $ ocadm cluster update use-ce</code></pre></div>
 <tr>
 <td>itsm</td>
 <td>流程工单组件</td>
-</tr>
-
-<tr>
-<td>meter</td>
-<td>计费组件</td>
-</tr>
-
-<tr>
-<td>meter-cloud</td>
-<td>计费组件</td>
-</tr>
-
-<tr>
-<td>meter-service</td>
-<td>计费组件</td>
-</tr>
-
-<tr>
-<td>meter-traffic</td>
-<td>计费组件</td>
 </tr>
 
 <tr>
@@ -1208,7 +1179,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 03.01.2020: <a  href="https://github.com/yunionio/docs/commit/99250e2fcd3a8fa03b595757aa2767832adb7d96">fix edition change (99250e2)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 06.01.2020: <a  href="https://github.com/yunionio/docs/commit/716884c2e7ed1385df03c045e36518a2be32aee0">update docs to use 2.13 repo (716884c)</a>
 </div>
 </div>
 

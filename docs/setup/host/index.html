@@ -13,15 +13,15 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/host/" />
-<meta property="article:modified_time" content="2019-12-31T10:54:45&#43;08:00"/>
+<meta property="article:modified_time" content="2020-01-06T20:58:27&#43;08:00"/>
 
 <meta itemprop="name" content="计算节点">
 <meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2019-12-31T10:54:45&#43;08:00" />
-<meta itemprop="wordCount" content="751">
+<meta itemprop="dateModified" content="2020-01-06T20:58:27&#43;08:00" />
+<meta itemprop="wordCount" content="749">
 
 
 
@@ -833,7 +833,7 @@
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/yunion.repo
 </span><span style="color:#4e9a06">[yunion]
 </span><span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
-</span><span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-2.10
+</span><span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-2.13
 </span><span style="color:#4e9a06">sslverify=0
 </span><span style="color:#4e9a06">failovermethod=priority
 </span><span style="color:#4e9a06">enabled=1
@@ -847,14 +847,14 @@ $ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/g
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  epel-release libaio jq libusb lvm2 nc ntp <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-host-image yunion-sdnagent yunion-executor-server <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-sdnagent yunion-executor-server <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kmod-openvswitch-2.9.6-1.el7 <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  openvswitch-2.9.6-1.el7
 
-$ systemctl <span style="color:#204a87">enable</span> --now yunion-host-sdnagent yunion-executor yunion-host-image
+$ systemctl <span style="color:#204a87">enable</span> --now yunion-host-sdnagent yunion-executor
 
 <span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核</span>
 $ reboot
@@ -893,7 +893,7 @@ $ climc zone-list
 $ climc wire-create zone0 bcast0 <span style="color:#0000cf;font-weight:bold">1000</span>
 
 <span style="color:#8f5902;font-style:italic"># 在 wire bcast0 之上创建一个计算节点的网络，计算节点的 host 服务注册会用到，如果 host 注册时没有在云平台找到对应的网络，将会注册失败</span>
-$ climc network-create --gateway <span style="color:#0000cf;font-weight:bold">10</span>.168.222.1 --server-type baremetal bcast0 inf0 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#0000cf;font-weight:bold">24</span></code></pre></div>
+$ climc network-create --gateway <span style="color:#0000cf;font-weight:bold">10</span>.168.222.1 --server-type baremetal bcast0 adm0 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140 <span style="color:#0000cf;font-weight:bold">24</span></code></pre></div>
 <h2 id="计算节点-host-操作">计算节点(host)操作</h2>
 
 <p>以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。</p>
@@ -1057,7 +1057,7 @@ https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;fon
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 31.12.2019: <a  href="https://github.com/yunionio/docs/commit/b9914370a88de0938e99f9267fd9d6159eb8cdc9">fix host setup docs (b991437)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 06.01.2020: <a  href="https://github.com/yunionio/docs/commit/716884c2e7ed1385df03c045e36518a2be32aee0">update docs to use 2.13 repo (716884c)</a>
 </div>
 </div>
 

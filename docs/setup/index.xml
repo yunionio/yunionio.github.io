@@ -525,7 +525,7 @@ $ chmod &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;755&lt;/span&
 
 &lt;p&gt;先安装部署工具 ocadm 和云平台的命令行工具 climc:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 climc 云平台命令行工具 和 ocadm 部署工具&lt;/span&gt;
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-2.13/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.0/yunion.repo
 $ yum install -y yunion-climc yunion-ocadm
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# climc 在 /opt/yunion/bin 目录下，根据自己的需要加到 bash 或者 zsh 配置文件里面&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;export PATH=$PATH:/opt/yunion/bin&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -595,6 +595,22 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         &lt;span style=&
 $ ocadm cluster create --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;执行完 &lt;code&gt;ocadm cluster create --wait&lt;/code&gt; 命令后，&lt;strong&gt;onecloud-operator&lt;/strong&gt; 会自动创建各个服务组件对应的 pod，等待一段该命令执行完毕， 就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p&gt;
 
+&lt;h4 id=&#34;启用baremetal-agent-可选&#34;&gt;启用baremetal-agent(可选)&lt;/h4&gt;
+
+&lt;p&gt;如果要使用物理机管理服务, 则需要在集群准备完毕后指定node来部署baremetal-agent服务。&lt;/p&gt;
+
+&lt;p&gt;baremetal-agent只会处理来自dhcp relay服务器的请求, 所以你需要事先在交换机配置dhcp relay或者使用host服务的dhcp relay功能。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用host服务的dhcp relay:&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 登录到已经部署好计算节点的服务器上修改 /etc/yunion/host.conf，添加dhcp_relay配置项：&lt;/span&gt;
+dhcp_relay:
+- &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.198 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# baremetal agent dhcp服务监听地址&lt;/span&gt;
+- &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;67&lt;/span&gt;             &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# baremetal agent dhcp服务监听端口&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后重启host服务&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后选择node启用baremetal-agent。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# $listen_interface指的是baremetal-agent监听的网卡名称&lt;/span&gt;
+ocadm baremetal &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --node &lt;span style=&#34;color:#000&#34;&gt;$node_name&lt;/span&gt; --listen-interface &lt;span style=&#34;color:#000&#34;&gt;$listen_interface&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;也可以在启用baremetal-agent的节点中选择节点禁止baremetal-agent调度到该节点。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ocadm baremetal disable --node &lt;span style=&#34;color:#000&#34;&gt;$node_name&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;创建登录用户&#34;&gt;创建登录用户&lt;/h3&gt;
 
 &lt;p&gt;当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 &lt;code&gt;ocadm cluster rcadmin&lt;/code&gt; 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p&gt;
@@ -889,7 +905,7 @@ Run &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;kubectl get nodes&amp;#39
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[yunion]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Packages for Yunion Multi-Cloud Platform
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-2.13
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-3.0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;sslverify=0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;failovermethod=priority
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1

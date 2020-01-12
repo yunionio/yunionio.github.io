@@ -14,7 +14,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57&#43;08:00"/>
-<meta property="article:modified_time" content="2020-01-12T12:49:17&#43;08:00"/>
+<meta property="article:modified_time" content="2020-01-12T17:25:01&#43;08:00"/>
 
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
@@ -22,8 +22,8 @@
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2020-01-12T12:49:17&#43;08:00" />
-<meta itemprop="wordCount" content="972">
+<meta itemprop="dateModified" content="2020-01-12T17:25:01&#43;08:00" />
+<meta itemprop="wordCount" content="1059">
 
 
 
@@ -696,6 +696,7 @@
 <li><a href="#后续">后续</a>
 <ul>
 <li><a href="#添加计算节点">添加计算节点</a></li>
+<li><a href="#控制节点作为计算节点">控制节点作为计算节点</a></li>
 <li><a href="#切换企业版前端">切换企业版前端</a></li>
 <li><a href="#额外插件">额外插件</a></li>
 </ul></li>
@@ -1052,6 +1053,31 @@ $ curl -k https://10.168.222.218</code></pre></div>
 
 <p>当控制节点搭建完成后，可以参考 <a href="/docs/setup/host/">计算节点</a> 一节的内容，添加计算节点，组建一套私有云集群。</p>
 
+<h3 id="控制节点作为计算节点">控制节点作为计算节点</h3>
+
+<p>默认情况下 <code>ocadm init</code> 创建的节点是控制节点，不会运行 onecloud 计算节点的服务。如果需要把控制节点也作为计算节点，需要执行以下步骤:</p>
+
+<ol>
+<li><p>安装计算节点需要的依赖，参考 <a href="/docs/setup/host/#安装依赖">&ldquo;计算节点/安装依赖&rdquo;</a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。</p></li>
+
+<li><p>在控制节点启用该节点作为计算节点，命令如下:</p></li>
+</ol>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 用 kubectl get nodes 拿到当前的节点名称</span>
+$ kubectl get nodes
+NAME                  STATUS   ROLES    AGE    VERSION
+controller01   Ready    master   116d   v1.14.3
+controller02   Ready    master   40d    v1.14.3
+node01         Ready    &lt;none&gt;   25d    v1.14.3
+
+<span style="color:#8f5902;font-style:italic"># 假设我要把 controller01 和 controller02 作为计算节点</span>
+$ ocadm node enable-host-agent <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --node controller01 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --node controller02
+
+<span style="color:#8f5902;font-style:italic"># 等待并查看运行在 controller01/02 上的计算节点服务</span>
+$ kubectl get pods -n onecloud -o wide <span style="color:#000;font-weight:bold">|</span> grep host
+default-host-7b5cr  <span style="color:#0000cf;font-weight:bold">2</span>/2     Running    <span style="color:#0000cf;font-weight:bold">218</span>        18h     <span style="color:#0000cf;font-weight:bold">192</span>.168.222.4 controller01
+default-host-ctx5s  <span style="color:#0000cf;font-weight:bold">2</span>/2     Running    <span style="color:#0000cf;font-weight:bold">218</span>        18h     <span style="color:#0000cf;font-weight:bold">192</span>.168.222.5 controller02</code></pre></div>
 <h3 id="切换企业版前端">切换企业版前端</h3>
 
 <p>默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 <code>ocadm cluster update</code> 命令来切换前端:</p>
@@ -1179,7 +1205,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.01.2020: <a  href="https://github.com/yunionio/docs/commit/c2f2644fbd728c01b63cdf5275838068589660f1">fix: net-tools missing (c2f2644)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.01.2020: <a  href="https://github.com/yunionio/docs/commit/a47f08c7a91207a41eaabd90e6407c2630c0762f">add controlplane run host agent (a47f08c)</a>
 </div>
 </div>
 

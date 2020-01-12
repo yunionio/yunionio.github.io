@@ -655,6 +655,31 @@ $ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;当控制节点搭建完成后，可以参考 &lt;a href=&#34;https://docs.yunion.io/docs/setup/host/&#34;&gt;计算节点&lt;/a&gt; 一节的内容，添加计算节点，组建一套私有云集群。&lt;/p&gt;
 
+&lt;h3 id=&#34;控制节点作为计算节点&#34;&gt;控制节点作为计算节点&lt;/h3&gt;
+
+&lt;p&gt;默认情况下 &lt;code&gt;ocadm init&lt;/code&gt; 创建的节点是控制节点，不会运行 onecloud 计算节点的服务。如果需要把控制节点也作为计算节点，需要执行以下步骤:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;安装计算节点需要的依赖，参考 &lt;a href=&#34;https://docs.yunion.io/docs/setup/host/#安装依赖&#34;&gt;&amp;ldquo;计算节点/安装依赖&amp;rdquo;&lt;/a&gt;，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在控制节点启用该节点作为计算节点，命令如下:&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 用 kubectl get nodes 拿到当前的节点名称&lt;/span&gt;
+$ kubectl get nodes
+NAME                  STATUS   ROLES    AGE    VERSION
+controller01   Ready    master   116d   v1.14.3
+controller02   Ready    master   40d    v1.14.3
+node01         Ready    &amp;lt;none&amp;gt;   25d    v1.14.3
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 假设我要把 controller01 和 controller02 作为计算节点&lt;/span&gt;
+$ ocadm node enable-host-agent &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  --node controller01 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  --node controller02
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 等待并查看运行在 controller01/02 上的计算节点服务&lt;/span&gt;
+$ kubectl get pods -n onecloud -o wide &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep host
+default-host-7b5cr  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;/2     Running    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;218&lt;/span&gt;        18h     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.222.4 controller01
+default-host-ctx5s  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;/2     Running    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;218&lt;/span&gt;        18h     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.222.5 controller02&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;切换企业版前端&#34;&gt;切换企业版前端&lt;/h3&gt;
 
 &lt;p&gt;默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令来切换前端:&lt;/p&gt;

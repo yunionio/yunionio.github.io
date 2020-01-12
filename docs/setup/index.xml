@@ -595,28 +595,12 @@ onecloud             onecloud-operator-6d4bddb8c4-tkjkh         &lt;span style=&
 $ ocadm cluster create --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;执行完 &lt;code&gt;ocadm cluster create --wait&lt;/code&gt; 命令后，&lt;strong&gt;onecloud-operator&lt;/strong&gt; 会自动创建各个服务组件对应的 pod，等待一段该命令执行完毕， 就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p&gt;
 
-&lt;h4 id=&#34;启用baremetal-agent-可选&#34;&gt;启用baremetal-agent(可选)&lt;/h4&gt;
-
-&lt;p&gt;如果要使用物理机管理服务, 则需要在集群准备完毕后指定node来部署baremetal-agent服务。&lt;/p&gt;
-
-&lt;p&gt;baremetal-agent只会处理来自dhcp relay服务器的请求, 所以你需要事先在交换机配置dhcp relay或者使用host服务的dhcp relay功能。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用host服务的dhcp relay:&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 登录到已经部署好计算节点的服务器上修改 /etc/yunion/host.conf，添加dhcp_relay配置项：&lt;/span&gt;
-dhcp_relay:
-- &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.198 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# baremetal agent dhcp服务监听地址&lt;/span&gt;
-- &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;67&lt;/span&gt;             &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# baremetal agent dhcp服务监听端口&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后重启host服务&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;然后选择node启用baremetal-agent。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# $listen_interface指的是baremetal-agent监听的网卡名称&lt;/span&gt;
-ocadm baremetal &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --node &lt;span style=&#34;color:#000&#34;&gt;$node_name&lt;/span&gt; --listen-interface &lt;span style=&#34;color:#000&#34;&gt;$listen_interface&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;也可以在启用baremetal-agent的节点中选择节点禁止baremetal-agent调度到该节点。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ocadm baremetal disable --node &lt;span style=&#34;color:#000&#34;&gt;$node_name&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;创建登录用户&#34;&gt;创建登录用户&lt;/h3&gt;
 
 &lt;p&gt;当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 &lt;code&gt;ocadm cluster rcadmin&lt;/code&gt; 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 获取连接 onecloud 集群的环境变量&lt;/span&gt;
 $ ocadm cluster rcadmin
-&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_AUTH_URL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;https://10.168.222.218:35357/v3
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_AUTH_URL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;https://10.168.222.218:30357/v3
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_USERNAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;sysadmin
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_PASSWORD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;3hV3qAhvxck84srk
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_PROJECT_NAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;system
@@ -675,10 +659,10 @@ $ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令来切换前端:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到企业版&lt;/span&gt;
-$ ocadm cluster update --use-ee
+$ ocadm cluster update --use-ee --wait
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到开源版的 web 前端&lt;/span&gt;
-$ ocadm cluster update --use-ce&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+$ ocadm cluster update --use-ce --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;ocadm cluster update --use-ee/--use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
 
 &lt;h3 id=&#34;额外插件&#34;&gt;额外插件&lt;/h3&gt;
@@ -924,7 +908,7 @@ $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.6-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.6-1.el7
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.6-1.el7 net-tools
 
 $ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-host-sdnagent yunion-executor
 

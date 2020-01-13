@@ -8,26 +8,26 @@
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
-<title>计算节点 | OneCloud</title><meta property="og:title" content="计算节点" />
+<title>添加计算节点 | OneCloud</title><meta property="og:title" content="添加计算节点" />
 <meta property="og:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/host/" />
-<meta property="article:modified_time" content="2020-01-12T12:49:17&#43;08:00"/>
+<meta property="article:modified_time" content="2020-01-13T15:15:49&#43;08:00"/>
 
-<meta itemprop="name" content="计算节点">
+<meta itemprop="name" content="添加计算节点">
 <meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-12T12:49:17&#43;08:00" />
-<meta itemprop="wordCount" content="754">
+<meta itemprop="dateModified" content="2020-01-13T15:15:49&#43;08:00" />
+<meta itemprop="wordCount" content="758">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="计算节点"/>
+<meta name="twitter:title" content="添加计算节点"/>
 <meta name="twitter:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 "/>
 
@@ -44,7 +44,7 @@
   crossorigin="anonymous"></script>
 
 
-    <title>计算节点 | OneCloud</title>
+    <title>添加计算节点 | OneCloud</title>
   </head>
   <body class="td-page">
     <header>
@@ -180,13 +180,13 @@
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加节点</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加 K8S 节点</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-setup-host" href="/docs/setup/host/">计算节点</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-setup-host" href="/docs/setup/host/">添加计算节点</a>
       
       
     </li>
@@ -660,7 +660,7 @@
     
     
     <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/setup/host.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
-    <a href="https://github.com/yunionio/docs/issues/new?title=%e8%ae%a1%e7%ae%97%e8%8a%82%e7%82%b9" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=%e6%b7%bb%e5%8a%a0%e8%ae%a1%e7%ae%97%e8%8a%82%e7%82%b9" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
     
     
     <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
@@ -733,7 +733,7 @@
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://docs.yunion.io/docs/setup/host/">计算节点</a>
+	<a href="https://docs.yunion.io/docs/setup/host/">添加计算节点</a>
 </li>
 
 	</ol>
@@ -741,7 +741,7 @@
 
             
 <div class="td-content">
-	<h1>计算节点</h1>
+	<h1>添加计算节点</h1>
 	<div class="lead">如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件</div>
 	
 
@@ -902,15 +902,20 @@ $ climc network-create --gateway <span style="color:#0000cf;font-weight:bold">10
 
 <p>参考 <a href="/docs/setup/components/#获取加入集群-token">&ldquo;添加节点/获取加入集群token&rdquo;</a> 的流程获取join所需的信息</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 ocadm join 来创建一台计算节点</span>
-<span style="color:#8f5902;font-style:italic"># 可选参数 --host-networks: 配置host服务的网络，example: &#39;eth0/br0/10.168.222.140&#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip</span>
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-networks: 配置host服务的网络，比如: &#39;eth0/br0/10.168.222.140&#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip</span>
 <span style="color:#8f5902;font-style:italic"># 获取计算节点 IP</span>
 $ <span style="color:#000">host_addr</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
 $ <span style="color:#204a87">echo</span> <span style="color:#000">$host_addr</span>
 <span style="color:#0000cf;font-weight:bold">10</span>.168.222.140
-<span style="color:#8f5902;font-style:italic"># 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，example: &#39;/opt/cloud/workspace/disks&#39;</span>
-<span style="color:#8f5902;font-style:italic"># 注意：容器部署的host服务只会挂载/opt/cloud目录，如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&#39;/src /opt/cloud/dst none defaults,bind 0 0&#39;</span>
-<span style="color:#8f5902;font-style:italic"># 可选参数 --host-hostname: 配置宿主机的hostname, example: &#39;node1&#39;</span>
-$ ./ocadm join <span style="color:#000">$api_server_addr</span> --token <span style="color:#000">$token</span> --discovery-token-ca-cert-hash <span style="color:#000">$token_hash</span> --enable-host-agent
+
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，比如: &#39;/opt/cloud/workspace/disks&#39;</span>
+<span style="color:#8f5902;font-style:italic"># 注意：容器部署的host服务只会挂载/opt/cloud目录</span>
+<span style="color:#8f5902;font-style:italic"># 如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&#39;/src /opt/cloud/dst none defaults,bind 0 0&#39;</span>
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-hostname: 配置宿主机的hostname, 比如: &#39;node1&#39;</span>
+$ ./ocadm join <span style="color:#000">$api_server_addr</span> <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --enable-host-agent <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --token <span style="color:#000">$token</span> <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --discovery-token-unsafe-skip-ca-verification
 
 <span style="color:#8f5902;font-style:italic"># 然后等待宿主机上的host pod和host-deployer pod为running状态</span></code></pre></div>
 <h2 id="控制节点启用-host">控制节点启用 host</h2>
@@ -1057,7 +1062,7 @@ https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;fon
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.01.2020: <a  href="https://github.com/yunionio/docs/commit/c2f2644fbd728c01b63cdf5275838068589660f1">fix: net-tools missing (c2f2644)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 13.01.2020: <a  href="https://github.com/yunionio/docs/commit/f4c749e4fe2c766bea17307b7f4b288b756cbbc5">adjust title (f4c749e)</a>
 </div>
 </div>
 

@@ -749,7 +749,7 @@ $ ocadm component disable cloudwatcher&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
     </item>
     
     <item>
-      <title>Docs: 添加节点</title>
+      <title>Docs: 添加 K8S 节点</title>
       <link>https://docs.yunion.io/docs/setup/components/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -816,7 +816,7 @@ Run &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;kubectl get nodes&amp;#39
     </item>
     
     <item>
-      <title>Docs: 计算节点</title>
+      <title>Docs: 添加计算节点</title>
       <link>https://docs.yunion.io/docs/setup/host/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -983,15 +983,20 @@ $ climc network-create --gateway &lt;span style=&#34;color:#0000cf;font-weight:b
 
 &lt;p&gt;参考 &lt;a href=&#34;https://docs.yunion.io/docs/setup/components/#获取加入集群-token&#34;&gt;&amp;ldquo;添加节点/获取加入集群token&amp;rdquo;&lt;/a&gt; 的流程获取join所需的信息&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 ocadm join 来创建一台计算节点&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-networks: 配置host服务的网络，example: &amp;#39;eth0/br0/10.168.222.140&amp;#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-networks: 配置host服务的网络，比如: &amp;#39;eth0/br0/10.168.222.140&amp;#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 获取计算节点 IP&lt;/span&gt;
 $ &lt;span style=&#34;color:#000&#34;&gt;host_addr&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;ip route get &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; awk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;{print $NF;exit}&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$host_addr&lt;/span&gt;
 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.140
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，example: &amp;#39;/opt/cloud/workspace/disks&amp;#39;&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 注意：容器部署的host服务只会挂载/opt/cloud目录，如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&amp;#39;/src /opt/cloud/dst none defaults,bind 0 0&amp;#39;&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-hostname: 配置宿主机的hostname, example: &amp;#39;node1&amp;#39;&lt;/span&gt;
-$ ./ocadm join &lt;span style=&#34;color:#000&#34;&gt;$api_server_addr&lt;/span&gt; --token &lt;span style=&#34;color:#000&#34;&gt;$token&lt;/span&gt; --discovery-token-ca-cert-hash &lt;span style=&#34;color:#000&#34;&gt;$token_hash&lt;/span&gt; --enable-host-agent
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，比如: &amp;#39;/opt/cloud/workspace/disks&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 注意：容器部署的host服务只会挂载/opt/cloud目录&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&amp;#39;/src /opt/cloud/dst none defaults,bind 0 0&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可选参数 --host-hostname: 配置宿主机的hostname, 比如: &amp;#39;node1&amp;#39;&lt;/span&gt;
+$ ./ocadm join &lt;span style=&#34;color:#000&#34;&gt;$api_server_addr&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --enable-host-agent &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --token &lt;span style=&#34;color:#000&#34;&gt;$token&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --discovery-token-unsafe-skip-ca-verification
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后等待宿主机上的host pod和host-deployer pod为running状态&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;控制节点启用-host&#34;&gt;控制节点启用 host&lt;/h2&gt;

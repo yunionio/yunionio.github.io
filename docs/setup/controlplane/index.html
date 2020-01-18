@@ -23,7 +23,7 @@
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
 <meta itemprop="dateModified" content="2020-01-18T13:15:21&#43;08:00" />
-<meta itemprop="wordCount" content="1138">
+<meta itemprop="wordCount" content="1134">
 
 
 
@@ -766,7 +766,7 @@
 <li>最低配置要求: 4核4G</li>
 <li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）</li>
 <li>docker: ce-18.09.1</li>
-<li>kubernetes: v1.14.3</li>
+<li>kubernetes: v1.15.8</li>
 </ul>
 
 <p>需要能访问如下网址，如果企业有外网隔离规则，则需要打开相应白名单：</p>
@@ -877,7 +877,7 @@ $ uname -r
 <span style="color:#0000cf;font-weight:bold">3</span>.10.0-1062.4.3.el7.yn20191203.x86_64</code></pre></div>
 <h3 id="安装配置-kubelet">安装配置 kubelet</h3>
 
-<p>从 aliyun 的 yum 源安装 kubernetes 1.14.3，并设置 kubelet 开机自启动</p>
+<p>从 aliyun 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/kubernetes.repo
 </span><span style="color:#4e9a06">[kubernetes]
 </span><span style="color:#4e9a06">name=Kubernetes
@@ -1091,10 +1091,10 @@ $ curl -k https://10.168.222.218</code></pre></div>
 </ol>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 用 kubectl get nodes 拿到当前的节点名称</span>
 $ kubectl get nodes
-NAME                  STATUS   ROLES    AGE    VERSION
-controller01   Ready    master   116d   v1.14.3
-controller02   Ready    master   40d    v1.14.3
-node01         Ready    &lt;none&gt;   25d    v1.14.3
+NAME           STATUS   ROLES    AGE 
+controller01   Ready    master   116d
+controller02   Ready    master   40d 
+node01         Ready    &lt;none&gt;   25d 
 
 <span style="color:#8f5902;font-style:italic"># 假设我要把 controller01 和 controller02 作为计算节点</span>
 $ ocadm node enable-host-agent <span style="color:#4e9a06">\
@@ -1241,7 +1241,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 18.01.2020: <a  href="https://github.com/yunionio/docs/commit/284b7e9eaa85a9cb7ecc88192c53890700d4f82d">use k8s v1.15.8 (284b7e9)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 18.01.2020: <a  href="https://github.com/yunionio/docs/commit/c0ad1d2f65604264e0d8b08fcda13deff47c6c35">use k8s v1.15.8 (c0ad1d2)</a>
 </div>
 </div>
 

@@ -360,7 +360,7 @@ tcp        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span
 &lt;li&gt;最低配置要求: 4核4G&lt;/li&gt;
 &lt;li&gt;数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li&gt;
 &lt;li&gt;docker: ce-18.09.1&lt;/li&gt;
-&lt;li&gt;kubernetes: v1.14.3&lt;/li&gt;
+&lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;需要能访问如下网址，如果企业有外网隔离规则，则需要打开相应白名单：&lt;/p&gt;
@@ -471,7 +471,7 @@ $ uname -r
 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装配置-kubelet&#34;&gt;安装配置 kubelet&lt;/h3&gt;
 
-&lt;p&gt;从 aliyun 的 yum 源安装 kubernetes 1.14.3，并设置 kubelet 开机自启动&lt;/p&gt;
+&lt;p&gt;从 aliyun 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[kubernetes]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Kubernetes
@@ -685,10 +685,10 @@ $ curl -k https://10.168.222.218&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/ol&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 用 kubectl get nodes 拿到当前的节点名称&lt;/span&gt;
 $ kubectl get nodes
-NAME                  STATUS   ROLES    AGE    VERSION
-controller01   Ready    master   116d   v1.14.3
-controller02   Ready    master   40d    v1.14.3
-node01         Ready    &amp;lt;none&amp;gt;   25d    v1.14.3
+NAME           STATUS   ROLES    AGE 
+controller01   Ready    master   116d
+controller02   Ready    master   40d 
+node01         Ready    &amp;lt;none&amp;gt;   25d 
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 假设我要把 controller01 和 controller02 作为计算节点&lt;/span&gt;
 $ ocadm node enable-host-agent &lt;span style=&#34;color:#4e9a06&#34;&gt;\

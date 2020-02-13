@@ -166,6 +166,8 @@
 
 &lt;p&gt;两个节点上面分别部署 keepalived 和 haproxy 组成负载均衡集群，haproxy 的 backend 为后端的 kubernetes control plane node，vip(虚ip) 在这两个节点之间漂移形成高可用。&lt;/p&gt;
 
+&lt;p&gt;另外 OneCloud 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href=&#34;https://docs.yunion.io/docs/setup/db-ha&#34;&gt;部署 DB HA 环境&lt;/a&gt; 。&lt;/p&gt;
+
 &lt;h2 id=&#34;部署&#34;&gt;部署&lt;/h2&gt;
 
 &lt;p&gt;keepalived 的主要作用是为 haproxy 提供 vip，在2个 haproxy 实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。&lt;/p&gt;
@@ -336,6 +338,299 @@ tcp        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span
 &lt;h1 id=&#34;部署-kubernetes-集群&#34;&gt;部署 kubernetes 集群&lt;/h1&gt;
 
 &lt;p&gt;参考 &lt;a href=&#34;https://docs.yunion.io/docs/setup/controlplane&#34;&gt;部署集群&lt;/a&gt; 。&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 部署 DB HA 环境</title>
+      <link>https://docs.yunion.io/docs/setup/db-ha/</link>
+      <pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate>
+      
+      <guid>https://docs.yunion.io/docs/setup/db-ha/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;OneCloud 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p&gt;
+
+&lt;h2 id=&#34;部署&#34;&gt;部署&lt;/h2&gt;
+
+&lt;p&gt;keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p&gt;
+
+&lt;h3 id=&#34;部署配置-mariadb-主主复制&#34;&gt;部署配置 Mariadb 主主复制&lt;/h3&gt;
+
+&lt;p&gt;安装并启动 Mariadb&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y mariadb-server
+$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now mariadb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;运行 Mariadb 安全配置向导，设置密码等&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mysql_secure_installation
+ ... ...
+Change the root password? &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;Y/n&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt; y
+New password:
+Re-enter new password:
+Password updated successfully!
+Reloading privilege tables..
+ ... Success!
+ ... ...
+Remove anonymous users? &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;Y/n&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt; y
+ ... Success!
+ ... ...
+Disallow root login remotely? &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;Y/n&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt; y
+ ... Success!
+ ... ...
+Remove &lt;span style=&#34;color:#204a87&#34;&gt;test&lt;/span&gt; database and access to it? &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;Y/n&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt; y
+ - Dropping &lt;span style=&#34;color:#204a87&#34;&gt;test&lt;/span&gt; database...
+ ... Success!
+ - Removing privileges on &lt;span style=&#34;color:#204a87&#34;&gt;test&lt;/span&gt; database...
+ ... Success! ... ...
+Reload privilege tables now? &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;Y/n&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt; y
+ ... Success!
+ ... ...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;修改 Mariadb 配置文件，准备配置主主复制&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 主节点&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/my.cnf
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[mysqld]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;datadir=/var/lib/mysql
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;socket=/var/lib/mysql/mysql.sock
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Disabling symbolic-links is recommended to prevent assorted security risks
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;symbolic-links=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Settings user and group are ignored when systemd is used.
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# If you need to run mysqld under a different user or group,
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# customize your systemd unit file for mariadb according to the
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# instructions in http://fedoraproject.org/wiki/Systemd
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# skip domain name resolve
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;skip_name_resolve
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# auto delete binlog older than 30 days
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;expire_logs_days=30
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;server-id = 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;auto_increment_offset = 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;auto_increment_increment = 2
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;log-bin = mysql-bin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;binlog-format = row
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;log-slave-updates
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_binlog_size = 1G
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;replicate-ignore-db = information_schema
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;replicate-ignore-db = performance_schema
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_connections = 1000
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_connect_errors = 0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_allowed_packet = 1G
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;slave-net-timeout=10
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;master-retry-count=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;slow_query_log = 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;long_query_time = 2
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;slow_query_log_file = /var/log/mariadb/slow-query.log
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[mysql]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;no-auto-rehash
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[mysqld_safe]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;log-error=/var/log/mariadb/mariadb.log
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;pid-file=/var/run/mariadb/mariadb.pid
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;#
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# include all files from the config directory
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;#
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;!includedir /etc/my.cnf.d
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 备节点&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/my.cnf
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[mysqld]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;datadir=/var/lib/mysql
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;socket=/var/lib/mysql/mysql.sock
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Disabling symbolic-links is recommended to prevent assorted security risks
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;symbolic-links=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Settings user and group are ignored when systemd is used.
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# If you need to run mysqld under a different user or group,
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# customize your systemd unit file for mariadb according to the
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# instructions in http://fedoraproject.org/wiki/Systemd
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# skip domain name resolve
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;skip_name_resolve
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# auto delete binlog older than 30 days
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;expire_logs_days=30
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;server-id = 2
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;auto_increment_offset = 2
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;auto_increment_increment = 2
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;log-bin = mysql-bin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;binlog-format = row
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;log-slave-updates
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_binlog_size = 1G
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;replicate-ignore-db = information_schema
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;replicate-ignore-db = performance_schema
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_connections = 1000
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_connect_errors = 0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_allowed_packet = 1G
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;slave-net-timeout=10
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;master-retry-count=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;slow_query_log = 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;long_query_time = 2
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;slow_query_log_file = /var/log/mariadb/slow-query.log
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[mysql]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;no-auto-rehash
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[mysqld_safe]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;log-error=/var/log/mariadb/mariadb.log
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;pid-file=/var/run/mariadb/mariadb.pid
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;#
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# include all files from the config directory
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;#
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;!includedir /etc/my.cnf.d
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启服务&lt;/span&gt;
+$ systemctl restart mariadb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;主节点创建只读账号，导出全部数据，导入备节点。记录binlog日志文件名和position。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 以下命令在主节点执行&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 此密码为上面设置的 Mariadb root 密码，为了方便，只读账号也使用此密码&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;your-sql-passwd&amp;#39;&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开启 Mariadb 的远程访问&lt;/span&gt;
+$ mysql -uroot -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;GRANT ALL PRIVILEGES ON *.* TO &amp;#39;root&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39; WITH GRANT OPTION;FLUSH PRIVILEGES&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建只读账号&lt;/span&gt;
+$ mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;GRANT REPLICATION SLAVE ON *.* TO repl@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;;FLUSH PRIVILEGES&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 示例是全新安装的 Mariadb ，还没有使用。如果是正在使用的数据库做主主复制，需要锁表后再导出数据&lt;/span&gt;
+$ mysql -uroot -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;SHOW PROCESSLIST&amp;#34;&lt;/span&gt;
++----+------+-----------+------+---------+------+-------+------------------+----------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Id &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; User &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Host      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; db   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Command &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Time &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; State &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Info             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Progress &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++----+------+-----------+------+---------+------+-------+------------------+----------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; root &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; localhost &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; NULL &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Query   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; NULL  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; SHOW PROCESSLIST &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;.000 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++----+------+-----------+------+---------+------+-------+------------------+----------+
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 记录binlog日志文件名和position&lt;/span&gt;
+$ mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;SHOW MASTER STATUS\G&amp;#34;&lt;/span&gt;
+*************************** &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;. row ***************************
+            File: mysql-bin.000001
+        Position: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2023&lt;/span&gt;
+    Binlog_Do_DB:
+Binlog_Ignore_DB:
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 导出全部数据&lt;/span&gt;
+$ mysqldump --all-databases -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &amp;gt; alldb.db
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 拷贝 alldb.db 到备节点&lt;/span&gt;
+$ scp alldb.db db2:/root/
+
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 以下命令在备节点执行&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 此密码为上面设置的 Mariadb root 密码&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;your-sql-passwd&amp;#39;&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 导入主节点导出的数据&lt;/span&gt;
+mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &amp;lt; alldb.db
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重载权限&lt;/span&gt;
+mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;FLUSH PRIVILEGES&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 记录binlog日志文件名和position&lt;/span&gt;
+mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;SHOW MASTER STATUS\G&amp;#34;&lt;/span&gt;
+*************************** &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;. row ***************************
+            File: mysql-bin.000001
+        Position: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;509778&lt;/span&gt;
+    Binlog_Do_DB:
+Binlog_Ignore_DB:&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;设置主主复制&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 以下命令在主节点执行&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 修改MASTER_HOST为备节点IP，修改MASTER_LOG_FILE和MASTER_LOG_POS为上面备节点记录的信息&lt;/span&gt;
+mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CHANGE MASTER TO MASTER_HOST=&amp;#39;192.168.199.99&amp;#39;,MASTER_USER=&amp;#39;repl&amp;#39;,MASTER_PASSWORD=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;,MASTER_PORT=3306,MASTER_LOG_FILE=&amp;#39;mysql-bin.000001&amp;#39;,MASTER_LOG_POS=509778,MASTER_CONNECT_RETRY=2;START SLAVE&amp;#34;&lt;/span&gt;
+
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 以下命令在备节点执行&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 修改MASTER_HOST为主节点IP，修改MASTER_LOG_FILE和MASTER_LOG_POS为上面主节点记录的信息&lt;/span&gt;
+mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CHANGE MASTER TO MASTER_HOST=&amp;#39;192.168.199.98&amp;#39;,MASTER_USER=&amp;#39;repl&amp;#39;,MASTER_PASSWORD=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;,MASTER_PORT=3306,MASTER_LOG_FILE=&amp;#39;mysql-bin.000001&amp;#39;,MASTER_LOG_POS=2023,MASTER_CONNECT_RETRY=2;START SLAVE&amp;#34;&lt;/span&gt;
+
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 主备都执行，验证同步状态，都输出2个 Yes 表示正常&lt;/span&gt;
+mysql -u root -p&lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;SHOW SLAVE STATUS\G&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep Running
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;至此，DB 主主复制部署完成，可以测试在任一节点进行数据库操作，另一节点验证。不过对外提供服务还是需要通过 vip，不然发生切换还需要业务端切换 ip，下面配置 keepalived 对外提供服务。&lt;/p&gt;
+
+&lt;h3 id=&#34;部署配置-keepalived&#34;&gt;部署配置 keepalived&lt;/h3&gt;
+
+&lt;p&gt;设置相关的环境变量，根据不同的环境自行配置。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# keepalived vip 地址&lt;/span&gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;DB_VIP&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.199.97
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# keepalived auth toke&lt;/span&gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;DBHA_KA_AUTH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;onecloud
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# keepalived network interface&lt;/span&gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;DB_NETIF&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;eth0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;设置 sysctl 选项&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt;/etc/sysctl.conf
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;net.ipv4.ip_forward = 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;net.ipv4.ip_nonlocal_bind = 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+
+$ sysctl -p&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;安装 keepalived nc&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y keepalived nc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;添加配置&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 请确保 virtual_router_id 不会和局域网内的其他 keepalived 集群冲突&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/keepalived/keepalived.conf
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;global_defs {
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    router_id onecloud
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;}
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;vrrp_script chk_mysql {
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    script &amp;#34;/etc/keepalived/chk_mysql&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    interval 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;}
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;vrrp_instance VI_1 {
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    state MASTER
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    interface $DB_NETIF         
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    virtual_router_id 99
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    priority 100
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    advert_int 1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    nopreempt
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    authentication {
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;        auth_type PASS
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;        auth_pass $DBHA_KA_AUTH
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    }
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    track_script {
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;        chk_mysql
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    }
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    virtual_ipaddress {
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;        $DB_VIP
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    }
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;}
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /etc/keepalived/chk_mysql
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;echo | nc 127.0.0.1 3306 &amp;amp;&amp;gt;/dev/null
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+  
+$ chmod +x /etc/keepalived/chk_mysql&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;启动 keepalived&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now keepalived
+$ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1500&lt;/span&gt; qdisc pfifo_fast state UP group default qlen &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1000&lt;/span&gt;
+    link/ether &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;00&lt;/span&gt;:22:cf:40:1e:29 brd ff:ff:ff:ff:ff:ff
+    inet &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.199.99/24 brd &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.199.255 scope global dynamic eth0
+       valid_lft 100651906sec preferred_lft 100651906sec
+    inet &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.199.97/32 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::222:cfff:fe40:1e29/64 scope link
+       valid_lft forever preferred_lft forever&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p&gt;
 
       </description>
     </item>

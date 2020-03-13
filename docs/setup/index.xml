@@ -101,8 +101,8 @@
 &lt;tr&gt;
 &lt;td align=&#34;center&#34;&gt;host&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;管理虚拟机&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;rpm&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;systemd&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;k8s daemonset&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;container&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -113,9 +113,9 @@
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;baremetal&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;baremetal-agent&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;管理物理机&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;kubernetes deployment&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;k8s deployment&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;container&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -138,7 +138,7 @@
 &lt;p&gt;其中 host 和 baremetal-agent 可以根据需求选择性部署:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;管理 kvm 虚拟机: 部署 host 和 sdnagent 服务&lt;/li&gt;
+&lt;li&gt;管理 kvm 虚拟机: 部署 host 服务&lt;/li&gt;
 &lt;li&gt;管理物理机: 部署 baremetal-agent 服务&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -651,8 +651,8 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
 &lt;p&gt;OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;操作系统: Centos 7.x&lt;/li&gt;
-&lt;li&gt;最低配置要求: 4核4G&lt;/li&gt;
+&lt;li&gt;操作系统: Centos 7.6&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
 &lt;li&gt;数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li&gt;
 &lt;li&gt;docker: ce-18.09.1&lt;/li&gt;
 &lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
@@ -750,7 +750,7 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 
 &lt;p&gt;这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 添加 yunion onecloud rpm 源&lt;/span&gt;
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.0/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装内核&lt;/span&gt;
 $ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
@@ -867,8 +867,7 @@ $ &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;#EXTRA_OPT=&amp;#3
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开始部署 kubernetes 以及 onecloud 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成&lt;/span&gt;
 $ ocadm init --mysql-host &lt;span style=&#34;color:#000&#34;&gt;$MYSQL_HOST&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --mysql-user root --mysql-password &lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --onecloud-version v3.0.0-20200113.0 &lt;span style=&#34;color:#000&#34;&gt;$EXTRA_OPT&lt;/span&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --mysql-user root --mysql-password &lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$EXTRA_OPT&lt;/span&gt;
 
 ...
 Your Kubernetes and Onecloud control-plane has initialized successfully!
@@ -1179,8 +1178,8 @@ Run &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;kubectl get nodes&amp;#39
 &lt;tr&gt;
 &lt;td align=&#34;center&#34;&gt;sdnagent&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;管理虚拟机网络和安全组&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;rpm&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;systemd&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;-&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;docker&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -1237,7 +1236,7 @@ Run &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;kubectl get nodes&amp;#39
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[yunion]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Packages for Yunion Multi-Cloud Platform
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-3.0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-3.1
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;sslverify=0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;failovermethod=priority
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
@@ -1251,14 +1250,14 @@ $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  epel-release libaio jq libusb lvm2 nc ntp fetchclient fuse fuse-devel fuse-libs &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-sdnagent yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.6-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.6-1.el7 net-tools
 
-$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-host-sdnagent yunion-executor
+$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-executor
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装完成后需要重启进入我们的内核&lt;/span&gt;
 $ reboot

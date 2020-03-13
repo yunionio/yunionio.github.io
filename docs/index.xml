@@ -253,6 +253,178 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ub
     </item>
     
     <item>
+      <title>Docs: All in One 安装</title>
+      <link>https://docs.yunion.io/docs/quickstart/allinone/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://docs.yunion.io/docs/quickstart/allinone/</guid>
+      <description>
+        
+        
+        
+
+&lt;h2 id=&#34;前提&#34;&gt;前提&lt;/h2&gt;
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
+本章内容是通过部署工具快速搭建 OneCloud 服务，如果想了解部署的细节或者部署高可用环境请参考: &lt;a href=&#34;https://docs.yunion.io/docs/setup/&#34;&gt;安装部署&lt;/a&gt; 。
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;环境准备&#34;&gt;环境准备&lt;/h2&gt;
+
+&lt;p&gt;OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;操作系统: Centos 7.6&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
+&lt;li&gt;数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li&gt;
+&lt;li&gt;docker: ce-18.09.1&lt;/li&gt;
+&lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
+&lt;li&gt;ssh: 开启 ssh 免密登录&lt;/li&gt;
+&lt;li&gt;本地环境安装部署 ansbile&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以下为待部署机器的环境:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;IP&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;登录用户&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;操作系统&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;10.168.26.216&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;root&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Centos 7.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;提示&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;10.168.26.216 是本次测试环境 ip，请根据自己的环境做相应修改。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;配置-ssh-免密登录&#34;&gt;配置 ssh 免密登录&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa 则跳过此步骤)&lt;/span&gt;
+$ ssh-keygen
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将生成的 ~/.ssh/id_rsa 拷贝到待部署机器&lt;/span&gt;
+$ ssh-copy-id -i ~/.ssh/id_rsa root@10.168.26.216
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span&gt;
+$ ssh root@10.168.26.216 &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;hostname&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;开始部署&#34;&gt;开始部署&lt;/h2&gt;
+
+&lt;p&gt;部署的工具是 &lt;a href=&#34;https://github.com/yunionio/ocboot&#34; target=&#34;_blank&#34;&gt;https://github.com/yunionio/ocboot&lt;/a&gt; , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 onecloud 服务，以下是操作步骤:&lt;/p&gt;
+
+&lt;h3 id=&#34;下载-ocboot&#34;&gt;下载 ocboot&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 本地安装 ansible&lt;/span&gt;
+$ pip install ansible
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
+$ git clone https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;编写部署配置&#34;&gt;编写部署配置&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编写 config-allinone.yml 文件&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# mariadb_node 表示需要部署 mariadb 服务的节点
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;mariadb_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 待部署节点 ip
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 待部署节点登录用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # mariadb 的用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # mariadb 用户密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# primary_master_node 表示运行 k8s 和 onecloud 服务的节点
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;primary_master_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 数据库连接地址
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_host: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 数据库用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 数据库密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # k8s 控制节点的 ip
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # k8s 控制节点的端口
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # onecloud 登录用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user: admin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # onecloud 登录用户密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user_password: admin@123
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 该节点作为 OneCloud 私有云计算节点
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  as_host: true
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;开始部署-1&#34;&gt;开始部署&lt;/h3&gt;
+
+&lt;p&gt;当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code&gt;./run.py ./config-allinone.yml&lt;/code&gt; 部署集群了。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开始部署&lt;/span&gt;
+$ ./run.py ./config-allinone.yml
+....
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 部署完成后会有如下输出，表示运行成功&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 浏览器打开 https://10.168.26.216&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span&gt;
+Initialized successfully!
+Web page: https://10.168.26.216
+User: admin
+Password: admin@123&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后用浏览器访问 &lt;a href=&#34;https://10.168.26.216&#34; target=&#34;_blank&#34;&gt;https://10.168.26.216&lt;/a&gt; ，用户名输入 &lt;code&gt;admin&lt;/code&gt;，密码输入 &lt;code&gt;admin@123&lt;/code&gt; 就会进入 OneCloud 的界面。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/index.png&#34; alt=&#34;登录页&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-在-all-in-one-中找不到虚拟机界面&#34;&gt;1. 在 All in One 中找不到虚拟机界面？&lt;/h3&gt;
+
+&lt;p&gt;All in One 部署的节点会部署 OneCloud host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 OneCloud 环境中没有启用宿主机。&lt;/p&gt;
+
+&lt;p&gt;请到 &lt;code&gt;管理后台&lt;/code&gt; 界面，点击 &lt;code&gt;主机/基础资源/宿主机&lt;/code&gt; 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p&gt;
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
+&lt;p&gt;&lt;p&gt;如果要使用 OneCloud 私有云虚拟机，需要宿主机使用 OneCloud 编译的内核，可使用以下命令查看宿主机是否使用 OneCloud 内核(包含 yn 关键字)。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看是否使用 yn 内核&lt;/span&gt;
+$ uname -a &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep yn
+Linux office-controller &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span&gt;
+$ reboot&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img src=&#34;../images/host.png&#34; alt=&#34;宿主机&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-如何导入公有云或者其它私有云平台资源&#34;&gt;2. 如何导入公有云或者其它私有云平台资源？&lt;/h3&gt;
+
+&lt;p&gt;在 &lt;code&gt;多云管理&lt;/code&gt; 菜单，选择 &lt;code&gt;云账号&lt;/code&gt; 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 OneCloud 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/cloudaccount.png&#34; alt=&#34;多云管理&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-其它问题&#34;&gt;3. 其它问题？&lt;/h3&gt;
+
+&lt;p&gt;其它问题欢迎在 OneCloud github issues 界面提交: &lt;a href=&#34;https://github.com/yunionio/onecloud/issues&#34; target=&#34;_blank&#34;&gt;https://github.com/yunionio/onecloud/issues&lt;/a&gt; , 我们会尽快回复。&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: 组件概览</title>
       <link>https://docs.yunion.io/docs/setup/intro/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -340,8 +512,8 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ub
 &lt;tr&gt;
 &lt;td align=&#34;center&#34;&gt;host&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;管理虚拟机&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;rpm&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;systemd&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;k8s daemonset&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;container&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -352,9 +524,9 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ub
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;baremetal&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;baremetal-agent&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;管理物理机&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;kubernetes deployment&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;k8s deployment&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;container&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -377,7 +549,7 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ub
 &lt;p&gt;其中 host 和 baremetal-agent 可以根据需求选择性部署:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;管理 kvm 虚拟机: 部署 host 和 sdnagent 服务&lt;/li&gt;
+&lt;li&gt;管理 kvm 虚拟机: 部署 host 服务&lt;/li&gt;
 &lt;li&gt;管理物理机: 部署 baremetal-agent 服务&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1121,8 +1293,8 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
 &lt;p&gt;OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;操作系统: Centos 7.x&lt;/li&gt;
-&lt;li&gt;最低配置要求: 4核4G&lt;/li&gt;
+&lt;li&gt;操作系统: Centos 7.6&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
 &lt;li&gt;数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li&gt;
 &lt;li&gt;docker: ce-18.09.1&lt;/li&gt;
 &lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
@@ -1220,7 +1392,7 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 
 &lt;p&gt;这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 添加 yunion onecloud rpm 源&lt;/span&gt;
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.0/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装内核&lt;/span&gt;
 $ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
@@ -1337,8 +1509,7 @@ $ &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;#EXTRA_OPT=&amp;#3
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开始部署 kubernetes 以及 onecloud 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成&lt;/span&gt;
 $ ocadm init --mysql-host &lt;span style=&#34;color:#000&#34;&gt;$MYSQL_HOST&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --mysql-user root --mysql-password &lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --onecloud-version v3.0.0-20200113.0 &lt;span style=&#34;color:#000&#34;&gt;$EXTRA_OPT&lt;/span&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --mysql-user root --mysql-password &lt;span style=&#34;color:#000&#34;&gt;$MYSQL_PASSWD&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$EXTRA_OPT&lt;/span&gt;
 
 ...
 Your Kubernetes and Onecloud control-plane has initialized successfully!
@@ -2461,8 +2632,8 @@ $ climc image-show ubuntu-xenial-server.qcow2
 &lt;tr&gt;
 &lt;td align=&#34;center&#34;&gt;sdnagent&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;管理虚拟机网络和安全组&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;rpm&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;systemd&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;-&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;docker&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2519,7 +2690,7 @@ $ climc image-show ubuntu-xenial-server.qcow2
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[yunion]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Packages for Yunion Multi-Cloud Platform
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-3.0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=https://iso.yunion.cn/yumrepo-3.1
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;sslverify=0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;failovermethod=priority
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
@@ -2533,14 +2704,14 @@ $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  epel-release libaio jq libusb lvm2 nc ntp fetchclient fuse fuse-devel fuse-libs &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-sdnagent yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.6-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.6-1.el7 net-tools
 
-$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-host-sdnagent yunion-executor
+$ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-executor
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装完成后需要重启进入我们的内核&lt;/span&gt;
 $ reboot

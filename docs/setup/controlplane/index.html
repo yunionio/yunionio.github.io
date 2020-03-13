@@ -14,7 +14,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://docs.yunion.io/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57&#43;08:00"/>
-<meta property="article:modified_time" content="2020-02-12T18:32:41&#43;08:00"/>
+<meta property="article:modified_time" content="2020-03-13T00:43:25&#43;08:00"/>
 
 <meta itemprop="name" content="部署集群">
 <meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
@@ -22,8 +22,8 @@
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2020-02-12T18:32:41&#43;08:00" />
-<meta itemprop="wordCount" content="1134">
+<meta itemprop="dateModified" content="2020-03-13T00:43:25&#43;08:00" />
+<meta itemprop="wordCount" content="1136">
 
 
 
@@ -70,7 +70,7 @@
 				
 				
 				
-				<a class="nav-link" href="/docs/setup/controlplane/" ><span>快速开始</span></a>
+				<a class="nav-link" href="/docs/quickstart/" ><span>快速开始</span></a>
 			</li>
 			
 			<li class="nav-item mr-4 mb-2 mb-lg-0">
@@ -142,6 +142,35 @@
   <ul>
     <li class="collapse show" id="docs">
       
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-quickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-allinone" href="/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
       
       
       
@@ -768,8 +797,8 @@
 <p>OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:</p>
 
 <ul>
-<li>操作系统: Centos 7.x</li>
-<li>最低配置要求: 4核4G</li>
+<li>操作系统: Centos 7.6</li>
+<li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
 <li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）</li>
 <li>docker: ce-18.09.1</li>
 <li>kubernetes: v1.15.8</li>
@@ -867,7 +896,7 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
 
 <p>这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 添加 yunion onecloud rpm 源</span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.0/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
 <span style="color:#8f5902;font-style:italic"># 安装内核</span>
 $ yum install -y <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  kernel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
@@ -984,8 +1013,7 @@ $ <span style="color:#8f5902;font-style:italic">#EXTRA_OPT=&#39; --control-plane
 
 <span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 onecloud 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成</span>
 $ ocadm init --mysql-host <span style="color:#000">$MYSQL_HOST</span> <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>    --mysql-user root --mysql-password <span style="color:#000">$MYSQL_PASSWD</span> <span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>    --onecloud-version v3.0.0-20200113.0 <span style="color:#000">$EXTRA_OPT</span>
+</span><span style="color:#4e9a06"></span>    --mysql-user root --mysql-password <span style="color:#000">$MYSQL_PASSWD</span> <span style="color:#000">$EXTRA_OPT</span>
 
 ...
 Your Kubernetes and Onecloud control-plane has initialized successfully!
@@ -1247,7 +1275,7 @@ $ ocadm component disable cloudwatcher</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 12.02.2020: <a  href="https://github.com/yunionio/docs/commit/613c9bb17d91aec4552bcb9e856fbd0c6c9c0312">add db ha (613c9bb)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 13.03.2020: <a  href="https://github.com/yunionio/docs/commit/b85f8b46a7ab0c109d530fc378d4b08b6ac3052b">add allinone quickstart (b85f8b4)</a>
 </div>
 </div>
 

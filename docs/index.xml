@@ -770,6 +770,17 @@ tcp        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span
 
 &lt;p&gt;安装go环境参考: &lt;a href=&#34;https://golang.org/doc/install&#34; target=&#34;_blank&#34;&gt;Install doc&lt;/a&gt;&lt;/p&gt;
 
+&lt;h2 id=&#34;安装-ceph-依赖&#34;&gt;安装 ceph 依赖&lt;/h2&gt;
+
+&lt;p&gt;On rpm based systems (dnf, yum, etc):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;sudo rpm --import https://download.ceph.com/keys/release.asc
+sudo yum install -y https://download.ceph.com/rpm-luminous/el7/noarch/ceph-release-1-1.el7.noarch.rpm
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install -y libcephfs-devel librbd-devel librados-devel&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On debian systems (apt):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;wget -q -O- &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo apt-key add -
+&lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; deb https://download.ceph.com/debian-luminous/ &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;lsb_release -sc&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt; main &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo tee /etc/apt/sources.list.d/ceph.list
+apt-get update &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get install -y libcephfs-dev librbd-dev librados-dev&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;编译-onecloud-组件&#34;&gt;编译 onecloud 组件&lt;/h2&gt;
 
 &lt;h3 id=&#34;fork-仓库&#34;&gt;Fork 仓库&lt;/h3&gt;

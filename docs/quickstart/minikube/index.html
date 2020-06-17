@@ -7,21 +7,29 @@
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
-<link rel="alternate" type="application/rss&#43;xml" href="/docs/howto/image/index.xml">
 
-<title>镜像 | OneCloud Documentation</title><meta property="og:title" content="镜像" />
-<meta property="og:description" content="Documentation for onecloud" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="/docs/howto/image/" />
+<title>MiniKube 安装 | OneCloud Documentation</title><meta property="og:title" content="MiniKube 安装" />
+<meta property="og:description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/quickstart/minikube/" />
+<meta property="article:modified_time" content="2020-06-11T19:57:13&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
 
-<meta property="og:updated_time" content="2019-07-19T10:27:28&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
+<meta itemprop="name" content="MiniKube 安装">
+<meta itemprop="description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+">
 
-<meta itemprop="name" content="镜像">
-<meta itemprop="description" content="Documentation for onecloud">
 
+<meta itemprop="dateModified" content="2020-06-11T19:57:13&#43;08:00" />
+<meta itemprop="wordCount" content="205">
+
+
+
+<meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="镜像"/>
-<meta name="twitter:description" content="Documentation for onecloud"/>
+<meta name="twitter:title" content="MiniKube 安装"/>
+<meta name="twitter:description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+"/>
 
 
 
@@ -36,9 +44,9 @@
   crossorigin="anonymous"></script>
 
 
-    <title>镜像 | OneCloud Documentation</title>
+    <title>MiniKube 安装 | OneCloud Documentation</title>
   </head>
-  <body class="td-section">
+  <body class="td-page">
     <header>
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
@@ -144,10 +152,10 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+    <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">快速开始</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-quickstart">
+    <li class="collapse show" id="docs-quickstart">
       
       
       
@@ -160,7 +168,7 @@
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
       
       
     </li>
@@ -285,10 +293,10 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
+    <a  href="/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
   </li>
   <ul>
-    <li class="collapse show" id="docs-howto">
+    <li class="collapse " id="docs-howto">
       
       
       
@@ -325,10 +333,10 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">镜像</a>
+    <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
   </li>
   <ul>
-    <li class="collapse show" id="docs-howto-image">
+    <li class="collapse " id="docs-howto-image">
       
       
       
@@ -698,8 +706,8 @@
     
     
     
-    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/howto/image/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
-    <a href="https://github.com/yunionio/docs/issues/new?title=%e9%95%9c%e5%83%8f" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/quickstart/minikube.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=MiniKube%20%e5%ae%89%e8%a3%85" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
     
     
     <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
@@ -708,6 +716,28 @@
 
 
 
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前提">前提</a></li>
+<li><a href="#环境准备">环境准备</a></li>
+<li><a href="#开始部署">开始部署</a>
+<ul>
+<li><a href="#启动minikube">启动minikube</a></li>
+<li><a href="#部署local-path-storage">部署local-path-storage</a></li>
+<li><a href="#部署onecloud-k8s-operator">部署onecloud k8s operator</a></li>
+<li><a href="#部署onecloud-集群">部署onecloud 集群</a></li>
+<li><a href="#创建账号登陆webui">创建账号登陆webUI</a></li>
+<li><a href="#带解决的问题">带解决的问题</a></li>
+<li><a href="#集群清理">集群清理</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
 
 
 
@@ -735,14 +765,14 @@
 
 
 <li class="breadcrumb-item" >
-	<a href="/docs/howto/">操作管理</a>
+	<a href="/docs/quickstart/">快速开始</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="/docs/howto/image/">镜像</a>
+	<a href="/docs/quickstart/minikube/">MiniKube 安装</a>
 </li>
 
 	</ol>
@@ -750,152 +780,100 @@
 
             
 <div class="td-content">
-	<h1>镜像</h1>
+	<h1>MiniKube 安装</h1>
+	<div class="lead">使用MiniKube,快速部署体验单机版本的OneCloud服务</div>
 	
-	<ul>
-<li><p>镜像(image): 是用于新建云服务器(虚拟机)、裸金属(物理机)使用的模板文件，常用类型为 qcow2, vmdk, raw, vhd, iso。</p></li>
 
-<li><p>镜像服务(glance): 云平台的镜像服务叫做 glance，用于存储转换用户上传或外部导入的镜像，提供下载功能。</p></li>
+<h2 id="前提">前提</h2>
 
-<li><p>缓存镜像(cached-image): 创建公/私有云虚拟机时，可以直接使用各个云平台已有的镜像，这些镜像不会存储在 glance，云平台只是保存元信息，创建机器时会直接使用。</p></li>
-</ul>
 
-<p>image 和 cached-image 两种资源的区别如下：</p>
 
-<ul>
-<li>image: glance 管理的镜像，由用户上传或者外部导入;</li>
-<li>cached-image:
-
-<ul>
-<li>包括公有云和其他私有云的镜像，不由 glance 管理，一般在创建 OneCloud 之外的公/私有云主机的时候用到;</li>
-<li>不提供创建接口，只能查询，刷新和删除;</li>
-</ul></li>
-</ul>
-
-        <div class="section-index">
-    
-    
-    
-    
-    <hr class="panel-line">
-        
-            
-        
-            
-        
-            
-        
-            
-                <div class="entry">
-                    <h5>
-                        <a href="/docs/howto/image/upload/">上传镜像</a>
-                    </h5>
-                    <p></p>
-                </div>
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-                <div class="entry">
-                    <h5>
-                        <a href="/docs/howto/image/query/">查询镜像</a>
-                    </h5>
-                    <p></p>
-                </div>
-            
-        
-            
-                <div class="entry">
-                    <h5>
-                        <a href="/docs/howto/image/create/">制作镜像</a>
-                    </h5>
-                    <p></p>
-                </div>
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-                <div class="entry">
-                    <h5>
-                        <a href="/docs/howto/image/operation/">其他操作</a>
-                    </h5>
-                    <p></p>
-                </div>
-            
-        
-            
-        
-    
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">注意</h4>
+本章内容是方便快速体验OneCloud, 通过MiniKube快速搭建OneCloud服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="/docs/setup/">安装部署</a> 。
 </div>
 
+
+<h2 id="环境准备">环境准备</h2>
+
+<p>OneCloud 相关的组件运行在MiniKube之上，环境以及相关的软件依赖如下:</p>
+
+<ul>
+<li>操作系统: Centos 7.6</li>
+<li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
+<li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）</li>
+</ul>
+
+<p>安装MySQL开启远程访问</p>
+
+<pre><code># 此密码为上面设置的 MySQL root 密码，为了方便，只读账号也使用此密码
+$ MYSQL_PASSWD='your-sql-passwd'
+$ mysql -uroot -p$MYSQL_PASSWD -e &quot;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_PASSWD' WITH GRANT OPTION;FLUSH PRIVILEGES&quot;
+</code></pre>
+
+<h2 id="开始部署">开始部署</h2>
+
+<h3 id="启动minikube">启动minikube</h3>
+
+<p>下载minikue/kubectl, 并启动minikube集群, 具体请参考： <a href="https://kubernetes.io/docs/tasks/tools/install-minikube/" target="_blank">https://kubernetes.io/docs/tasks/tools/install-minikube/</a></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">minikube config -p onecloud <span style="color:#204a87">set</span> memory <span style="color:#0000cf;font-weight:bold">8192</span> 
+minikube start  --nodes <span style="color:#0000cf;font-weight:bold">2</span> -p onecloud
+minikube dashboard -p onecloud</code></pre></div>
+<h3 id="部署local-path-storage">部署local-path-storage</h3>
+
+<p>参考：<a href="https://github.com/rancher/local-path-provisioner" target="_blank">https://github.com/rancher/local-path-provisioner</a>, 在minikube部署local-path-storage</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml -O local-path-storage.yaml 
+kubectl apply -f local-path-storage.yaml </code></pre></div>
+<h3 id="部署onecloud-k8s-operator">部署onecloud k8s operator</h3>
+
+<p>onecloud k8s operator地址： <a href="https://github.com/yunionio/onecloud-operator" target="_blank">https://github.com/yunionio/onecloud-operator</a></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/onecloud-operator.yaml -O onecloud-operator.yaml
+kubectl apply -f onecloud-operator.yaml</code></pre></div>
+<h3 id="部署onecloud-集群">部署onecloud 集群</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/example-onecloud-cluster.yaml -O onecloud-cluster.yaml
+vim onecloud-cluster.yaml</code></pre></div>
+<ul>
+<li><p>修改onecloud-cluster.yaml mysql相关配额</p>
+
+<pre><code>host: $MYSQL_HOST
+port: $MYSQL_PORT
+username: &quot;$MYSQL_USERNAME&quot;
+password: &quot;$MYSQL_PASSWD&quot;
+</code></pre></li>
+
+<li><p>其他集群配置请参考： <a href="https://github.com/yunionio/onecloud-operator/blob/4c871ae1d3d6774a827834464c480287b7b8b433/pkg/apis/onecloud/v1alpha1/types.go#L97" target="_blank">OnecloudClusterSpec</a>::</p></li>
+
+<li><p>启动onecloud集群</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f onecloud-cluster.yaml</code></pre></div>
+<p>打开K8s Dashboard确认相关服务正常启动完成</p>
+
+<h3 id="创建账号登陆webui">创建账号登陆webUI</h3>
+
+<p>创建账号</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl <span style="color:#204a87">exec</span> -n onecloud <span style="color:#4e9a06">`</span>kubectl -n onecloud get pods  <span style="color:#000;font-weight:bold">|</span> grep <span style="color:#4e9a06">&#34;example-onecloud-cluster-climc&#34;</span><span style="color:#000;font-weight:bold">|</span> cut -f1 -d<span style="color:#4e9a06">&#34; &#34;</span><span style="color:#4e9a06">`</span> -c climc  -i -t -- /bin/bash -il
+$ climc user-create demo --password demo123A --system-account --enabled</code></pre></div></li>
+</ul>
+
+<p>登陆webUI</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl -n onecloud port-forward <span style="color:#4e9a06">`</span>kubectl -n onecloud get pods  <span style="color:#000;font-weight:bold">|</span> grep <span style="color:#4e9a06">&#34;example-onecloud-cluster-web&#34;</span><span style="color:#000;font-weight:bold">|</span> cut -f1 -d<span style="color:#4e9a06">&#34; &#34;</span><span style="color:#4e9a06">`</span> <span style="color:#0000cf;font-weight:bold">9999</span>:443 --address<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">0</span>.0.0.0</code></pre></div>
+<p>打开浏览器：<a href="https://localhost:9999" target="_blank">https://localhost:9999</a></p>
+
+<h3 id="带解决的问题">带解决的问题</h3>
+
+<p>4类Pod启动失败，问题还在分析中，但不影响体验onecloud</p>
+
+<ul>
+<li>example-onecloud-cluster-notify</li>
+<li>example-onecloud-cluster-host-deployer</li>
+<li>example-onecloud-cluster-monitor</li>
+<li>example-onecloud-cluster-autoupdate</li>
+</ul>
+
+<h3 id="集群清理">集群清理</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl delete -f onecloud-cluster.yaml
+kubectl delete -f onecloud-operator.yaml
+kubectl delete -f local-path-storage.yaml
+minikube -p onecloud stop</code></pre></div>
 	
 		<style>
   .feedback--answer {
@@ -958,9 +936,10 @@
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 30.07.2019: <a  href="https://github.com/yunionio/docs/commit/61a5e0c8caf98ca74b477bbebe4113c295c79cec">update theme to docsy (61a5e0c)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 11.06.2020: <a  href="https://github.com/yunionio/docs/commit/18e47ffab43e76e56449bf2006bf91645c4562aa">docs:优化minikube安装体验 (18e47ff)</a>
 </div>
 </div>
+
 
           </main>
         </div>

@@ -69,6 +69,83 @@ $ make cmd/region cmd/host
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看编译好的二进制文件&lt;/span&gt;
 $ ls _output/bin
 region host&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;本地开发调试&#34;&gt;本地开发调试&lt;/h2&gt;
+
+&lt;p&gt;3.0 版本后我们的服务都已经容器化运行在 k8s 集群中，快速开发调试并不方便。
+通过Telepresence 提供远程k8s上下文，可以在本地开发调试。&lt;/p&gt;
+
+&lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
+
+&lt;p&gt;确保有一个已部署的onecloud k8s集群，参考&lt;a href=&#34;/docs/setup/&#34;&gt;安装部署&lt;/a&gt;。
+这里介绍Centos7的本地环境安装，其他发行版可参考官方文档：&lt;a href=&#34;https://www.telepresence.io/reference/install&#34; target=&#34;_blank&#34;&gt;Installing Telepresence&lt;/a&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;不建议k8s集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装依赖&lt;/span&gt;
+$ yum install -y python3 sshfs conntrack iptables torsocks sshuttle sudo yum-utils
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 kubectl 用于连接 k8s 集群&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[kubernetes]
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Kubernetes
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgcheck=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;repo_gpgcheck=0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+$ yum install -y kubectl-1.15.8-0
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 需要自行配置kubctl config&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试kubctl可以访问之前部署的k8s集群&lt;/span&gt;
+$ kubctl version
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 源码安装 telepresence 到 /usr/local/bin/telepresence&lt;/span&gt;
+$ git clone https://github.com/telepresenceio/telepresence
+$ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; telepresence
+$ sudo env &lt;span style=&#34;color:#000&#34;&gt;PREFIX&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;/usr/local ./install.sh&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;
+
+&lt;p&gt;利用 telepresence 本地连通远端 k8s 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 k8s 其它服务的环境。&lt;/p&gt;
+
+&lt;p&gt;比如以下是本地编译运行 region 服务的流程：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到 onecloud 代码目录&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 region 服务&lt;/span&gt;
+$ make cmd/region
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 telepresence 替换 k8s 里面的 default-region deployment&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后把流量的访问导向本地&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span&gt;
+$ telepresence --swap-deployment default-region --namespace onecloud&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;到这里已经进入到 telepresence 隔离的 namespace 里面了，
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 设置 max_user_namespaces&lt;/span&gt;
+$ cat /proc/sys/user/max_user_namespaces
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果 max_user_namespaces 为 0，需要设置下 user_namespaces&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;640&lt;/span&gt; &amp;gt; /proc/sys/user/max_user_namespaces
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启动一个新的 namespace , 但不共享 mount namespace，这样接下来的 mount bind 操作就不会影响到宿主机&lt;/span&gt;
+$ unshare --map-root-user --mount
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# bind k8s /var/run/secrets&lt;/span&gt;
+$ mount --bind &lt;span style=&#34;color:#000&#34;&gt;$TELEPRESENCE_ROOT&lt;/span&gt;/var/run /var/run
+$ ls /var/run/
+secrets
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# bind onecloud config&lt;/span&gt;
+$ mkdir /etc/yunion
+$ mount --bind &lt;span style=&#34;color:#000&#34;&gt;$TELEPRESENCE_ROOT&lt;/span&gt;/etc/yunion /etc/yunion
+$ ls /etc/yunion/
+pki  region.conf
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启动 region 服务&lt;/span&gt;
+$ ./_output/bin/region --config /etc/yunion/region.conf
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这个时候如果我们在外部调用 climc&lt;/span&gt;
+$ climc server-list
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 就会发现相关的请求已经被转发到本地开发机启动 region 服务了&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;更多用法，以及 telepresence 的原理请参考&lt;a href=&#34;https://www.telepresence.io/discussion/overview&#34; target=&#34;_blank&#34;&gt;官方文档&lt;/a&gt;。&lt;/p&gt;
+
 &lt;h2 id=&#34;开发流程&#34;&gt;开发流程&lt;/h2&gt;
 
 &lt;ul&gt;

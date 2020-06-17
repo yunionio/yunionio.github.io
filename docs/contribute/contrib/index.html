@@ -13,15 +13,15 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/contribute/contrib/" />
-<meta property="article:modified_time" content="2020-05-26T13:32:20&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
+<meta property="article:modified_time" content="2020-06-15T16:48:13&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
 
 <meta itemprop="name" content="开发贡献">
 <meta itemprop="description" content="介绍如何搭建开发环境，编译组件以及提交代码的流程
 ">
 
 
-<meta itemprop="dateModified" content="2020-05-26T13:32:20&#43;08:00" />
-<meta itemprop="wordCount" content="303">
+<meta itemprop="dateModified" content="2020-06-15T16:48:13&#43;08:00" />
+<meta itemprop="wordCount" content="535">
 
 
 
@@ -163,6 +163,12 @@
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-allinone" href="/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
       
       
     </li>
@@ -725,6 +731,11 @@
 <li><a href="#clone-源码">Clone 源码</a></li>
 <li><a href="#编译">编译</a></li>
 </ul></li>
+<li><a href="#本地开发调试">本地开发调试</a>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#使用">使用</a></li>
+</ul></li>
 <li><a href="#开发流程">开发流程</a></li>
 </ul></li>
 </ul>
@@ -820,6 +831,83 @@ $ make cmd/region cmd/host
 <span style="color:#8f5902;font-style:italic"># 查看编译好的二进制文件</span>
 $ ls _output/bin
 region host</code></pre></div>
+<h2 id="本地开发调试">本地开发调试</h2>
+
+<p>3.0 版本后我们的服务都已经容器化运行在 k8s 集群中，快速开发调试并不方便。
+通过Telepresence 提供远程k8s上下文，可以在本地开发调试。</p>
+
+<h3 id="安装">安装</h3>
+
+<p>确保有一个已部署的onecloud k8s集群，参考<a href="/docs/setup/">安装部署</a>。
+这里介绍Centos7的本地环境安装，其他发行版可参考官方文档：<a href="https://www.telepresence.io/reference/install" target="_blank">Installing Telepresence</a>。</p>
+
+<blockquote>
+<p>不建议k8s集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。</p>
+</blockquote>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 安装依赖</span>
+$ yum install -y python3 sshfs conntrack iptables torsocks sshuttle sudo yum-utils
+<span style="color:#8f5902;font-style:italic"># 安装 kubectl 用于连接 k8s 集群</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/kubernetes.repo
+</span><span style="color:#4e9a06">[kubernetes]
+</span><span style="color:#4e9a06">name=Kubernetes
+</span><span style="color:#4e9a06">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+</span><span style="color:#4e9a06">enabled=1
+</span><span style="color:#4e9a06">gpgcheck=0
+</span><span style="color:#4e9a06">repo_gpgcheck=0
+</span><span style="color:#4e9a06">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+</span><span style="color:#4e9a06">EOF</span>
+$ yum install -y kubectl-1.15.8-0
+<span style="color:#8f5902;font-style:italic"># 需要自行配置kubctl config</span>
+<span style="color:#8f5902;font-style:italic"># 测试kubctl可以访问之前部署的k8s集群</span>
+$ kubctl version
+<span style="color:#8f5902;font-style:italic"># 源码安装 telepresence 到 /usr/local/bin/telepresence</span>
+$ git clone https://github.com/telepresenceio/telepresence
+$ <span style="color:#204a87">cd</span> telepresence
+$ sudo env <span style="color:#000">PREFIX</span><span style="color:#ce5c00;font-weight:bold">=</span>/usr/local ./install.sh</code></pre></div>
+<h3 id="使用">使用</h3>
+
+<p>利用 telepresence 本地连通远端 k8s 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 k8s 其它服务的环境。</p>
+
+<p>比如以下是本地编译运行 region 服务的流程：</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 切换到 onecloud 代码目录</span>
+$ <span style="color:#204a87">cd</span> <span style="color:#000">$GOPATH</span>/src/yunion.io/x/onecloud
+ 
+<span style="color:#8f5902;font-style:italic"># 编译 region 服务</span>
+$ make cmd/region
+ 
+<span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 k8s 里面的 default-region deployment</span>
+<span style="color:#8f5902;font-style:italic"># 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin</span>
+<span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地</span>
+<span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&#34;--run /bin/zsh&#34;</span>
+$ telepresence --swap-deployment default-region --namespace onecloud</code></pre></div>
+<p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+接下来我们就可以在这个 namespace 里面运行 region 服务了：</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 设置 max_user_namespaces</span>
+$ cat /proc/sys/user/max_user_namespaces
+<span style="color:#0000cf;font-weight:bold">0</span>
+<span style="color:#8f5902;font-style:italic"># 如果 max_user_namespaces 为 0，需要设置下 user_namespaces</span>
+$ <span style="color:#204a87">echo</span> <span style="color:#0000cf;font-weight:bold">640</span> &gt; /proc/sys/user/max_user_namespaces
+ 
+<span style="color:#8f5902;font-style:italic"># 启动一个新的 namespace , 但不共享 mount namespace，这样接下来的 mount bind 操作就不会影响到宿主机</span>
+$ unshare --map-root-user --mount
+<span style="color:#8f5902;font-style:italic"># bind k8s /var/run/secrets</span>
+$ mount --bind <span style="color:#000">$TELEPRESENCE_ROOT</span>/var/run /var/run
+$ ls /var/run/
+secrets
+<span style="color:#8f5902;font-style:italic"># bind onecloud config</span>
+$ mkdir /etc/yunion
+$ mount --bind <span style="color:#000">$TELEPRESENCE_ROOT</span>/etc/yunion /etc/yunion
+$ ls /etc/yunion/
+pki  region.conf
+ 
+<span style="color:#8f5902;font-style:italic"># 启动 region 服务</span>
+$ ./_output/bin/region --config /etc/yunion/region.conf
+<span style="color:#8f5902;font-style:italic"># 这个时候如果我们在外部调用 climc</span>
+$ climc server-list
+<span style="color:#8f5902;font-style:italic"># 就会发现相关的请求已经被转发到本地开发机启动 region 服务了</span></code></pre></div>
+<p>更多用法，以及 telepresence 的原理请参考<a href="https://www.telepresence.io/discussion/overview" target="_blank">官方文档</a>。</p>
+
 <h2 id="开发流程">开发流程</h2>
 
 <ul>
@@ -938,7 +1026,7 @@ $ git am --continue
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 26.05.2020: <a  href="https://github.com/yunionio/docs/commit/ccaf44240b663d64863dad0a010c966b8ce8678d">docs: add install ceph dependencies (ccaf442)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 15.06.2020: <a  href="https://github.com/yunionio/docs/commit/4c440dc41b4fce05ea34a11c26c11fe286932038">add:doc/contrib 本地调试运行 (4c440dc)</a>
 </div>
 </div>
 

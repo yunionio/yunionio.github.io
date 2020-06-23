@@ -652,7 +652,7 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
 
 &lt;ul&gt;
 &lt;li&gt;操作系统: Centos 7.6&lt;/li&gt;
-&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li&gt;
 &lt;li&gt;数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li&gt;
 &lt;li&gt;docker: ce-19.03.9&lt;/li&gt;
 &lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
@@ -662,7 +662,6 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
 
 &lt;ul&gt;
 &lt;li&gt;CentOS YUM网络安装源&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://mirrors.aliyun.com&#34; target=&#34;_blank&#34;&gt;http://mirrors.aliyun.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://iso.yunion.cn/&#34; target=&#34;_blank&#34;&gt;https://iso.yunion.cn/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://registry.cn-beijing.aliyuncs.com&#34; target=&#34;_blank&#34;&gt;https://registry.cn-beijing.aliyuncs.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://meta.yunion.cn&#34; target=&#34;_blank&#34;&gt;https://meta.yunion.cn&lt;/a&gt;&lt;/li&gt;
@@ -717,7 +716,8 @@ $ systemctl restart mariadb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;安装 docker&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y yum-utils bash-completion
-$ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 添加 yunion onecloud rpm 源&lt;/span&gt;
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
 $ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;配置 docker&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir -p /etc/docker
@@ -749,9 +749,7 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 &lt;h3 id=&#34;安装-onecloud-依赖内核&#34;&gt;安装 onecloud 依赖内核&lt;/h3&gt;
 
 &lt;p&gt;这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 添加 yunion onecloud rpm 源&lt;/span&gt;
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装内核&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装内核&lt;/span&gt;
 $ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
@@ -766,17 +764,8 @@ $ uname -r
 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装配置-kubelet&#34;&gt;安装配置 kubelet&lt;/h3&gt;
 
-&lt;p&gt;从 aliyun 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[kubernetes]
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Kubernetes
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgcheck=0
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;repo_gpgcheck=0
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;p&gt;从 yunion onecloud rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc
 $ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; /etc/profile
@@ -1012,61 +1001,6 @@ v3.0.0-20200112.0
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 升级到 v3.0.0-20200113.0&lt;/span&gt;
 $ ocadm cluster update --version v3.0.0-20200113.0 --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;额外插件&#34;&gt;额外插件&lt;/h3&gt;
-
-&lt;p&gt;onecloud 系统有一些非核心的额外组件可以通过 &lt;code&gt;ocadm component&lt;/code&gt; 命令来启用或者禁用，对应组件列表说明如下:&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;名称&lt;/th&gt;
-&lt;th&gt;功能&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;cloudmon&lt;/td&gt;
-&lt;td&gt;多云监控组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;cloudwatcher&lt;/td&gt;
-&lt;td&gt;优化建议组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;itsm&lt;/td&gt;
-&lt;td&gt;流程工单组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;meteralert&lt;/td&gt;
-&lt;td&gt;计费组件&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;这些组件并不是必需的，如果有需要，可以使用下面命令来管理:&lt;/p&gt;
-
-
-
-&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
-&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
-这些额外插件大部分是 java 编写，每个组件以 pod 的方式启动，会占用 1g 以上的内存，如果要启用，建议先参考 &lt;a href=&#34;/docs/setup/components/&#34;&gt;添加节点&lt;/a&gt; 添加更多的 kubernetes node 节点然后再启用这些组件。
-&lt;/div&gt;
-
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用所有组件，会占用更多 cpu/memory 的资源&lt;/span&gt;
-$ ocadm component &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; all
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用所有组件&lt;/span&gt;
-$ ocadm component disable all
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用某个组件，以 cloudmon 为例&lt;/span&gt;
-$ ocadm component &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; cloudmon
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用某个组件，以 cloudwatcher 为例&lt;/span&gt;
-$ ocadm component disable cloudwatcher&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       </description>
     </item>
     
@@ -1264,7 +1198,7 @@ $ reboot
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启完成后，查看当前节点内核信息，确保为 yn 内核&lt;/span&gt;
 $ uname -r
-&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-862.14.4.el7.yn20190712.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装-docker-和-kubelet&#34;&gt;安装 docker 和 kubelet&lt;/h3&gt;
 
 &lt;p&gt;参考 &lt;a href=&#34;/docs/setup/controlplane/#安装配置-docker&#34;&gt;&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a&gt; 的流程，安装好 docker 和 kubelet。&lt;/p&gt;

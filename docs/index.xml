@@ -232,18 +232,18 @@ $ climc host-enable &amp;lt;host_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&#34;制作镜像&#34;&gt;制作镜像&lt;/h3&gt;
 
-&lt;p&gt;参考: &lt;a href=&#34;/howto/image/create/&#34;&gt;制作镜像&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;参考: &lt;a href=&#34;../create/&#34;&gt;制作镜像&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;上传&#34;&gt;上传&lt;/h2&gt;
 
-&lt;p&gt;下载或者制作完镜像后，使用 &lt;code&gt;climc image-upload&lt;/code&gt; 上传到云平台的 glance 服务，下面以下载 ubuntu 提供的 xenial-server-cloudimg 举例:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ubuntu xenial-server-cloudimg-amd64-disk1.img&lt;/span&gt; 
-$ wget https://cloud-images.ubuntu.com/xenial/20190716/xenial-server-cloudimg-amd64-disk1.img
+&lt;p&gt;下载或者制作完镜像后，使用 &lt;code&gt;climc image-upload&lt;/code&gt; 上传到云平台的 glance 服务，下面以下载 CentOS 提供的 CentOS-7-x86_64-GenericCloud-1711 举例:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2&lt;/span&gt; 
+$ wget wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 上传镜像到云平台并名为 ubuntu-xenial-server.qcow2&lt;/span&gt;
-$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --public ubuntu-xenial-server.qcow2 ./xenial-server-cloudimg-amd64-disk1.img&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &amp;lsquo;active&amp;rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: &lt;a href=&#34;/howto/image/query/&#34;&gt;镜像查询&lt;/a&gt; )&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc image-show ubuntu-xenial-server.qcow2 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep status
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2&lt;/span&gt;
+$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &amp;lsquo;active&amp;rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: &lt;a href=&#34;../query/&#34;&gt;镜像查询&lt;/a&gt; )&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep status
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; status          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;上传参数&#34;&gt;上传参数&lt;/h2&gt;
 
@@ -1486,7 +1486,7 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
 
 &lt;ul&gt;
 &lt;li&gt;操作系统: Centos 7.6&lt;/li&gt;
-&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li&gt;
 &lt;li&gt;数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li&gt;
 &lt;li&gt;docker: ce-19.03.9&lt;/li&gt;
 &lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
@@ -1496,7 +1496,6 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
 
 &lt;ul&gt;
 &lt;li&gt;CentOS YUM网络安装源&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://mirrors.aliyun.com&#34; target=&#34;_blank&#34;&gt;http://mirrors.aliyun.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://iso.yunion.cn/&#34; target=&#34;_blank&#34;&gt;https://iso.yunion.cn/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://registry.cn-beijing.aliyuncs.com&#34; target=&#34;_blank&#34;&gt;https://registry.cn-beijing.aliyuncs.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://meta.yunion.cn&#34; target=&#34;_blank&#34;&gt;https://meta.yunion.cn&lt;/a&gt;&lt;/li&gt;
@@ -1551,7 +1550,8 @@ $ systemctl restart mariadb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;安装 docker&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y yum-utils bash-completion
-$ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 添加 yunion onecloud rpm 源&lt;/span&gt;
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
 $ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;配置 docker&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir -p /etc/docker
@@ -1583,9 +1583,7 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 &lt;h3 id=&#34;安装-onecloud-依赖内核&#34;&gt;安装 onecloud 依赖内核&lt;/h3&gt;
 
 &lt;p&gt;这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 添加 yunion onecloud rpm 源&lt;/span&gt;
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装内核&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装内核&lt;/span&gt;
 $ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
@@ -1600,17 +1598,8 @@ $ uname -r
 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装配置-kubelet&#34;&gt;安装配置 kubelet&lt;/h3&gt;
 
-&lt;p&gt;从 aliyun 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[kubernetes]
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Kubernetes
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;enabled=1
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgcheck=0
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;repo_gpgcheck=0
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;p&gt;从 yunion onecloud rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
 $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc
 $ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; /etc/profile
@@ -1846,61 +1835,6 @@ v3.0.0-20200112.0
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 升级到 v3.0.0-20200113.0&lt;/span&gt;
 $ ocadm cluster update --version v3.0.0-20200113.0 --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;额外插件&#34;&gt;额外插件&lt;/h3&gt;
-
-&lt;p&gt;onecloud 系统有一些非核心的额外组件可以通过 &lt;code&gt;ocadm component&lt;/code&gt; 命令来启用或者禁用，对应组件列表说明如下:&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;名称&lt;/th&gt;
-&lt;th&gt;功能&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;cloudmon&lt;/td&gt;
-&lt;td&gt;多云监控组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;cloudwatcher&lt;/td&gt;
-&lt;td&gt;优化建议组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;itsm&lt;/td&gt;
-&lt;td&gt;流程工单组件&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;meteralert&lt;/td&gt;
-&lt;td&gt;计费组件&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;这些组件并不是必需的，如果有需要，可以使用下面命令来管理:&lt;/p&gt;
-
-
-
-&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
-&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
-这些额外插件大部分是 java 编写，每个组件以 pod 的方式启动，会占用 1g 以上的内存，如果要启用，建议先参考 &lt;a href=&#34;/docs/setup/components/&#34;&gt;添加节点&lt;/a&gt; 添加更多的 kubernetes node 节点然后再启用这些组件。
-&lt;/div&gt;
-
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用所有组件，会占用更多 cpu/memory 的资源&lt;/span&gt;
-$ ocadm component &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; all
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用所有组件&lt;/span&gt;
-$ ocadm component disable all
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用某个组件，以 cloudmon 为例&lt;/span&gt;
-$ ocadm component &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; cloudmon
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用某个组件，以 cloudwatcher 为例&lt;/span&gt;
-$ ocadm component disable cloudwatcher&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       </description>
     </item>
     
@@ -2717,49 +2651,53 @@ $ climc &lt;span style=&#34;color:#204a87&#34;&gt;help&lt;/span&gt; cached-image
 &lt;h2 id=&#34;详情&#34;&gt;详情&lt;/h2&gt;
 
 &lt;p&gt;根据 image-list 可以获取镜像的列表，第1、2列包含镜像的 id 和 name，通过 id 或 name 可以获取镜像的详情。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查询名称包含 ubuntu 的镜像&lt;/span&gt;
-$ climc image-list --search ubuntu
-+--------------------------------------+--------------------------------------+-------------+------------+-----------+----------+---------+--------+----------------------------------+
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                  ID                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                 Name                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Disk_format &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;    Size    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Is_public &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Min_disk &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Min_ram &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Status &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;             Checksum             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-+--------------------------------------+--------------------------------------+-------------+------------+-----------+----------+---------+--------+----------------------------------+
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; bd0a4029-7646-4d21-89b7-856d90334cc7 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ubuntu-xenial-server.qcow2           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; qcow2       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;297009152&lt;/span&gt;  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2252&lt;/span&gt;     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 3ab09243ba73ae87fb48c08ddb42ef42 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; b3440f33-23ca-4d56-85ee-dc2b368b6337 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ubuntu-18.04.2-server-20190430.qcow2 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; qcow2       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1003356160&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;30720&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 9c414111827a07a446e25811a3674a43 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; a0ef7a1e-eb92-406f-8042-b7018a410b2c &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ubuntu-16.04.5-server-20181117.qcow2 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; qcow2       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;792002560&lt;/span&gt;  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;30720&lt;/span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; a69f06c9063089368fdc729149fc545e &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-+--------------------------------------+--------------------------------------+-------------+------------+-----------+----------+---------+--------+----------------------------------+
-***  Total: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt; Pages: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; Limit: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;20&lt;/span&gt; Offset: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; Page: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;  ***
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查询名称包含 CentOS 的镜像&lt;/span&gt;
+$ climc image-list --search centos
++--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                  ID                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                  Name                   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Disk_format &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;   Size    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Is_public &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Protected &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Is_Standard &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Min_disk &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Min_ram &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Status &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;             Checksum             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;            Tenant_Id             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Tenant &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_guest_image &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; abf0fd6e-ec40-44ef-8fa2-cfb7187ea656 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; qcow2       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;876740608&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8192&lt;/span&gt;     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; d53ea650bfe144da8ee8f3fba417b904 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; system &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
+***  Total: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; Pages: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; Limit: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;20&lt;/span&gt; Offset: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; Page: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;  ***
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看 ubuntu-xenial-server.qcow2 的详情&lt;/span&gt;
-$ climc image-show ubuntu-xenial-server.qcow2
-+-----------------+------------------------------------------------------------------------------------------------------------------+
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;      Field      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                                                      Value                                                       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-+-----------------+------------------------------------------------------------------------------------------------------------------+
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; can_delete      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; can_update      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; checksum        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 3ab09243ba73ae87fb48c08ddb42ef42                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; created_at      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2019&lt;/span&gt;-07-19T03:33:11.000000Z                                                                                      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; disk_format     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; qcow2                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; domain_id       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; default                                                                                                          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; fast_hash       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; bdcce6185fcefcd0e009499226f0bee9                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; id              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; bd0a4029-7646-4d21-89b7-856d90334cc7                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_emulated     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_public       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_system       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; min_disk        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2252&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; min_ram         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;                                                                                                                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; name            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ubuntu-xenial-server.qcow2                                                                                       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; oss_checksum    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 3ab09243ba73ae87fb48c08ddb42ef42                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; owner           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; a7f2e2a81a1e4850a41eae5f140ceb14                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; pending_deleted &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; project_src     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;local&lt;/span&gt;                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; properties      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;installed_cloud_init&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;os_arch&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;x86&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;os_distribution&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Ubuntu&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;os_type&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Linux&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;os_version&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;16.0&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; protected       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public_scope    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; system                                                                                                           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; size            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;297009152&lt;/span&gt;                                                                                                        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; status          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active                                                                                                           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; tenant_id       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; a7f2e2a81a1e4850a41eae5f140ceb14                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; update_version  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;6&lt;/span&gt;                                                                                                                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; updated_at      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2019&lt;/span&gt;-07-19T03:34:47.000000Z                                                                                      &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
-+-----------------+-------------------------------------------------------------------------------------------------&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看 CentOS-7-x86_64-GenericCloud-1711.qcow2 的详情&lt;/span&gt;
+$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2
++--------------------+-------------------------------------------------------------------------------------------------------------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;       Field        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                                                       Value                                                       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++--------------------+-------------------------------------------------------------------------------------------------------------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; can_delete         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; can_update         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;                                                                                                              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; checksum           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 317ecf7d1128e0e53cb285b8704dc3d3                                                                                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; created_at         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2020&lt;/span&gt;-06-16T09:17:57.000000Z                                                                                       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; delete_fail_reason &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;error&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;class&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;ForbiddenError&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;code&amp;#34;&lt;/span&gt;:403,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;data&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;image is protected&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;details&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;image is protected&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}}&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; disk_format        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; qcow2                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; domain_id          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; default                                                                                                           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; fast_hash          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 4c53ba2c464213ddc2a77c9b4c5ad3b7                                                                                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; id                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; abf0fd6e-ec40-44ef-8fa2-cfb7187ea656                                                                              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_data            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_emulated        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_guest_image     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_public          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_standard        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;                                                                                                              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; is_system          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; min_disk           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8192&lt;/span&gt;                                                                                                              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; min_ram            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;                                                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; name               &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; CentOS-7-x86_64-GenericCloud-1711.qcow2                                                                           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; oss_checksum       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 317ecf7d1128e0e53cb285b8704dc3d3                                                                                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; owner              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; d53ea650bfe144da8ee8f3fba417b904                                                                                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; pending_deleted    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; project_domain     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Default                                                                                                           &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; project_src        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;local&lt;/span&gt;                                                                                                             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; properties         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;os_arch&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;x86_64&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;os_type&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Linux&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt;                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; protected          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;                                                                                                              &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; public_scope       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; system                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; size               &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;876740608&lt;/span&gt;                                                                                                         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; status             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; active                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; tenant             &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; system                                                                                                            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; tenant_id          &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; d53ea650bfe144da8ee8f3fba417b904                                                                                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; update_version     &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8&lt;/span&gt;                                                                                                                 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; updated_at         &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2020&lt;/span&gt;-06-16T09:19:24.000000Z                                                                                       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++--------------------+-------------------------------------------------------------------------------------------------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       </description>
     </item>
     
@@ -2910,7 +2848,7 @@ $ reboot
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启完成后，查看当前节点内核信息，确保为 yn 内核&lt;/span&gt;
 $ uname -r
-&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-862.14.4.el7.yn20190712.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt;.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;安装-docker-和-kubelet&#34;&gt;安装 docker 和 kubelet&lt;/h3&gt;
 
 &lt;p&gt;参考 &lt;a href=&#34;/docs/setup/controlplane/#安装配置-docker&#34;&gt;&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a&gt; 的流程，安装好 docker 和 kubelet。&lt;/p&gt;
@@ -3354,22 +3292,26 @@ $ climc servers-import-from-libvirt servers.yaml&lt;/code&gt;&lt;/pre&gt;&lt;/di
 &lt;h2 id=&#34;导入镜像&#34;&gt;导入镜像&lt;/h2&gt;
 
 &lt;p&gt;云平台的 glance 镜像服务支持从外部 url 导入镜像，对应 climc 的子命令为 &lt;code&gt;image-import&lt;/code&gt;　。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 导入 https://iso.yunion.cn/yumrepo-2.10/images/cirros-0.4.0-x86_64-disk.qcow2 镜像&lt;/span&gt;
-$ climc image-import --format qcow2 --os-type Linux cirros-test.qcow2 https://iso.yunion.cn/yumrepo-2.10/images/cirros-0.4.0-x86_64-disk.qcow2&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 导入 https://iso.yunion.cn/yumrepo-3.2/images/cirros-0.4.0-x86_64-disk.qcow2 镜像&lt;/span&gt;
+$ climc image-import --format qcow2 --os-type Linux cirros-test.qcow2 https://iso.yunion.cn/yumrepo-3.2/images/cirros-0.4.0-x86_64-disk.qcow2&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;使用 &lt;code&gt;image-list&lt;/code&gt; 或 &lt;code&gt;image-show&lt;/code&gt; 查询导入镜像的状态，变为 active 时表明可以使用。&lt;/p&gt;
 
 &lt;h2 id=&#34;下载镜像&#34;&gt;下载镜像&lt;/h2&gt;
 
 &lt;p&gt;如果需要将云平台的镜像导出到本地，就需要用 &lt;code&gt;climc image-download&lt;/code&gt; 把 glance 存的镜像下载下来。&lt;/p&gt;
 
-&lt;p&gt;参考 &lt;a href=&#34;/howto/image/query/&#34;&gt;查询镜像&lt;/a&gt; 查询你想要下载的镜像，等到镜像 id 或 name。&lt;/p&gt;
+&lt;p&gt;参考 &lt;a href=&#34;../query/&#34;&gt;查询镜像&lt;/a&gt; 查询你想要下载的镜像，获取镜像 id 或 name。&lt;/p&gt;
 
 &lt;p&gt;下载镜像:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc image-download &amp;lt;id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# OUTPUT 指定镜像的保存路径和文件名称，如/root/test.qcow2&lt;/span&gt;
+$ climc image-download &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;--output OUTPUT&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt; &amp;lt;image_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;删除镜像&#34;&gt;删除镜像&lt;/h2&gt;
 
-&lt;p&gt;镜像确定不用了，可以通过 &lt;code&gt;climc image-delete&lt;/code&gt; 删除镜像&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc image-delete &amp;lt;image_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;镜像默认启用了删除保护，当镜像确定不用了，需要先通过&lt;code&gt;climc image-update&lt;/code&gt;禁用删除保护，再通过 &lt;code&gt;climc image-delete&lt;/code&gt; 删除镜像。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 禁用镜像删除保护&lt;/span&gt;
+$ climc image-update --unprotected &amp;lt;image_id&amp;gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 删除镜像&lt;/span&gt;
+$ climc image-delete &amp;lt;image_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       </description>
     </item>
     

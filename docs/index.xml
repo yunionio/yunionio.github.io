@@ -1111,6 +1111,8 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /et
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;skip_name_resolve
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# auto delete binlog older than 30 days
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;expire_logs_days=30
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;innodb_file_per_table=ON
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_connections = 300
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;server-id = 1
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;auto_increment_offset = 1
@@ -1159,6 +1161,8 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; /et
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;skip_name_resolve
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# auto delete binlog older than 30 days
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;expire_logs_days=30
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;innodb_file_per_table=ON
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;max_connections = 300
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt; 
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;server-id = 2
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;auto_increment_offset = 2
@@ -1663,7 +1667,9 @@ $ chmod &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;755&lt;/span&
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 climc 云平台命令行工具 和 ocadm 部署工具&lt;/span&gt;
 $ yum install -y yunion-climc yunion-ocadm
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# climc 在 /opt/yunion/bin 目录下，根据自己的需要加到 bash 或者 zsh 配置文件里面&lt;/span&gt;
-$ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;export PATH=$PATH:/opt/yunion/bin&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;export PATH=$PATH:/opt/yunion/bin&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/.bashrc
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装必要的服务，并启动和设置为开机自启&lt;/span&gt;
+$ yum install -y yunion-executor-server &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-executor&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;部署-kubernetes-集群&#34;&gt;部署 kubernetes 集群&lt;/h3&gt;
 
 &lt;p&gt;接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 OneCloud 控制节点相关的服务到 kubernetes 集群。&lt;/p&gt;

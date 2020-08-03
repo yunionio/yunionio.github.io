@@ -7,21 +7,44 @@
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
-<link rel="alternate" type="application/rss&#43;xml" href="https://opensource.yunion.cn/docs/howto/storage/index.xml">
 
-<title>存储 | OneCloud Documentation</title><meta property="og:title" content="存储" />
-<meta property="og:description" content="Documentation for onecloud" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://opensource.yunion.cn/docs/howto/storage/" />
+<title>升级相关 | OneCloud Documentation</title><meta property="og:title" content="升级相关" />
+<meta property="og:description" content="本文介绍从 v3.2.x 升级到 v3.3.x 的步骤以及注意事项。
+版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.2.x 需要以下的步骤：
+ v3.0.x =&gt; v3.1.x v3.1.x =&gt; v3.2.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
+ v3.1.x 升级到 v3.2.x  总体来说，升级的步骤如下:
+ 更新 rpm 源，升级 ocadm 使用 ocadm 升级 OneCloud 服务  查看当前版本 可以使用 kubectl 查看当前集群的版本
+# 使用 kubectl 获得当前集群的版本为 v3.2.3 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.2.3 更新 rpm repo ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 OneCloud 服务。
+# 修改 baseurl，把 3." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/docs/setup/upgrade/" />
+<meta property="article:modified_time" content="2020-08-03T15:50:05&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
 
-<meta property="og:updated_time" content="2019-07-19T20:48:20&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
+<meta itemprop="name" content="升级相关">
+<meta itemprop="description" content="本文介绍从 v3.2.x 升级到 v3.3.x 的步骤以及注意事项。
+版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.2.x 需要以下的步骤：
+ v3.0.x =&gt; v3.1.x v3.1.x =&gt; v3.2.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
+ v3.1.x 升级到 v3.2.x  总体来说，升级的步骤如下:
+ 更新 rpm 源，升级 ocadm 使用 ocadm 升级 OneCloud 服务  查看当前版本 可以使用 kubectl 查看当前集群的版本
+# 使用 kubectl 获得当前集群的版本为 v3.2.3 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.2.3 更新 rpm repo ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 OneCloud 服务。
+# 修改 baseurl，把 3.">
 
-<meta itemprop="name" content="存储">
-<meta itemprop="description" content="Documentation for onecloud">
 
+<meta itemprop="dateModified" content="2020-08-03T15:50:05&#43;08:00" />
+<meta itemprop="wordCount" content="131">
+
+
+
+<meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="存储"/>
-<meta name="twitter:description" content="Documentation for onecloud"/>
+<meta name="twitter:title" content="升级相关"/>
+<meta name="twitter:description" content="本文介绍从 v3.2.x 升级到 v3.3.x 的步骤以及注意事项。
+版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.2.x 需要以下的步骤：
+ v3.0.x =&gt; v3.1.x v3.1.x =&gt; v3.2.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
+ v3.1.x 升级到 v3.2.x  总体来说，升级的步骤如下:
+ 更新 rpm 源，升级 ocadm 使用 ocadm 升级 OneCloud 服务  查看当前版本 可以使用 kubectl 查看当前集群的版本
+# 使用 kubectl 获得当前集群的版本为 v3.2.3 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.2.3 更新 rpm repo ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 OneCloud 服务。
+# 修改 baseurl，把 3."/>
 
 
 
@@ -36,9 +59,9 @@
   crossorigin="anonymous"></script>
 
 
-    <title>存储 | OneCloud Documentation</title>
+    <title>升级相关 | OneCloud Documentation</title>
   </head>
-  <body class="td-section">
+  <body class="td-page">
     <header>
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
@@ -210,10 +233,10 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+    <a  href="/docs/setup/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">安装部署</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-setup">
+    <li class="collapse show" id="docs-setup">
       
       
       
@@ -262,7 +285,7 @@
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-upgrade" href="/docs/setup/upgrade/">升级相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-setup-upgrade" href="/docs/setup/upgrade/">升级相关</a>
       
       
     </li>
@@ -322,10 +345,10 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
+    <a  href="/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
   </li>
   <ul>
-    <li class="collapse show" id="docs-howto">
+    <li class="collapse " id="docs-howto">
       
       
       
@@ -601,10 +624,10 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">存储</a>
+    <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
   </li>
   <ul>
-    <li class="collapse show" id="docs-howto-storage">
+    <li class="collapse " id="docs-howto-storage">
       
       
       
@@ -758,8 +781,8 @@
     
     
     
-    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/howto/storage/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
-    <a href="https://github.com/yunionio/docs/issues/new?title=%e5%ad%98%e5%82%a8" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/setup/upgrade.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=%e5%8d%87%e7%ba%a7%e7%9b%b8%e5%85%b3" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
     
     
     <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
@@ -768,6 +791,19 @@
 
 
 
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#查看当前版本">查看当前版本</a></li>
+<li><a href="#更新-rpm-repo">更新 rpm repo</a></li>
+<li><a href="#更新-onecloud-服务">更新 OneCloud 服务</a></li>
+</ul></li>
+</ul>
+</nav>
 
 
 
@@ -795,14 +831,14 @@
 
 
 <li class="breadcrumb-item" >
-	<a href="https://opensource.yunion.cn/docs/howto/">操作管理</a>
+	<a href="https://opensource.yunion.cn/docs/setup/">安装部署</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://opensource.yunion.cn/docs/howto/storage/">存储</a>
+	<a href="https://opensource.yunion.cn/docs/setup/upgrade/">升级相关</a>
 </li>
 
 	</ol>
@@ -810,110 +846,57 @@
 
             
 <div class="td-content">
-	<h1>存储</h1>
+	<h1>升级相关</h1>
 	
-	<p>TODO</p>
+	
 
-        <div class="section-index">
-    
-    
-    
-    
-    <hr class="panel-line">
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-</div>
+<p>本文介绍从 v3.2.x 升级到 v3.3.x 的步骤以及注意事项。</p>
 
+<p>版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.2.x 需要以下的步骤：</p>
+
+<ol>
+<li>v3.0.x =&gt; v3.1.x</li>
+<li>v3.1.x =&gt; v3.2.x</li>
+</ol>
+
+<p>直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:</p>
+
+<ul>
+<li><a href="https://opensource.yunion.cn/v3.2/docs/setup/upgrade" target="_blank">v3.1.x 升级到 v3.2.x</a></li>
+</ul>
+
+<p>总体来说，升级的步骤如下:</p>
+
+<ol>
+<li>更新 rpm 源，升级 ocadm</li>
+<li>使用 ocadm 升级 OneCloud 服务</li>
+</ol>
+
+<h2 id="查看当前版本">查看当前版本</h2>
+
+<p>可以使用 kubectl 查看当前集群的版本</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.2.3</span>
+$ kubectl -n onecloud get onecloudclusters default -o<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#000">jsonpath</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;{.spec.version}&#39;</span>
+v3.2.3</code></pre></div>
+<h2 id="更新-rpm-repo">更新 rpm repo</h2>
+
+<p>ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 OneCloud 服务。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 修改 baseurl，把 3.2 改成 3.3</span>
+$ sed -i <span style="color:#4e9a06">&#39;s|baseurl.*|baseurl=https://iso.yunion.cn/3.3|g&#39;</span> /etc/yum.repos.d/yunion.repo
+
+<span style="color:#8f5902;font-style:italic"># 更新 yunion-ocadm, yunion-climc</span>
+$ yum install -y yunion-ocadm yunion-climc
+
+<span style="color:#8f5902;font-style:italic"># 查看 ocadm 版本</span>
+$ ocadm version -o short
+tags/v3.3.0<span style="color:#ce5c00;font-weight:bold">(</span>bece1be20080211<span style="color:#ce5c00;font-weight:bold">)</span></code></pre></div>
+<h2 id="更新-onecloud-服务">更新 OneCloud 服务</h2>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 ocadm 更新 onecloud operator 以及相关服务到 v3.3.0 版本</span>
+<span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待</span>
+$ ocadm cluster update --operator-version v3.3.0 --version v3.3.0 --wait
+
+<span style="color:#8f5902;font-style:italic"># 另外可以在升级的过程中使用 kubectl 查看对应 pods 的升级情况</span>
+$ kubectl get pods -n onecloud --watch</code></pre></div>
 	
 		<style>
   .feedback--answer {
@@ -976,9 +959,10 @@
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 30.07.2019: <a  href="https://github.com/yunionio/docs/commit/61a5e0c8caf98ca74b477bbebe4113c295c79cec">update theme to docsy (61a5e0c)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 03.08.2020: <a  href="https://github.com/yunionio/docs/commit/6908c1e8d86263b872d5c84b76c3d573176775c5">add upgrade page (6908c1e)</a>
 </div>
 </div>
+
 
           </main>
         </div>

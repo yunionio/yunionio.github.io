@@ -2837,15 +2837,15 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 $ systemctl disable firewalld
 $ sed -i &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;s/SELINUX=enforcing/SELINUX=disabled/g&amp;#39;&lt;/span&gt; /etc/selinux/config&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;安装 rpm 包&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ yum --disablerepo&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;*&amp;#39;&lt;/span&gt; --enablerepo&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;yunion*&amp;#39;&lt;/span&gt; install -y &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  epel-release libaio jq libusb lvm2 nc ntp fetchclient fuse fuse-devel fuse-libs &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma pciutils spice spice-protocol sysstat tcpdump telegraf usbredir &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  yunion-qemu-2.12.1 yunion-executor-server &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch-2.9.6-1.el7 &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch-2.9.6-1.el7 net-tools
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  kmod-openvswitch &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  openvswitch net-tools
 
 $ systemctl &lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt; --now yunion-executor
 

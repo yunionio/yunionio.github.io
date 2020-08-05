@@ -1822,16 +1822,6 @@ $ ocadm node enable-host-agent &lt;span style=&#34;color:#4e9a06&#34;&gt;\
 $ kubectl get pods -n onecloud -o wide &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep host
 default-host-7b5cr  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;/2     Running    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;218&lt;/span&gt;        18h     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.222.4 controller01
 default-host-ctx5s  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;/2     Running    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;218&lt;/span&gt;        18h     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192&lt;/span&gt;.168.222.5 controller02&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;切换企业版前端&#34;&gt;切换企业版前端&lt;/h3&gt;
-
-&lt;p&gt;默认情况下使用的 web 前端是开源版的，我们也提供企业版的 web 前端，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令来切换前端:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到企业版&lt;/span&gt;
-$ ocadm cluster update --use-ee --wait
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到开源版的 web 前端&lt;/span&gt;
-$ ocadm cluster update --use-ce --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;ocadm cluster update --use-ee/--use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
-
 &lt;h3 id=&#34;升级-回滚组件版本&#34;&gt;升级/回滚组件版本&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;ocadm init&lt;/code&gt; 的时候使用 &lt;code&gt;--onecloud-version&lt;/code&gt; 选项设置了组件的版本，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令升级组件到指定的版本，保持更新。&lt;/p&gt;
@@ -3047,6 +3037,42 @@ $ climc agent-list
 
 &lt;p&gt;可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ocadm baremetal disable --node &lt;span style=&#34;color:#000&#34;&gt;$node_name&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 切换到企业版</title>
+      <link>https://opensource.yunion.cn/docs/setup/ce-ee-switch/</link>
+      <pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/docs/setup/ce-ee-switch/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;默认情况下部署好的版本是 &lt;strong&gt;开源版本(CE: Community Edition)&lt;/strong&gt;，可以使用 &lt;code&gt;ocadm cluster update&lt;/code&gt; 命令切换成 &lt;strong&gt;企业版本(EE: Enterprise Edition)&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;切换操作&#34;&gt;切换操作&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到企业版&lt;/span&gt;
+$ ocadm cluster update --use-ee --wait
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到开源版的 web 前端&lt;/span&gt;
+$ ocadm cluster update --use-ce --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;ocadm cluster update --use-ee/--use-ce&lt;/code&gt; 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p&gt;
+
+&lt;h2 id=&#34;常见问题&#34;&gt;常见问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;访问前端出现错误&#34;&gt;访问前端出现错误&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;问题原因&lt;/strong&gt;: 开源与企业版本的前端分别依赖不同的 default-web configmap，直接切换过去会导致 default-web configmap 没有更新，会造成企业版本使用开源版本 configmap 的问题。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;解决办法&lt;/strong&gt;: 在控制节点上删除 web 服务的 nginx configmap 配置文件，并重启 web 服务即可。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 删除 default-web 的 configmap 文件&lt;/span&gt;
+$ kubectl delete configmap -n onecloud default-web
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启 default-web 服务&lt;/span&gt;
+$ kubectl rollout restart deployment -n onecloud default-web&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       </description>
     </item>
     

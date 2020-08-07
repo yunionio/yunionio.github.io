@@ -13,15 +13,15 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/v3.2/docs/quickstart/allinone/" />
-<meta property="article:modified_time" content="2020-08-03T13:12:58&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
+<meta property="article:modified_time" content="2020-08-07T16:15:02&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
 
 <meta itemprop="name" content="All in One 安装">
 <meta itemprop="description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 OneCloud 服务
 ">
 
 
-<meta itemprop="dateModified" content="2020-08-03T13:12:58&#43;08:00" />
-<meta itemprop="wordCount" content="311">
+<meta itemprop="dateModified" content="2020-08-07T16:15:02&#43;08:00" />
+<meta itemprop="wordCount" content="315">
 
 
 
@@ -786,7 +786,12 @@
 <li><a href="#前提">前提</a></li>
 <li><a href="#环境准备">环境准备</a>
 <ul>
+<li><a href="#服务器配置要求">服务器配置要求</a></li>
+<li><a href="#onecloud相关软件依赖">OneCloud相关软件依赖</a></li>
+<li><a href="#本地环境配置要求">本地环境配置要求</a>
+<ul>
 <li><a href="#配置-ssh-免密登录">配置 ssh 免密登录</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#开始部署">开始部署</a>
 <ul>
@@ -861,16 +866,13 @@
 
 <h2 id="环境准备">环境准备</h2>
 
-<p>OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:</p>
+<p>OneCloud 相关的组件运行在 kubernetes 之上。</p>
+
+<h3 id="服务器配置要求">服务器配置要求</h3>
 
 <ul>
 <li>操作系统: Centos 7.6</li>
 <li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
-<li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）</li>
-<li>docker: ce-18.09.1</li>
-<li>kubernetes: v1.15.8</li>
-<li>ssh: 开启 ssh 免密登录</li>
-<li>本地环境安装部署 ansbile</li>
 </ul>
 
 <p>以下为待部署机器的环境:</p>
@@ -903,7 +905,24 @@
 </div>
 
 
-<h3 id="配置-ssh-免密登录">配置 ssh 免密登录</h3>
+<h3 id="onecloud相关软件依赖">OneCloud相关软件依赖</h3>
+
+<ul>
+<li>数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB</li>
+<li>docker: ce-19.03.9</li>
+<li>kubernetes: v1.15.8</li>
+</ul>
+
+<h3 id="本地环境配置要求">本地环境配置要求</h3>
+
+<p>本地环境即用户进行实际操作部署的环境。本次测试的本地环境为MAC操作系统的笔记本，也可在待部署机器上进行操作。</p>
+
+<ul>
+<li>ssh: 开启 ssh 免密登录</li>
+<li>本地环境安装部署 ansbile，Windows操作系统不支持安装 ansible</li>
+</ul>
+
+<h4 id="配置-ssh-免密登录">配置 ssh 免密登录</h4>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa 则跳过此步骤)</span>
 $ ssh-keygen
 
@@ -914,7 +933,7 @@ $ ssh-copy-id -i ~/.ssh/id_rsa root@10.168.26.216
 $ ssh root@10.168.26.216 <span style="color:#4e9a06">&#34;hostname&#34;</span></code></pre></div>
 <h2 id="开始部署">开始部署</h2>
 
-<p>部署的工具是 <a href="https://github.com/yunionio/ocboot" target="_blank">https://github.com/yunionio/ocboot</a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 onecloud 服务，以下是操作步骤:</p>
+<p>部署的工具是 <a href="https://github.com/yunionio/ocboot" target="_blank">https://github.com/yunionio/ocboot</a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 onecloud 服务，以下操作都在本地环境上进行操作。操作步骤如下:</p>
 
 <h3 id="下载-ocboot">下载 ocboot</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
@@ -1069,7 +1088,7 @@ $ reboot</code></pre></div></p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 03.08.2020: <a  href="https://github.com/yunionio/docs/commit/ffa01c4a7ee5e464944245141a163e02256859bb">update iso url for 3.2 (ffa01c4)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 07.08.2020: <a  href="https://github.com/yunionio/docs/commit/040729d70e20300fc061b24d5cbf57f750f1fe65">allinone部署说明优化 (040729d)</a>
 </div>
 </div>
 

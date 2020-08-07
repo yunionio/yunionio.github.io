@@ -13,15 +13,15 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/v3.2/docs/quickstart/minikube/" />
-<meta property="article:modified_time" content="2020-06-11T19:57:13&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
+<meta property="article:modified_time" content="2020-08-07T16:15:02&#43;08:00"/><meta property="og:site_name" content="OneCloud Documentation" />
 
 <meta itemprop="name" content="MiniKube 安装">
 <meta itemprop="description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
 ">
 
 
-<meta itemprop="dateModified" content="2020-06-11T19:57:13&#43;08:00" />
-<meta itemprop="wordCount" content="205">
+<meta itemprop="dateModified" content="2020-08-07T16:15:02&#43;08:00" />
+<meta itemprop="wordCount" content="204">
 
 
 
@@ -791,8 +791,8 @@
 <li><a href="#部署local-path-storage">部署local-path-storage</a></li>
 <li><a href="#部署onecloud-k8s-operator">部署onecloud k8s operator</a></li>
 <li><a href="#部署onecloud-集群">部署onecloud 集群</a></li>
-<li><a href="#创建账号登陆webui">创建账号登陆webUI</a></li>
-<li><a href="#带解决的问题">带解决的问题</a></li>
+<li><a href="#创建账号登录webui">创建账号登录WebUI</a></li>
+<li><a href="#待解决的问题">待解决的问题</a></li>
 <li><a href="#集群清理">集群清理</a></li>
 </ul></li>
 </ul></li>
@@ -861,7 +861,7 @@
 <ul>
 <li>操作系统: Centos 7.6</li>
 <li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
-<li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）</li>
+<li>数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB</li>
 </ul>
 
 <p>安装MySQL开启远程访问</p>
@@ -904,21 +904,23 @@ password: &quot;$MYSQL_PASSWD&quot;
 <li><p>其他集群配置请参考： <a href="https://github.com/yunionio/onecloud-operator/blob/4c871ae1d3d6774a827834464c480287b7b8b433/pkg/apis/onecloud/v1alpha1/types.go#L97" target="_blank">OnecloudClusterSpec</a>::</p></li>
 
 <li><p>启动onecloud集群</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f onecloud-cluster.yaml</code></pre></div>
-<p>打开K8s Dashboard确认相关服务正常启动完成</p>
 
-<h3 id="创建账号登陆webui">创建账号登陆webUI</h3>
+<pre><code>kubectl apply -f onecloud-cluster.yaml
+</code></pre>
+
+<p>打开K8s Dashboard确认相关服务正常启动完成</p></li>
+</ul>
+
+<h3 id="创建账号登录webui">创建账号登录WebUI</h3>
 
 <p>创建账号</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl <span style="color:#204a87">exec</span> -n onecloud <span style="color:#4e9a06">`</span>kubectl -n onecloud get pods  <span style="color:#000;font-weight:bold">|</span> grep <span style="color:#4e9a06">&#34;example-onecloud-cluster-climc&#34;</span><span style="color:#000;font-weight:bold">|</span> cut -f1 -d<span style="color:#4e9a06">&#34; &#34;</span><span style="color:#4e9a06">`</span> -c climc  -i -t -- /bin/bash -il
-$ climc user-create demo --password demo123A --system-account --enabled</code></pre></div></li>
-</ul>
-
+$ climc user-create demo --password demo123A --system-account --enabled</code></pre></div>
 <p>登陆webUI</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl -n onecloud port-forward <span style="color:#4e9a06">`</span>kubectl -n onecloud get pods  <span style="color:#000;font-weight:bold">|</span> grep <span style="color:#4e9a06">&#34;example-onecloud-cluster-web&#34;</span><span style="color:#000;font-weight:bold">|</span> cut -f1 -d<span style="color:#4e9a06">&#34; &#34;</span><span style="color:#4e9a06">`</span> <span style="color:#0000cf;font-weight:bold">9999</span>:443 --address<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">0</span>.0.0.0</code></pre></div>
 <p>打开浏览器：<a href="https://localhost:9999" target="_blank">https://localhost:9999</a></p>
 
-<h3 id="带解决的问题">带解决的问题</h3>
+<h3 id="待解决的问题">待解决的问题</h3>
 
 <p>4类Pod启动失败，问题还在分析中，但不影响体验onecloud</p>
 
@@ -996,7 +998,7 @@ minikube -p onecloud stop</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 11.06.2020: <a  href="https://github.com/yunionio/docs/commit/18e47ffab43e76e56449bf2006bf91645c4562aa">docs:优化minikube安装体验 (18e47ff)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 07.08.2020: <a  href="https://github.com/yunionio/docs/commit/040729d70e20300fc061b24d5cbf57f750f1fe65">allinone部署说明优化 (040729d)</a>
 </div>
 </div>
 

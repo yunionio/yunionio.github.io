@@ -332,11 +332,11 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard 
 &lt;/ul&gt;
 
 &lt;h4 id=&#34;配置-ssh-免密登录&#34;&gt;配置 ssh 免密登录&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa 则跳过此步骤)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa.pub 则跳过此步骤)&lt;/span&gt;
 $ ssh-keygen
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将生成的 ~/.ssh/id_rsa 拷贝到待部署机器&lt;/span&gt;
-$ ssh-copy-id -i ~/.ssh/id_rsa root@10.168.26.216
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将生成的 ~/.ssh/id_rsa.pub 公钥拷贝到待部署机器&lt;/span&gt;
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span&gt;
 $ ssh root@10.168.26.216 &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;hostname&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

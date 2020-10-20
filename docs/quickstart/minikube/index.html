@@ -9,18 +9,18 @@
 
 
 <title>MiniKube 安装 | 云联壹云</title><meta property="og:title" content="MiniKube 安装" />
-<meta property="og:description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+<meta property="og:description" content="使用MiniKube,快速部署体验单机版本的云联壹云服务
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/quickstart/minikube/" />
-<meta property="article:modified_time" content="2020-08-07T16:15:02&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2020-10-20T15:52:21&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="MiniKube 安装">
-<meta itemprop="description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+<meta itemprop="description" content="使用MiniKube,快速部署体验单机版本的云联壹云服务
 ">
 
 
-<meta itemprop="dateModified" content="2020-08-07T16:15:02&#43;08:00" />
+<meta itemprop="dateModified" content="2020-10-20T15:52:21&#43;08:00" />
 <meta itemprop="wordCount" content="204">
 
 
@@ -28,15 +28,15 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MiniKube 安装"/>
-<meta name="twitter:description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+<meta name="twitter:description" content="使用MiniKube,快速部署体验单机版本的云联壹云服务
 "/>
 
 
 
 
 
-<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
-<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -66,14 +66,18 @@
 
 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     
-    v3.3
+    v3.4
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     
     
     
         
-            <a class="dropdown-item" href="/">v3.3 (latest)</a>
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
         
     
         
@@ -795,8 +799,8 @@
 <ul>
 <li><a href="#启动minikube">启动minikube</a></li>
 <li><a href="#部署local-path-storage">部署local-path-storage</a></li>
-<li><a href="#部署onecloud-k8s-operator">部署onecloud k8s operator</a></li>
-<li><a href="#部署onecloud-集群">部署onecloud 集群</a></li>
+<li><a href="#部署云联壹云-k8s-operator">部署云联壹云 k8s operator</a></li>
+<li><a href="#部署云联壹云-集群">部署云联壹云 集群</a></li>
 <li><a href="#创建账号登录webui">创建账号登录WebUI</a></li>
 <li><a href="#待解决的问题">待解决的问题</a></li>
 <li><a href="#集群清理">集群清理</a></li>
@@ -847,7 +851,7 @@
             
 <div class="td-content">
 	<h1>MiniKube 安装</h1>
-	<div class="lead">使用MiniKube,快速部署体验单机版本的OneCloud服务</div>
+	<div class="lead">使用MiniKube,快速部署体验单机版本的云联壹云服务</div>
 	
 
 <h2 id="前提">前提</h2>
@@ -856,13 +860,13 @@
 
 <div class="alert alert-warning" role="alert">
 <h4 class="alert-heading">注意</h4>
-本章内容是方便快速体验OneCloud, 通过MiniKube快速搭建OneCloud服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="/docs/setup/">安装部署</a> 。
+本章内容是方便快速体验云联壹云, 通过MiniKube快速搭建云联壹云服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="/docs/setup/">安装部署</a> 。
 </div>
 
 
 <h2 id="环境准备">环境准备</h2>
 
-<p>OneCloud 相关的组件运行在MiniKube之上，环境以及相关的软件依赖如下:</p>
+<p>云联壹云 相关的组件运行在MiniKube之上，环境以及相关的软件依赖如下:</p>
 
 <ul>
 <li>操作系统: Centos 7.6</li>
@@ -890,12 +894,12 @@ minikube dashboard -p onecloud</code></pre></div>
 <p>参考：<a href="https://github.com/rancher/local-path-provisioner" target="_blank">https://github.com/rancher/local-path-provisioner</a>, 在minikube部署local-path-storage</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml -O local-path-storage.yaml 
 kubectl apply -f local-path-storage.yaml </code></pre></div>
-<h3 id="部署onecloud-k8s-operator">部署onecloud k8s operator</h3>
+<h3 id="部署云联壹云-k8s-operator">部署云联壹云 k8s operator</h3>
 
-<p>onecloud k8s operator地址： <a href="https://github.com/yunionio/onecloud-operator" target="_blank">https://github.com/yunionio/onecloud-operator</a></p>
+<p>云联壹云 k8s operator地址： <a href="https://github.com/yunionio/onecloud-operator" target="_blank">https://github.com/yunionio/onecloud-operator</a></p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/onecloud-operator.yaml -O onecloud-operator.yaml
 kubectl apply -f onecloud-operator.yaml</code></pre></div>
-<h3 id="部署onecloud-集群">部署onecloud 集群</h3>
+<h3 id="部署云联壹云-集群">部署云联壹云 集群</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/example-onecloud-cluster.yaml -O onecloud-cluster.yaml
 vim onecloud-cluster.yaml</code></pre></div>
 <ul>
@@ -909,7 +913,7 @@ password: &quot;$MYSQL_PASSWD&quot;
 
 <li><p>其他集群配置请参考： <a href="https://github.com/yunionio/onecloud-operator/blob/4c871ae1d3d6774a827834464c480287b7b8b433/pkg/apis/onecloud/v1alpha1/types.go#L97" target="_blank">OnecloudClusterSpec</a>::</p></li>
 
-<li><p>启动onecloud集群</p>
+<li><p>启动云联壹云集群</p>
 
 <pre><code>kubectl apply -f onecloud-cluster.yaml
 </code></pre>
@@ -928,7 +932,7 @@ $ climc user-create demo --password demo123A --system-account --enabled</code></
 
 <h3 id="待解决的问题">待解决的问题</h3>
 
-<p>4类Pod启动失败，问题还在分析中，但不影响体验onecloud</p>
+<p>4类Pod启动失败，问题还在分析中，但不影响体验云联壹云</p>
 
 <ul>
 <li>example-onecloud-cluster-notify</li>
@@ -1004,7 +1008,7 @@ minikube -p onecloud stop</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 07.08.2020: <a  href="https://github.com/yunionio/docs/commit/c020cbef9fd74f9a38d4c94c4220e489cae322ce">allinone部署说明优化 (c020cbe)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
 </div>
 </div>
 

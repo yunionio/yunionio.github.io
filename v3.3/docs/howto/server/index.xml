@@ -1,0 +1,252 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>云联壹云 – 云主机</title>
+    <link>https://opensource.yunion.cn/v3.3/docs/howto/server/</link>
+    <description>Recent content in 云主机 on 云联壹云</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 19 Jul 2019 10:26:40 +0800</lastBuildDate>
+    
+	  <atom:link href="https://opensource.yunion.cn/v3.3/docs/howto/server/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: 登录云主机</title>
+      <link>https://opensource.yunion.cn/v3.3/docs/howto/server/connect/</link>
+      <pubDate>Fri, 19 Jul 2019 17:38:36 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.3/docs/howto/server/connect/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;创建好主机后，登录的方式大概分为以下几种：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ssh: linux 通用，要求主机网络可达;&lt;/li&gt;
+&lt;li&gt;rdp: windows 远程桌面，要求主机网络可达；&lt;/li&gt;
+&lt;li&gt;vnc: vnc 链接，对主机网络没有要求，只要能链接云平台 vnc proxy 即可;&lt;/li&gt;
+&lt;li&gt;ipmi sol: 只对装有 BMC 的物理机可用;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;针对以上的链接方式，我们提供以下接口链接云主机：&lt;/p&gt;
+
+&lt;h3 id=&#34;vnc-链接&#34;&gt;vnc 链接&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;climc webconsole-server&lt;/code&gt; 命令提供通过 vnc 的方式链接虚拟机，该方式对裸金属服务器不可用。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc webconsole-server &amp;lt;server_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;ssh-链接&#34;&gt;ssh 链接&lt;/h3&gt;
+
+&lt;p&gt;查询 server 的 ip&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可通过 server-list --search --details 的方式找到主机的 ip&lt;/span&gt;
+$ climc server-list --search &amp;lt;server_name&amp;gt; --details 
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 或者通过 server-show &amp;lt;server_id&amp;gt; 的方式得到 ip&lt;/span&gt;
+$ climc server-show &amp;lt;server_name&amp;gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep ip
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; ips                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;.168.222.226 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;查询 server 的登录信息&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc server-logininfo &amp;lt;server_name&amp;gt;
++----------+-----------------------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;  Field   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;            Value            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++----------+-----------------------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; password &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; @2aWXB6AmCbV                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; updated  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2019&lt;/span&gt;-07-03T10:00:20.801716Z &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; username &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; root                        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++----------+-----------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ssh 登录&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ ssh root@10.168.222.226&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;通过 webconsole 登录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ climc webconsole-ssh 10.168.222.226
+https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1vskIuVwB-aINfH4mm8MsZqwxKSfHqm2pCvY6O8bBA%3D%3D&amp;amp;api_server=https%3A%2F%2Foffice.yunion.io&amp;amp;protocol=tty
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在浏览器打开 webconsole 放回的 url ，就会到对应虚拟机的登录界面&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/webssh.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 其他操作</title>
+      <link>https://opensource.yunion.cn/v3.3/docs/howto/server/others/</link>
+      <pubDate>Fri, 19 Jul 2019 17:32:09 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.3/docs/howto/server/others/</guid>
+      <description>
+        
+        
+        
+
+&lt;h3 id=&#34;开关机&#34;&gt;开关机&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开机&lt;/span&gt;
+$ climc server-start &amp;lt;server_id&amp;gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 关机&lt;/span&gt;
+$ climc server-stop &amp;lt;server_id&amp;gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 强制关机&lt;/span&gt;
+$ climc server-stop --is-force &amp;lt;server_id&amp;gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启&lt;/span&gt;
+$ climc server-restart &amp;lt;server_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;删除&#34;&gt;删除&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 删除至回收站&lt;/span&gt;
+$ climc server-delete &amp;lt;server_id&amp;gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 彻底删除&lt;/span&gt;
+$ climc server-delete -f &amp;lt;server_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;重装密码&#34;&gt;重装密码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc server-deploy --reset-password --password &amp;lt;your_password&amp;gt; &amp;lt;server_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: libvirt管理虚机导入</title>
+      <link>https://opensource.yunion.cn/v3.3/docs/howto/server/import/</link>
+      <pubDate>Tue, 26 Nov 2019 16:57:43 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.3/docs/howto/server/import/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;支持将libvirt管理的虚拟机导入到OneCloud&lt;/p&gt;
+
+&lt;h2 id=&#34;注意事项&#34;&gt;注意事项&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;首先需要在libvirt管理的宿主机上安装我们的计算节点&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;安装好计算节点后需要添加的虚拟机的网络到控制节点&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;确保libvirt服务关闭&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;相关操作&#34;&gt;相关操作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;准备好需要导入虚拟机的信息文件&lt;code&gt;servers.yaml&lt;/code&gt;， 格式如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hosts:
+- host_ip: 10.168.222.137
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+  - mac: 52:54:00:4A:19:AF
+    ip: 10.168.222.53
+  - mac: 52:54:00:4A:19:CC
+    ip: 10.168.222.54
+- host_ip: 10.168.222.130
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+  - mac: 53:54:00:4A:19:EC
+    ip: 11.168.222.50
+  - mac: 53:54:00:4A:19:EE
+    ip: 11.168.222.51
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;host_ip&lt;/code&gt; 是要导入的宿主机的ip&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xml_file_path&lt;/code&gt;是libvirt存储虚拟机xml文件的路径，&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;monitor_path&lt;/code&gt;是libvirt存储虚拟机monitor socket文件的路径，&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;servers&lt;/code&gt;是需要导入的虚拟机，里面描述了虚拟机的ip和mac对应关系&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;执行 climc servers-import-from-libvirt 开始导入&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 导入前确认libvirt服务关闭&lt;/span&gt;
+$ climc servers-import-from-libvirt servers.yaml&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: GPU相关</title>
+      <link>https://opensource.yunion.cn/v3.3/docs/howto/server/gpu/</link>
+      <pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.3/docs/howto/server/gpu/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;目前仅支持 OneCloud kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。&lt;/p&gt;
+
+&lt;h2 id=&#34;相关操作&#34;&gt;相关操作&lt;/h2&gt;
+
+&lt;h3 id=&#34;创建-gpu-云主机&#34;&gt;创建 GPU 云主机&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;查询 gpu 列表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc isolated-device-list --gpu
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;                  ID                  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Dev_type &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;        Model        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;  Addr   &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Vendor_device_id &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;               Host_id                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 273f4f72-06b6-49aa-8456-4beceec44997 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; GPU-HPC  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; GeForce GTX &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1050&lt;/span&gt; Ti &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;41&lt;/span&gt;:00.0 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 10de:1c82        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 3bce9607-2597-469f-8d9b-977345456739 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; a77333e9-08d9-45c6-87eb-a7d8d902c5f5 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; GPU-HPC  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Quadro FX &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;580&lt;/span&gt;       &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;05&lt;/span&gt;:00.0 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 10de:0659        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; 3bce9607-2597-469f-8d9b-977345456739 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;创建 server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;server-create 中的 &lt;code&gt;--isolated-device&lt;/code&gt; 参数指定透传的设备到云主机，可以重复使用多次，透传多个 gpu 到云主机，但要求透传到同一云主机的 gpu 必须在同一宿主机。其余创建参数和创建普通云主机是一样的。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc server-create --hypervisor kvm --isolated-device 273f4f72-06b6-49aa-8456-4beceec44997 ...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;查询-gpu-云主机&#34;&gt;查询 GPU 云主机&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc server-list --gpu&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;关联-gpu&#34;&gt;关联 GPU&lt;/h3&gt;
+
+&lt;p&gt;如果云主机所在的宿主机有可用的 gpu，在主机关机的情况下，可以通过 &lt;code&gt;server-attach-isolated-device&lt;/code&gt; 命令将 gpu 和云主机关联起来，下次主机启动后就可以使用该 gpu 。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc server-attach-isolated-device &amp;lt;server_id&amp;gt; &amp;lt;device_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;卸载-gpu&#34;&gt;卸载 GPU&lt;/h3&gt;
+
+&lt;p&gt;如果云主机关联了 gpu，可以通过 &lt;code&gt;server-detach-isolated-device&lt;/code&gt; 卸载主机的某一 gpu。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc server-detach-isolated-device &amp;lt;server_id&amp;gt; &amp;lt;device_id&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 迁移相关</title>
+      <link>https://opensource.yunion.cn/v3.3/docs/howto/server/migrate/</link>
+      <pubDate>Fri, 19 Jul 2019 18:58:33 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.3/docs/howto/server/migrate/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 主备机</title>
+      <link>https://opensource.yunion.cn/v3.3/docs/howto/server/backup/</link>
+      <pubDate>Fri, 19 Jul 2019 18:57:43 +0800</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.3/docs/howto/server/backup/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TODO&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

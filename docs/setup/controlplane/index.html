@@ -9,36 +9,36 @@
 
 
 <title>部署集群 | 云联壹云</title><meta property="og:title" content="部署集群" />
-<meta property="og:description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
+<meta property="og:description" content="部署 kubernetes 和 云联壹云 服务，创建第一个控制节点
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/setup/controlplane/" />
 <meta property="article:published_time" content="2019-04-13T13:01:57&#43;08:00"/>
-<meta property="article:modified_time" content="2020-08-05T12:57:45&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2020-10-20T15:52:21&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="部署集群">
-<meta itemprop="description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
+<meta itemprop="description" content="部署 kubernetes 和 云联壹云 服务，创建第一个控制节点
 ">
 
 
 <meta itemprop="datePublished" content="2019-04-13T13:01:57&#43;08:00" />
-<meta itemprop="dateModified" content="2020-08-05T12:57:45&#43;08:00" />
-<meta itemprop="wordCount" content="1031">
+<meta itemprop="dateModified" content="2020-10-20T15:52:21&#43;08:00" />
+<meta itemprop="wordCount" content="1081">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="部署集群"/>
-<meta name="twitter:description" content="部署 kubernetes 和 onecloud 服务，创建第一个控制节点
+<meta name="twitter:description" content="部署 kubernetes 和 云联壹云 服务，创建第一个控制节点
 "/>
 
 
 
 
 
-<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
-<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -68,14 +68,18 @@
 
 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     
-    v3.3
+    v3.4
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     
     
     
         
-            <a class="dropdown-item" href="/">v3.3 (latest)</a>
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
         
     
         
@@ -795,14 +799,14 @@
 <ul>
 <li><a href="#安装配置-mariadb">安装配置 mariadb</a></li>
 <li><a href="#安装配置-docker">安装配置 docker</a></li>
-<li><a href="#安装-onecloud-依赖内核">安装 onecloud 依赖内核</a></li>
+<li><a href="#安装-云联壹云-依赖内核">安装 云联壹云 依赖内核</a></li>
 <li><a href="#安装配置-kubelet">安装配置 kubelet</a></li>
 </ul></li>
 <li><a href="#部署集群">部署集群</a>
 <ul>
 <li><a href="#安装部署工具">安装部署工具</a></li>
 <li><a href="#部署-kubernetes-集群">部署 kubernetes 集群</a></li>
-<li><a href="#创建-onecloud-集群">创建 onecloud 集群</a></li>
+<li><a href="#创建-云联壹云-集群">创建 云联壹云 集群</a></li>
 <li><a href="#创建登录用户">创建登录用户</a></li>
 <li><a href="#访问前端">访问前端</a></li>
 <li><a href="#删除环境">删除环境</a></li>
@@ -859,12 +863,12 @@
             
 <div class="td-content">
 	<h1>部署集群</h1>
-	<div class="lead">部署 kubernetes 和 onecloud 服务，创建第一个控制节点</div>
+	<div class="lead">部署 kubernetes 和 云联壹云 服务，创建第一个控制节点</div>
 	
 
 <h2 id="环境准备">环境准备</h2>
 
-<p>OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:</p>
+<p>云联壹云 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:</p>
 
 <ul>
 <li>操作系统: Centos 7.6</li>
@@ -932,8 +936,8 @@ $ systemctl restart mariadb</code></pre></div>
 
 <p>安装 docker</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
-<span style="color:#8f5902;font-style:italic"># 添加 yunion onecloud rpm 源</span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.3/yunion.repo
+<span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源</span>
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.4/yunion.repo
 $ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io</code></pre></div>
 <p>配置 docker</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
@@ -962,7 +966,7 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
 </span><span style="color:#4e9a06">EOF</span></code></pre></div>
 <p>启动 docker</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> --now docker</code></pre></div>
-<h3 id="安装-onecloud-依赖内核">安装 onecloud 依赖内核</h3>
+<h3 id="安装-云联壹云-依赖内核">安装 云联壹云 依赖内核</h3>
 
 <p>这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 安装内核</span>
@@ -980,7 +984,7 @@ $ uname -r
 <span style="color:#0000cf;font-weight:bold">3</span>.10.0-1062.4.3.el7.yn20191203.x86_64</code></pre></div>
 <h3 id="安装配置-kubelet">安装配置 kubelet</h3>
 
-<p>从 yunion onecloud rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动</p>
+<p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>    jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
 $ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;source &lt;(kubectl completion bash)&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc
@@ -1002,7 +1006,8 @@ $ systemctl disable firewalld
 <span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager</span>
 $ systemctl stop NetworkManager
 $ systemctl disable NetworkManager
-
+$ ps -ef<span style="color:#000;font-weight:bold">|</span>grep dhcp <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $2}&#39;</span> <span style="color:#000;font-weight:bold">|</span>xargs <span style="color:#204a87">kill</span> -9
+ 
 <span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求</span>
 $ modprobe br_netfilter
 
@@ -1050,7 +1055,7 @@ $ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;expor
 $ yum install -y yunion-executor-server <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> systemctl <span style="color:#204a87">enable</span> --now yunion-executor</code></pre></div>
 <h3 id="部署-kubernetes-集群">部署 kubernetes 集群</h3>
 
-<p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 OneCloud 控制节点相关的服务到 kubernetes 集群。</p>
+<p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 云联壹云 控制节点相关的服务到 kubernetes 集群。</p>
 
 <p>拉取必要的 docker 镜像</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm config images pull</code></pre></div>
@@ -1072,12 +1077,12 @@ $ <span style="color:#000">MYSQL_HOST</span><span style="color:#ce5c00;font-weig
 $ <span style="color:#000">EXTRA_OPT</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;&#34;</span>
 $ <span style="color:#8f5902;font-style:italic">#EXTRA_OPT=&#39; --control-plane-endpoint 10.168.222.18:6443&#39;</span>
 
-<span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 onecloud 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成</span>
+<span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 云联壹云 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成</span>
 $ ocadm init --mysql-host <span style="color:#000">$MYSQL_HOST</span> <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>    --mysql-user root --mysql-password <span style="color:#000">$MYSQL_PASSWD</span> <span style="color:#000">$EXTRA_OPT</span>
 
 ...
-Your Kubernetes and Onecloud control-plane has initialized successfully!
+Your Kubernetes and control-plane has initialized successfully!
 ...</code></pre></div>
 
 
@@ -1107,9 +1112,9 @@ kube-system          kube-scheduler-lzx-ocadm-test2             <span style="col
 kube-system          traefik-ingress-controller-qwkfb           <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          5h1m
 local-path-storage   local-path-provisioner-5978cff7b7-7h8df    <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          5h1m
 onecloud             onecloud-operator-6d4bddb8c4-tkjkh         <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          3h37m</code></pre></div>
-<h3 id="创建-onecloud-集群">创建 onecloud 集群</h3>
+<h3 id="创建-云联壹云-集群">创建 云联壹云 集群</h3>
 
-<p>当 kubernetes 集群部署完成后，就可以通过 <code>ocadm cluster create</code> 创建 onecloud 集群，该集群由 onecloud namespace 里面 <strong>onecloud-operator</strong> deployment 自动部署和维护。</p>
+<p>当 kubernetes 集群部署完成后，就可以通过 <code>ocadm cluster create</code> 创建 云联壹云 集群，该集群由 onecloud namespace 里面 <strong>onecloud-operator</strong> deployment 自动部署和维护。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建集群</span>
 <span style="color:#8f5902;font-style:italic"># 如果要部署企业版的组件可以在 cluster create 的时候加上 --use-ee 参数</span>
 $ ocadm cluster create --wait</code></pre></div>
@@ -1118,7 +1123,7 @@ $ ocadm cluster create --wait</code></pre></div>
 <h3 id="创建登录用户">创建登录用户</h3>
 
 <p>当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 <code>ocadm cluster rcadmin</code> 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取连接 onecloud 集群的环境变量</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 获取连接 云联壹云 集群的环境变量</span>
 $ ocadm cluster rcadmin
 <span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://10.168.222.218:30357/v3
 <span style="color:#204a87">export</span> <span style="color:#000">OS_USERNAME</span><span style="color:#ce5c00;font-weight:bold">=</span>sysadmin
@@ -1169,7 +1174,7 @@ $ curl -k https://10.168.222.218</code></pre></div>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ocadm reset --force</code></pre></div>
 <h2 id="后续">后续</h2>
 
-<p>如果没有意外，现在应该已经部署好了 onecloud on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。</p>
+<p>如果没有意外，现在应该已经部署好了 云联壹云 on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。</p>
 
 <h3 id="添加计算节点">添加计算节点</h3>
 
@@ -1179,11 +1184,21 @@ $ curl -k https://10.168.222.218</code></pre></div>
 
 <p>默认情况下 <code>ocadm init</code> 创建的节点是控制节点，不会运行 onecloud 计算节点的服务。如果需要把控制节点也作为计算节点，需要执行以下步骤:</p>
 
-<ol>
-<li><p>安装计算节点需要的依赖，参考 <a href="/docs/setup/host/#安装依赖">&ldquo;计算节点/安装依赖&rdquo;</a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。</p></li>
+<ul>
+<li>安装计算节点需要的依赖，参考 <a href="/docs/setup/host/#安装依赖">&ldquo;计算节点/安装依赖&rdquo;</a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。</li>
+</ul>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 安装rpm包</span>
+$ yum --disablerepo<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;*&#39;</span> --enablerepo<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;yunion*&#39;</span> install -y <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  epel-release libaio jq libusb lvm2 nc ntp fetchclient fuse fuse-devel fuse-libs <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-executor-server <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kmod-openvswitch <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  openvswitch net-tools
 
-<li><p>在控制节点启用该节点作为计算节点，命令如下:</p></li>
-</ol>
+$ systemctl <span style="color:#204a87">enable</span> --now yunion-executor</code></pre></div>
+<ul>
+<li>在控制节点启用该节点作为计算节点，命令如下:</li>
+</ul>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 用 kubectl get nodes 拿到当前的节点名称</span>
 $ kubectl get nodes
 NAME           STATUS   ROLES    AGE 
@@ -1203,7 +1218,7 @@ default-host-ctx5s  <span style="color:#0000cf;font-weight:bold">2</span>/2     
 <h3 id="升级-回滚组件版本">升级/回滚组件版本</h3>
 
 <p><code>ocadm init</code> 的时候使用 <code>--onecloud-version</code> 选项设置了组件的版本，可以使用 <code>ocadm cluster update</code> 命令升级组件到指定的版本，保持更新。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看现在 onecloud cluster 的版本</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看现在 云联壹云 cluster 的版本</span>
 $ kubectl get oc -n onecloud default  -o <span style="color:#000">jsonpath</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;{.spec.version}&#39;</span>
 v3.0.0-20200112.0
 
@@ -1271,7 +1286,7 @@ $ ocadm cluster update --version v3.0.0-20200113.0 --wait</code></pre></div>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 05.08.2020: <a  href="https://github.com/yunionio/docs/commit/66e9a9b5a3517f965b65737df581af0c6b6830f5">add: CE and EE switch content (66e9a9b)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
 </div>
 </div>
 

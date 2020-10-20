@@ -9,18 +9,18 @@
 
 
 <title>All in One 安装 | 云联壹云</title><meta property="og:title" content="All in One 安装" />
-<meta property="og:description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 OneCloud 服务
+<meta property="og:description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/quickstart/allinone/" />
-<meta property="article:modified_time" content="2020-08-11T18:47:51&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2020-10-20T15:52:21&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="All in One 安装">
-<meta itemprop="description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 OneCloud 服务
+<meta itemprop="description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务
 ">
 
 
-<meta itemprop="dateModified" content="2020-08-11T18:47:51&#43;08:00" />
+<meta itemprop="dateModified" content="2020-10-20T15:52:21&#43;08:00" />
 <meta itemprop="wordCount" content="315">
 
 
@@ -28,15 +28,15 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="All in One 安装"/>
-<meta name="twitter:description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 OneCloud 服务
+<meta name="twitter:description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务
 "/>
 
 
 
 
 
-<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
-<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -66,14 +66,18 @@
 
 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     
-    v3.3
+    v3.4
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     
     
     
         
-            <a class="dropdown-item" href="/">v3.3 (latest)</a>
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
         
     
         
@@ -793,7 +797,7 @@
 <li><a href="#环境准备">环境准备</a>
 <ul>
 <li><a href="#服务器配置要求">服务器配置要求</a></li>
-<li><a href="#onecloud相关软件依赖">OneCloud相关软件依赖</a></li>
+<li><a href="#云联壹云相关软件依赖">云联壹云相关软件依赖</a></li>
 <li><a href="#本地环境配置要求">本地环境配置要求</a>
 <ul>
 <li><a href="#配置-ssh-免密登录">配置 ssh 免密登录</a></li>
@@ -857,7 +861,7 @@
             
 <div class="td-content">
 	<h1>All in One 安装</h1>
-	<div class="lead">使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 OneCloud 服务</div>
+	<div class="lead">使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务</div>
 	
 
 <h2 id="前提">前提</h2>
@@ -866,13 +870,13 @@
 
 <div class="alert alert-warning" role="alert">
 <h4 class="alert-heading">注意</h4>
-本章内容是通过部署工具快速搭建 OneCloud 服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="/docs/setup/">安装部署</a> 。
+本章内容是通过部署工具快速搭建 云联壹云 服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="/docs/setup/">安装部署</a> 。
 </div>
 
 
 <h2 id="环境准备">环境准备</h2>
 
-<p>OneCloud 相关的组件运行在 kubernetes 之上。</p>
+<p>云联壹云 相关的组件运行在 kubernetes 之上。</p>
 
 <h3 id="服务器配置要求">服务器配置要求</h3>
 
@@ -911,7 +915,7 @@
 </div>
 
 
-<h3 id="onecloud相关软件依赖">OneCloud相关软件依赖</h3>
+<h3 id="云联壹云相关软件依赖">云联壹云相关软件依赖</h3>
 
 <ul>
 <li>数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB</li>
@@ -939,7 +943,7 @@ $ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
 $ ssh root@10.168.26.216 <span style="color:#4e9a06">&#34;hostname&#34;</span></code></pre></div>
 <h2 id="开始部署">开始部署</h2>
 
-<p>部署的工具是 <a href="https://github.com/yunionio/ocboot" target="_blank">https://github.com/yunionio/ocboot</a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 onecloud 服务，以下操作都在本地环境上进行操作。操作步骤如下:</p>
+<p>部署的工具是 <a href="https://github.com/yunionio/ocboot" target="_blank">https://github.com/yunionio/ocboot</a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 云联壹云 服务，以下操作都在本地环境上进行操作。操作步骤如下:</p>
 
 <h3 id="下载-ocboot">下载 ocboot</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
@@ -960,7 +964,7 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-allinone.yml
 </span><span style="color:#4e9a06">  db_user: root
 </span><span style="color:#4e9a06">  # mariadb 用户密码
 </span><span style="color:#4e9a06">  db_password: your-sql-password
-</span><span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 onecloud 服务的节点
+</span><span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 云联壹云 服务的节点
 </span><span style="color:#4e9a06">primary_master_node:
 </span><span style="color:#4e9a06">  hostname: 10.168.26.216
 </span><span style="color:#4e9a06">  user: root
@@ -974,11 +978,11 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-allinone.yml
 </span><span style="color:#4e9a06">  controlplane_host: 10.168.26.216
 </span><span style="color:#4e9a06">  # k8s 控制节点的端口
 </span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
-</span><span style="color:#4e9a06">  # onecloud 登录用户
+</span><span style="color:#4e9a06">  # 云联壹云 登录用户
 </span><span style="color:#4e9a06">  onecloud_user: admin
-</span><span style="color:#4e9a06">  # onecloud 登录用户密码
+</span><span style="color:#4e9a06">  # 云联壹云 登录用户密码
 </span><span style="color:#4e9a06">  onecloud_user_password: admin@123
-</span><span style="color:#4e9a06">  # 该节点作为 OneCloud 私有云计算节点
+</span><span style="color:#4e9a06">  # 该节点作为 云联壹云 私有云计算节点
 </span><span style="color:#4e9a06">  as_host: true
 </span><span style="color:#4e9a06">EOF</span></code></pre></div>
 <h3 id="开始部署-1">开始部署</h3>
@@ -994,7 +998,7 @@ Initialized successfully!
 Web page: https://10.168.26.216
 User: admin
 Password: admin@123</code></pre></div>
-<p>然后用浏览器访问 <a href="https://10.168.26.216" target="_blank">https://10.168.26.216</a> ，用户名输入 <code>admin</code>，密码输入 <code>admin@123</code> 就会进入 OneCloud 的界面。</p>
+<p>然后用浏览器访问 <a href="https://10.168.26.216" target="_blank">https://10.168.26.216</a> ，用户名输入 <code>admin</code>，密码输入 <code>admin@123</code> 就会进入 云联壹云 的界面。</p>
 
 <p><img src="../images/index.png" alt="登录页" /></p>
 
@@ -1002,7 +1006,7 @@ Password: admin@123</code></pre></div>
 
 <h3 id="1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？</h3>
 
-<p>All in One 部署的节点会部署 OneCloud host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 OneCloud 环境中没有启用宿主机。</p>
+<p>All in One 部署的节点会部署 云联壹云 host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 云联壹云 环境中没有启用宿主机。</p>
 
 <p>请到 <code>管理后台</code> 界面，点击 <code>主机/基础资源/宿主机</code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。</p>
 
@@ -1010,7 +1014,7 @@ Password: admin@123</code></pre></div>
 
 <div class="alert alert-warning" role="alert">
 <h4 class="alert-heading">注意</h4>
-<p><p>如果要使用 OneCloud 私有云虚拟机，需要宿主机使用 OneCloud 编译的内核，可使用以下命令查看宿主机是否使用 OneCloud 内核(包含 yn 关键字)。</p>
+<p><p>如果要使用 云联壹云 私有云虚拟机，需要宿主机使用 云联壹云 编译的内核，可使用以下命令查看宿主机是否使用 云联壹云 内核(包含 yn 关键字)。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核</span>
 $ uname -a <span style="color:#000;font-weight:bold">|</span> grep yn
 Linux office-controller <span style="color:#0000cf;font-weight:bold">3</span>.10.0-1062.4.3.el7.yn20191203.x86_64
@@ -1024,13 +1028,13 @@ $ reboot</code></pre></div></p>
 
 <h3 id="2-如何导入公有云或者其它私有云平台资源">2. 如何导入公有云或者其它私有云平台资源？</h3>
 
-<p>在 <code>多云管理</code> 菜单，选择 <code>云账号</code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 OneCloud 服务就会同步相应云平台的资源，同步完成后即可在前端查看。</p>
+<p>在 <code>多云管理</code> 菜单，选择 <code>云账号</code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 云联壹云 服务就会同步相应云平台的资源，同步完成后即可在前端查看。</p>
 
 <p><img src="../images/cloudaccount.png" alt="多云管理" /></p>
 
 <h3 id="3-其它问题">3. 其它问题？</h3>
 
-<p>其它问题欢迎在 OneCloud github issues 界面提交: <a href="https://github.com/yunionio/onecloud/issues" target="_blank">https://github.com/yunionio/onecloud/issues</a> , 我们会尽快回复。</p>
+<p>其它问题欢迎在 云联壹云 github issues 界面提交: <a href="https://github.com/yunionio/onecloud/issues" target="_blank">https://github.com/yunionio/onecloud/issues</a> , 我们会尽快回复。</p>
 
 	
 		<style>
@@ -1094,7 +1098,7 @@ $ reboot</code></pre></div></p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 11.08.2020: <a  href="https://github.com/yunionio/docs/commit/b28fede8d01b2d9bf4e9037ac8c1ca757dc93f02">fix: quickstart ssh-copy-id (b28fede)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
 </div>
 </div>
 

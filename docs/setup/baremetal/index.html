@@ -9,18 +9,18 @@
 
 
 <title>物理机管理服务 | 云联壹云</title><meta property="og:title" content="物理机管理服务" />
-<meta property="og:description" content="如果要使用 onecloud 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件
+<meta property="og:description" content="如果要使用 云联壹云 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/setup/baremetal/" />
-<meta property="article:modified_time" content="2020-01-15T19:06:37&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2020-10-20T15:52:21&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="物理机管理服务">
-<meta itemprop="description" content="如果要使用 onecloud 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件
+<meta itemprop="description" content="如果要使用 云联壹云 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-15T19:06:37&#43;08:00" />
+<meta itemprop="dateModified" content="2020-10-20T15:52:21&#43;08:00" />
 <meta itemprop="wordCount" content="197">
 
 
@@ -28,15 +28,15 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="物理机管理服务"/>
-<meta name="twitter:description" content="如果要使用 onecloud 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件
+<meta name="twitter:description" content="如果要使用 云联壹云 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件
 "/>
 
 
 
 
 
-<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
-<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -66,14 +66,18 @@
 
 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     
-    v3.3
+    v3.4
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     
     
     
         
-            <a class="dropdown-item" href="/">v3.3 (latest)</a>
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
         
     
         
@@ -841,16 +845,16 @@
             
 <div class="td-content">
 	<h1>物理机管理服务</h1>
-	<div class="lead">如果要使用 onecloud 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件</div>
+	<div class="lead">如果要使用 云联壹云 私有云物理机管理功能，需要启用物理机管理服务(baremetal-agent)，本节介绍如何部署相应组件</div>
 	
 
-<p>启用 baremetal-agent 之前需要部署 onecloud 集群，详见 <a href="/docs/setup/controlplane">&ldquo;安装部署/部署集群&rdquo;</a></p>
+<p>启用 baremetal-agent 之前需要部署 云联壹云 集群，详见 <a href="/docs/setup/controlplane">&ldquo;安装部署/部署集群&rdquo;</a></p>
 
 <p>待集群准备完毕后指定 node 来部署 baremetal-agent 服务</p>
 
 <h2 id="启用-baremetal-agent">启用 baremetal-agent</h2>
 
-<p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 onecloud host 服务的 dhcp relay 功能。</p>
+<p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 云联壹云 host 服务的 dhcp relay 功能。</p>
 
 <h3 id="如何配置-host-服务-启用-dhcp-relay">如何配置 host 服务 启用 dhcp relay</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 登录到已经部署好计算节点的服务器上修改 /etc/yunion/host.conf，添加 dhcp_relay 配置项：</span>
@@ -946,7 +950,7 @@ $ climc agent-list
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 15.01.2020: <a  href="https://github.com/yunionio/docs/commit/4bd3ebee5528eb00e7c003c35feeafe605a7ef21">baremetal setup fix (4bd3ebe)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
 </div>
 </div>
 

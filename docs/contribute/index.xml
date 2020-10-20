@@ -41,7 +41,7 @@ sudo yum install -y libcephfs-devel librbd-devel librados-devel&lt;/code&gt;&lt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;wget -q -O- &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo apt-key add -
 &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; deb https://download.ceph.com/debian-luminous/ &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;lsb_release -sc&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt; main &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo tee /etc/apt/sources.list.d/ceph.list
 apt-get update &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get install -y libcephfs-dev librbd-dev librados-dev&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;编译-onecloud-组件&#34;&gt;编译 onecloud 组件&lt;/h2&gt;
+&lt;h2 id=&#34;编译-云联壹云-组件&#34;&gt;编译 云联壹云 组件&lt;/h2&gt;
 
 &lt;h3 id=&#34;fork-仓库&#34;&gt;Fork 仓库&lt;/h3&gt;
 
@@ -76,7 +76,7 @@ region host&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
 
-&lt;p&gt;确保有一个已部署的onecloud k8s集群，参考&lt;a href=&#34;https://opensource.yunion.cn/docs/setup/&#34;&gt;安装部署&lt;/a&gt;。
+&lt;p&gt;确保有一个已部署的云联壹云 k8s集群，参考&lt;a href=&#34;https://opensource.yunion.cn/docs/setup/&#34;&gt;安装部署&lt;/a&gt;。
 这里介绍Centos7的本地环境安装，其他发行版可参考官方文档：&lt;a href=&#34;https://www.telepresence.io/reference/install&#34; target=&#34;_blank&#34;&gt;Installing Telepresence&lt;/a&gt;。&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -107,7 +107,7 @@ $ sudo env &lt;span style=&#34;color:#000&#34;&gt;PREFIX&lt;/span&gt;&lt;span st
 &lt;p&gt;利用 telepresence 本地连通远端 k8s 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 k8s 其它服务的环境。&lt;/p&gt;
 
 &lt;p&gt;比如以下是本地编译运行 region 服务的流程：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到 onecloud 代码目录&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到 云联壹云 代码目录&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
  
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 region 服务&lt;/span&gt;
@@ -133,7 +133,7 @@ $ unshare --map-root-user --mount
 $ mount --bind &lt;span style=&#34;color:#000&#34;&gt;$TELEPRESENCE_ROOT&lt;/span&gt;/var/run /var/run
 $ ls /var/run/
 secrets
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# bind onecloud config&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# bind 云联壹云 config&lt;/span&gt;
 $ mkdir /etc/yunion
 $ mount --bind &lt;span style=&#34;color:#000&#34;&gt;$TELEPRESENCE_ROOT&lt;/span&gt;/etc/yunion /etc/yunion
 $ ls /etc/yunion/
@@ -218,7 +218,7 @@ $ git am --continue
 
 &lt;h2 id=&#34;架构简介&#34;&gt;架构简介&lt;/h2&gt;
 
-&lt;p&gt;OneCloud 服务组件较多，接下来分别介绍每个组件的功能:&lt;/p&gt;
+&lt;p&gt;云联壹云 服务组件较多，接下来分别介绍每个组件的功能:&lt;/p&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -361,7 +361,7 @@ $ git am --continue
 &lt;li&gt;&lt;p&gt;Task: 后台处理异步耗时任务的模块，会通过更新 Model 的状态来更新任务的执行结果。&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;onecloud-代码结构&#34;&gt;onecloud 代码结构&lt;/h2&gt;
+&lt;h2 id=&#34;云联壹云-代码结构&#34;&gt;云联壹云 代码结构&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/yunionio/onecloud/tree/master/build&#34; target=&#34;_blank&#34;&gt;build&lt;/a&gt;: 打包rpm脚本&lt;/li&gt;

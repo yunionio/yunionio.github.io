@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.55.5" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<title>MiniKube 安装 | 云联壹云</title><meta property="og:title" content="MiniKube 安装" />
+<meta property="og:description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/v3.3/docs/quickstart/minikube/" />
+<meta property="article:modified_time" content="2020-08-07T16:15:02&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="MiniKube 安装">
+<meta itemprop="description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+">
+
+
+<meta itemprop="dateModified" content="2020-08-07T16:15:02&#43;08:00" />
+<meta itemprop="wordCount" content="204">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MiniKube 安装"/>
+<meta name="twitter:description" content="使用MiniKube,快速部署体验单机版本的OneCloud服务
+"/>
+
+
+
+
+
+<link rel="preload" href="/v3.3/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/v3.3/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>MiniKube 安装 | 云联壹云</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        
+		
+	
+  <a href="/v3.3/" class="logo flex-shrink-0 navbar-brand">
+    
+    
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.3
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.3/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/v3.3/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.3/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+		</ul>
+	</div>
+	
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <div class="td-sidebar__search d-flex align-items-center">
+    
+ <input type="input" class="form-control search-input" placeholder="&#xf002 Search this site…" aria-label="Search this site…" autocomplete="off">
+
+
+ 
+  
+ 
+
+
+<script type="text/javascript" src="/js/search.js"></script>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </div>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v3-3-docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/quickstart/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v3-3-docs-quickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-quickstart-allinone" href="/v3.3/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v3-3-docs-quickstart-minikube" href="/v3.3/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-setup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-intro" href="/v3.3/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-controlplane-ha" href="/v3.3/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-db-ha" href="/v3.3/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-controlplane" href="/v3.3/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-components" href="/v3.3/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-host" href="/v3.3/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-baremetal" href="/v3.3/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-ce-ee-switch" href="/v3.3/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-upgrade" href="/v3.3/docs/setup/upgrade/">升级相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-contribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-contribute-contrib" href="/v3.3/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-contribute-services" href="/v3.3/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-contribute-framework" href="/v3.3/docs/contribute/framework/">后端服务框架</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-climc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-image">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-upload" href="/v3.3/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-query" href="/v3.3/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-create" href="/v3.3/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-operation" href="/v3.3/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-server">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-server-create">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-connect" href="/v3.3/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-others" href="/v3.3/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-import" href="/v3.3/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-gpu" href="/v3.3/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-migrate" href="/v3.3/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-backup" href="/v3.3/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-host">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-host-kvm" href="/v3.3/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-baremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-baremetal-intro" href="/v3.3/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-baremetal-operator" href="/v3.3/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-network">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-lb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-storage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-multicloud">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-auth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-container">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-howto-scheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.3/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v3-3-docs-contact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+    
+    
+    
+    
+    
+    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/quickstart/minikube.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=MiniKube%20%e5%ae%89%e8%a3%85" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    
+    
+    <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
+    
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前提">前提</a></li>
+<li><a href="#环境准备">环境准备</a></li>
+<li><a href="#开始部署">开始部署</a>
+<ul>
+<li><a href="#启动minikube">启动minikube</a></li>
+<li><a href="#部署local-path-storage">部署local-path-storage</a></li>
+<li><a href="#部署onecloud-k8s-operator">部署onecloud k8s operator</a></li>
+<li><a href="#部署onecloud-集群">部署onecloud 集群</a></li>
+<li><a href="#创建账号登录webui">创建账号登录WebUI</a></li>
+<li><a href="#待解决的问题">待解决的问题</a></li>
+<li><a href="#集群清理">集群清理</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.3/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.3/docs/quickstart/">快速开始</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/v3.3/docs/quickstart/minikube/">MiniKube 安装</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>MiniKube 安装</h1>
+	<div class="lead">使用MiniKube,快速部署体验单机版本的OneCloud服务</div>
+	
+
+<h2 id="前提">前提</h2>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">注意</h4>
+本章内容是方便快速体验OneCloud, 通过MiniKube快速搭建OneCloud服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="/docs/setup/">安装部署</a> 。
+</div>
+
+
+<h2 id="环境准备">环境准备</h2>
+
+<p>OneCloud 相关的组件运行在MiniKube之上，环境以及相关的软件依赖如下:</p>
+
+<ul>
+<li>操作系统: Centos 7.6</li>
+<li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
+<li>数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB</li>
+</ul>
+
+<p>安装MySQL开启远程访问</p>
+
+<pre><code># 此密码为上面设置的 MySQL root 密码，为了方便，只读账号也使用此密码
+$ MYSQL_PASSWD='your-sql-passwd'
+$ mysql -uroot -p$MYSQL_PASSWD -e &quot;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_PASSWD' WITH GRANT OPTION;FLUSH PRIVILEGES&quot;
+</code></pre>
+
+<h2 id="开始部署">开始部署</h2>
+
+<h3 id="启动minikube">启动minikube</h3>
+
+<p>下载minikue/kubectl, 并启动minikube集群, 具体请参考： <a href="https://kubernetes.io/docs/tasks/tools/install-minikube/" target="_blank">https://kubernetes.io/docs/tasks/tools/install-minikube/</a></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">minikube config -p onecloud <span style="color:#204a87">set</span> memory <span style="color:#0000cf;font-weight:bold">8192</span> 
+minikube start  --nodes <span style="color:#0000cf;font-weight:bold">2</span> -p onecloud
+minikube dashboard -p onecloud</code></pre></div>
+<h3 id="部署local-path-storage">部署local-path-storage</h3>
+
+<p>参考：<a href="https://github.com/rancher/local-path-provisioner" target="_blank">https://github.com/rancher/local-path-provisioner</a>, 在minikube部署local-path-storage</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml -O local-path-storage.yaml 
+kubectl apply -f local-path-storage.yaml </code></pre></div>
+<h3 id="部署onecloud-k8s-operator">部署onecloud k8s operator</h3>
+
+<p>onecloud k8s operator地址： <a href="https://github.com/yunionio/onecloud-operator" target="_blank">https://github.com/yunionio/onecloud-operator</a></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/onecloud-operator.yaml -O onecloud-operator.yaml
+kubectl apply -f onecloud-operator.yaml</code></pre></div>
+<h3 id="部署onecloud-集群">部署onecloud 集群</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/example-onecloud-cluster.yaml -O onecloud-cluster.yaml
+vim onecloud-cluster.yaml</code></pre></div>
+<ul>
+<li><p>修改onecloud-cluster.yaml mysql相关配额</p>
+
+<pre><code>host: $MYSQL_HOST
+port: $MYSQL_PORT
+username: &quot;$MYSQL_USERNAME&quot;
+password: &quot;$MYSQL_PASSWD&quot;
+</code></pre></li>
+
+<li><p>其他集群配置请参考： <a href="https://github.com/yunionio/onecloud-operator/blob/4c871ae1d3d6774a827834464c480287b7b8b433/pkg/apis/onecloud/v1alpha1/types.go#L97" target="_blank">OnecloudClusterSpec</a>::</p></li>
+
+<li><p>启动onecloud集群</p>
+
+<pre><code>kubectl apply -f onecloud-cluster.yaml
+</code></pre>
+
+<p>打开K8s Dashboard确认相关服务正常启动完成</p></li>
+</ul>
+
+<h3 id="创建账号登录webui">创建账号登录WebUI</h3>
+
+<p>创建账号</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl <span style="color:#204a87">exec</span> -n onecloud <span style="color:#4e9a06">`</span>kubectl -n onecloud get pods  <span style="color:#000;font-weight:bold">|</span> grep <span style="color:#4e9a06">&#34;example-onecloud-cluster-climc&#34;</span><span style="color:#000;font-weight:bold">|</span> cut -f1 -d<span style="color:#4e9a06">&#34; &#34;</span><span style="color:#4e9a06">`</span> -c climc  -i -t -- /bin/bash -il
+$ climc user-create demo --password demo123A --system-account --enabled</code></pre></div>
+<p>登陆webUI</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl -n onecloud port-forward <span style="color:#4e9a06">`</span>kubectl -n onecloud get pods  <span style="color:#000;font-weight:bold">|</span> grep <span style="color:#4e9a06">&#34;example-onecloud-cluster-web&#34;</span><span style="color:#000;font-weight:bold">|</span> cut -f1 -d<span style="color:#4e9a06">&#34; &#34;</span><span style="color:#4e9a06">`</span> <span style="color:#0000cf;font-weight:bold">9999</span>:443 --address<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">0</span>.0.0.0</code></pre></div>
+<p>打开浏览器：<a href="https://localhost:9999" target="_blank">https://localhost:9999</a></p>
+
+<h3 id="待解决的问题">待解决的问题</h3>
+
+<p>4类Pod启动失败，问题还在分析中，但不影响体验onecloud</p>
+
+<ul>
+<li>example-onecloud-cluster-notify</li>
+<li>example-onecloud-cluster-host-deployer</li>
+<li>example-onecloud-cluster-monitor</li>
+<li>example-onecloud-cluster-autoupdate</li>
+</ul>
+
+<h3 id="集群清理">集群清理</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl delete -f onecloud-cluster.yaml
+kubectl delete -f onecloud-operator.yaml
+kubectl delete -f local-path-storage.yaml
+minikube -p onecloud stop</code></pre></div>
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 07.08.2020: <a  href="https://github.com/yunionio/docs/commit/c020cbef9fd74f9a38d4c94c4220e489cae322ce">allinone部署说明优化 (c020cbe)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src="/v3.3/js/main.min.97776a1071500611dc649795b569574ba95c3b2c920881c71bab85fb63ae0798.js" integrity="sha256-l3dqEHFQBhHcZJeVtWlXS6lcOyySCIHHG6uF&#43;2OuB5g="></script>
+
+
+
+  </body>
+</html>

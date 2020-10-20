@@ -9,34 +9,34 @@
 
 
 <title>添加计算节点 | 云联壹云</title><meta property="og:title" content="添加计算节点" />
-<meta property="og:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
+<meta property="og:description" content="如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/setup/host/" />
-<meta property="article:modified_time" content="2020-08-04T20:59:50&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2020-10-20T15:52:21&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="添加计算节点">
-<meta itemprop="description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
+<meta itemprop="description" content="如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 ">
 
 
-<meta itemprop="dateModified" content="2020-08-04T20:59:50&#43;08:00" />
-<meta itemprop="wordCount" content="757">
+<meta itemprop="dateModified" content="2020-10-20T15:52:21&#43;08:00" />
+<meta itemprop="wordCount" content="1017">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="添加计算节点"/>
-<meta name="twitter:description" content="如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
+<meta name="twitter:description" content="如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
 "/>
 
 
 
 
 
-<link rel="preload" href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" as="style">
-<link href="/scss/main.min.ec2e5140c6fb209af64a2ee2117600b9fcd215c29d2ebda3b876a1815a68d486.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -66,14 +66,18 @@
 
 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     
-    v3.3
+    v3.4
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     
     
     
         
-            <a class="dropdown-item" href="/">v3.3 (latest)</a>
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
         
     
         
@@ -792,7 +796,11 @@
 <li><a href="#环境">环境</a></li>
 <li><a href="#安装依赖">安装依赖</a>
 <ul>
-<li><a href="#安装-docker-和-kubelet">安装 docker 和 kubelet</a></li>
+<li><a href="#安装-docker-和-kubelet">安装 docker 和 kubelet</a>
+<ul>
+<li><a href="#安装配置-docker">安装配置 docker</a></li>
+<li><a href="#安装配置-kubelet">安装配置 kubelet</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#控制节点操作">控制节点操作</a>
 <ul>
@@ -855,7 +863,7 @@
             
 <div class="td-content">
 	<h1>添加计算节点</h1>
-	<div class="lead">如果要运行 onecloud 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件</div>
+	<div class="lead">如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件</div>
 	
 
 <p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:</p>
@@ -908,7 +916,7 @@
 
 <tr>
 <td align="center">kernel</td>
-<td align="center">onecloud 提供的内核</td>
+<td align="center">云联壹云 提供的内核</td>
 <td align="center">rpm</td>
 <td align="center">-</td>
 </tr>
@@ -946,7 +954,7 @@
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/yunion.repo
 </span><span style="color:#4e9a06">[yunion]
 </span><span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
-</span><span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.3
+</span><span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.4
 </span><span style="color:#4e9a06">sslverify=0
 </span><span style="color:#4e9a06">failovermethod=priority
 </span><span style="color:#4e9a06">enabled=1
@@ -979,6 +987,90 @@ $ uname -r
 
 <p>参考 <a href="/docs/setup/controlplane/#安装配置-docker">&ldquo;部署集群/环境准备&rdquo;</a> 的流程，安装好 docker 和 kubelet。</p>
 
+<h4 id="安装配置-docker">安装配置 docker</h4>
+
+<p>安装 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
+<span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源</span>
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.4/yunion.repo
+$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io</code></pre></div>
+<p>配置 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
+</span><span style="color:#4e9a06">{
+</span><span style="color:#4e9a06">  &#34;bridge&#34;: &#34;none&#34;,
+</span><span style="color:#4e9a06">  &#34;iptables&#34;: false,
+</span><span style="color:#4e9a06">  &#34;exec-opts&#34;:
+</span><span style="color:#4e9a06">    [
+</span><span style="color:#4e9a06">      &#34;native.cgroupdriver=systemd&#34;
+</span><span style="color:#4e9a06">    ],
+</span><span style="color:#4e9a06">  &#34;data-root&#34;: &#34;/opt/docker&#34;,
+</span><span style="color:#4e9a06">  &#34;live-restore&#34;: true,
+</span><span style="color:#4e9a06">  &#34;log-driver&#34;: &#34;json-file&#34;,
+</span><span style="color:#4e9a06">  &#34;log-opts&#34;:
+</span><span style="color:#4e9a06">    {
+</span><span style="color:#4e9a06">      &#34;max-size&#34;: &#34;100m&#34;
+</span><span style="color:#4e9a06">    },
+</span><span style="color:#4e9a06">  &#34;registry-mirrors&#34;:
+</span><span style="color:#4e9a06">    [
+</span><span style="color:#4e9a06">      &#34;https://lje6zxpk.mirror.aliyuncs.com&#34;,
+</span><span style="color:#4e9a06">      &#34;https://lms7sxqp.mirror.aliyuncs.com&#34;,
+</span><span style="color:#4e9a06">      &#34;https://registry.docker-cn.com&#34;
+</span><span style="color:#4e9a06">    ]
+</span><span style="color:#4e9a06">}
+</span><span style="color:#4e9a06">EOF</span></code></pre></div>
+<p>启动 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> --now docker</code></pre></div>
+<h4 id="安装配置-kubelet">安装配置 kubelet</h4>
+
+<p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
+$ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;source &lt;(kubectl completion bash)&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc
+$ <span style="color:#204a87">source</span> /etc/profile
+$ systemctl <span style="color:#204a87">enable</span> kubelet</code></pre></div>
+<p>安装完 kubernetes 相关的二进制后，还需要对系统做一些配置并启用 ipvs 作为 kube-proxy 内部的 service 负载均衡</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 禁用 swap</span>
+$ swapoff -a
+<span style="color:#8f5902;font-style:italic"># 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行</span>
+
+<span style="color:#8f5902;font-style:italic"># 关闭 selinux</span>
+$ setenforce  <span style="color:#0000cf;font-weight:bold">0</span>
+$ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/&#39;</span> /etc/selinux/config
+
+<span style="color:#8f5902;font-style:italic"># 禁用 firewalld</span>
+$ systemctl stop firewalld
+$ systemctl disable firewalld
+
+<span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager</span>
+$ systemctl stop NetworkManager
+$ systemctl disable NetworkManager
+$ ps -ef<span style="color:#000;font-weight:bold">|</span>grep dhcp <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $2}&#39;</span> <span style="color:#000;font-weight:bold">|</span>xargs <span style="color:#204a87">kill</span> -9
+ 
+<span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求</span>
+$ modprobe br_netfilter
+
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;&gt; /etc/sysctl.conf
+</span><span style="color:#4e9a06">net.bridge.bridge-nf-call-iptables=1
+</span><span style="color:#4e9a06">net.bridge.bridge-nf-call-ip6tables=1
+</span><span style="color:#4e9a06">net.ipv4.ip_forward=1
+</span><span style="color:#4e9a06">EOF</span>
+
+$ sysctl -p
+
+<span style="color:#8f5902;font-style:italic"># 配置并开启 ipvs</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysconfig/modules/ipvs.modules
+</span><span style="color:#4e9a06">#!/bin/bash
+</span><span style="color:#4e9a06">ipvs_modules=&#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&#34;
+</span><span style="color:#4e9a06">for kernel_module in \${ipvs_modules}; do
+</span><span style="color:#4e9a06">    /sbin/modinfo -F filename \${kernel_module} &gt; /dev/null 2&gt;&amp;1
+</span><span style="color:#4e9a06">    if [ $? -eq 0 ]; then
+</span><span style="color:#4e9a06">        /sbin/modprobe \${kernel_module}
+</span><span style="color:#4e9a06">    fi
+</span><span style="color:#4e9a06">done
+</span><span style="color:#4e9a06">EOF</span>
+
+$ chmod <span style="color:#0000cf;font-weight:bold">755</span> /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> bash /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> lsmod <span style="color:#000;font-weight:bold">|</span> grep ip_vs</code></pre></div>
 <h2 id="控制节点操作">控制节点操作</h2>
 
 <p>以下操作在控制节点进行。</p>
@@ -1175,7 +1267,7 @@ https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;fon
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 04.08.2020: <a  href="https://github.com/yunionio/docs/commit/af3556ef61c7694de4593f35fa12cce2e051e83e">host setup: fix install pkgs (af3556e)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
 </div>
 </div>
 

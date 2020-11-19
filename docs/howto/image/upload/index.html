@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.78.1" />
+<meta name="generator" content="Hugo 0.55.5" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -13,21 +13,24 @@
 发行版镜像 根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:
  centos: http://cloud.centos.org/centos/7/images/ ubuntu: https://cloud-images.ubuntu.com/  制作镜像 参考: 制作镜像
 上传 下载或者制作完镜像后，使用 climc image-upload 上传到云平台的 glance 服务，下面以下载 CentOS 提供的 CentOS-7-x86_64-GenericCloud-1711 举例:
-# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2  $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2 # 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
+# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2 # 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
 $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | status | active | 上传参数 使用 climc help image-upload 获取各个参数解释。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/howto/image/upload/" />
-<meta property="article:published_time" content="2019-07-19T11:34:14+08:00" />
-<meta property="article:modified_time" content="2020-11-10T19:55:11+08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:published_time" content="2019-07-19T11:34:14&#43;08:00"/>
+<meta property="article:modified_time" content="2020-11-10T19:55:11&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+
 <meta itemprop="name" content="上传镜像">
 <meta itemprop="description" content="获取镜像 上传镜像之前需要先获取镜像，途径有多种，比如从发行版官网下载用于云平台的镜像，或者自己制作。
 发行版镜像 根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:
  centos: http://cloud.centos.org/centos/7/images/ ubuntu: https://cloud-images.ubuntu.com/  制作镜像 参考: 制作镜像
 上传 下载或者制作完镜像后，使用 climc image-upload 上传到云平台的 glance 服务，下面以下载 CentOS 提供的 CentOS-7-x86_64-GenericCloud-1711 举例:
-# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2  $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2 # 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
+# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2 # 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
 $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | status | active | 上传参数 使用 climc help image-upload 获取各个参数解释。">
-<meta itemprop="datePublished" content="2019-07-19T11:34:14+08:00" />
-<meta itemprop="dateModified" content="2020-11-10T19:55:11+08:00" />
+
+
+<meta itemprop="datePublished" content="2019-07-19T11:34:14&#43;08:00" />
+<meta itemprop="dateModified" content="2020-11-10T19:55:11&#43;08:00" />
 <meta itemprop="wordCount" content="69">
 
 
@@ -39,15 +42,15 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
 发行版镜像 根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:
  centos: http://cloud.centos.org/centos/7/images/ ubuntu: https://cloud-images.ubuntu.com/  制作镜像 参考: 制作镜像
 上传 下载或者制作完镜像后，使用 climc image-upload 上传到云平台的 glance 服务，下面以下载 CentOS 提供的 CentOS-7-x86_64-GenericCloud-1711 举例:
-# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2  $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2 # 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
+# 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2 # 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2 上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: 镜像查询 )
 $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | status | active | 上传参数 使用 climc help image-upload 获取各个参数解释。"/>
 
 
 
 
 
-<link rel="preload" href="/scss/main.min.160c3d4868b70fbdcc83e31946f74e9019fafda1bc75f471578a1c5c4f759de5.css" as="style">
-<link href="/scss/main.min.160c3d4868b70fbdcc83e31946f74e9019fafda1bc75f471578a1c5c4f759de5.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -201,20 +204,20 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
   </li>
   <ul>
-    <li class="collapse " id="docsquickstart">
+    <li class="collapse " id="docs-quickstart">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docsquickstartallinone" href="/docs/quickstart/allinone/">All in One 安装</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-allinone" href="/docs/quickstart/allinone/">All in One 安装</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docsquickstartminikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
       
       
     </li>
@@ -236,62 +239,62 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
   </li>
   <ul>
-    <li class="collapse " id="docssetup">
+    <li class="collapse " id="docs-setup">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupintro" href="/docs/setup/intro/">组件概览</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-intro" href="/docs/setup/intro/">组件概览</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupcontrolplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupdb-ha" href="/docs/setup/db-ha/">部署 DB HA 环境</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-db-ha" href="/docs/setup/db-ha/">部署 DB HA 环境</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupcontrolplane" href="/docs/setup/controlplane/">部署集群</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupcomponents" href="/docs/setup/components/">添加 K8S 节点</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加 K8S 节点</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetuphost" href="/docs/setup/host/">添加计算节点</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-host" href="/docs/setup/host/">添加计算节点</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupbaremetal" href="/docs/setup/baremetal/">物理机管理服务</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-baremetal" href="/docs/setup/baremetal/">物理机管理服务</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupce-ee-switch" href="/docs/setup/ce-ee-switch/">切换到企业版</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-ce-ee-switch" href="/docs/setup/ce-ee-switch/">切换到企业版</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupupgrade" href="/docs/setup/upgrade/">升级相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-upgrade" href="/docs/setup/upgrade/">升级相关</a>
       
       
     </li>
@@ -313,26 +316,26 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
   </li>
   <ul>
-    <li class="collapse " id="docscontribute">
+    <li class="collapse " id="docs-contribute">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributecontrib" href="/docs/contribute/contrib/">开发贡献</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-contrib" href="/docs/contribute/contrib/">开发贡献</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributeservices" href="/docs/contribute/services/">服务组件介绍</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-services" href="/docs/contribute/services/">服务组件介绍</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributeframework" href="/docs/contribute/framework/">后端服务框架</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-framework" href="/docs/contribute/framework/">后端服务框架</a>
       
       
     </li>
@@ -354,7 +357,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
   </li>
   <ul>
-    <li class="collapse show" id="docshowto">
+    <li class="collapse show" id="docs-howto">
       
       
       
@@ -371,7 +374,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtoclimc">
+    <li class="collapse " id="docs-howto-climc">
       
       
       
@@ -394,32 +397,32 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">镜像</a>
   </li>
   <ul>
-    <li class="collapse show" id="docshowtoimage">
+    <li class="collapse show" id="docs-howto-image">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docshowtoimageupload" href="/docs/howto/image/upload/">上传镜像</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-howto-image-upload" href="/docs/howto/image/upload/">上传镜像</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimagequery" href="/docs/howto/image/query/">查询镜像</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-query" href="/docs/howto/image/query/">查询镜像</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimagecreate" href="/docs/howto/image/create/">制作镜像</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-create" href="/docs/howto/image/create/">制作镜像</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimageoperation" href="/docs/howto/image/operation/">其他操作</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-operation" href="/docs/howto/image/operation/">其他操作</a>
       
       
     </li>
@@ -441,7 +444,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtoserver">
+    <li class="collapse " id="docs-howto-server">
       
       
       
@@ -458,7 +461,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtoservercreate">
+    <li class="collapse " id="docs-howto-server-create">
       
       
       
@@ -471,37 +474,37 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverconnect" href="/docs/howto/server/connect/">登录云主机</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-connect" href="/docs/howto/server/connect/">登录云主机</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverothers" href="/docs/howto/server/others/">其他操作</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-others" href="/docs/howto/server/others/">其他操作</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverimport" href="/docs/howto/server/import/">libvirt管理虚机导入</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-import" href="/docs/howto/server/import/">libvirt管理虚机导入</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoservergpu" href="/docs/howto/server/gpu/">GPU相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-gpu" href="/docs/howto/server/gpu/">GPU相关</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoservermigrate" href="/docs/howto/server/migrate/">迁移相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-migrate" href="/docs/howto/server/migrate/">迁移相关</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverbackup" href="/docs/howto/server/backup/">主备机</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-backup" href="/docs/howto/server/backup/">主备机</a>
       
       
     </li>
@@ -523,14 +526,14 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtohost">
+    <li class="collapse " id="docs-howto-host">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtohostkvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-host-kvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
       
       
     </li>
@@ -552,20 +555,20 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtobaremetal">
+    <li class="collapse " id="docs-howto-baremetal">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtobaremetalintro" href="/docs/howto/baremetal/intro/">介绍</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-intro" href="/docs/howto/baremetal/intro/">介绍</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtobaremetaloperator" href="/docs/howto/baremetal/operator/">操作相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-operator" href="/docs/howto/baremetal/operator/">操作相关</a>
       
       
     </li>
@@ -587,7 +590,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtonetwork">
+    <li class="collapse " id="docs-howto-network">
       
       
       
@@ -610,7 +613,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtolb">
+    <li class="collapse " id="docs-howto-lb">
       
       
       
@@ -633,7 +636,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtostorage">
+    <li class="collapse " id="docs-howto-storage">
       
       
       
@@ -656,7 +659,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtomulticloud">
+    <li class="collapse " id="docs-howto-multicloud">
       
       
       
@@ -679,7 +682,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtoauth">
+    <li class="collapse " id="docs-howto-auth">
       
       
       
@@ -702,7 +705,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtocontainer">
+    <li class="collapse " id="docs-howto-container">
       
       
       
@@ -725,7 +728,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
   </li>
   <ul>
-    <li class="collapse " id="docshowtoscheduler">
+    <li class="collapse " id="docs-howto-scheduler">
       
       
       
@@ -754,7 +757,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
     <a  href="/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
   </li>
   <ul>
-    <li class="collapse " id="docscontact">
+    <li class="collapse " id="docs-contact">
       
       
       
@@ -801,16 +804,18 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
 
 
 <nav id="TableOfContents">
-  <ul>
-    <li><a href="#获取镜像">获取镜像</a>
-      <ul>
-        <li><a href="#发行版镜像">发行版镜像</a></li>
-        <li><a href="#制作镜像">制作镜像</a></li>
-      </ul>
-    </li>
-    <li><a href="#上传">上传</a></li>
-    <li><a href="#上传参数">上传参数</a></li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#获取镜像">获取镜像</a>
+<ul>
+<li><a href="#发行版镜像">发行版镜像</a></li>
+<li><a href="#制作镜像">制作镜像</a></li>
+</ul></li>
+<li><a href="#上传">上传</a></li>
+<li><a href="#上传参数">上传参数</a></li>
+</ul></li>
+</ul>
 </nav>
 
 
@@ -866,27 +871,38 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 | grep status | statu
 <div class="td-content">
 	<h1>上传镜像</h1>
 	
-	<h2 id="获取镜像">获取镜像</h2>
+	
+
+<h2 id="获取镜像">获取镜像</h2>
+
 <p>上传镜像之前需要先获取镜像，途径有多种，比如从发行版官网下载用于云平台的镜像，或者自己制作。</p>
+
 <h3 id="发行版镜像">发行版镜像</h3>
+
 <p>根据自己对发行版的需要下载发行版镜像，常用的 Linux 发行版会提供云平台虚拟机使用的镜像，地址如下:</p>
+
 <ul>
-<li><a href="http://cloud.centos.org/centos/7/images/">centos</a>: <a href="http://cloud.centos.org/centos/7/images/">http://cloud.centos.org/centos/7/images/</a></li>
-<li><a href="https://cloud-images.ubuntu.com/">ubuntu</a>: <a href="https://cloud-images.ubuntu.com/">https://cloud-images.ubuntu.com/</a></li>
+<li><a href="http://cloud.centos.org/centos/7/images/" target="_blank">centos</a>: <a href="http://cloud.centos.org/centos/7/images/" target="_blank">http://cloud.centos.org/centos/7/images/</a></li>
+<li><a href="https://cloud-images.ubuntu.com/" target="_blank">ubuntu</a>: <a href="https://cloud-images.ubuntu.com/" target="_blank">https://cloud-images.ubuntu.com/</a></li>
 </ul>
+
 <h3 id="制作镜像">制作镜像</h3>
+
 <p>参考: <a href="../create/">制作镜像</a></p>
+
 <h2 id="上传">上传</h2>
+
 <p>下载或者制作完镜像后，使用 <code>climc image-upload</code> 上传到云平台的 glance 服务，下面以下载 CentOS 提供的 CentOS-7-x86_64-GenericCloud-1711 举例:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2 </span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 下载 CentOS-7-x86_64-GenericCloud-1711.qcow2</span> 
 $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2
 
 <span style="color:#8f5902;font-style:italic"># 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2</span>
-$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2
-</code></pre></div><p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: <a href="../query/">镜像查询</a> )</p>
+$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2</code></pre></div>
+<p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &lsquo;active&rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: <a href="../query/">镜像查询</a> )</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 <span style="color:#000;font-weight:bold">|</span> grep status
-<span style="color:#000;font-weight:bold">|</span> status          <span style="color:#000;font-weight:bold">|</span> active <span style="color:#000;font-weight:bold">|</span>
-</code></pre></div><h2 id="上传参数">上传参数</h2>
+<span style="color:#000;font-weight:bold">|</span> status          <span style="color:#000;font-weight:bold">|</span> active <span style="color:#000;font-weight:bold">|</span></code></pre></div>
+<h2 id="上传参数">上传参数</h2>
+
 <p>使用 <code>climc help image-upload</code> 获取各个参数解释。</p>
 
 	
@@ -970,7 +986,7 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard 
 
 
 
-<script src="/js/main.min.c4e47cf1883cb0e621ef4bafe1cde5007e31d888046ce1db4a21c2080c80d0bc.js" integrity="sha256-xOR88Yg8sOYh70uv4c3lAH4x2IgEbOHbSiHCCAyA0Lw="></script>
+<script src="/js/main.min.f8a4d11fd5e943809e16dabb9e3b24b2f71e4c0d13998b0dc4962eb279ac6b5f.js" integrity="sha256-&#43;KTRH9XpQ4CeFtq7njsksvceTA0TmYsNxJYusnmsa18="></script>
 
 
 

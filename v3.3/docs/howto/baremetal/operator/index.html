@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.78.1" />
+<meta name="generator" content="Hugo 0.55.5" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -12,12 +12,15 @@
 <meta property="og:description" content="查询物理机 # list baremetal 记录 climc host-list --baremetal true # list 已经安装系统的物理机 climc host-list --baremetal true --occupied # list 未安装系统的物理机 climc host-list --baremetal true --empty # 查询物理机详情，包括硬件信息，机房信息 climc host-show &lt;host_id&gt; 注册物理机 climc host-create &lt;host_id&gt; 重新准备物理机 climc host-prepare &lt;host_id&gt; 获取物理机登录信息 climc host-logininfo &lt;host_id&gt; 获取串口登录控制台 climc webconsole-baremetal &lt;host_id&gt; 开/关机 climc host-start/host-stop &lt;host_id&gt; 进入/退出维护模式 climc host-maintenance/host-unmaintenance &lt;host_id&gt; 删除物理机 climc host-delete &lt;host_id&gt; 转换/回收宿主机 climc host-convert-hypervisor climc host-undo-convert &lt;host_id&gt; 裸金属服务器相关 安装操作系统 climc server-create \  --hypervisor baremetal \ # 指定 server 的类型为 baremetal --ncpu 24 \ # 创建到 24 核 cpu 的物理机 --raid-config &#39;raid1:2:MegaRaid&#39; \ # 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1 --raid-config &#39;none:1&#39; \ # 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid --raid-config &#39;raid10:4:MegaRaid&#39; \ # 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10 --disk CentOS-7." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/v3.3/docs/howto/baremetal/operator/" />
-<meta property="article:published_time" content="2019-07-19T20:25:05+08:00" />
-<meta property="article:modified_time" content="2019-07-30T14:08:01+08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:published_time" content="2019-07-19T20:25:05&#43;08:00"/>
+<meta property="article:modified_time" content="2019-07-30T14:08:01&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+
 <meta itemprop="name" content="操作相关">
 <meta itemprop="description" content="查询物理机 # list baremetal 记录 climc host-list --baremetal true # list 已经安装系统的物理机 climc host-list --baremetal true --occupied # list 未安装系统的物理机 climc host-list --baremetal true --empty # 查询物理机详情，包括硬件信息，机房信息 climc host-show &lt;host_id&gt; 注册物理机 climc host-create &lt;host_id&gt; 重新准备物理机 climc host-prepare &lt;host_id&gt; 获取物理机登录信息 climc host-logininfo &lt;host_id&gt; 获取串口登录控制台 climc webconsole-baremetal &lt;host_id&gt; 开/关机 climc host-start/host-stop &lt;host_id&gt; 进入/退出维护模式 climc host-maintenance/host-unmaintenance &lt;host_id&gt; 删除物理机 climc host-delete &lt;host_id&gt; 转换/回收宿主机 climc host-convert-hypervisor climc host-undo-convert &lt;host_id&gt; 裸金属服务器相关 安装操作系统 climc server-create \  --hypervisor baremetal \ # 指定 server 的类型为 baremetal --ncpu 24 \ # 创建到 24 核 cpu 的物理机 --raid-config &#39;raid1:2:MegaRaid&#39; \ # 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1 --raid-config &#39;none:1&#39; \ # 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid --raid-config &#39;raid10:4:MegaRaid&#39; \ # 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10 --disk CentOS-7.">
-<meta itemprop="datePublished" content="2019-07-19T20:25:05+08:00" />
-<meta itemprop="dateModified" content="2019-07-30T14:08:01+08:00" />
+
+
+<meta itemprop="datePublished" content="2019-07-19T20:25:05&#43;08:00" />
+<meta itemprop="dateModified" content="2019-07-30T14:08:01&#43;08:00" />
 <meta itemprop="wordCount" content="296">
 
 
@@ -31,8 +34,8 @@
 
 
 
-<link rel="preload" href="/v3.3/scss/main.min.160c3d4868b70fbdcc83e31946f74e9019fafda1bc75f471578a1c5c4f759de5.css" as="style">
-<link href="/v3.3/scss/main.min.160c3d4868b70fbdcc83e31946f74e9019fafda1bc75f471578a1c5c4f759de5.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/v3.3/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/v3.3/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -169,7 +172,7 @@
     <a  href="/v3.3/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
   </li>
   <ul>
-    <li class="collapse show" id="v33docs">
+    <li class="collapse show" id="v3-3-docs">
       
       
       
@@ -186,20 +189,20 @@
     <a  href="/v3.3/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docsquickstart">
+    <li class="collapse " id="v3-3-docs-quickstart">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docsquickstartallinone" href="/v3.3/docs/quickstart/allinone/">All in One 安装</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-quickstart-allinone" href="/v3.3/docs/quickstart/allinone/">All in One 安装</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docsquickstartminikube" href="/v3.3/docs/quickstart/minikube/">MiniKube 安装</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-quickstart-minikube" href="/v3.3/docs/quickstart/minikube/">MiniKube 安装</a>
       
       
     </li>
@@ -221,62 +224,62 @@
     <a  href="/v3.3/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docssetup">
+    <li class="collapse " id="v3-3-docs-setup">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupintro" href="/v3.3/docs/setup/intro/">组件概览</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-intro" href="/v3.3/docs/setup/intro/">组件概览</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupcontrolplane-ha" href="/v3.3/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-controlplane-ha" href="/v3.3/docs/setup/controlplane-ha/">部署 HA 环境</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupdb-ha" href="/v3.3/docs/setup/db-ha/">部署 DB HA 环境</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-db-ha" href="/v3.3/docs/setup/db-ha/">部署 DB HA 环境</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupcontrolplane" href="/v3.3/docs/setup/controlplane/">部署集群</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-controlplane" href="/v3.3/docs/setup/controlplane/">部署集群</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupcomponents" href="/v3.3/docs/setup/components/">添加 K8S 节点</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-components" href="/v3.3/docs/setup/components/">添加 K8S 节点</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetuphost" href="/v3.3/docs/setup/host/">添加计算节点</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-host" href="/v3.3/docs/setup/host/">添加计算节点</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupbaremetal" href="/v3.3/docs/setup/baremetal/">物理机管理服务</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-baremetal" href="/v3.3/docs/setup/baremetal/">物理机管理服务</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupce-ee-switch" href="/v3.3/docs/setup/ce-ee-switch/">切换到企业版</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-ce-ee-switch" href="/v3.3/docs/setup/ce-ee-switch/">切换到企业版</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupupgrade" href="/v3.3/docs/setup/upgrade/">升级相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-setup-upgrade" href="/v3.3/docs/setup/upgrade/">升级相关</a>
       
       
     </li>
@@ -298,26 +301,26 @@
     <a  href="/v3.3/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docscontribute">
+    <li class="collapse " id="v3-3-docs-contribute">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributecontrib" href="/v3.3/docs/contribute/contrib/">开发贡献</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-contribute-contrib" href="/v3.3/docs/contribute/contrib/">开发贡献</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributeservices" href="/v3.3/docs/contribute/services/">服务组件介绍</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-contribute-services" href="/v3.3/docs/contribute/services/">服务组件介绍</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributeframework" href="/v3.3/docs/contribute/framework/">后端服务框架</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-contribute-framework" href="/v3.3/docs/contribute/framework/">后端服务框架</a>
       
       
     </li>
@@ -339,7 +342,7 @@
     <a  href="/v3.3/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
   </li>
   <ul>
-    <li class="collapse show" id="v33docshowto">
+    <li class="collapse show" id="v3-3-docs-howto">
       
       
       
@@ -356,7 +359,7 @@
     <a  href="/v3.3/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtoclimc">
+    <li class="collapse " id="v3-3-docs-howto-climc">
       
       
       
@@ -379,32 +382,32 @@
     <a  href="/v3.3/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtoimage">
+    <li class="collapse " id="v3-3-docs-howto-image">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimageupload" href="/v3.3/docs/howto/image/upload/">上传镜像</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-upload" href="/v3.3/docs/howto/image/upload/">上传镜像</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimagequery" href="/v3.3/docs/howto/image/query/">查询镜像</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-query" href="/v3.3/docs/howto/image/query/">查询镜像</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimagecreate" href="/v3.3/docs/howto/image/create/">制作镜像</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-create" href="/v3.3/docs/howto/image/create/">制作镜像</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimageoperation" href="/v3.3/docs/howto/image/operation/">其他操作</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-image-operation" href="/v3.3/docs/howto/image/operation/">其他操作</a>
       
       
     </li>
@@ -426,7 +429,7 @@
     <a  href="/v3.3/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtoserver">
+    <li class="collapse " id="v3-3-docs-howto-server">
       
       
       
@@ -443,7 +446,7 @@
     <a  href="/v3.3/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtoservercreate">
+    <li class="collapse " id="v3-3-docs-howto-server-create">
       
       
       
@@ -456,37 +459,37 @@
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverconnect" href="/v3.3/docs/howto/server/connect/">登录云主机</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-connect" href="/v3.3/docs/howto/server/connect/">登录云主机</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverothers" href="/v3.3/docs/howto/server/others/">其他操作</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-others" href="/v3.3/docs/howto/server/others/">其他操作</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverimport" href="/v3.3/docs/howto/server/import/">libvirt管理虚机导入</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-import" href="/v3.3/docs/howto/server/import/">libvirt管理虚机导入</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoservergpu" href="/v3.3/docs/howto/server/gpu/">GPU相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-gpu" href="/v3.3/docs/howto/server/gpu/">GPU相关</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoservermigrate" href="/v3.3/docs/howto/server/migrate/">迁移相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-migrate" href="/v3.3/docs/howto/server/migrate/">迁移相关</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverbackup" href="/v3.3/docs/howto/server/backup/">主备机</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-server-backup" href="/v3.3/docs/howto/server/backup/">主备机</a>
       
       
     </li>
@@ -508,14 +511,14 @@
     <a  href="/v3.3/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtohost">
+    <li class="collapse " id="v3-3-docs-howto-host">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtohostkvm" href="/v3.3/docs/howto/host/kvm/">KVM 宿主机</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-host-kvm" href="/v3.3/docs/howto/host/kvm/">KVM 宿主机</a>
       
       
     </li>
@@ -537,20 +540,20 @@
     <a  href="/v3.3/docs/howto/baremetal/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">物理机</a>
   </li>
   <ul>
-    <li class="collapse show" id="v33docshowtobaremetal">
+    <li class="collapse show" id="v3-3-docs-howto-baremetal">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtobaremetalintro" href="/v3.3/docs/howto/baremetal/intro/">介绍</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v3-3-docs-howto-baremetal-intro" href="/v3.3/docs/howto/baremetal/intro/">介绍</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v33docshowtobaremetaloperator" href="/v3.3/docs/howto/baremetal/operator/">操作相关</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v3-3-docs-howto-baremetal-operator" href="/v3.3/docs/howto/baremetal/operator/">操作相关</a>
       
       
     </li>
@@ -572,7 +575,7 @@
     <a  href="/v3.3/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtonetwork">
+    <li class="collapse " id="v3-3-docs-howto-network">
       
       
       
@@ -595,7 +598,7 @@
     <a  href="/v3.3/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtolb">
+    <li class="collapse " id="v3-3-docs-howto-lb">
       
       
       
@@ -618,7 +621,7 @@
     <a  href="/v3.3/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtostorage">
+    <li class="collapse " id="v3-3-docs-howto-storage">
       
       
       
@@ -641,7 +644,7 @@
     <a  href="/v3.3/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtomulticloud">
+    <li class="collapse " id="v3-3-docs-howto-multicloud">
       
       
       
@@ -664,7 +667,7 @@
     <a  href="/v3.3/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtoauth">
+    <li class="collapse " id="v3-3-docs-howto-auth">
       
       
       
@@ -687,7 +690,7 @@
     <a  href="/v3.3/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtocontainer">
+    <li class="collapse " id="v3-3-docs-howto-container">
       
       
       
@@ -710,7 +713,7 @@
     <a  href="/v3.3/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docshowtoscheduler">
+    <li class="collapse " id="v3-3-docs-howto-scheduler">
       
       
       
@@ -739,7 +742,7 @@
     <a  href="/v3.3/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
   </li>
   <ul>
-    <li class="collapse " id="v33docscontact">
+    <li class="collapse " id="v3-3-docs-contact">
       
       
       
@@ -786,30 +789,34 @@
 
 
 <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#查询物理机">查询物理机</a></li>
-        <li><a href="#注册物理机">注册物理机</a></li>
-        <li><a href="#重新准备物理机">重新准备物理机</a></li>
-        <li><a href="#获取物理机登录信息">获取物理机登录信息</a></li>
-        <li><a href="#获取串口登录控制台">获取串口登录控制台</a></li>
-        <li><a href="#开关机">开/关机</a></li>
-        <li><a href="#进入退出维护模式">进入/退出维护模式</a></li>
-        <li><a href="#删除物理机">删除物理机</a></li>
-        <li><a href="#转换回收宿主机">转换/回收宿主机</a></li>
-      </ul>
-    </li>
-    <li><a href="#裸金属服务器相关">裸金属服务器相关</a>
-      <ul>
-        <li><a href="#安装操作系统">安装操作系统</a></li>
-        <li><a href="#查询裸金属服务器">查询裸金属服务器</a></li>
-        <li><a href="#重装操作系统">重装操作系统</a></li>
-        <li><a href="#开关机-1">开/关机</a></li>
-        <li><a href="#删除裸金属服务器">删除裸金属服务器</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#查询物理机">查询物理机</a></li>
+<li><a href="#注册物理机">注册物理机</a></li>
+<li><a href="#重新准备物理机">重新准备物理机</a></li>
+<li><a href="#获取物理机登录信息">获取物理机登录信息</a></li>
+<li><a href="#获取串口登录控制台">获取串口登录控制台</a></li>
+<li><a href="#开-关机">开/关机</a></li>
+<li><a href="#进入-退出维护模式">进入/退出维护模式</a></li>
+<li><a href="#删除物理机">删除物理机</a></li>
+<li><a href="#转换-回收宿主机">转换/回收宿主机</a></li>
+</ul></li>
+<li><a href="#裸金属服务器相关">裸金属服务器相关</a>
+<ul>
+<li><a href="#安装操作系统">安装操作系统</a>
+<ul>
+<li><a href="#raid-配置和分区">raid 配置和分区</a></li>
+</ul></li>
+<li><a href="#查询裸金属服务器">查询裸金属服务器</a></li>
+<li><a href="#重装操作系统">重装操作系统</a></li>
+<li><a href="#开-关机-1">开/关机</a></li>
+<li><a href="#删除裸金属服务器">删除裸金属服务器</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 
 
@@ -865,7 +872,9 @@
 <div class="td-content">
 	<h1>操作相关</h1>
 	
-	<h3 id="查询物理机">查询物理机</h3>
+	
+
+<h3 id="查询物理机">查询物理机</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># list baremetal 记录</span>
 climc host-list --baremetal <span style="color:#204a87">true</span>
 
@@ -876,25 +885,26 @@ climc host-list --baremetal <span style="color:#204a87">true</span> --occupied
 climc host-list --baremetal <span style="color:#204a87">true</span> --empty
 
 <span style="color:#8f5902;font-style:italic"># 查询物理机详情，包括硬件信息，机房信息</span>
-climc host-show &lt;host_id&gt;
-</code></pre></div><h3 id="注册物理机">注册物理机</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-create &lt;host_id&gt;
-</code></pre></div><h3 id="重新准备物理机">重新准备物理机</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-prepare &lt;host_id&gt;
-</code></pre></div><h3 id="获取物理机登录信息">获取物理机登录信息</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-logininfo &lt;host_id&gt;
-</code></pre></div><h3 id="获取串口登录控制台">获取串口登录控制台</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc webconsole-baremetal &lt;host_id&gt;
-</code></pre></div><h3 id="开关机">开/关机</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-start/host-stop &lt;host_id&gt;
-</code></pre></div><h3 id="进入退出维护模式">进入/退出维护模式</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-maintenance/host-unmaintenance &lt;host_id&gt;
-</code></pre></div><h3 id="删除物理机">删除物理机</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-delete &lt;host_id&gt;
-</code></pre></div><h3 id="转换回收宿主机">转换/回收宿主机</h3>
+climc host-show &lt;host_id&gt;</code></pre></div>
+<h3 id="注册物理机">注册物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-create &lt;host_id&gt;</code></pre></div>
+<h3 id="重新准备物理机">重新准备物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-prepare &lt;host_id&gt;</code></pre></div>
+<h3 id="获取物理机登录信息">获取物理机登录信息</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-logininfo &lt;host_id&gt;</code></pre></div>
+<h3 id="获取串口登录控制台">获取串口登录控制台</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc webconsole-baremetal &lt;host_id&gt;</code></pre></div>
+<h3 id="开-关机">开/关机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-start/host-stop &lt;host_id&gt;</code></pre></div>
+<h3 id="进入-退出维护模式">进入/退出维护模式</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-maintenance/host-unmaintenance &lt;host_id&gt;</code></pre></div>
+<h3 id="删除物理机">删除物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-delete &lt;host_id&gt;</code></pre></div>
+<h3 id="转换-回收宿主机">转换/回收宿主机</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-convert-hypervisor
-climc host-undo-convert &lt;host_id&gt;
-</code></pre></div><h2 id="裸金属服务器相关">裸金属服务器相关</h2>
+climc host-undo-convert &lt;host_id&gt;</code></pre></div>
+<h2 id="裸金属服务器相关">裸金属服务器相关</h2>
+
 <h3 id="安装操作系统">安装操作系统</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-create <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>    --hypervisor baremetal <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 指定 server 的类型为 baremetal</span>
@@ -907,13 +917,17 @@ climc host-undo-convert &lt;host_id&gt;
     --disk <span style="color:#4e9a06">&#39;autoextend:xfs:/data-nonraid&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-nonraid, 使用第2块没做 raid 的盘, 文件系统为 xfs，使用所有空间</span>
     --disk <span style="color:#4e9a06">&#39;autoextend:ext4:/data-raid10&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-raid10, 使用第3块 raid10 的盘，文件系统为 ext4, 使用所有空间</span>
     &lt;server_name&gt; <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 裸金属服务器名称</span>
-    64g <span style="color:#8f5902;font-style:italic"># 创建到 64g 内存大小的物理机</span>
-</code></pre></div><h4 id="raid-配置和分区">raid 配置和分区</h4>
+    64g <span style="color:#8f5902;font-style:italic"># 创建到 64g 内存大小的物理机</span></code></pre></div>
+<h4 id="raid-配置和分区">raid 配置和分区</h4>
+
 <p>调用 server-create 接口时通过 &lsquo;&ndash;raid-config&rsquo; 传递参数来配置 raid，每个 raid-config 对应到操作系统可见的磁盘设备(/dev/sdx)。</p>
-<p>&lsquo;&ndash;disk&rsquo; 参数对应不同磁盘上的分区，分区对应到磁盘的逻辑为: 分区按照顺序创建到第1块磁盘上，当 disk 设置 autoextend 参数后，表示接下来的 disk 分区会创建到下一个磁盘，以此类推。</p>
+
+<p>&rsquo;&ndash;disk&rsquo; 参数对应不同磁盘上的分区，分区对应到磁盘的逻辑为: 分区按照顺序创建到第1块磁盘上，当 disk 设置 autoextend 参数后，表示接下来的 disk 分区会创建到下一个磁盘，以此类推。</p>
+
 <ul>
 <li>raid 配置 API 参数:</li>
 </ul>
+
 <table>
 <thead>
 <tr>
@@ -923,6 +937,7 @@ climc host-undo-convert &lt;host_id&gt;
 <th>解释</th>
 </tr>
 </thead>
+
 <tbody>
 <tr>
 <td>type(磁盘类型)</td>
@@ -930,66 +945,77 @@ climc host-undo-convert &lt;host_id&gt;
 <td>rotate(机械盘), ssd(固态盘), hybrid(未知)</td>
 <td>-</td>
 </tr>
+
 <tr>
 <td>conf (raid)</td>
 <td>string</td>
 <td>none, raid0, raid1, raid5, raid10</td>
 <td>做raid几或者不做</td>
 </tr>
+
 <tr>
 <td>count (磁盘数量)</td>
 <td>int</td>
 <td>e.g. 0, 2, 4</td>
 <td>小于等于物理机实际的盘数</td>
 </tr>
+
 <tr>
 <td>range (磁盘范围)</td>
 <td>[]int</td>
 <td>e.g. [0,1,2,3], [4,7], [5,6]</td>
 <td>物理磁盘在控制器上的索引号</td>
 </tr>
+
 <tr>
 <td>splits (切割物理盘)</td>
 <td>string</td>
 <td>(30%,20%,), (300g,100g,)</td>
 <td>做好 raid 的物理盘再切割为多块物理盘</td>
 </tr>
+
 <tr>
 <td>adapter (控制器号)</td>
 <td>int</td>
 <td>0, 1</td>
 <td>对应driver的 Adapter 控制器</td>
 </tr>
+
 <tr>
 <td>driver  (控制器名称)</td>
 <td>string</td>
 <td>MegaRaid,HPSARaid,Mpt2SAS,MarvelRaid,Linux,PCIE</td>
 <td>1台物理机上有多个控制器时用于选择盘</td>
 </tr>
+
 <tr>
 <td>strip  (设置raid strip 大小)</td>
 <td>*int</td>
 <td>e.g. 64*1024</td>
 <td>设置strip size, 可选</td>
 </tr>
+
 <tr>
 <td>ra</td>
 <td>*bool</td>
 <td></td>
 <td>设置读模式</td>
 </tr>
+
 <tr>
 <td>wt</td>
 <td></td>
 <td></td>
 <td>设置写模式</td>
 </tr>
+
 <tr>
 <td>cachedbadbbu</td>
 <td>*bool</td>
 <td></td>
 <td></td>
 </tr>
+
 <tr>
 <td>direct</td>
 <td>*bool</td>
@@ -998,24 +1024,25 @@ climc host-undo-convert &lt;host_id&gt;
 </tr>
 </tbody>
 </table>
+
 <ul>
-<li>
-<p>命令行格式:</p>
-<p>&lsquo;(none,raid0,raid1,raid5,raid10):%d:(MegaRaid|HPSARaid|Mpt2SAS|MarvelRaid|Linux|PCIE):(rotate|ssd|hybrid):[0-n]:strip%dk:adapter%d:ra:nora:wt:wb:direct:cachedbadbbu:nocachedbadbbu&rsquo;</p>
-</li>
+<li><p>命令行格式:</p>
+
+<p>&rsquo;(none,raid0,raid1,raid5,raid10):%d:(MegaRaid|HPSARaid|Mpt2SAS|MarvelRaid|Linux|PCIE):(rotate|ssd|hybrid):[0-n]:strip%dk:adapter%d:ra:nora:wt:wb:direct:cachedbadbbu:nocachedbadbbu&rsquo;</p></li>
 </ul>
+
 <h3 id="查询裸金属服务器">查询裸金属服务器</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-list --hypervisor baremetal
-climc server-show &lt;server_id&gt;
-</code></pre></div><h3 id="重装操作系统">重装操作系统</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-rebuild --image &lt;image_id&gt; &lt;server_id&gt;
-</code></pre></div><h3 id="开关机-1">开/关机</h3>
+climc server-show &lt;server_id&gt;</code></pre></div>
+<h3 id="重装操作系统">重装操作系统</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-rebuild --image &lt;image_id&gt; &lt;server_id&gt;</code></pre></div>
+<h3 id="开-关机-1">开/关机</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-start &lt;server_id&gt;
-climc server-stop &lt;server_id&gt;
-</code></pre></div><h3 id="删除裸金属服务器">删除裸金属服务器</h3>
+climc server-stop &lt;server_id&gt;</code></pre></div>
+<h3 id="删除裸金属服务器">删除裸金属服务器</h3>
+
 <p>删除 server 裸金属服务器会销毁物理机上的操作系统和 raid 配置，对应的 baremetal 重新进入未分配状态</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-delete &lt;server_id&gt;
-</code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-delete &lt;server_id&gt;</code></pre></div>
 	
 		<style>
   .feedback--answer {
@@ -1097,7 +1124,7 @@ climc server-stop &lt;server_id&gt;
 
 
 
-<script src="/v3.3/js/main.min.fe319342730af549ed76ccb65cfdd91330d35bbb0aa2e25ca4baf1992eb8911d.js" integrity="sha256-/jGTQnMK9Untdsy2XP3ZEzDTW7sKouJcpLrxmS64kR0="></script>
+<script src="/v3.3/js/main.min.97776a1071500611dc649795b569574ba95c3b2c920881c71bab85fb63ae0798.js" integrity="sha256-l3dqEHFQBhHcZJeVtWlXS6lcOyySCIHHG6uF&#43;2OuB5g="></script>
 
 
 

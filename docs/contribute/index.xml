@@ -206,6 +206,121 @@ $ git am --continue
     </item>
     
     <item>
+      <title>Docs: Git 提交内容规范</title>
+      <link>https://opensource.yunion.cn/docs/contribute/git-convention/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/docs/contribute/git-convention/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;为了方便代码提交记录的查看，以及以后的统计，我们制定了以下使用 Git 书写提交内容的规范，提交代码的时候请大家遵循以下的格式。&lt;/p&gt;
+
+&lt;h2 id=&#34;git-提交记录书写规范&#34;&gt;Git 提交记录书写规范&lt;/h2&gt;
+
+&lt;p&gt;格式如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;lt;type&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;&amp;lt;scope&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: &amp;lt;subject&amp;gt;
+
+&amp;lt;body&amp;gt;
+
+&amp;lt;footer&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;通过 &lt;code&gt;git commit&lt;/code&gt; 命令填写的提交内容应该类似如上的结构，大致分为３个部分（每个部分使用空行分割）：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;标题行：必填，描述主要修改类型和概要内容&lt;/li&gt;
+&lt;li&gt;主题内容：选填，描述为什么修改，做了什么样的修改，以及开发的思路，使用方法等等&lt;/li&gt;
+&lt;li&gt;页脚备注：选填，一些备注&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;每个部分的占位符说明如下:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;type(PR 的类型):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;feat: 新功能&lt;/li&gt;
+&lt;li&gt;fix: 修复&lt;/li&gt;
+&lt;li&gt;refactor: 代码重构&lt;/li&gt;
+&lt;li&gt;test: 测试用例相关修改&lt;/li&gt;
+&lt;li&gt;chore: 其它修改，比如Makefile,Dockerfile等&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;scope(影响范围，相关组件): 比如 region, scheduler, cloudcommon，如果是多个组件，用英文 &amp;lsquo;,&amp;rsquo; 分割，比如: (region,scheduler,monitor)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;subject(commit 的概述): 建议不超过 50 个字符&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;body(commit 具体修改内容): 可以分为多行，建议每行不超过 72 个字符&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;footer(一些备注，选填): 一些备注，通常是相关参考连接、BREAKING CHANGE 或修复 bug 的连接&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;commit-举例&#34;&gt;Commit 举例&lt;/h2&gt;
+
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;region&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: compute NextSyncTime &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; snapshotpolicydisk
+
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;. 如果计算出来的 NextSyncTime 和 base 相等，可以将 base 加1一个小时递归处理。
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;. 对于 retentionday 有效的快照策略，比如某一个 snaphsotpolicy
+是每周一生效，并且打的快照自动保留 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt; 天，那么，就应该在每周一（打快照）
+和每周四（释放快照）进行快照的同步。&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;scheduler&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: add cpu filter
+
+Added new cpu filter to scheduler:
+
+- filter host by cpu model
+- &lt;span style=&#34;color:#204a87&#34;&gt;set&lt;/span&gt; host capability by request cpu count&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;apigateway,monitor,influxdb&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: disable influxdb service query proxy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;climc&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: support disable wrap line
+
+Usage:
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_TRY_TERM_WIDTH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;
+climc server-list
+
+Closes &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;#6710&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;辅助工具&#34;&gt;辅助工具&lt;/h2&gt;
+
+&lt;p&gt;也有相应的工具帮忙生成符合要求的 Commit message，使用 &lt;a href=&#34;https://github.com/lintingzhen/commitizen-go&#34; target=&#34;_blank&#34;&gt;commitizen-go&lt;/a&gt; 可以协助生成 Commit message，用法如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# osx 安装 commitizen-go&lt;/span&gt;
+$ brew tap lintingzhen/tap
+$ brew install commitizen-go
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果是 linux 环境，可以 clone 源码编译，这个工具是 golang 写的，编译也简单&lt;/span&gt;
+$ git clone https://github.com/lintingzhen/commitizen-go &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; commitizen-go
+$ make &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./commitizen-go install
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这一部会生成 git cz 命令的配置&lt;/span&gt;
+$ sudo commitizen-go install
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试提交&lt;/span&gt;
+$ git add .
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 git cz 命令，就会以交互式的方式帮忙输入 commit&lt;/span&gt;
+$ git cz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;相关配置参考：&lt;a href=&#34;https://github.com/lintingzhen/commitizen-go/blob/master/README.MD#configure&#34; target=&#34;_blank&#34;&gt;https://github.com/lintingzhen/commitizen-go/blob/master/README.MD#configure&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当然工具并不是说强制使用，只是说有工具的帮助，生成的 commit 内容会更统一一点　;)&lt;/p&gt;
+
+&lt;p&gt;当然也有 nodejs 版本的工具，可能更符合前端的使用: &lt;a href=&#34;https://github.com/commitizen/cz-cli&#34; target=&#34;_blank&#34;&gt;https://github.com/commitizen/cz-cli&lt;/a&gt; ，前端的同学也可以使用这个工具。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&#34; target=&#34;_blank&#34;&gt;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&#34; target=&#34;_blank&#34;&gt;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/noaman_wgs/article/details/103429171&#34; target=&#34;_blank&#34;&gt;https://blog.csdn.net/noaman_wgs/article/details/103429171&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: 服务组件介绍</title>
       <link>https://opensource.yunion.cn/docs/contribute/services/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

@@ -1363,127 +1363,115 @@ $ ip addr show &lt;span style=&#34;color:#000&#34;&gt;$DB_NETIF&lt;/span&gt;
     </item>
     
     <item>
-      <title>Docs: 服务组件介绍</title>
-      <link>https://opensource.yunion.cn/docs/contribute/services/</link>
+      <title>Docs: Git 提交内容规范</title>
+      <link>https://opensource.yunion.cn/docs/contribute/git-convention/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://opensource.yunion.cn/docs/contribute/services/</guid>
+      <guid>https://opensource.yunion.cn/docs/contribute/git-convention/</guid>
       <description>
         
         
         
 
-&lt;h2 id=&#34;架构简介&#34;&gt;架构简介&lt;/h2&gt;
+&lt;p&gt;为了方便代码提交记录的查看，以及以后的统计，我们制定了以下使用 Git 书写提交内容的规范，提交代码的时候请大家遵循以下的格式。&lt;/p&gt;
 
-&lt;p&gt;云联壹云 服务组件较多，接下来分别介绍每个组件的功能:&lt;/p&gt;
+&lt;h2 id=&#34;git-提交记录书写规范&#34;&gt;Git 提交记录书写规范&lt;/h2&gt;
 
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;服务组件&lt;/th&gt;
-&lt;th&gt;功能用途&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
+&lt;p&gt;格式如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;lt;type&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;&amp;lt;scope&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: &amp;lt;subject&amp;gt;
 
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;keystone&lt;/td&gt;
-&lt;td&gt;认证权限管理&lt;/td&gt;
-&lt;/tr&gt;
+&amp;lt;body&amp;gt;
 
-&lt;tr&gt;
-&lt;td&gt;region&lt;/td&gt;
-&lt;td&gt;多云资源控制器&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;scheduler&lt;/td&gt;
-&lt;td&gt;资源调度器&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;glance&lt;/td&gt;
-&lt;td&gt;虚拟机镜像管理&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;host&lt;/td&gt;
-&lt;td&gt;私有云虚拟机管理&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;baremetal&lt;/td&gt;
-&lt;td&gt;私有云物理机管理&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;esxi-agent&lt;/td&gt;
-&lt;td&gt;vmware esxi 实例管理&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;lb-agent&lt;/td&gt;
-&lt;td&gt;私有云负载均衡&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;webconsole&lt;/td&gt;
-&lt;td&gt;提供 vnc, ssh 访问&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;logger&lt;/td&gt;
-&lt;td&gt;记录审计日志&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;apigateway&lt;/td&gt;
-&lt;td&gt;api 网关，能通过该服务访问后端所有 api&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;climc&lt;/td&gt;
-&lt;td&gt;命令行管理工具&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;组件架构见下图，分为接入层，控制层和资源层三个主要部分。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../images/onecloud-services.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;接入层&#34;&gt;接入层&lt;/h2&gt;
-
-&lt;p&gt;接入层实现云管平台的访问功能，允许用户通过如下3种方式访问云管平台的功能：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;API访问&lt;/strong&gt;: 通过REST API访问云管平台功能，用户可以直接通过http接口访问云管平台的REST API，也可以使用云管平台提供的SDK。目前SDK支持Java，Python和Golang等三种语言。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;命令行访问&lt;/strong&gt;: 通过云管平台提供的climc命令行工具访问云管平台功能，允许用户通过脚本调用climc，实现一些自动化运维功能。Climc使用Golang语言，基于云管平台的Golang SDK开发。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Web控制台访问&lt;/strong&gt;: 通过Web UI访问云管平台的功能。允许用户通过主流web浏览器访问云管平台。Web控制台提供管理员使用的管理后台以及普通用户使用的普通功能页面，能够提供大部分的管理和使用功能。Web控制台基于Vue 2.0 JavaScript SPA框架实现。&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;控制层&#34;&gt;控制层&lt;/h2&gt;
+&amp;lt;footer&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;通过 &lt;code&gt;git commit&lt;/code&gt; 命令填写的提交内容应该类似如上的结构，大致分为３个部分（每个部分使用空行分割）：&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;控制层实现云管平台的管理和控制功能。主要由API网关，认证服务，镜像服务，云控制器和调度器，以及 webconsole vnc, ssh 代理服务等组件构成。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;API网关提供Web控制台对各个服务的统一REST API访问接口。实现Web控制台的登录验证，session 控制，以及对后端各个服务的API调用。API网关由Golang完全自主开发，完全无状态架构，具备水平扩展能力。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;认证服务提供平台的账户管理和认证体系，并提供基于项目的多租户支持，同时提供服务目录功能。认证服务支持多种认证源，允许和企业的LDAP／AD对接，允许用户以企业统一的账户体系登入系统。认证服务2.10之前版本基于OpenStack Keystone Pika版本，开发语言为Python。在开源版本基础上，我们修正了BUG，并做了若干改进。2.10之后版本采用golang语言开发。Keystone采用无状态架构，支持水平扩展，可以水平拆分实现服务高可用。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;镜像服务提供云管平台各种主机资源的操作系统镜像的管理功能。提供镜像存储，元数据管理等功能。镜像服务1.x版本基于OpenStack Glance Folsom版本改进而来，开发语言为Python。在开源版本基础上，我们修正了BUG，并做了若干改进。2.x版本采用golang语言开发。Glance采用无状态架构，支持水平扩展，可以水平拆分实现服务高可用。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;云控制器是整个云管平台的中枢，负责机房网络，宿主机，网络，存储，虚拟机等各类资源的元数据信息管理，以及对虚拟机，裸机等的自动化管理操作认证的调度，协调管理。云控制器内置基于REST API接口的分布式异步任务管理框架，实现对在计算节点进行的开关机，创建删除等耗时操作任务的管理协调工作。云控制器完全自主开发，云控制器采用无状态架构，可以水平扩展，通过水平拆分实现高可用。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;调度器负责云管平台资源调度功能，是云管平台中资源获取决策的唯一执行者，根据用户对资源的要求，给出资源的最优提供者。调度器支持批量调度，调度性能优异，可扩展性好。调度器完全自主开发，基于Golang语言开发。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;标题行：必填，描述主要修改类型和概要内容&lt;/li&gt;
+&lt;li&gt;主题内容：选填，描述为什么修改，做了什么样的修改，以及开发的思路，使用方法等等&lt;/li&gt;
+&lt;li&gt;页脚备注：选填，一些备注&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;资源层&#34;&gt;资源层&lt;/h2&gt;
+&lt;p&gt;每个部分的占位符说明如下:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;资源层实现对KVM虚拟机，裸机，VMWare虚拟机等计算资源的管理和控制功能。云管平台目前主要支持对KVM虚拟机，裸机，VMWare虚拟机，常用私有云openstack, zstack 以及公有云阿里云，Azure，腾讯云，AWS等公有云资源的管理。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;type(PR 的类型):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;feat: 新功能&lt;/li&gt;
+&lt;li&gt;fix: 修复&lt;/li&gt;
+&lt;li&gt;refactor: 代码重构&lt;/li&gt;
+&lt;li&gt;test: 测试用例相关修改&lt;/li&gt;
+&lt;li&gt;chore: 其它修改，比如Makefile,Dockerfile等&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;scope(影响范围，相关组件): 比如 region, scheduler, cloudcommon，如果是多个组件，用英文 &amp;lsquo;,&amp;rsquo; 分割，比如: (region,scheduler,monitor)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;subject(commit 的概述): 建议不超过 50 个字符&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;body(commit 具体修改内容): 可以分为多行，建议每行不超过 72 个字符&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;footer(一些备注，选填): 一些备注，通常是相关参考连接、BREAKING CHANGE 或修复 bug 的连接&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;commit-举例&#34;&gt;Commit 举例&lt;/h2&gt;
+
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;region&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: compute NextSyncTime &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; snapshotpolicydisk
+
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;. 如果计算出来的 NextSyncTime 和 base 相等，可以将 base 加1一个小时递归处理。
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt;. 对于 retentionday 有效的快照策略，比如某一个 snaphsotpolicy
+是每周一生效，并且打的快照自动保留 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt; 天，那么，就应该在每周一（打快照）
+和每周四（释放快照）进行快照的同步。&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;scheduler&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: add cpu filter
+
+Added new cpu filter to scheduler:
+
+- filter host by cpu model
+- &lt;span style=&#34;color:#204a87&#34;&gt;set&lt;/span&gt; host capability by request cpu count&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;apigateway,monitor,influxdb&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: disable influxdb service query proxy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;climc&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: support disable wrap line
+
+Usage:
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_TRY_TERM_WIDTH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;
+climc server-list
+
+Closes &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;#6710&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;辅助工具&#34;&gt;辅助工具&lt;/h2&gt;
+
+&lt;p&gt;也有相应的工具帮忙生成符合要求的 Commit message，使用 &lt;a href=&#34;https://github.com/lintingzhen/commitizen-go&#34; target=&#34;_blank&#34;&gt;commitizen-go&lt;/a&gt; 可以协助生成 Commit message，用法如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# osx 安装 commitizen-go&lt;/span&gt;
+$ brew tap lintingzhen/tap
+$ brew install commitizen-go
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果是 linux 环境，可以 clone 源码编译，这个工具是 golang 写的，编译也简单&lt;/span&gt;
+$ git clone https://github.com/lintingzhen/commitizen-go &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; commitizen-go
+$ make &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./commitizen-go install
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这一部会生成 git cz 命令的配置&lt;/span&gt;
+$ sudo commitizen-go install
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试提交&lt;/span&gt;
+$ git add .
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 git cz 命令，就会以交互式的方式帮忙输入 commit&lt;/span&gt;
+$ git cz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;相关配置参考：&lt;a href=&#34;https://github.com/lintingzhen/commitizen-go/blob/master/README.MD#configure&#34; target=&#34;_blank&#34;&gt;https://github.com/lintingzhen/commitizen-go/blob/master/README.MD#configure&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当然工具并不是说强制使用，只是说有工具的帮助，生成的 commit 内容会更统一一点　;)&lt;/p&gt;
+
+&lt;p&gt;当然也有 nodejs 版本的工具，可能更符合前端的使用: &lt;a href=&#34;https://github.com/commitizen/cz-cli&#34; target=&#34;_blank&#34;&gt;https://github.com/commitizen/cz-cli&lt;/a&gt; ，前端的同学也可以使用这个工具。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&#34; target=&#34;_blank&#34;&gt;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&#34; target=&#34;_blank&#34;&gt;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/noaman_wgs/article/details/103429171&#34; target=&#34;_blank&#34;&gt;https://blog.csdn.net/noaman_wgs/article/details/103429171&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1858,6 +1846,133 @@ v3.0.0-20200112.0
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 升级到 v3.0.0-20200113.0&lt;/span&gt;
 $ ocadm cluster update --version v3.0.0-20200113.0 --wait&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 服务组件介绍</title>
+      <link>https://opensource.yunion.cn/docs/contribute/services/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/docs/contribute/services/</guid>
+      <description>
+        
+        
+        
+
+&lt;h2 id=&#34;架构简介&#34;&gt;架构简介&lt;/h2&gt;
+
+&lt;p&gt;云联壹云 服务组件较多，接下来分别介绍每个组件的功能:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;服务组件&lt;/th&gt;
+&lt;th&gt;功能用途&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;keystone&lt;/td&gt;
+&lt;td&gt;认证权限管理&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;region&lt;/td&gt;
+&lt;td&gt;多云资源控制器&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;scheduler&lt;/td&gt;
+&lt;td&gt;资源调度器&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;glance&lt;/td&gt;
+&lt;td&gt;虚拟机镜像管理&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;host&lt;/td&gt;
+&lt;td&gt;私有云虚拟机管理&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;baremetal&lt;/td&gt;
+&lt;td&gt;私有云物理机管理&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;esxi-agent&lt;/td&gt;
+&lt;td&gt;vmware esxi 实例管理&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;lb-agent&lt;/td&gt;
+&lt;td&gt;私有云负载均衡&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;webconsole&lt;/td&gt;
+&lt;td&gt;提供 vnc, ssh 访问&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;logger&lt;/td&gt;
+&lt;td&gt;记录审计日志&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;apigateway&lt;/td&gt;
+&lt;td&gt;api 网关，能通过该服务访问后端所有 api&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;climc&lt;/td&gt;
+&lt;td&gt;命令行管理工具&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;组件架构见下图，分为接入层，控制层和资源层三个主要部分。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/onecloud-services.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;接入层&#34;&gt;接入层&lt;/h2&gt;
+
+&lt;p&gt;接入层实现云管平台的访问功能，允许用户通过如下3种方式访问云管平台的功能：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;API访问&lt;/strong&gt;: 通过REST API访问云管平台功能，用户可以直接通过http接口访问云管平台的REST API，也可以使用云管平台提供的SDK。目前SDK支持Java，Python和Golang等三种语言。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;命令行访问&lt;/strong&gt;: 通过云管平台提供的climc命令行工具访问云管平台功能，允许用户通过脚本调用climc，实现一些自动化运维功能。Climc使用Golang语言，基于云管平台的Golang SDK开发。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Web控制台访问&lt;/strong&gt;: 通过Web UI访问云管平台的功能。允许用户通过主流web浏览器访问云管平台。Web控制台提供管理员使用的管理后台以及普通用户使用的普通功能页面，能够提供大部分的管理和使用功能。Web控制台基于Vue 2.0 JavaScript SPA框架实现。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;控制层&#34;&gt;控制层&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;控制层实现云管平台的管理和控制功能。主要由API网关，认证服务，镜像服务，云控制器和调度器，以及 webconsole vnc, ssh 代理服务等组件构成。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;API网关提供Web控制台对各个服务的统一REST API访问接口。实现Web控制台的登录验证，session 控制，以及对后端各个服务的API调用。API网关由Golang完全自主开发，完全无状态架构，具备水平扩展能力。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;认证服务提供平台的账户管理和认证体系，并提供基于项目的多租户支持，同时提供服务目录功能。认证服务支持多种认证源，允许和企业的LDAP／AD对接，允许用户以企业统一的账户体系登入系统。认证服务2.10之前版本基于OpenStack Keystone Pika版本，开发语言为Python。在开源版本基础上，我们修正了BUG，并做了若干改进。2.10之后版本采用golang语言开发。Keystone采用无状态架构，支持水平扩展，可以水平拆分实现服务高可用。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;镜像服务提供云管平台各种主机资源的操作系统镜像的管理功能。提供镜像存储，元数据管理等功能。镜像服务1.x版本基于OpenStack Glance Folsom版本改进而来，开发语言为Python。在开源版本基础上，我们修正了BUG，并做了若干改进。2.x版本采用golang语言开发。Glance采用无状态架构，支持水平扩展，可以水平拆分实现服务高可用。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;云控制器是整个云管平台的中枢，负责机房网络，宿主机，网络，存储，虚拟机等各类资源的元数据信息管理，以及对虚拟机，裸机等的自动化管理操作认证的调度，协调管理。云控制器内置基于REST API接口的分布式异步任务管理框架，实现对在计算节点进行的开关机，创建删除等耗时操作任务的管理协调工作。云控制器完全自主开发，云控制器采用无状态架构，可以水平扩展，通过水平拆分实现高可用。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;调度器负责云管平台资源调度功能，是云管平台中资源获取决策的唯一执行者，根据用户对资源的要求，给出资源的最优提供者。调度器支持批量调度，调度性能优异，可扩展性好。调度器完全自主开发，基于Golang语言开发。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;资源层&#34;&gt;资源层&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;资源层实现对KVM虚拟机，裸机，VMWare虚拟机等计算资源的管理和控制功能。云管平台目前主要支持对KVM虚拟机，裸机，VMWare虚拟机，常用私有云openstack, zstack 以及公有云阿里云，Azure，腾讯云，AWS等公有云资源的管理。&lt;/li&gt;
+&lt;/ul&gt;
+
       </description>
     </item>
     

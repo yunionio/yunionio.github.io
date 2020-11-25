@@ -74,7 +74,20 @@ region host&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;3.0 版本后我们的服务都已经容器化运行在 k8s 集群中，快速开发调试并不方便。
 通过Telepresence 提供远程k8s上下文，可以在本地开发调试。&lt;/p&gt;
 
-&lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
+&lt;h3 id=&#34;安装配置-kubectl&#34;&gt;安装配置 kubectl&lt;/h3&gt;
+
+&lt;p&gt;需要在本地安装 &lt;a href=&#34;https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34;&gt;kubectl&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;需要在本地配置好集群信息，以通过 kubectl 访问；将云联壹云控制节点上的&lt;code&gt;$KUBECONFIG&lt;/code&gt;文件拷贝到本地&lt;code&gt;~/.kube/config&lt;/code&gt;;
+如果本地已经有此文件，参考 &lt;a href=&#34;https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/&#34; target=&#34;_blank&#34;&gt;配置多集群访问&lt;/a&gt; 进行合并。&lt;/p&gt;
+
+&lt;h3 id=&#34;安装配置-climc&#34;&gt;安装配置 climc&lt;/h3&gt;
+
+&lt;p&gt;climc 的本地安装参考 &lt;a href=&#34;../../howto/climc/#源码编译安装&#34;&gt;源码编译安装&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;climc 的本地配置参考 &lt;a href=&#34;../../howto/climc/#非控制节点认证配置&#34;&gt;非控制节点认证配置&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;安装-telepresence&#34;&gt;安装 telepresence&lt;/h3&gt;
 
 &lt;p&gt;确保有一个已部署的云联壹云 k8s集群，参考&lt;a href=&#34;https://opensource.yunion.cn/docs/setup/&#34;&gt;安装部署&lt;/a&gt;。
 这里介绍Centos7的本地环境安装，其他发行版可参考官方文档：&lt;a href=&#34;https://www.telepresence.io/reference/install&#34; target=&#34;_blank&#34;&gt;Installing Telepresence&lt;/a&gt;。&lt;/p&gt;
@@ -106,7 +119,43 @@ $ sudo env &lt;span style=&#34;color:#000&#34;&gt;PREFIX&lt;/span&gt;&lt;span st
 
 &lt;p&gt;利用 telepresence 本地连通远端 k8s 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 k8s 其它服务的环境。&lt;/p&gt;
 
-&lt;p&gt;比如以下是本地编译运行 region 服务的流程：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;macOS中或Linux中本地编译运行 region 服务&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到 云联壹云 代码目录&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 region 服务&lt;/span&gt;
+$ make cmd/region
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 telepresence 替换 k8s 里面的 default-region deployment&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后把流量的访问导向本地&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span&gt;
+$ telepresence --swap-deployment default-region --namespace onecloud&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;到这里已经进入到 telepresence 隔离的 namespace 里面了，
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo chmod &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;777&lt;/span&gt; /etc
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将 $TELEPRESENCE_ROOT/etc/yunion 链接到本地的 /etc&lt;/span&gt;
+$ ln -s &lt;span style=&#34;color:#000&#34;&gt;$TELEPRESENCE_ROOT&lt;/span&gt;/etc/yunion /etc
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启动 region 服务&lt;/span&gt;
+$ ./_output/bin/region --config /etc/yunion/region.conf&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这个时候如果我们在外部调用 climc 就会发现相关的请求已经被转发到本地开发机启动 region 服务了。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ climc network-list&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;调试完成后需要进行清理操作&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 退出 telepresence&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;exit&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 会看到类似下面的输出&lt;/span&gt;
+T: Your process exited with &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; code &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;127&lt;/span&gt;.
+T: Exit cleanup in progress
+T: Cleaning up Pod
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 删除链接文件&lt;/span&gt;
+$ rm /etc/yunion&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Linux系统中本地编译运行 region 服务&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这种方式相比上一种方式，更加干净；但是相对复杂&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到 云联壹云 代码目录&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
  
@@ -142,7 +191,7 @@ pki  region.conf
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启动 region 服务&lt;/span&gt;
 $ ./_output/bin/region --config /etc/yunion/region.conf
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这个时候如果我们在外部调用 climc&lt;/span&gt;
-$ climc server-list
+$ climc network-list
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 就会发现相关的请求已经被转发到本地开发机启动 region 服务了&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;更多用法，以及 telepresence 的原理请参考&lt;a href=&#34;https://www.telepresence.io/discussion/overview&#34; target=&#34;_blank&#34;&gt;官方文档&lt;/a&gt;。&lt;/p&gt;
 
@@ -201,6 +250,22 @@ $ git add xxx &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 解�
 $ git am --continue
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 回到执行 cherry-pick 脚本的 terminal 输入 &amp;#39;y&amp;#39; 即可&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;去 upstream 的 &lt;a href=&#34;https://github.com/yunionio/onecloud/pulls&#34; target=&#34;_blank&#34;&gt;PR 页面&lt;/a&gt;, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：&lt;code&gt;Automated cherry pick of #8&lt;/code&gt;，然后重复 PR review 流程合并到 release&lt;/p&gt;
+
+&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-本地调试启动-region-服务-报以下错误&#34;&gt;1. 本地调试启动 region 服务，报以下错误&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/region_error.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;使用&lt;code&gt;climc service-config-edit region2&lt;/code&gt;编辑 region 服务的配置，修改参数：
+&amp;gt;     fetch_etcd_service_info_and_use_etcd_lock: false
+&amp;gt;     enable_host_health_check: false&lt;/p&gt;
+
+&lt;h3 id=&#34;2-使用-telepresence-时-上次未正常退出-再次使用一直报错&#34;&gt;2. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3&gt;
+
+&lt;p&gt;尝试手动清理:
+1. 使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；
+2. 使用&lt;code&gt;kubectl edit deployment default-region -n onecloud&lt;/code&gt;，将 spec 下的 replicas 从0改为1.&lt;/p&gt;
 
       </description>
     </item>

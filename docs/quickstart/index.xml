@@ -192,7 +192,25 @@ $ reboot&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;../images/cloudaccount.png&#34; alt=&#34;多云管理&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;3-其它问题&#34;&gt;3. 其它问题？&lt;/h3&gt;
+&lt;h3 id=&#34;3-修改节点的-hostname-有些服务启动失败&#34;&gt;3. 修改节点的 hostname ，有些服务启动失败&lt;/h3&gt;
+
+&lt;p&gt;k8s 管理节点，依赖于 hostname，请改回去。&lt;/p&gt;
+
+&lt;h3 id=&#34;4-如何重装&#34;&gt;4. 如何重装&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;重新运行 ocboot 的脚本&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;等待运行完毕，使用&lt;code&gt;kubectl edit deployment onecloud-operator -n onecloud&lt;/code&gt;加入下列参数，然后保存关闭。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/oo_syncuser.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;5-其它问题&#34;&gt;5. 其它问题？&lt;/h3&gt;
 
 &lt;p&gt;其它问题欢迎在 云联壹云 github issues 界面提交: &lt;a href=&#34;https://github.com/yunionio/onecloud/issues&#34; target=&#34;_blank&#34;&gt;https://github.com/yunionio/onecloud/issues&lt;/a&gt; , 我们会尽快回复。&lt;/p&gt;
 

@@ -1,0 +1,1278 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.55.5" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<title>v3.4.1 | 云联壹云</title><meta property="og:title" content="v3.4.1" />
+<meta property="og:description" content="发布时间 2020-10-14 18:03:02
+onecloud 仓库地址: https://github.com/yunionio/onecloud
+48 commits to onecloud - v3.4.1 since this release.
+Baremetal (1)  fix pxe filter network by guest_dhcp (d0d3d8e33, Zexi Li)  Bug Fixes (22)  qcloud set hostname for instance (5b79ba560, Qu Xuan) support public ip create (2a210407a, Qu Xuan) 支持带宽包用户 (84e8e4e6c, Qu Xuan) trans google new region name (3fe15d267, Qu Xuan) qcloud eip with bandwidth attr (d574a823b, Qu Xuan) avoid qcloud secgroup cache name not sync (e8d737ff6, Qu Xuan) server name auto index should start from 1 (7ce0d7b44, Qiu Jian) qcloud instance with max bandwidth (715db28e3, Qu Xuan) format errors that block make test (152ea54f3, Qiu Jian) project_id in resource details not correct (d2aacafa4, Qiu Jian) ldap sync not update user&rsquo;s phone and email (1aa82ae95, Qiu Jian) not clean pending domain usage (488e7e56a, Qiu Jian) validate secgroup purge condition (9fbd4f059, Qu Xuan) avoid slice out of bounds (078b1d635, rainzm) filter cached images with host schedtag (49887e540, Qiu Jian) sync huawei bucket project info (cb36572c1, Qu Xuan) error code of external bucket not found error should be 404 (76f794d1a, Qiu Jian) esxi: check whether some fields of vm are nil (27bd564d2, rainzm) esxi: check nil value when NewVirtualMachine (1bc4b3cb9, rainzm) esxi: filter linkLocalAddress (b8e0599e3, rainzm) esxi: search template from whole vCenter (2259fe119, rainzm) esxi: use system disk of template only when cloning vm (d16affc9a, rainzm)  Eip (2)  NewEipForVMOnHost: add opslog (896bec8f4, Yousong Zhou) construct a pointer type (a8426482b, Yousong Zhou)  Feature (1)  qcloud create VM with tags (ef9b64990, Qiu Jian)  Features (5)  add vlanId for suggested network (7edcd151e, rainzm) filter esxi ip by CIDR (552ce3b2e, rainzm) add &lsquo;ip-list&rsquo; for esxicli (8528d7981, rainzm) esxi: support fake template vm via regex filter (df90d99bc, rainzm) region: make address recommendations more precise (91c852676, rainzm)  Hotfix (1)  1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/docs/changelog/release-3.4/3-4-1/" />
+<meta property="article:modified_time" content="2020-11-26T20:20:04&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="v3.4.1">
+<meta itemprop="description" content="发布时间 2020-10-14 18:03:02
+onecloud 仓库地址: https://github.com/yunionio/onecloud
+48 commits to onecloud - v3.4.1 since this release.
+Baremetal (1)  fix pxe filter network by guest_dhcp (d0d3d8e33, Zexi Li)  Bug Fixes (22)  qcloud set hostname for instance (5b79ba560, Qu Xuan) support public ip create (2a210407a, Qu Xuan) 支持带宽包用户 (84e8e4e6c, Qu Xuan) trans google new region name (3fe15d267, Qu Xuan) qcloud eip with bandwidth attr (d574a823b, Qu Xuan) avoid qcloud secgroup cache name not sync (e8d737ff6, Qu Xuan) server name auto index should start from 1 (7ce0d7b44, Qiu Jian) qcloud instance with max bandwidth (715db28e3, Qu Xuan) format errors that block make test (152ea54f3, Qiu Jian) project_id in resource details not correct (d2aacafa4, Qiu Jian) ldap sync not update user&rsquo;s phone and email (1aa82ae95, Qiu Jian) not clean pending domain usage (488e7e56a, Qiu Jian) validate secgroup purge condition (9fbd4f059, Qu Xuan) avoid slice out of bounds (078b1d635, rainzm) filter cached images with host schedtag (49887e540, Qiu Jian) sync huawei bucket project info (cb36572c1, Qu Xuan) error code of external bucket not found error should be 404 (76f794d1a, Qiu Jian) esxi: check whether some fields of vm are nil (27bd564d2, rainzm) esxi: check nil value when NewVirtualMachine (1bc4b3cb9, rainzm) esxi: filter linkLocalAddress (b8e0599e3, rainzm) esxi: search template from whole vCenter (2259fe119, rainzm) esxi: use system disk of template only when cloning vm (d16affc9a, rainzm)  Eip (2)  NewEipForVMOnHost: add opslog (896bec8f4, Yousong Zhou) construct a pointer type (a8426482b, Yousong Zhou)  Feature (1)  qcloud create VM with tags (ef9b64990, Qiu Jian)  Features (5)  add vlanId for suggested network (7edcd151e, rainzm) filter esxi ip by CIDR (552ce3b2e, rainzm) add &lsquo;ip-list&rsquo; for esxicli (8528d7981, rainzm) esxi: support fake template vm via regex filter (df90d99bc, rainzm) region: make address recommendations more precise (91c852676, rainzm)  Hotfix (1)  1.">
+
+
+<meta itemprop="dateModified" content="2020-11-26T20:20:04&#43;08:00" />
+<meta itemprop="wordCount" content="451">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="v3.4.1"/>
+<meta name="twitter:description" content="发布时间 2020-10-14 18:03:02
+onecloud 仓库地址: https://github.com/yunionio/onecloud
+48 commits to onecloud - v3.4.1 since this release.
+Baremetal (1)  fix pxe filter network by guest_dhcp (d0d3d8e33, Zexi Li)  Bug Fixes (22)  qcloud set hostname for instance (5b79ba560, Qu Xuan) support public ip create (2a210407a, Qu Xuan) 支持带宽包用户 (84e8e4e6c, Qu Xuan) trans google new region name (3fe15d267, Qu Xuan) qcloud eip with bandwidth attr (d574a823b, Qu Xuan) avoid qcloud secgroup cache name not sync (e8d737ff6, Qu Xuan) server name auto index should start from 1 (7ce0d7b44, Qiu Jian) qcloud instance with max bandwidth (715db28e3, Qu Xuan) format errors that block make test (152ea54f3, Qiu Jian) project_id in resource details not correct (d2aacafa4, Qiu Jian) ldap sync not update user&rsquo;s phone and email (1aa82ae95, Qiu Jian) not clean pending domain usage (488e7e56a, Qiu Jian) validate secgroup purge condition (9fbd4f059, Qu Xuan) avoid slice out of bounds (078b1d635, rainzm) filter cached images with host schedtag (49887e540, Qiu Jian) sync huawei bucket project info (cb36572c1, Qu Xuan) error code of external bucket not found error should be 404 (76f794d1a, Qiu Jian) esxi: check whether some fields of vm are nil (27bd564d2, rainzm) esxi: check nil value when NewVirtualMachine (1bc4b3cb9, rainzm) esxi: filter linkLocalAddress (b8e0599e3, rainzm) esxi: search template from whole vCenter (2259fe119, rainzm) esxi: use system disk of template only when cloning vm (d16affc9a, rainzm)  Eip (2)  NewEipForVMOnHost: add opslog (896bec8f4, Yousong Zhou) construct a pointer type (a8426482b, Yousong Zhou)  Feature (1)  qcloud create VM with tags (ef9b64990, Qiu Jian)  Features (5)  add vlanId for suggested network (7edcd151e, rainzm) filter esxi ip by CIDR (552ce3b2e, rainzm) add &lsquo;ip-list&rsquo; for esxicli (8528d7981, rainzm) esxi: support fake template vm via regex filter (df90d99bc, rainzm) region: make address recommendations more precise (91c852676, rainzm)  Hotfix (1)  1."/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>v3.4.1 | 云联壹云</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        
+		
+	
+  <a href="/" class="logo flex-shrink-0 navbar-brand">
+    
+    
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.4
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+		</ul>
+	</div>
+	
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <div class="td-sidebar__search d-flex align-items-center">
+    
+ <input type="input" class="form-control search-input" placeholder="&#xf002 Search this site…" aria-label="Search this site…" autocomplete="off">
+
+
+ 
+  
+ 
+
+
+<script type="text/javascript" src="/js/search.js"></script>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </div>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-quickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-allinone" href="/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-setup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-intro" href="/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-db-ha" href="/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-host" href="/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-baremetal" href="/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-ce-ee-switch" href="/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-upgrade" href="/docs/setup/upgrade/">升级相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-contribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-contrib" href="/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-git-convention" href="/docs/contribute/git-convention/">Git 提交内容规范</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-services" href="/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-framework" href="/docs/contribute/framework/">后端服务框架</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-climc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-image">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-upload" href="/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-query" href="/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-create" href="/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-operation" href="/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server-create">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-connect" href="/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-others" href="/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-import" href="/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-gpu" href="/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-migrate" href="/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-backup" href="/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-host">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-host-kvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-baremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-intro" href="/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-operator" href="/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-network">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-lb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-storage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-multicloud">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-auth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-container">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-scheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-contact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/changelog/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-changelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-changelog-release-3-4">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-9" href="/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-8" href="/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-7" href="/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-6" href="/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-5" href="/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-4" href="/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-3" href="/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-2" href="/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-changelog-release-3-4-3-4-1" href="/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-0" href="/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-changelog-release-3-3">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-7" href="/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-6" href="/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-5" href="/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-4" href="/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-3" href="/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-2" href="/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-1" href="/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-0" href="/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+    
+    
+    
+    
+    
+    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/changelog/release-3.4/3-4-1.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=v3.4.1" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    
+    
+    <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
+    
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#onecloud">onecloud</a>
+<ul>
+<li><a href="#baremetal-1">Baremetal (1)</a></li>
+<li><a href="#bug-fixes-22">Bug Fixes (22)</a></li>
+<li><a href="#eip-2">Eip (2)</a></li>
+<li><a href="#feature-1">Feature (1)</a></li>
+<li><a href="#features-5">Features (5)</a></li>
+<li><a href="#hotfix-1">Hotfix (1)</a></li>
+<li><a href="#others-13">Others (13)</a></li>
+<li><a href="#vpcagent-1">Vpcagent (1)</a></li>
+<li><a href="#webconsole-2">Webconsole (2)</a></li>
+</ul></li>
+<li><a href="#onecloud-operator">onecloud-operator</a>
+<ul>
+<li><a href="#others-1">Others (1)</a></li>
+<li><a href="#regiondns-1">Regiondns (1)</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/docs/changelog/">CHANGELOG</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/docs/changelog/release-3.4/">release/3.4</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>v3.4.1</h1>
+	
+	
+
+<p>发布时间 2020-10-14 18:03:02</p>
+
+<hr />
+
+<h2 id="onecloud">onecloud</h2>
+
+<p>仓库地址: <a href="https://github.com/yunionio/onecloud" target="_blank">https://github.com/yunionio/onecloud</a></p>
+
+<p>48 commits to <a href="https://github.com/yunionio/onecloud/compare/v3.4.0...v3.4.1" target="_blank">onecloud - v3.4.1</a> since this release.</p>
+
+<h3 id="baremetal-1">Baremetal (1)</h3>
+
+<ul>
+<li>fix pxe filter network by guest_dhcp (<a href="https://github.com/yunionio/onecloud/commit/d0d3d8e333128f1d81849a0f69fe04a6f48e6387" target="_blank">d0d3d8e33</a>, <a href="mailto:zexi.li@qq.com" target="_blank">Zexi Li</a>)</li>
+</ul>
+
+<h3 id="bug-fixes-22">Bug Fixes (22)</h3>
+
+<ul>
+<li>qcloud set hostname for instance (<a href="https://github.com/yunionio/onecloud/commit/5b79ba560703da088c4566db7638cdef8237fb38" target="_blank">5b79ba560</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>support public ip create (<a href="https://github.com/yunionio/onecloud/commit/2a210407a59e7ef90485683a75063a6aaa66b7fa" target="_blank">2a210407a</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>支持带宽包用户 (<a href="https://github.com/yunionio/onecloud/commit/84e8e4e6c8e4167eaea77151321c205bb7f97516" target="_blank">84e8e4e6c</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>trans google new region name (<a href="https://github.com/yunionio/onecloud/commit/3fe15d2675017d190f59b31729ecf78ae97afa7b" target="_blank">3fe15d267</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>qcloud eip with bandwidth attr (<a href="https://github.com/yunionio/onecloud/commit/d574a823ba5aa3b733d4fdc78654cdbcfd4a89d1" target="_blank">d574a823b</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>avoid qcloud secgroup cache name not sync (<a href="https://github.com/yunionio/onecloud/commit/e8d737ff6c91b50d931c3250d87d5484026b4aba" target="_blank">e8d737ff6</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>server name auto index should start from 1 (<a href="https://github.com/yunionio/onecloud/commit/7ce0d7b44b52cd123910111a0696ccdcbce5b0f0" target="_blank">7ce0d7b44</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>qcloud instance with max bandwidth (<a href="https://github.com/yunionio/onecloud/commit/715db28e3ef78e98ddaaf178b386b6232b17b1e3" target="_blank">715db28e3</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>format errors that block make test (<a href="https://github.com/yunionio/onecloud/commit/152ea54f369e4b5646eed302f3a8a781d1d92ac2" target="_blank">152ea54f3</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>project_id in resource details not correct (<a href="https://github.com/yunionio/onecloud/commit/d2aacafa4c6257c4a6d021e97d134abaf1bfb1de" target="_blank">d2aacafa4</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>ldap sync not update user&rsquo;s phone and email (<a href="https://github.com/yunionio/onecloud/commit/1aa82ae950e70624380668d5e79ea4c1aa1bd88f" target="_blank">1aa82ae95</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>not clean pending domain usage (<a href="https://github.com/yunionio/onecloud/commit/488e7e56a682b0bd2c1f1de35b103e88e69f2e68" target="_blank">488e7e56a</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>validate secgroup purge condition (<a href="https://github.com/yunionio/onecloud/commit/9fbd4f05996d97850ea9ab6ba9279cc0dc0249ef" target="_blank">9fbd4f059</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>avoid slice out of bounds (<a href="https://github.com/yunionio/onecloud/commit/078b1d635a35bc23c4628ba6ec39a5d1f7ede719" target="_blank">078b1d635</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li>filter cached images with host schedtag (<a href="https://github.com/yunionio/onecloud/commit/49887e540ac710e9f1fc520aa8bb84bb7121fcd1" target="_blank">49887e540</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>sync huawei bucket project info (<a href="https://github.com/yunionio/onecloud/commit/cb36572c1c72f9f06efaee408673c974308999fa" target="_blank">cb36572c1</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>error code of external bucket not found error should be 404 (<a href="https://github.com/yunionio/onecloud/commit/76f794d1a2805d65d9ff178954d65b8308bd5289" target="_blank">76f794d1a</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li><strong>esxi:</strong> check whether some fields of vm are nil (<a href="https://github.com/yunionio/onecloud/commit/27bd564d2dcfe3c760bb39a17b6c97169749effb" target="_blank">27bd564d2</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li><strong>esxi:</strong> check nil value when NewVirtualMachine (<a href="https://github.com/yunionio/onecloud/commit/1bc4b3cb90644ae16586248e5eb111b56dc68c05" target="_blank">1bc4b3cb9</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li><strong>esxi:</strong> filter linkLocalAddress (<a href="https://github.com/yunionio/onecloud/commit/b8e0599e3fbb3a9cf36deb2b4396fa50dbfff96b" target="_blank">b8e0599e3</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li><strong>esxi:</strong> search template from whole vCenter (<a href="https://github.com/yunionio/onecloud/commit/2259fe1195ca638ba82ffa70b29ae3c2f4be7889" target="_blank">2259fe119</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li><strong>esxi:</strong> use system disk of template only when cloning vm (<a href="https://github.com/yunionio/onecloud/commit/d16affc9a6e95e1f6d14d091846cabe5daf9edca" target="_blank">d16affc9a</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+</ul>
+
+<h3 id="eip-2">Eip (2)</h3>
+
+<ul>
+<li>NewEipForVMOnHost: add opslog (<a href="https://github.com/yunionio/onecloud/commit/896bec8f43c539df59ad4b9f24a45b11dd1d7bfe" target="_blank">896bec8f4</a>, <a href="mailto:zhouyousong@yunionyun.com" target="_blank">Yousong Zhou</a>)</li>
+<li>construct a pointer type (<a href="https://github.com/yunionio/onecloud/commit/a8426482bf4679a4e0b09c7f480d693e551e2f1f" target="_blank">a8426482b</a>, <a href="mailto:zhouyousong@yunionyun.com" target="_blank">Yousong Zhou</a>)</li>
+</ul>
+
+<h3 id="feature-1">Feature (1)</h3>
+
+<ul>
+<li>qcloud create VM with tags (<a href="https://github.com/yunionio/onecloud/commit/ef9b64990eed1f902cbdd142f4eb85fc771a2cc3" target="_blank">ef9b64990</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+</ul>
+
+<h3 id="features-5">Features (5)</h3>
+
+<ul>
+<li>add vlanId for suggested network (<a href="https://github.com/yunionio/onecloud/commit/7edcd151e3d500840eaa051429341171d36b94a2" target="_blank">7edcd151e</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li>filter esxi ip by CIDR (<a href="https://github.com/yunionio/onecloud/commit/552ce3b2ea27706d6d23a9cad76fc6e5f66db351" target="_blank">552ce3b2e</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li>add &lsquo;ip-list&rsquo; for esxicli (<a href="https://github.com/yunionio/onecloud/commit/8528d79817e30a067c0f85cfc4da70b9f9a21bdb" target="_blank">8528d7981</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li><strong>esxi:</strong> support fake template vm via regex filter (<a href="https://github.com/yunionio/onecloud/commit/df90d99bc5c26b524633f26338314a7ef7e665eb" target="_blank">df90d99bc</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+<li><strong>region:</strong> make address recommendations more precise (<a href="https://github.com/yunionio/onecloud/commit/91c852676a506e5d5602f697e2b6bc69e3569d82" target="_blank">91c852676</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+</ul>
+
+<h3 id="hotfix-1">Hotfix (1)</h3>
+
+<ul>
+<li>1. allow merge networks without continuous addresses 2. filter guest_ip_start and guest_ip_end with contains operator (<a href="https://github.com/yunionio/onecloud/commit/adccad34872144cf5b7b5e59f7ca196930bd5565" target="_blank">adccad348</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+</ul>
+
+<h3 id="others-13">Others (13)</h3>
+
+<ul>
+<li>replace NewFloat by NewFloat64 and NewFloat32 (<a href="https://github.com/yunionio/onecloud/commit/f19fe2178c44ef6bed6ac2603c1849ae72d48898" target="_blank">f19fe2178</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>make mode (<a href="https://github.com/yunionio/onecloud/commit/2265c9422f0f5a61a1643190aeaa72fbc5fc4f37" target="_blank">2265c9422</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>fix:aliyun jsonRequest 增加i/o timeout retry (<a href="https://github.com/yunionio/onecloud/commit/d72081770e1e32021198192e90aa9981c5696c3c" target="_blank">d72081770</a>, <a href="mailto:lvyangyang@yunion.cn" target="_blank">lvyangyang</a>)</li>
+<li>fix host-deployer base image (<a href="https://github.com/yunionio/onecloud/commit/407251975eba8f615b06d165a91f7d8babc7e216" target="_blank">407251975</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>在 docker push 脚本里创建_output 目录，以便容错 (<a href="https://github.com/yunionio/onecloud/commit/b7fd879e44756f80ffb323edc6fcca6eb3eee90a" target="_blank">b7fd879e4</a>, <a href="mailto:zhangdongliang@yunion.cn" target="_blank">Zhang Dongliang</a>)</li>
+<li>在 docker push 脚本里创建_output 目录，以便容错 (<a href="https://github.com/yunionio/onecloud/commit/7efb85ba042bfe10d433ebb741d252b2ac41ba6f" target="_blank">7efb85ba0</a>, <a href="mailto:zhangdongliang@yunion.cn" target="_blank">Zhang Dongliang</a>)</li>
+<li>resolve conflict (<a href="https://github.com/yunionio/onecloud/commit/d7316b26aa6b19169a7dbda2bb2ddedb429c74cf" target="_blank">d7316b26a</a>, <a href="mailto:zhangdongliang@yunion.cn" target="_blank">Zhang Dongliang</a>)</li>
+<li>genreate api models (<a href="https://github.com/yunionio/onecloud/commit/dee1aa26dc367b1bf65bdfa6e1f34ee38549f4cc" target="_blank">dee1aa26d</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>add interface freeze virtual resource (<a href="https://github.com/yunionio/onecloud/commit/c973bf16321ab35f34e3c8d0d6ebee013d0b0d06" target="_blank">c973bf163</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>Add web url to alarm template (<a href="https://github.com/yunionio/onecloud/commit/58d52d947ca8d5696efd5c6f3a75c81b1b05e07d" target="_blank">58d52d947</a>, <a href="mailto:1422928955@qq.com" target="_blank">zhaoxiangchun</a>)</li>
+<li>bugfix:scoperesource FilterByOwner (<a href="https://github.com/yunionio/onecloud/commit/c5ef564d357def027675bccee598d973b8b1d800" target="_blank">c5ef564d3</a>, <a href="mailto:1422928955@qq.com" target="_blank">zhaoxiangchun</a>)</li>
+<li>remove aws lbbg cache metedata (<a href="https://github.com/yunionio/onecloud/commit/e82cf184f11271a8994d647dfc833824a8e69cb7" target="_blank">e82cf184f</a>, <a href="mailto:tangbin@yunion.cn" target="_blank">TangBin</a>)</li>
+<li>modify suggest rule cli (<a href="https://github.com/yunionio/onecloud/commit/bba2cf23fdea02baf9b37a74c25a3d431f533b11" target="_blank">bba2cf23f</a>, <a href="mailto:1422928955@qq.com" target="_blank">zhaoxiangchun</a>)</li>
+</ul>
+
+<h3 id="vpcagent-1">Vpcagent (1)</h3>
+
+<ul>
+<li>ovn: increase dhcp lease, renew, rebind time (<a href="https://github.com/yunionio/onecloud/commit/e9415ae49e994d28b21b3bb0b771915a98bfe31b" target="_blank">e9415ae49</a>, <a href="mailto:zhouyousong@yunionyun.com" target="_blank">Yousong Zhou</a>)</li>
+</ul>
+
+<h3 id="webconsole-2">Webconsole (2)</h3>
+
+<ul>
+<li>ssh: add keyboard-interactive as an option (<a href="https://github.com/yunionio/onecloud/commit/63b0d0c071d419c4bd01f0f6bc7463682e04136c" target="_blank">63b0d0c07</a>, <a href="mailto:zhouyousong@yunionyun.com" target="_blank">Yousong Zhou</a>)</li>
+<li>ssh: each argument on its own line (<a href="https://github.com/yunionio/onecloud/commit/39a45229afccc0b3d78825d730434121ac04987d" target="_blank">39a45229a</a>, <a href="mailto:zhouyousong@yunionyun.com" target="_blank">Yousong Zhou</a>)</li>
+</ul>
+
+<hr />
+
+<h2 id="onecloud-operator">onecloud-operator</h2>
+
+<p>仓库地址: <a href="https://github.com/yunionio/onecloud-operator" target="_blank">https://github.com/yunionio/onecloud-operator</a></p>
+
+<p>2 commits to <a href="https://github.com/yunionio/onecloud-operator/compare/v3.4.0...v3.4.1" target="_blank">onecloud-operator - v3.4.1</a> since this release.</p>
+
+<h3 id="others-1">Others (1)</h3>
+
+<ul>
+<li>not create notice (<a href="https://github.com/yunionio/onecloud-operator/commit/a834a78e6899d8bbc43c4f7638914689f0e3eceb" target="_blank">a834a78</a>, <a href="mailto:zexi.li@qq.com" target="_blank">Zexi Li</a>)</li>
+</ul>
+
+<h3 id="regiondns-1">Regiondns (1)</h3>
+
+<ul>
+<li>configmap: quash trailing spaces (<a href="https://github.com/yunionio/onecloud-operator/commit/746963fc0749ba1a881f16f5834fdc197e2b0cd2" target="_blank">746963f</a>, <a href="mailto:zhouyousong@yunionyun.com" target="_blank">Yousong Zhou</a>)</li>
+</ul>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 26.11.2020: <a  href="https://github.com/yunionio/docs/commit/6f637e2decf06d048f2aac9449dc0772232da8c0">feat(changelog): add changelog entry (6f637e2)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src="/js/main.min.f8a4d11fd5e943809e16dabb9e3b24b2f71e4c0d13998b0dc4962eb279ac6b5f.js" integrity="sha256-&#43;KTRH9XpQ4CeFtq7njsksvceTA0TmYsNxJYusnmsa18="></script>
+
+
+
+  </body>
+</html>

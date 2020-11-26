@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.55.5" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<title>v3.3.1 | 云联壹云</title><meta property="og:title" content="v3.3.1" />
+<meta property="og:description" content="发布时间 2020-08-11 20:59:07
+onecloud 仓库地址: https://github.com/yunionio/onecloud
+18 commits to onecloud - v3.3.1 since this release.
+Bug Fixes (11)  separete enabled and status field (3b036e6c3, Qu Xuan) optimized huawei security group get and create operation (#7521) (3c63af8de, 屈轩) avoid nil pointer (6f5be444c, Qu Xuan) backport fix (bb1752fb7, Qu Xuan) 提高zstack认证兼容性 (b152aa333, Qu Xuan) 隐藏auzre经典类型存储 (bb0123694, Qu Xuan) 增加openstack兼容性 (#7493) (7a81820cd, 屈轩) typo running_geusts =&gt; running_guests (2153a79dc, Qiu Jian) filter public network count by zone and region (780cf826c, Qiu Jian) typo (62d2a732e, Qu Xuan) ignore bucket-set-acl not implemented error (4cbe29d0c, Qiu Jian)  Others (7)  support diable usb kbd (0742afb48, wanyaoqi) fix usage get storage capbility (#7528) (5439457bb, wanyaoqi) fix mount xfs (57cd48354, wanyaoqi) set disk status on disk detached (#7518) (52488eeb5, wanyaoqi) nodealert bugfix： (abe44154b, zhaoxiangchun) add image upload&amp; s3 upload api (#7515) (6cdbae22a, tb365) fix host info get sshkey (39bcc36c2, wanyaoqi)  notify-plugins 仓库地址: https://github." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/docs/changelog/release-3.3/3-3-1/" />
+<meta property="article:modified_time" content="2020-11-26T20:20:04&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="v3.3.1">
+<meta itemprop="description" content="发布时间 2020-08-11 20:59:07
+onecloud 仓库地址: https://github.com/yunionio/onecloud
+18 commits to onecloud - v3.3.1 since this release.
+Bug Fixes (11)  separete enabled and status field (3b036e6c3, Qu Xuan) optimized huawei security group get and create operation (#7521) (3c63af8de, 屈轩) avoid nil pointer (6f5be444c, Qu Xuan) backport fix (bb1752fb7, Qu Xuan) 提高zstack认证兼容性 (b152aa333, Qu Xuan) 隐藏auzre经典类型存储 (bb0123694, Qu Xuan) 增加openstack兼容性 (#7493) (7a81820cd, 屈轩) typo running_geusts =&gt; running_guests (2153a79dc, Qiu Jian) filter public network count by zone and region (780cf826c, Qiu Jian) typo (62d2a732e, Qu Xuan) ignore bucket-set-acl not implemented error (4cbe29d0c, Qiu Jian)  Others (7)  support diable usb kbd (0742afb48, wanyaoqi) fix usage get storage capbility (#7528) (5439457bb, wanyaoqi) fix mount xfs (57cd48354, wanyaoqi) set disk status on disk detached (#7518) (52488eeb5, wanyaoqi) nodealert bugfix： (abe44154b, zhaoxiangchun) add image upload&amp; s3 upload api (#7515) (6cdbae22a, tb365) fix host info get sshkey (39bcc36c2, wanyaoqi)  notify-plugins 仓库地址: https://github.">
+
+
+<meta itemprop="dateModified" content="2020-11-26T20:20:04&#43;08:00" />
+<meta itemprop="wordCount" content="225">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="v3.3.1"/>
+<meta name="twitter:description" content="发布时间 2020-08-11 20:59:07
+onecloud 仓库地址: https://github.com/yunionio/onecloud
+18 commits to onecloud - v3.3.1 since this release.
+Bug Fixes (11)  separete enabled and status field (3b036e6c3, Qu Xuan) optimized huawei security group get and create operation (#7521) (3c63af8de, 屈轩) avoid nil pointer (6f5be444c, Qu Xuan) backport fix (bb1752fb7, Qu Xuan) 提高zstack认证兼容性 (b152aa333, Qu Xuan) 隐藏auzre经典类型存储 (bb0123694, Qu Xuan) 增加openstack兼容性 (#7493) (7a81820cd, 屈轩) typo running_geusts =&gt; running_guests (2153a79dc, Qiu Jian) filter public network count by zone and region (780cf826c, Qiu Jian) typo (62d2a732e, Qu Xuan) ignore bucket-set-acl not implemented error (4cbe29d0c, Qiu Jian)  Others (7)  support diable usb kbd (0742afb48, wanyaoqi) fix usage get storage capbility (#7528) (5439457bb, wanyaoqi) fix mount xfs (57cd48354, wanyaoqi) set disk status on disk detached (#7518) (52488eeb5, wanyaoqi) nodealert bugfix： (abe44154b, zhaoxiangchun) add image upload&amp; s3 upload api (#7515) (6cdbae22a, tb365) fix host info get sshkey (39bcc36c2, wanyaoqi)  notify-plugins 仓库地址: https://github."/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
+<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>v3.3.1 | 云联壹云</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        
+		
+	
+  <a href="/" class="logo flex-shrink-0 navbar-brand">
+    
+    
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.4
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+		</ul>
+	</div>
+	
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <div class="td-sidebar__search d-flex align-items-center">
+    
+ <input type="input" class="form-control search-input" placeholder="&#xf002 Search this site…" aria-label="Search this site…" autocomplete="off">
+
+
+ 
+  
+ 
+
+
+<script type="text/javascript" src="/js/search.js"></script>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </div>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-quickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-allinone" href="/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-setup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-intro" href="/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-db-ha" href="/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-host" href="/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-baremetal" href="/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-ce-ee-switch" href="/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-upgrade" href="/docs/setup/upgrade/">升级相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-contribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-contrib" href="/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-git-convention" href="/docs/contribute/git-convention/">Git 提交内容规范</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-services" href="/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-framework" href="/docs/contribute/framework/">后端服务框架</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-climc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-image">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-upload" href="/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-query" href="/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-create" href="/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-operation" href="/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-server-create">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-connect" href="/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-others" href="/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-import" href="/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-gpu" href="/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-migrate" href="/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-backup" href="/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-host">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-host-kvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-baremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-intro" href="/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-operator" href="/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-network">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-lb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-storage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-multicloud">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-auth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-container">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-howto-scheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-contact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/changelog/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-changelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-changelog-release-3-4">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-9" href="/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-8" href="/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-7" href="/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-6" href="/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-5" href="/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-4" href="/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-3" href="/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-2" href="/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-1" href="/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-0" href="/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-changelog-release-3-3">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-7" href="/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-6" href="/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-5" href="/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-4" href="/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-3" href="/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-2" href="/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-changelog-release-3-3-3-3-1" href="/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-0" href="/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+    
+    
+    
+    
+    
+    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/changelog/release-3.3/3-3-1.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+    <a href="https://github.com/yunionio/docs/issues/new?title=v3.3.1" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+    
+    
+    <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
+    
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#onecloud">onecloud</a>
+<ul>
+<li><a href="#bug-fixes-11">Bug Fixes (11)</a></li>
+<li><a href="#others-7">Others (7)</a></li>
+</ul></li>
+<li><a href="#notify-plugins">notify-plugins</a>
+<ul>
+<li><a href="#bug-fixes-1">Bug Fixes (1)</a></li>
+<li><a href="#others-1">Others (1)</a></li>
+</ul></li>
+<li><a href="#ocadm">ocadm</a>
+<ul>
+<li><a href="#others-2">Others (2)</a></li>
+</ul></li>
+<li><a href="#onecloud-operator">onecloud-operator</a>
+<ul>
+<li><a href="#others-1-1">Others (1)</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/docs/changelog/">CHANGELOG</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/docs/changelog/release-3.3/">release/3.3</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>v3.3.1</h1>
+	
+	
+
+<p>发布时间 2020-08-11 20:59:07</p>
+
+<hr />
+
+<h2 id="onecloud">onecloud</h2>
+
+<p>仓库地址: <a href="https://github.com/yunionio/onecloud" target="_blank">https://github.com/yunionio/onecloud</a></p>
+
+<p>18 commits to <a href="https://github.com/yunionio/onecloud/compare/v3.3.0...v3.3.1" target="_blank">onecloud - v3.3.1</a> since this release.</p>
+
+<h3 id="bug-fixes-11">Bug Fixes (11)</h3>
+
+<ul>
+<li>separete enabled and status field (<a href="https://github.com/yunionio/onecloud/commit/3b036e6c30fb2d067f74dda398494dce41b07c89" target="_blank">3b036e6c3</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>optimized huawei security group get and create operation (<a href="https://github.com/yunionio/onecloud/issues/7521" target="_blank">#7521</a>) (<a href="https://github.com/yunionio/onecloud/commit/3c63af8de0af63c088dc731ef14cdd713c8485be" target="_blank">3c63af8de</a>, <a href="mailto:qu_xuan@icloud.com" target="_blank">屈轩</a>)</li>
+<li>avoid nil pointer (<a href="https://github.com/yunionio/onecloud/commit/6f5be444c323ddd1bd99ad9c132dd00d0965275b" target="_blank">6f5be444c</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>backport fix (<a href="https://github.com/yunionio/onecloud/commit/bb1752fb7b40ef0980fb85887eab7331d8da9d31" target="_blank">bb1752fb7</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>提高zstack认证兼容性 (<a href="https://github.com/yunionio/onecloud/commit/b152aa333711208b66df1ca75e808753c6186c12" target="_blank">b152aa333</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>隐藏auzre经典类型存储 (<a href="https://github.com/yunionio/onecloud/commit/bb01236942705cd7d497c54308afd3599cc10a15" target="_blank">bb0123694</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>增加openstack兼容性 (<a href="https://github.com/yunionio/onecloud/issues/7493" target="_blank">#7493</a>) (<a href="https://github.com/yunionio/onecloud/commit/7a81820cd3226cca56143bb84d393ab4af57db53" target="_blank">7a81820cd</a>, <a href="mailto:qu_xuan@icloud.com" target="_blank">屈轩</a>)</li>
+<li>typo running_geusts =&gt; running_guests (<a href="https://github.com/yunionio/onecloud/commit/2153a79dcbfe52688b4efb72ab4ecfe35497457b" target="_blank">2153a79dc</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>filter public network count by zone and region (<a href="https://github.com/yunionio/onecloud/commit/780cf826c7cdc61601c4c04827fc9622b3558fac" target="_blank">780cf826c</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+<li>typo (<a href="https://github.com/yunionio/onecloud/commit/62d2a732e20436a59b785d68b4eaa2cd690b54cd" target="_blank">62d2a732e</a>, <a href="mailto:quxuan@yunionyun.com" target="_blank">Qu Xuan</a>)</li>
+<li>ignore bucket-set-acl not implemented error (<a href="https://github.com/yunionio/onecloud/commit/4cbe29d0c5b7dcadb10fec9a685af0940b89135b" target="_blank">4cbe29d0c</a>, <a href="mailto:qiujian@yunionyun.com" target="_blank">Qiu Jian</a>)</li>
+</ul>
+
+<h3 id="others-7">Others (7)</h3>
+
+<ul>
+<li>support diable usb kbd (<a href="https://github.com/yunionio/onecloud/commit/0742afb4879df1c3f9b5865ff2ed71b3d9b86aa9" target="_blank">0742afb48</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>fix usage get storage capbility (<a href="https://github.com/yunionio/onecloud/issues/7528" target="_blank">#7528</a>) (<a href="https://github.com/yunionio/onecloud/commit/5439457bb48f1101196a5e07a2510148910d719d" target="_blank">5439457bb</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>fix mount xfs (<a href="https://github.com/yunionio/onecloud/commit/57cd48354f7472f8be933804bc73f1da019b9e94" target="_blank">57cd48354</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>set disk status on disk detached (<a href="https://github.com/yunionio/onecloud/issues/7518" target="_blank">#7518</a>) (<a href="https://github.com/yunionio/onecloud/commit/52488eeb507ddcd1e3f63db73df551d74acd5db0" target="_blank">52488eeb5</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+<li>nodealert bugfix： (<a href="https://github.com/yunionio/onecloud/commit/abe44154ba10868c01af58947988a0bd9662c0e4" target="_blank">abe44154b</a>, <a href="mailto:1422928955@qq.com" target="_blank">zhaoxiangchun</a>)</li>
+<li>add image upload&amp; s3 upload api (<a href="https://github.com/yunionio/onecloud/issues/7515" target="_blank">#7515</a>) (<a href="https://github.com/yunionio/onecloud/commit/6cdbae22a43f1b75a9fa442b99e2e6549cc4e793" target="_blank">6cdbae22a</a>, <a href="mailto:41716617+tb365@users.noreply.github.com" target="_blank">tb365</a>)</li>
+<li>fix host info get sshkey (<a href="https://github.com/yunionio/onecloud/commit/39bcc36c2db714611b9dcf052f6fa2178c6bfe79" target="_blank">39bcc36c2</a>, <a href="mailto:wanyaoqi@yunionyun.com" target="_blank">wanyaoqi</a>)</li>
+</ul>
+
+<hr />
+
+<h2 id="notify-plugins">notify-plugins</h2>
+
+<p>仓库地址: <a href="https://github.com/yunionio/notify-plugins" target="_blank">https://github.com/yunionio/notify-plugins</a></p>
+
+<p>2 commits to <a href="https://github.com/yunionio/notify-plugins/compare/v3.3.0...v3.3.1" target="_blank">notify-plugins - v3.3.1</a> since this release.</p>
+
+<h3 id="bug-fixes-1">Bug Fixes (1)</h3>
+
+<ul>
+<li>Add deadline for email and fix some proble (<a href="https://github.com/yunionio/notify-plugins/commit/225694c5377d3f5ef0af607942ae32f800c0dbe0" target="_blank">225694c</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+</ul>
+
+<h3 id="others-1">Others (1)</h3>
+
+<ul>
+<li>fix bug for email and smsaliyun (<a href="https://github.com/yunionio/notify-plugins/commit/c59bf42c13ba1ed7759b505089472e90e2b17145" target="_blank">c59bf42</a>, <a href="mailto:mjoycarry@gmail.com" target="_blank">rainzm</a>)</li>
+</ul>
+
+<hr />
+
+<h2 id="ocadm">ocadm</h2>
+
+<p>仓库地址: <a href="https://github.com/yunionio/ocadm" target="_blank">https://github.com/yunionio/ocadm</a></p>
+
+<p>2 commits to <a href="https://github.com/yunionio/ocadm/compare/v3.3.0...v3.3.1" target="_blank">ocadm - v3.3.1</a> since this release.</p>
+
+<h3 id="others-2">Others (2)</h3>
+
+<ul>
+<li>update vendor for v3.2: (<a href="https://github.com/yunionio/ocadm/commit/774b5179cb2297b582c767eca9ab4beea6c24d8e" target="_blank">774b517</a>, <a href="mailto:zexi.li@qq.com" target="_blank">Zexi Li</a>)</li>
+<li>update vendor cause of onecloud-operator (<a href="https://github.com/yunionio/ocadm/commit/3208d0045b4e58ede7d012ceaaa484fa5b36aa94" target="_blank">3208d00</a>, <a href="mailto:zexi.li@qq.com" target="_blank">Zexi Li</a>)</li>
+</ul>
+
+<hr />
+
+<h2 id="onecloud-operator">onecloud-operator</h2>
+
+<p>仓库地址: <a href="https://github.com/yunionio/onecloud-operator" target="_blank">https://github.com/yunionio/onecloud-operator</a></p>
+
+<p>1 commits to <a href="https://github.com/yunionio/onecloud-operator/compare/v3.3.0...v3.3.1" target="_blank">onecloud-operator - v3.3.1</a> since this release.</p>
+
+<h3 id="others-1-1">Others (1)</h3>
+
+<ul>
+<li>remove etcd-operator dependcies (<a href="https://github.com/yunionio/onecloud-operator/issues/236" target="_blank">#236</a>) (<a href="https://github.com/yunionio/onecloud-operator/commit/698c93ae75f0829b7dd6cca6f63edd82f6993260" target="_blank">698c93a</a>, <a href="mailto:zexi.li@qq.com" target="_blank">Zexi Li</a>)</li>
+</ul>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 26.11.2020: <a  href="https://github.com/yunionio/docs/commit/6f637e2decf06d048f2aac9449dc0772232da8c0">feat(changelog): add changelog entry (6f637e2)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src="/js/main.min.f8a4d11fd5e943809e16dabb9e3b24b2f71e4c0d13998b0dc4962eb279ac6b5f.js" integrity="sha256-&#43;KTRH9XpQ4CeFtq7njsksvceTA0TmYsNxJYusnmsa18="></script>
+
+
+
+  </body>
+</html>

@@ -3,22 +3,28 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.55.5" />
-
+<meta name="generator" content="Hugo 0.78.2" /><link rel="alternate" type="application/rss&#43;xml" href="https://opensource.yunion.cn/docs/howto/lb/index.xml">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
-<link rel="alternate" type="application/rss&#43;xml" href="https://opensource.yunion.cn/docs/howto/lb/index.xml">
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
 <title>负载均衡 | 云联壹云</title><meta property="og:title" content="负载均衡" />
 <meta property="og:description" content="云联壹云文档" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/howto/lb/" />
-
-<meta property="og:updated_time" content="2019-07-19T10:27:52&#43;08:00"/><meta property="og:site_name" content="云联壹云" />
-
+<meta property="og:updated_time" content="2019-07-30T14:08:01+08:00" /><meta property="og:site_name" content="云联壹云" />
 <meta itemprop="name" content="负载均衡">
 <meta itemprop="description" content="云联壹云文档">
-
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="负载均衡"/>
 <meta name="twitter:description" content="云联壹云文档"/>
@@ -27,27 +33,31 @@
 
 
 
-<link rel="preload" href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" as="style">
-<link href="/scss/main.min.8d3528bda65ec7c25a4294f9d5a875a633169023648788028a29439bf11be6a8.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/scss/main.min.2dad0c6a03d285a754842e609ae78af6f7e03b191cb5cff6fa68cfacf5d29911.css" as="style">
+<link href="/scss/main.min.2dad0c6a03d285a754842e609ae78af6f7e03b191cb5cff6fa68cfacf5d29911.css" rel="stylesheet" integrity="">
+
 
 <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+<script
+  src="https://unpkg.com/lunr@2.3.8/lunr.min.js"
+  integrity="sha384-vRQ9bDyE0Wnu+lMfm57BlYLO0/XauFuKpVsZPs7KEDwYKktWi5+Kz3MP8++DFlRY"
   crossorigin="anonymous"></script>
 
 
-    <title>负载均衡 | 云联壹云</title>
+
+
   </head>
   <body class="td-section">
     <header>
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
-        
-		
-	
+  
   <a href="/" class="logo flex-shrink-0 navbar-brand">
-    
-    
+    <img src="https://opensource.yunion.cn//images/logo.svg" />
   </a>
 
 	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
@@ -127,7 +137,23 @@
 			
 		</ul>
 	</div>
-	
+  <div class="navbar-nav d-none d-lg-block">
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; Search this site…"
+  aria-label="Search this site…"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/offline-search-index.7e4e63bd201b3eb12ed3b966f3cc13b9.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
+
+</div>
 </nav>
 
     </header>
@@ -142,24 +168,30 @@
 
 <div id="td-sidebar-menu" class="td-sidebar__inner">
   
-  <div class="td-sidebar__search d-flex align-items-center">
+  <form class="td-sidebar__search d-flex align-items-center d-lg-none">
     
- <input type="input" class="form-control search-input" placeholder="&#xf002 Search this site…" aria-label="Search this site…" autocomplete="off">
 
 
- 
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; Search this site…"
+  aria-label="Search this site…"
+  autocomplete="off"
   
- 
-
-
-<script type="text/javascript" src="/js/search.js"></script>
+  data-offline-search-index-json-src="/offline-search-index.7e4e63bd201b3eb12ed3b966f3cc13b9.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
 
 
     <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
     </button>
-  </div>
+  </form>
   
-  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
     
     
 
@@ -178,7 +210,8 @@
       
       
       
-      
+        
+          
 
 
 
@@ -190,30 +223,36 @@
     <a  href="/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-quickstart">
+    <li class="collapse " id="docsquickstart">
       
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docsquickstartallinone" href="/docs/quickstart/allinone/">All in One 安装</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-allinone" href="/docs/quickstart/allinone/">All in One 安装</a>
       
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-quickstart-minikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docsquickstartminikube" href="/docs/quickstart/minikube/">MiniKube 安装</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -225,72 +264,92 @@
     <a  href="/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-setup">
+    <li class="collapse " id="docssetup">
       
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-intro" href="/docs/setup/intro/">组件概览</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupintro" href="/docs/setup/intro/">组件概览</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-db-ha" href="/docs/setup/db-ha/">部署 DB HA 环境</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-controlplane" href="/docs/setup/controlplane/">部署集群</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupcontrolplane-ha" href="/docs/setup/controlplane-ha/">部署 HA 环境</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-components" href="/docs/setup/components/">添加 K8S 节点</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-host" href="/docs/setup/host/">添加计算节点</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupdb-ha" href="/docs/setup/db-ha/">部署 DB HA 环境</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-baremetal" href="/docs/setup/baremetal/">物理机管理服务</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-ce-ee-switch" href="/docs/setup/ce-ee-switch/">切换到企业版</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupcontrolplane" href="/docs/setup/controlplane/">部署集群</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupcomponents" href="/docs/setup/components/">添加 K8S 节点</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-setup-upgrade" href="/docs/setup/upgrade/">升级相关</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetuphost" href="/docs/setup/host/">添加计算节点</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupbaremetal" href="/docs/setup/baremetal/">物理机管理服务</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupce-ee-switch" href="/docs/setup/ce-ee-switch/">切换到企业版</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docssetupupgrade" href="/docs/setup/upgrade/">升级相关</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -302,42 +361,52 @@
     <a  href="/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-contribute">
+    <li class="collapse " id="docscontribute">
       
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-contrib" href="/docs/contribute/contrib/">开发贡献</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-git-convention" href="/docs/contribute/git-convention/">Git 提交内容规范</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributecontrib" href="/docs/contribute/contrib/">开发贡献</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributegit-convention" href="/docs/contribute/git-convention/">Git 提交内容规范</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-services" href="/docs/contribute/services/">服务组件介绍</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributeservices" href="/docs/contribute/services/">服务组件介绍</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-contribute-framework" href="/docs/contribute/framework/">后端服务框架</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docscontributeframework" href="/docs/contribute/framework/">后端服务框架</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -349,12 +418,13 @@
     <a  href="/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
   </li>
   <ul>
-    <li class="collapse show" id="docs-howto">
+    <li class="collapse show" id="docshowto">
       
       
       
       
-      
+        
+          
 
 
 
@@ -366,7 +436,7 @@
     <a  href="/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-climc">
+    <li class="collapse " id="docshowtoclimc">
       
       
       
@@ -374,10 +444,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -389,42 +461,52 @@
     <a  href="/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-image">
+    <li class="collapse " id="docshowtoimage">
       
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-upload" href="/docs/howto/image/upload/">上传镜像</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-query" href="/docs/howto/image/query/">查询镜像</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimageupload" href="/docs/howto/image/upload/">上传镜像</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimagequery" href="/docs/howto/image/query/">查询镜像</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-create" href="/docs/howto/image/create/">制作镜像</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimagecreate" href="/docs/howto/image/create/">制作镜像</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-image-operation" href="/docs/howto/image/operation/">其他操作</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoimageoperation" href="/docs/howto/image/operation/">其他操作</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -436,12 +518,13 @@
     <a  href="/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-server">
+    <li class="collapse " id="docshowtoserver">
       
       
       
       
-      
+        
+          
 
 
 
@@ -453,7 +536,7 @@
     <a  href="/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-server-create">
+    <li class="collapse " id="docshowtoservercreate">
       
       
       
@@ -461,52 +544,67 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-connect" href="/docs/howto/server/connect/">登录云主机</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-others" href="/docs/howto/server/others/">其他操作</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverconnect" href="/docs/howto/server/connect/">登录云主机</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-import" href="/docs/howto/server/import/">libvirt管理虚机导入</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-gpu" href="/docs/howto/server/gpu/">GPU相关</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverothers" href="/docs/howto/server/others/">其他操作</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverimport" href="/docs/howto/server/import/">libvirt管理虚机导入</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-migrate" href="/docs/howto/server/migrate/">迁移相关</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoservergpu" href="/docs/howto/server/gpu/">GPU相关</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoservermigrate" href="/docs/howto/server/migrate/">迁移相关</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-server-backup" href="/docs/howto/server/backup/">主备机</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtoserverbackup" href="/docs/howto/server/backup/">主备机</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -518,24 +616,28 @@
     <a  href="/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-host">
+    <li class="collapse " id="docshowtohost">
       
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-host-kvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtohostkvm" href="/docs/howto/host/kvm/">KVM 宿主机</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -547,30 +649,36 @@
     <a  href="/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-baremetal">
+    <li class="collapse " id="docshowtobaremetal">
       
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtobaremetalintro" href="/docs/howto/baremetal/intro/">介绍</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-intro" href="/docs/howto/baremetal/intro/">介绍</a>
       
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-howto-baremetal-operator" href="/docs/howto/baremetal/operator/">操作相关</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtobaremetaloperator" href="/docs/howto/baremetal/operator/">操作相关</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -582,7 +690,7 @@
     <a  href="/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-network">
+    <li class="collapse " id="docshowtonetwork">
       
       
       
@@ -590,10 +698,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -605,7 +715,7 @@
     <a  href="/docs/howto/lb/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">负载均衡</a>
   </li>
   <ul>
-    <li class="collapse show" id="docs-howto-lb">
+    <li class="collapse show" id="docshowtolb">
       
       
       
@@ -613,10 +723,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -628,7 +740,7 @@
     <a  href="/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-storage">
+    <li class="collapse " id="docshowtostorage">
       
       
       
@@ -636,10 +748,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -651,7 +765,7 @@
     <a  href="/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-multicloud">
+    <li class="collapse " id="docshowtomulticloud">
       
       
       
@@ -659,10 +773,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -674,7 +790,7 @@
     <a  href="/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-auth">
+    <li class="collapse " id="docshowtoauth">
       
       
       
@@ -682,10 +798,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -697,7 +815,7 @@
     <a  href="/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-container">
+    <li class="collapse " id="docshowtocontainer">
       
       
       
@@ -705,10 +823,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -720,7 +840,7 @@
     <a  href="/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-howto-scheduler">
+    <li class="collapse " id="docshowtoscheduler">
       
       
       
@@ -728,16 +848,19 @@
   </ul>
 </ul>
 
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -749,7 +872,7 @@
     <a  href="/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-contact">
+    <li class="collapse " id="docscontact">
       
       
       
@@ -757,10 +880,12 @@
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -772,12 +897,13 @@
     <a  href="/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-changelog">
+    <li class="collapse " id="docschangelog">
       
       
       
       
-      
+        
+          
 
 
 
@@ -789,78 +915,100 @@
     <a  href="/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-changelog-release-3-4">
+    <li class="collapse " id="docschangelogrelease-34">
       
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-9" href="/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-8" href="/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-9" href="/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-7" href="/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-6" href="/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-8" href="/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-5" href="/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-4" href="/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-7" href="/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-3" href="/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-2" href="/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-6" href="/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-5" href="/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-1" href="/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-4" href="/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-3" href="/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-4-3-4-0" href="/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-2" href="/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-1" href="/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-343-4-0" href="/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
       
-      
+        
+          
 
 
 
@@ -872,68 +1020,86 @@
     <a  href="/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
   </li>
   <ul>
-    <li class="collapse " id="docs-changelog-release-3-3">
+    <li class="collapse " id="docschangelogrelease-33">
       
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-7" href="/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-6" href="/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-7" href="/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-5" href="/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-4" href="/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-6" href="/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+        
       
       
       
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-3" href="/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-2" href="/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-5" href="/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-4" href="/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-1" href="/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-3" href="/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+        
       
       
       
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-2" href="/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+        
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-changelog-release-3-3-3-3-0" href="/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-1" href="/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-docschangelogrelease-333-3-0" href="/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
     </li>
   </ul>
 </ul>
 
+        
       
       
     </li>
@@ -953,19 +1119,33 @@
 
 
 
+
+
 <div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-    
-    
-    
-    
-    
-    <a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/howto/lb/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
-    <a href="https://github.com/yunionio/docs/issues/new?title=%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
-    
-    
-    <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
-    
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/howto/lb/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑本页</a>
+<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/howto/lb/_index.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1" target="_blank"><i class="fab fa-github fa-fw"></i> 创建文档 issue</a>
+
+
+<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 创建项目 issue</a>
+
+
+
+
+
 </div>
+
 
 
 
@@ -975,6 +1155,9 @@
 
           </div>
           <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
             <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
 	<ol class="breadcrumb spb-1">
 		
@@ -1012,10 +1195,12 @@
             
 <div class="td-content">
 	<h1>负载均衡</h1>
+        
 	
 	<p>TODO</p>
 
         <div class="section-index">
+    
     
     
     
@@ -1177,6 +1362,7 @@
     display: block;
   }
 </style>
+<div class="d-print-none">
 <h2 class="feedback--title">Feedback</h2>
 <p class="feedback--question">Was this page helpful?</p>
 <button class="feedback--answer feedback--answer-yes">Yes</button>
@@ -1187,6 +1373,7 @@
 <p class="feedback--response feedback--response-no">
   Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
 </p>
+</div>
 <script>
   const yesButton = document.querySelector('.feedback--answer-yes');
   const noButton = document.querySelector('.feedback--answer-no');
@@ -1241,7 +1428,16 @@
 
 
 
-<script src="/js/main.min.f8a4d11fd5e943809e16dabb9e3b24b2f71e4c0d13998b0dc4962eb279ac6b5f.js" integrity="sha256-&#43;KTRH9XpQ4CeFtq7njsksvceTA0TmYsNxJYusnmsa18="></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.min.460c8ae21829f9b330823a08f34ac961d7d0daa8874c8c9eba7ea0484bb42a79.js" integrity="sha256-RgyK4hgp&#43;bMwgjoI80rJYdfQ2qiHTIyeun6gSEu0Knk=" crossorigin="anonymous"></script>
+
 
 
 

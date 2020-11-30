@@ -22,7 +22,7 @@
 <meta property="og:description" content="云联壹云文档" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/howto/climc/" />
-<meta property="og:updated_time" content="2020-11-24T18:21:05+08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="og:updated_time" content="2020-11-30T19:53:48+08:00" /><meta property="og:site_name" content="云联壹云" />
 <meta itemprop="name" content="命令行工具">
 <meta itemprop="description" content="云联壹云文档">
 <meta name="twitter:card" content="summary"/>
@@ -148,7 +148,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.7e4e63bd201b3eb12ed3b966f3cc13b9.json"
+  data-offline-search-index-json-src="/offline-search-index.25b338cf9512198812b52e53ccac702f.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -180,7 +180,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.7e4e63bd201b3eb12ed3b966f3cc13b9.json"
+  data-offline-search-index-json-src="/offline-search-index.25b338cf9512198812b52e53ccac702f.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1286,7 +1286,7 @@ $ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-
 将输出的认证信息保存到本地的文件中，通过source命令认证配置。</p>
 <p>以下为用户名／密码认证的配置文件模板，通过OS_USERNAME, OS_DOMAIN_NAME, OS_PASSWORD, OS_PROJECT_NAME, OS_PROJECT_DOMAIN等字段指定用户的信息和项目的信息。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 在控制节点上获取认证所需要的配置信息。</span>
-<span style="color:#8f5902;font-style:italic"># ocadm cluster rcadmin</span>
+$ ocadm cluster rcadmin
 <span style="color:#204a87">export</span> <span style="color:#000">OS_AUTH_URL</span><span style="color:#ce5c00;font-weight:bold">=</span>https://192.168.0.246:5000/v3
 <span style="color:#204a87">export</span> <span style="color:#000">OS_USERNAME</span><span style="color:#ce5c00;font-weight:bold">=</span>sysadmin
 <span style="color:#204a87">export</span> <span style="color:#000">OS_PASSWORD</span><span style="color:#ce5c00;font-weight:bold">=</span>3hV3***84srk
@@ -1295,38 +1295,25 @@ $ <span style="color:#204a87">source</span> &lt;<span style="color:#ce5c00;font-
 <span style="color:#204a87">export</span> <span style="color:#000">OS_REGION_NAME</span><span style="color:#ce5c00;font-weight:bold">=</span>region0
 <span style="color:#204a87">export</span> <span style="color:#000">OS_ENDPOINT_TYPE</span><span style="color:#ce5c00;font-weight:bold">=</span>publicURL
 
-<span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用</span>
+<span style="color:#8f5902;font-style:italic"># 将上述认证信息保存到文件中，方便 source 使用</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; ~/test_rc_admin
+</span><span style="color:#4e9a06"># keystone 认证地址
+</span><span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
 </span><span style="color:#4e9a06"># 用户名
 </span><span style="color:#4e9a06">export OS_USERNAME=sysadmin
-</span><span style="color:#4e9a06"># 用户所属域名称(如果为Default域,可以省略)
-</span><span style="color:#4e9a06">export OS_DOMAIN_NAME=Default
 </span><span style="color:#4e9a06"># 用户密码
-</span><span style="color:#4e9a06">export OS_PASSWORD=***
+</span><span style="color:#4e9a06">export OS_PASSWORD=3hV3***84srk
 </span><span style="color:#4e9a06"># 用户所属项目名称
 </span><span style="color:#4e9a06">export OS_PROJECT_NAME=system
-</span><span style="color:#4e9a06"># 项目所属域名称(如果为Default域,可以省略)
-</span><span style="color:#4e9a06">export OS_PROJECT_DOMAIN=Default
-</span><span style="color:#4e9a06"># keystone 认证地址
-</span><span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
+</span><span style="color:#4e9a06"># 允许 insecure https 连接
+</span><span style="color:#4e9a06">export YUNION_INSECURE=true
 </span><span style="color:#4e9a06"># 对应的 region
-</span><span style="color:#4e9a06">export OS_REGION_NAME=Beijing
+</span><span style="color:#4e9a06">export OS_REGION_NAME=region0
+</span><span style="color:#4e9a06"># endpoint 类型为 public
+</span><span style="color:#4e9a06">export OS_ENDPOINT_TYPE=publicURL
 </span><span style="color:#4e9a06">EOF</span>
-
 </code></pre></div><p>以下为Access Key/Secret认证的配置文件模板，通过OS_ACCESS_KEY, OS_SECRET_KEY等两个字段指定用户的Access Key/secret。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用</span>
-$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; ~/test_rc_admin
-</span><span style="color:#4e9a06"># Access Key
-</span><span style="color:#4e9a06">export OS_ACCESS_KEY=0d184a3c9c484e4c892f4855935e37e7  
-</span><span style="color:#4e9a06"># Secret
-</span><span style="color:#4e9a06">export OS_SECRET_KEY=VG***5mUXM=
-</span><span style="color:#4e9a06"># keystone 认证地址
-</span><span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
-</span><span style="color:#4e9a06"># 对应的 region
-</span><span style="color:#4e9a06">export OS_REGION_NAME=Beijing
-</span><span style="color:#4e9a06">EOF</span>
-
-<span style="color:#8f5902;font-style:italic"># 在控制节点上获取用户在一个项目中的Access Key/Secret</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 在控制节点上获取用户在一个项目中的Access Key/Secret</span>
 
 <span style="color:#8f5902;font-style:italic"># 生成 Secret Key</span>
 $ climc credential-create-aksk
@@ -1349,9 +1336,24 @@ $ climc credential-list
 +-----------------------+------------+------------+-----------------------+---------+---------+-----------+---------+-----------------------+-------------+--------------+-----------------------+------+-----------------------+----------------------+----------+----------------------+
 ***  Total: <span style="color:#0000cf;font-weight:bold">1</span> Pages: <span style="color:#0000cf;font-weight:bold">1</span> Limit: <span style="color:#0000cf;font-weight:bold">2048</span> Offset: <span style="color:#0000cf;font-weight:bold">0</span> Page: <span style="color:#0000cf;font-weight:bold">1</span>  ***
 
+<span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; ~/test_rc_aksk
+</span><span style="color:#4e9a06"># Access Key
+</span><span style="color:#4e9a06">export OS_ACCESS_KEY=0d184a3c9c484e4c892f4855935e37e7  
+</span><span style="color:#4e9a06"># Secret
+</span><span style="color:#4e9a06">export OS_SECRET_KEY=VG***5mUXM=
+</span><span style="color:#4e9a06"># 允许 insecure https 连接
+</span><span style="color:#4e9a06">export YUNION_INSECURE=true
+</span><span style="color:#4e9a06"># keystone 认证地址
+</span><span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
+</span><span style="color:#4e9a06"># 对应的 region
+</span><span style="color:#4e9a06">export OS_REGION_NAME=region0
+</span><span style="color:#4e9a06">EOF</span>
 </code></pre></div><p>模板配置完成后，通过以下名称认证环境变量。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># source 认证环境变量</span>
 $ <span style="color:#204a87">source</span> ~/test_rc_admin
+<span style="color:#8f5902;font-style:italic"># 或者想要使用 Access Key/Secret 登陆</span>
+<span style="color:#8f5902;font-style:italic"># source ~/test_rc_aksk</span>
 
 <span style="color:#8f5902;font-style:italic"># 执行climc。例如，查看虚拟机列表</span>
 $ climc server-list
@@ -1669,7 +1671,7 @@ Optional arguments:
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 24.11.2020: <a  href="https://github.com/yunionio/docs/commit/c11f35aa20fa4a08138bc58586bc46bd121029bc">feat(howto): 完善 非控制节点认证配置 (c11f35a)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 30.11.2020: <a  href="https://github.com/yunionio/docs/commit/1c31e944a540fcc2e15e878574874223496afd73">fix(climc): adjust aksk operation order (1c31e94)</a>
 </div>
 </div>
 

@@ -90,7 +90,7 @@ $ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span
 将输出的认证信息保存到本地的文件中，通过source命令认证配置。&lt;/p&gt;
 &lt;p&gt;以下为用户名／密码认证的配置文件模板，通过OS_USERNAME, OS_DOMAIN_NAME, OS_PASSWORD, OS_PROJECT_NAME, OS_PROJECT_DOMAIN等字段指定用户的信息和项目的信息。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 在控制节点上获取认证所需要的配置信息。&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# ocadm cluster rcadmin&lt;/span&gt;
+$ ocadm cluster rcadmin
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_AUTH_URL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;https://192.168.0.246:5000/v3
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_USERNAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;sysadmin
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_PASSWORD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;3hV3***84srk
@@ -99,38 +99,25 @@ $ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_REGION_NAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;region0
 &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_ENDPOINT_TYPE&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;publicURL
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将认证信息保存到文件中，方便 source 使用&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将上述认证信息保存到文件中，方便 source 使用&lt;/span&gt;
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_admin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# keystone 认证地址
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_AUTH_URL=https://192.168.0.246:5000/v3
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户名
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_USERNAME=sysadmin
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户所属域名称(如果为Default域,可以省略)
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_DOMAIN_NAME=Default
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户密码
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PASSWORD=***
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PASSWORD=3hV3***84srk
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 用户所属项目名称
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PROJECT_NAME=system
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 项目所属域名称(如果为Default域,可以省略)
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_PROJECT_DOMAIN=Default
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# keystone 认证地址
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_AUTH_URL=https://192.168.0.246:5000/v3
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 允许 insecure https 连接
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export YUNION_INSECURE=true
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 对应的 region
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_REGION_NAME=Beijing
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_REGION_NAME=region0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# endpoint 类型为 public
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_ENDPOINT_TYPE=publicURL
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下为Access Key/Secret认证的配置文件模板，通过OS_ACCESS_KEY, OS_SECRET_KEY等两个字段指定用户的Access Key/secret。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将认证信息保存到文件中，方便 source 使用&lt;/span&gt;
-$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_admin
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Access Key
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_ACCESS_KEY=0d184a3c9c484e4c892f4855935e37e7  
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Secret
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_SECRET_KEY=VG***5mUXM=
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# keystone 认证地址
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_AUTH_URL=https://192.168.0.246:5000/v3
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 对应的 region
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_REGION_NAME=Beijing
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 在控制节点上获取用户在一个项目中的Access Key/Secret&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 在控制节点上获取用户在一个项目中的Access Key/Secret&lt;/span&gt;
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 生成 Secret Key&lt;/span&gt;
 $ climc credential-create-aksk
@@ -153,9 +140,24 @@ $ climc credential-list
 +-----------------------+------------+------------+-----------------------+---------+---------+-----------+---------+-----------------------+-------------+--------------+-----------------------+------+-----------------------+----------------------+----------+----------------------+
 ***  Total: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; Pages: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; Limit: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2048&lt;/span&gt; Offset: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; Page: &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;  ***
 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将认证信息保存到文件中，方便 source 使用&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_aksk
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Access Key
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_ACCESS_KEY=0d184a3c9c484e4c892f4855935e37e7  
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# Secret
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_SECRET_KEY=VG***5mUXM=
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 允许 insecure https 连接
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export YUNION_INSECURE=true
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# keystone 认证地址
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_AUTH_URL=https://192.168.0.246:5000/v3
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# 对应的 region
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;export OS_REGION_NAME=region0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;模板配置完成后，通过以下名称认证环境变量。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# source 认证环境变量&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; ~/test_rc_admin
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 或者想要使用 Access Key/Secret 登陆&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# source ~/test_rc_aksk&lt;/span&gt;
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 执行climc。例如，查看虚拟机列表&lt;/span&gt;
 $ climc server-list

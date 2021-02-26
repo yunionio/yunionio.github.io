@@ -21,36 +21,39 @@
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
 <title>升级相关 | 云联壹云</title><meta property="og:title" content="升级相关" />
-<meta property="og:description" content="本文介绍从 v3.3.x 升级到 v3.4.x 的步骤以及注意事项。
-版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.4.x 需要以下的步骤：
- v3.0.x =&gt; v3.1.x v3.1.x =&gt; v3.2.x v3.2.x =&gt; v3.3.x v3.3.x =&gt; v3.4.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
- v3.1.x 升级到 v3.2.x v3.2.x 升级到 v3.3.x  总体来说，升级的步骤如下:
- 更新 rpm 源，升级 ocadm 使用 ocadm 升级 云联壹云 服务  查看当前版本 可以使用 kubectl 查看当前集群的版本
-# 使用 kubectl 获得当前集群的版本为 v3.3.3 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.3.3 更新 rpm repo ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 云联壹云 服务。" />
+<meta property="og:description" content="本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。
+版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：
+ v3.2.x =&gt; v3.3.x v3.3.x =&gt; v3.4.x v3.4.x =&gt; v3.6.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
+ v3.1.x 升级到 v3.2.x v3.2.x 升级到 v3.3.x v3.3.x 升级到 v3.4.x  总体来说，升级的步骤如下:
+使用我们编写的 ocboot 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。
+ 使用 git 拉取最新的 ocboot 代码，切换到 release/3.6 分支 使用 ocboot 进行大版本升级  查看当前版本 可以使用 kubectl 查看当前集群的版本
+# 使用 kubectl 获得当前集群的版本为 v3.4.5 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.4.5 拉取 ocboot 工具 如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/setup/upgrade/" />
-<meta property="article:modified_time" content="2020-10-20T15:52:21+08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2021-02-25T17:40:06+08:00" /><meta property="og:site_name" content="云联壹云" />
 <meta itemprop="name" content="升级相关">
-<meta itemprop="description" content="本文介绍从 v3.3.x 升级到 v3.4.x 的步骤以及注意事项。
-版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.4.x 需要以下的步骤：
- v3.0.x =&gt; v3.1.x v3.1.x =&gt; v3.2.x v3.2.x =&gt; v3.3.x v3.3.x =&gt; v3.4.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
- v3.1.x 升级到 v3.2.x v3.2.x 升级到 v3.3.x  总体来说，升级的步骤如下:
- 更新 rpm 源，升级 ocadm 使用 ocadm 升级 云联壹云 服务  查看当前版本 可以使用 kubectl 查看当前集群的版本
-# 使用 kubectl 获得当前集群的版本为 v3.3.3 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.3.3 更新 rpm repo ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 云联壹云 服务。">
-<meta itemprop="dateModified" content="2020-10-20T15:52:21+08:00" />
-<meta itemprop="wordCount" content="143">
+<meta itemprop="description" content="本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。
+版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：
+ v3.2.x =&gt; v3.3.x v3.3.x =&gt; v3.4.x v3.4.x =&gt; v3.6.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
+ v3.1.x 升级到 v3.2.x v3.2.x 升级到 v3.3.x v3.3.x 升级到 v3.4.x  总体来说，升级的步骤如下:
+使用我们编写的 ocboot 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。
+ 使用 git 拉取最新的 ocboot 代码，切换到 release/3.6 分支 使用 ocboot 进行大版本升级  查看当前版本 可以使用 kubectl 查看当前集群的版本
+# 使用 kubectl 获得当前集群的版本为 v3.4.5 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.4.5 拉取 ocboot 工具 如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。">
+<meta itemprop="dateModified" content="2021-02-25T17:40:06+08:00" />
+<meta itemprop="wordCount" content="162">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="升级相关"/>
-<meta name="twitter:description" content="本文介绍从 v3.3.x 升级到 v3.4.x 的步骤以及注意事项。
-版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.4.x 需要以下的步骤：
- v3.0.x =&gt; v3.1.x v3.1.x =&gt; v3.2.x v3.2.x =&gt; v3.3.x v3.3.x =&gt; v3.4.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
- v3.1.x 升级到 v3.2.x v3.2.x 升级到 v3.3.x  总体来说，升级的步骤如下:
- 更新 rpm 源，升级 ocadm 使用 ocadm 升级 云联壹云 服务  查看当前版本 可以使用 kubectl 查看当前集群的版本
-# 使用 kubectl 获得当前集群的版本为 v3.3.3 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.3.3 更新 rpm repo ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 云联壹云 服务。"/>
+<meta name="twitter:description" content="本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。
+版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：
+ v3.2.x =&gt; v3.3.x v3.3.x =&gt; v3.4.x v3.4.x =&gt; v3.6.x  直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:
+ v3.1.x 升级到 v3.2.x v3.2.x 升级到 v3.3.x v3.3.x 升级到 v3.4.x  总体来说，升级的步骤如下:
+使用我们编写的 ocboot 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。
+ 使用 git 拉取最新的 ocboot 代码，切换到 release/3.6 分支 使用 ocboot 进行大版本升级  查看当前版本 可以使用 kubectl 查看当前集群的版本
+# 使用 kubectl 获得当前集群的版本为 v3.4.5 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.4.5 拉取 ocboot 工具 如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。"/>
 
 
 
@@ -89,14 +92,18 @@
 
 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     
-    v3.4
+    v3.6
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
     
     
     
         
-            <a class="dropdown-item" href="/">v3.4 (latest)</a>
+            <a class="dropdown-item" href="/">v3.6 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.4">v3.4</a>
         
     
         
@@ -169,7 +176,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.7f5b9eb94d028fce9f7a750ff0955914.json"
+  data-offline-search-index-json-src="/offline-search-index.4da8b2806a9e4e34fd407d00634017ac.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -202,7 +209,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.7f5b9eb94d028fce9f7a750ff0955914.json"
+  data-offline-search-index-json-src="/offline-search-index.4da8b2806a9e4e34fd407d00634017ac.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -762,6 +769,12 @@
       
       
       
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docshowtocontainerpre_env" href="/docs/howto/container/pre_env/">环境准备</a>
+      
+      
     </li>
   </ul>
 </ul>
@@ -1069,7 +1082,8 @@
 <nav id="TableOfContents">
   <ul>
     <li><a href="#查看当前版本">查看当前版本</a></li>
-    <li><a href="#更新-rpm-repo">更新 rpm repo</a></li>
+    <li><a href="#拉取-ocboot-工具">拉取 ocboot 工具</a></li>
+    <li><a href="#更新-ocboot-代码">更新 ocboot 代码</a></li>
     <li><a href="#更新-云联壹云-服务">更新 云联壹云 服务</a></li>
   </ul>
 </nav>
@@ -1120,47 +1134,54 @@
 	<h1>升级相关</h1>
     
 	       
-	<p>本文介绍从 v3.3.x 升级到 v3.4.x 的步骤以及注意事项。</p>
-<p>版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.4.x 需要以下的步骤：</p>
+	<p>本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。</p>
+<p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：</p>
 <ol>
-<li>v3.0.x =&gt; v3.1.x</li>
-<li>v3.1.x =&gt; v3.2.x</li>
 <li>v3.2.x =&gt; v3.3.x</li>
 <li>v3.3.x =&gt; v3.4.x</li>
+<li>v3.4.x =&gt; v3.6.x</li>
 </ol>
 <p>直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:</p>
 <ul>
 <li><a href="https://opensource.yunion.cn/v3.2/docs/setup/upgrade">v3.1.x 升级到 v3.2.x</a></li>
 <li><a href="https://opensource.yunion.cn/v3.3/docs/setup/upgrade">v3.2.x 升级到 v3.3.x</a></li>
+<li><a href="https://opensource.yunion.cn/v3.4/docs/setup/upgrade">v3.3.x 升级到 v3.4.x</a></li>
 </ul>
 <p>总体来说，升级的步骤如下:</p>
+<p>使用我们编写的 <a href="https://github.com/yunionio/ocboot">ocboot</a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。</p>
 <ol>
-<li>更新 rpm 源，升级 ocadm</li>
-<li>使用 ocadm 升级 云联壹云 服务</li>
+<li>使用 git 拉取最新的 <a href="https://github.com/yunionio/ocboot">ocboot</a> 代码，切换到 release/3.6 分支</li>
+<li>使用 <a href="https://github.com/yunionio/ocboot">ocboot</a> 进行大版本升级</li>
 </ol>
 <h2 id="查看当前版本">查看当前版本</h2>
 <p>可以使用 kubectl 查看当前集群的版本</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.3.3</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.4.5</span>
 $ kubectl -n onecloud get onecloudclusters default -o<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#000">jsonpath</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;{.spec.version}&#39;</span>
-v3.3.3
-</code></pre></div><h2 id="更新-rpm-repo">更新 rpm repo</h2>
-<p>ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 云联壹云 服务。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 修改 baseurl，把 3.3 改成 3.4</span>
-$ sed -i <span style="color:#4e9a06">&#39;s|baseurl.*|baseurl=https://iso.yunion.cn/3.4|g&#39;</span> /etc/yum.repos.d/yunion.repo
+v3.4.5
+</code></pre></div><h2 id="拉取-ocboot-工具">拉取 ocboot 工具</h2>
+<p>如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
+$ pip install ansible
 
-<span style="color:#8f5902;font-style:italic"># 更新 yunion-ocadm, yunion-climc</span>
-$ yum clean all
-$ yum install -y yunion-ocadm yunion-climc
-
-<span style="color:#8f5902;font-style:italic"># 查看 ocadm 版本</span>
-$ ocadm version -o short
-tags/v3.4.3<span style="color:#ce5c00;font-weight:bold">(</span>99f04e620101609<span style="color:#ce5c00;font-weight:bold">)</span>
+<span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+</code></pre></div><h2 id="更新-ocboot-代码">更新 ocboot 代码</h2>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git checkout release/3.6
+$ git pull
 </code></pre></div><h2 id="更新-云联壹云-服务">更新 云联壹云 服务</h2>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 ocadm 更新 operator 以及相关服务到 v3.4.3 版本</span>
+<p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：</p>
+<ol>
+<li>本机能够 ssh 远程登录 PRIMARY_MASTER_HOST</li>
+<li>PRIMARY_MASTER_HOST 能够 ssh 免密码登录集群中的其它节点</li>
+</ol>
+<p>如果没有设置免密码登录，请使用 <em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST</em> 命令把公钥下发到自己环境对应的节点。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务到 v3.6.7 版本</span>
 <span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待</span>
-$ ocadm cluster update --operator-version v3.4.3 --version v3.4.3 --wait
+<span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址</span>
+<span style="color:#8f5902;font-style:italic"># 需要本机能够使用 ssh 密钥登录上去</span>
+$ ./ocboot.py upgrade &lt;PRIMARY_MASTER_HOST&gt; v3.6.7
 
-<span style="color:#8f5902;font-style:italic"># 另外可以在升级的过程中使用 kubectl 查看对应 pods 的升级情况</span>
+<span style="color:#8f5902;font-style:italic"># 另外可以在升级的过程中可以登录到 PRIMARY_MASTER_HOST， 使用 kubectl 查看对应 pods 的升级情况</span>
 $ kubectl get pods -n onecloud --watch
 </code></pre></div>
 	
@@ -1225,7 +1246,7 @@ $ kubectl get pods -n onecloud --watch
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 25.02.2021: <a  href="https://github.com/yunionio/docs/commit/1e237ee7dddb86c184c3d1db2065459666124d55">feat(v3.6): release v3.6 docs (1e237ee)</a>
 </div>
 </div>
 

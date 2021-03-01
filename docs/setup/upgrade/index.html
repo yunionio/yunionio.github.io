@@ -31,7 +31,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/setup/upgrade/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2021-03-01T16:17:48&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2021-03-01T17:05:38&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="升级相关">
 <meta itemprop="description" content="本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。
@@ -41,8 +41,8 @@
 使用我们编写的 ocboot 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。
  使用 git 拉取最新的 ocboot 代码，切换到 release/3.6 分支 使用 ocboot 进行大版本升级  查看当前版本 可以使用 kubectl 查看当前集群的版本
 # 使用 kubectl 获得当前集群的版本为 v3.4.5 $ kubectl -n onecloud get onecloudclusters default -o=jsonpath=&#39;{.spec.version}&#39; v3.4.5 拉取 ocboot 工具 如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。">
-<meta itemprop="dateModified" content="2021-03-01T16:17:48&#43;08:00" />
-<meta itemprop="wordCount" content="196">
+<meta itemprop="dateModified" content="2021-03-01T17:05:38&#43;08:00" />
+<meta itemprop="wordCount" content="205">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="升级相关"/>
 <meta name="twitter:description" content="本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。
@@ -174,7 +174,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.70ffd7e2f47ba995c1e1247b8409180f.json"
+  data-offline-search-index-json-src="/offline-search-index.eb89e5bc6eb05cf48d8e290b8814d797.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -207,7 +207,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.70ffd7e2f47ba995c1e1247b8409180f.json"
+  data-offline-search-index-json-src="/offline-search-index.eb89e5bc6eb05cf48d8e290b8814d797.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1270,6 +1270,8 @@ $ pip install ansible
 
 <span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
 $ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+<span style="color:#8f5902;font-style:italic"># 安装相应 python 包依赖</span>
+$ pip install -r ./requirements.txt
 </code></pre></div><h2 id="更新-ocboot-代码">更新 ocboot 代码</h2>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git checkout release/3.6
 $ git pull
@@ -1359,7 +1361,7 @@ $ kubectl get pods -n onecloud --watch
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 01.03.2021: <a  href="https://github.com/yunionio/docs/commit/046fbb20e75bfef7a71250c58d3fb4be7b6cf704">feat(upgrade): add page changelog link (046fbb2)</a>
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 01.03.2021: <a  href="https://github.com/yunionio/docs/commit/67e1f0c61e5c63b828a0af3370c8857150f15bb8">fix(upgrade): pip install requirements (67e1f0c)</a>
 </div>
 </div>
 

@@ -21,21 +21,21 @@
 <link rel="icon" type="image/png" href="/v3.4/favicons/android-192x192.png" sizes="192x192">
 
 <title>All in One 安装 | 云联壹云</title><meta property="og:title" content="All in One 安装" />
-<meta property="og:description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务
+<meta property="og:description" content="使用 ansible 安装脚本快速在已有的 CentOS 7 虚拟机上 All in One 部署 云联壹云 服务
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/v3.4/docs/quickstart/allinone/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2020-11-24T18:26:33&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2021-03-08T17:33:36&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="All in One 安装">
-<meta itemprop="description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务
+<meta itemprop="description" content="使用 ansible 安装脚本快速在已有的 CentOS 7 虚拟机上 All in One 部署 云联壹云 服务
 ">
-<meta itemprop="dateModified" content="2020-11-24T18:26:33&#43;08:00" />
-<meta itemprop="wordCount" content="336">
+<meta itemprop="dateModified" content="2021-03-08T17:33:36&#43;08:00" />
+<meta itemprop="wordCount" content="361">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="All in One 安装"/>
-<meta name="twitter:description" content="使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务
+<meta name="twitter:description" content="使用 ansible 安装脚本快速在已有的 CentOS 7 虚拟机上 All in One 部署 云联壹云 服务
 "/>
 
 
@@ -159,7 +159,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/v3.4/offline-search-index.e7e699ec4176e280ad6755eb6d32c2f6.json"
+  data-offline-search-index-json-src="/v3.4/offline-search-index.7f5f308cb54af0e2a14e886abd902b23.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -192,7 +192,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/v3.4/offline-search-index.e7e699ec4176e280ad6755eb6d32c2f6.json"
+  data-offline-search-index-json-src="/v3.4/offline-search-index.7f5f308cb54af0e2a14e886abd902b23.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1129,7 +1129,7 @@
             
 <div class="td-content">
 	<h1>All in One 安装</h1>
-    <div class="lead">使用 ansible 安装脚本快速在已有的 Centos 7 虚拟机上 All in One 部署 云联壹云 服务</div>
+    <div class="lead">使用 ansible 安装脚本快速在已有的 CentOS 7 虚拟机上 All in One 部署 云联壹云 服务</div>
 	       
 	<h2 id="前提">前提</h2>
 
@@ -1143,7 +1143,7 @@
 <p>云联壹云 相关的组件运行在 kubernetes 之上。</p>
 <h3 id="服务器配置要求">服务器配置要求</h3>
 <ul>
-<li>操作系统: Centos 7.6</li>
+<li>操作系统: CentOS 7.6</li>
 <li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
 </ul>
 <p>以下为待部署机器的环境:</p>
@@ -1159,7 +1159,7 @@
 <tr>
 <td style="text-align:center">10.168.26.216</td>
 <td style="text-align:center">root</td>
-<td style="text-align:center">Centos 7.6</td>
+<td style="text-align:center">CentOS 7.6</td>
 </tr>
 </tbody>
 </table>
@@ -1197,12 +1197,27 @@ $ ssh root@10.168.26.216 <span style="color:#4e9a06">&#34;hostname&#34;</span>
 </code></pre></div><h2 id="开始部署">开始部署</h2>
 <p>部署的工具是 <a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot</a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 云联壹云 服务，以下操作都在本地环境上进行操作。操作步骤如下:</p>
 <h3 id="下载-ocboot">下载 ocboot</h3>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
+<ul class="nav nav-tabs" id="ocboot_install" role="tablist"><li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7</a></li>
+	  
+		<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">其它操作系统</a></li></ul>
+<div class="tab-content" id="ocboot_install"><div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
+
+<p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
+$ yum install -y epel-release ansible
+
+<span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+</code></pre></div></div>
+  <div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
+
+<p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
 $ pip install ansible
 
 <span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
 $ git clone -b release/3.4 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
-</code></pre></div><h3 id="编写部署配置">编写部署配置</h3>
+</code></pre></div></div></div>
+
+<h3 id="编写部署配置">编写部署配置</h3>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 编写 config-allinone.yml 文件</span>
 $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-allinone.yml
 </span><span style="color:#4e9a06"># mariadb_node 表示需要部署 mariadb 服务的节点
@@ -1351,7 +1366,7 @@ $ reboot
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 24.11.2020: <a  href="https://github.com/yunionio/docs/commit/41e256510d8b3bffe08b6007ff774ecb56a7e7d4">feat(quickstart): expand FAQ for allinone (41e2565)</a>
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 08.03.2021: <a  href="https://github.com/yunionio/docs/commit/0a9aac2936a3131bbd3eea0c98d8fa087bc909dd">feat(shortcodes): add tabs (0a9aac2)</a>
 </div>
 </div>
 

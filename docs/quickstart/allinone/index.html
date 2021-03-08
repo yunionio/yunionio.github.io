@@ -26,13 +26,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/docs/quickstart/allinone/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2021-03-08T17:33:36&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2021-03-06T12:57:50&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="All in One 安装">
 <meta itemprop="description" content="使用 ansible 安装脚本快速在已有的 CentOS 7 虚拟机上 All in One 部署 云联壹云 服务
 ">
-<meta itemprop="dateModified" content="2021-03-08T17:33:36&#43;08:00" />
-<meta itemprop="wordCount" content="366">
+<meta itemprop="dateModified" content="2021-03-06T12:57:50&#43;08:00" />
+<meta itemprop="wordCount" content="414">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="All in One 安装"/>
 <meta name="twitter:description" content="使用 ansible 安装脚本快速在已有的 CentOS 7 虚拟机上 All in One 部署 云联壹云 服务
@@ -159,7 +159,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.b6e7b47e9b5c4e7ac67e9eac9dc378d6.json"
+  data-offline-search-index-json-src="/offline-search-index.f43f4a1e39425de5efdb39992476239a.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -192,7 +192,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.b6e7b47e9b5c4e7ac67e9eac9dc378d6.json"
+  data-offline-search-index-json-src="/offline-search-index.f43f4a1e39425de5efdb39992476239a.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1184,15 +1184,16 @@
         <li><a href="#下载-ocboot">下载 ocboot</a></li>
         <li><a href="#编写部署配置">编写部署配置</a></li>
         <li><a href="#开始部署-1">开始部署</a></li>
+        <li><a href="#创建第一台虚拟机">创建第一台虚拟机</a></li>
+        <li><a href="#导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源</a></li>
       </ul>
     </li>
     <li><a href="#faq">FAQ</a>
       <ul>
         <li><a href="#1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？</a></li>
-        <li><a href="#2-如何导入公有云或者其它私有云平台资源">2. 如何导入公有云或者其它私有云平台资源？</a></li>
-        <li><a href="#3-修改节点的-hostname-有些服务启动失败">3. 修改节点的 hostname ，有些服务启动失败</a></li>
-        <li><a href="#4-如何重装">4. 如何重装</a></li>
-        <li><a href="#5-其它问题">5. 其它问题？</a></li>
+        <li><a href="#2-修改节点的-hostname-有些服务启动失败">2. 修改节点的 hostname ，有些服务启动失败</a></li>
+        <li><a href="#3-如何重装">3. 如何重装</a></li>
+        <li><a href="#4-其它问题">4. 其它问题？</a></li>
       </ul>
     </li>
   </ul>
@@ -1380,6 +1381,21 @@ User: admin
 Password: admin@123
 </code></pre></div><p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 <code>admin</code>，密码输入 <code>admin@123</code> 就会进入 云联壹云 的界面。</p>
 <p><img src="../images/index.png" alt="登录页"></p>
+<h3 id="创建第一台虚拟机">创建第一台虚拟机</h3>
+<p>通过如下三步创建出第一台虚拟机：</p>
+<h4 id="1-导入镜像">1. 导入镜像</h4>
+<p>浏览位于 <a href="https://cloud.centos.org/centos/7/images/">CentOS 7云主机镜像</a> ，选择一个GenericCloud 镜像，拷贝镜像URL。</p>
+<p>在 <code>主机</code> 菜单，选择 <code>系统镜像</code>，选择 <code>上传</code>。输入镜像名称，选择 <code>输入镜像URL</code>，选择 <code>确定</code>。</p>
+<p>可以访问 <a href="https://docs.openstack.org/image-guide/obtain-images.html">https://docs.openstack.org/image-guide/obtain-images.html</a> 获得更多的虚拟机镜像。</p>
+<h4 id="2-创建网络vpc和ip子网">2. 创建网络（VPC和IP子网）</h4>
+<p>[新建VPC] 在 <code>网络</code> 菜单，选择 <code>VPC</code> 子菜单，选择 <code>新建</code>。输入名称，例如 <code>vpc0</code>，选择目标网段，例如 <code>192.168.0.0/16</code>。点击 <code>新建</code>。</p>
+<p>[新建IP子网] VPC创建完成后，选择 <code>IP子网</code> 子菜单，选择 <code>新建</code>。输入名称，例如 <code>vnet0</code>，选择VPC为刚才创建的VPC <code>vpc0</code>，选择可用区，输入 <code>子网网段</code>，例如 <code>192.168.100.0/24</code>。点击 <code>新建</code>。</p>
+<h4 id="3-创建虚拟机">3. 创建虚拟机</h4>
+<p>在 <code>主机</code> 菜单，选择 <code>虚拟机</code>，选择 <code>新建</code>。在此界面输入主机名，选择镜像和IP子网，创建虚拟机。</p>
+<h3 id="导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源</h3>
+<p>云联壹云自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。</p>
+<p>在 <code>多云管理</code> 菜单，选择 <code>云账号</code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 云联壹云 服务就会同步相应云平台的资源，同步完成后即可在前端查看。</p>
+<p><img src="../images/cloudaccount.png" alt="多云管理"></p>
 <h2 id="faq">FAQ</h2>
 <h3 id="1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？</h3>
 <p>All in One 部署的节点会部署 云联壹云 host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 云联壹云 环境中没有启用宿主机。</p>
@@ -1398,12 +1414,9 @@ $ reboot
 </div>
 
 <p><img src="../images/host.png" alt="宿主机"></p>
-<h3 id="2-如何导入公有云或者其它私有云平台资源">2. 如何导入公有云或者其它私有云平台资源？</h3>
-<p>在 <code>多云管理</code> 菜单，选择 <code>云账号</code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 云联壹云 服务就会同步相应云平台的资源，同步完成后即可在前端查看。</p>
-<p><img src="../images/cloudaccount.png" alt="多云管理"></p>
-<h3 id="3-修改节点的-hostname-有些服务启动失败">3. 修改节点的 hostname ，有些服务启动失败</h3>
+<h3 id="2-修改节点的-hostname-有些服务启动失败">2. 修改节点的 hostname ，有些服务启动失败</h3>
 <p>k8s 管理节点，依赖于 hostname，请改回去。</p>
-<h3 id="4-如何重装">4. 如何重装</h3>
+<h3 id="3-如何重装">3. 如何重装</h3>
 <ol>
 <li>
 <p>重新运行 ocboot 的脚本</p>
@@ -1416,7 +1429,7 @@ $ reboot
 <ol start="3">
 <li>第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。</li>
 </ol>
-<h3 id="5-其它问题">5. 其它问题？</h3>
+<h3 id="4-其它问题">4. 其它问题？</h3>
 <p>其它问题欢迎在 云联壹云 github issues 界面提交: <a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues</a> , 我们会尽快回复。</p>
 
 	
@@ -1481,7 +1494,7 @@ $ reboot
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 08.03.2021: <a  href="https://github.com/yunionio/docs/commit/3e338444eadd2e86e10bbb84fbf12959b5e63a24">feat(shortcodes): add tabs (3e33844)</a>
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 06.03.2021: <a  href="https://github.com/yunionio/docs/commit/56c10effa985d9a6bf554f8606c7b5deb8765b42">Update allinone.md (56c10ef)</a>
 </div>
 </div>
 

@@ -14,27 +14,63 @@
     
     
     <item>
-      <title>Docs: 开发贡献</title>
-      <link>https://opensource.yunion.cn/docs/contribute/contrib/</link>
+      <title>Docs: 搭建开发环境</title>
+      <link>https://opensource.yunion.cn/docs/contribute/dev-env/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://opensource.yunion.cn/docs/contribute/contrib/</guid>
+      <guid>https://opensource.yunion.cn/docs/contribute/dev-env/</guid>
       <description>
         
         
-        &lt;h2 id=&#34;安装-go&#34;&gt;安装 Go&lt;/h2&gt;
-&lt;p&gt;Golang 版本要求 1.12 以上&lt;/p&gt;
-&lt;p&gt;安装go环境参考: &lt;a href=&#34;https://golang.org/doc/install&#34;&gt;Install doc&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;安装-ceph-依赖&#34;&gt;安装 ceph 依赖&lt;/h2&gt;
-&lt;p&gt;On rpm based systems (dnf, yum, etc):&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;sudo rpm --import https://download.ceph.com/keys/release.asc
-sudo yum install -y https://download.ceph.com/rpm-luminous/el7/noarch/ceph-release-1-1.el7.noarch.rpm
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install -y libcephfs-devel librbd-devel librados-devel
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;On debian systems (apt):&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;wget -q -O- &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo apt-key add -
-&lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; deb https://download.ceph.com/debian-luminous/ &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;lsb_release -sc&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt; main &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo tee /etc/apt/sources.list.d/ceph.list
-apt-get update &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get install -y libcephfs-dev librbd-dev librados-dev
+        
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;说明&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;服务是以容器的方式运行在 Kubernetes(K8S) 集群里面的，所以开发调试需要部署一个 Kubernetes 集群&lt;/li&gt;
+&lt;li&gt;后端服务都是用 Golang 编写，所以需要在开发环境安装 Golang&lt;/li&gt;
+&lt;li&gt;为了把开发的服务发布到 Kubernetes 集群，需要在本地把相关服务构建成 docker 镜像&lt;/li&gt;
+&lt;li&gt;开发环境最好都是在 Linux 上进行，安装使用 docker 和编译源码都很方便&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;接下来介绍如何搭建开发环境。&lt;/p&gt;
+&lt;h2 id=&#34;部署云联壹云服务&#34;&gt;部署云联壹云服务&lt;/h2&gt;
+&lt;p&gt;在开始开发之前，请先参考 &lt;a href=&#34;../../quickstart/allinone&#34;&gt;All in One 安装&lt;/a&gt; 或者 &lt;a href=&#34;../../quickstart/minikube&#34;&gt;MiniKube 安装&lt;/a&gt; 部署云联壹云服务。我们的服务全部使用容器的方式运行在 Kubernetes 集群里面，所以需要先搭建好我们的服务，把这个环境作为自己的开发环境。&lt;/p&gt;
+&lt;p&gt;这里建议使用一个单独的 CentOS 7 虚拟机，配置(至少 4C8G + 100G 系统盘)，安装部署我们的服务。&lt;/p&gt;
+&lt;h2 id=&#34;安装-go&#34;&gt;安装 Go&lt;/h2&gt;
+&lt;p&gt;Golang 版本要求 1.15 以上&lt;/p&gt;
+&lt;p&gt;安装 Golang 环境请参考： &lt;a href=&#34;https://golang.org/doc/install&#34;&gt;Install Golang&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;安装配置-docker&#34;&gt;安装配置 Docker&lt;/h2&gt;
+&lt;p&gt;因为要把服务打包成容器镜像，所以需要先安装 docker，这里的 docker 版本需要是 docker-ce 19.03 以上的版本。&lt;/p&gt;
+&lt;p&gt;下面是不同操作系统和 Linux 发行版的安装方式，这里还是建议开发环境是 Linux 。&lt;/p&gt;
+&lt;h3 id=&#34;安装-docker&#34;&gt;安装 Docker&lt;/h3&gt;
+&lt;ul class=&#34;nav nav-tabs&#34; id=&#34;docker_install&#34; role=&#34;tablist&#34;&gt;&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link active&#34; href=&#34;#docker_install-0&#34; role=&#34;tab&#34; aria-controls=&#34;docker_install-0&#34; aria-selected=&#34;true&#34;&gt;CentOS 7&lt;/a&gt;&lt;/li&gt;
+	  &lt;/ul&gt;
+&lt;div class=&#34;tab-content&#34; id=&#34;docker_install&#34;&gt;&lt;div id=&#34;docker_install-0&#34; class=&#34;tab-pane show active&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;docker_install-0&#34;&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 1. 安装必要的一些系统工具&lt;/span&gt;
+sudo yum install -y yum-utils
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 2. 添加软件源信息&lt;/span&gt;
+sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 3. 更新并安装 Docker CE&lt;/span&gt;
+sudo yum -y install docker-ce
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;配置-docker&#34;&gt;配置 Docker&lt;/h3&gt;
+&lt;p&gt;后续的代码编译和打包使用了 &lt;a href=&#34;https://github.com/docker/buildx/&#34;&gt;docker buildx&lt;/a&gt; 的功能，需要做在让 docker daemon 开启 experimental 特性。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 在 docker daemon 的配置里面打开 experimental 特性&lt;/span&gt;
+$ cat /etc/docker/daemon.json
+&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;
+  &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;experimental&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;
+&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 重启 docker 服务&lt;/span&gt;
+$ systemctl restart docker
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建 buildx context&lt;/span&gt;
+$ docker buildx create --use --name build --node build --driver-opt &lt;span style=&#34;color:#000&#34;&gt;network&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;host
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;编译-云联壹云-组件&#34;&gt;编译 云联壹云 组件&lt;/h2&gt;
 &lt;h3 id=&#34;fork-仓库&#34;&gt;Fork 仓库&lt;/h3&gt;
 &lt;p&gt;访问 &lt;a href=&#34;https://github.com/yunionio/onecloud&#34;&gt;https://github.com/yunionio/onecloud&lt;/a&gt; ，将仓库 fork 到自己的 github 用户下。&lt;/p&gt;
@@ -43,41 +79,151 @@ apt-get update &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;a
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ git clone  https://github.com/&amp;lt;your_name&amp;gt;/onecloud &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
 $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
 $ git remote add upstream https://github.com/yunionio/onecloud
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;编译&#34;&gt;编译&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译所有组件&lt;/span&gt;
-$ make
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# cmd 目录下面存放着所有的组件:&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;二进制编译&#34;&gt;二进制编译&lt;/h3&gt;
+&lt;p&gt;编译是直接调用 go 编译器在本地编译出二进制，对应的 Makefile 规则为 &lt;code&gt;make cmd/%&lt;/code&gt; ，&lt;code&gt;%&lt;/code&gt; 对应的是 &lt;code&gt;cmd&lt;/code&gt; 目录里面的组件名称。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# cmd 目录下面存放着所有的组件:&lt;/span&gt;
 $ ls cmd
 ...
 ansibleserver    climc      glance      keystone  qcloudcli     ucloudcli
 awscli           cloudir    host        lbagent   region        webconsole
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以编译cmd下制定的组件，比如：编译 region 和 host 组件&lt;/span&gt;
-$ make cmd/region cmd/host
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以编译cmd下指定的组件，比如：编译 climc 和 region 组件&lt;/span&gt;
+$ make cmd/climc cmd/region
 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看编译好的二进制文件&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译好的二进制会直接在 _output/bin 目录下面，查看编译好的二进制文件&lt;/span&gt;
 $ ls _output/bin
-region host
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;本地开发调试&#34;&gt;本地开发调试&lt;/h2&gt;
-&lt;p&gt;3.0 版本后我们的服务都已经容器化运行在 k8s 集群中，快速开发调试并不方便。
-通过Telepresence 提供远程k8s上下文，可以在本地开发调试。&lt;/p&gt;
+climc region
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译所有组件&lt;/span&gt;
+$ make
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;docker-镜像编译上传&#34;&gt;Docker 镜像编译上传&lt;/h3&gt;
+&lt;p&gt;通常我们的开发流程是写完代码，把相应服务打包生成 docker 镜像，然后发布到自己搭建的 Kubernetes 集群里面测试。
+下面说明如何生成 docker 镜像。&lt;/p&gt;
+&lt;p&gt;生成好的 docker 镜像需要上传的镜像仓库，这里以 &lt;a href=&#34;https://cn.aliyun.com/product/acr&#34;&gt;Aliyun 的容器镜像服务&lt;/a&gt; 为例，比如我在 aliyun 创建了一个公开的命令空间，仓库地址为: &lt;code&gt;registry.cn-beijing.aliyuncs.com/zexi&lt;/code&gt; 。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 在本地登录镜像仓库，这里以你自己的镜像仓库为准&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 需要先用自己的 aliyun 帐号登录下，后面容器镜像的上传就不需要密码了&lt;/span&gt;
+$ docker login registry.cn-beijing.aliyuncs.com/zexi
+......
+Login Succeeded
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;准备好镜像仓库后，就可以开始打包上传镜像了，这些步骤是通过 Makefile 的 image 规则来执行的。&lt;/p&gt;
+&lt;p&gt;这里有以下环境变量用来控制制作镜像的内容：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;REGISTRY: 对应镜像上传的仓库&lt;/li&gt;
+&lt;li&gt;VERSION: 用于生成镜像的 tag&lt;/li&gt;
+&lt;li&gt;ARCH: 对应 docker 镜像的 arch，可设置成 &amp;lsquo;arm64&amp;rsquo; 或者 &amp;lsquo;all&amp;rsquo;
+&lt;ul&gt;
+&lt;li&gt;arm64: 编译打包制作 arm64 的 docker 镜像&lt;/li&gt;
+&lt;li&gt;all: 编译打包制作 amd64 和 arm64 的镜像&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;DEBUG: 如果设置为 true 会显示打包步骤&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据 REGISTRY 和 VERSION 这两个环境变量，会生成各个组件的镜像地址，格式是:
+&lt;code&gt;$(REGISTRY)/$(component):$VERSION&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将 region 服务编译并制作成 docker 镜像&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后上传到 registry.cn-beijing.aliyuncs.com/zexi/region:dev&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;VERSION&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;dev &lt;span style=&#34;color:#000&#34;&gt;REGISTRY&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.cn-beijing.aliyuncs.com/zexi make image region
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译多个组件，并上传，以下命令会上传以下的组件&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# - registry.cn-beijing.aliyuncs.com/zexi/ansibleserver:dev&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# - registry.cn-beijing.aliyuncs.com/zexi/apigateway:dev&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# - registry.cn-beijing.aliyuncs.com/zexi/region:dev&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;VERSION&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;dev &lt;span style=&#34;color:#000&#34;&gt;REGISTRY&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.cn-beijing.aliyuncs.com/zexi make image &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;     ansibleserver apigateway region
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 arm64 的镜像，如果指定了 ARCH=arm64 ，则会在对应镜像的末尾加上 &amp;#39;-arm64&amp;#39; 的后缀&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# - registry.cn-beijing.aliyuncs.com/yunionio/scheduler:dev-arm64&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;VERSION&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;dev &lt;span style=&#34;color:#000&#34;&gt;REGISTRY&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.cn-beijing.aliyuncs.com/zexi &lt;span style=&#34;color:#000&#34;&gt;ARCH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;arm64 make image scheduler
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 amd64 + arm64 的镜像，指定 ARCH=all，这里不会添加后缀，会在镜像名里面包含两个架构的版本&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# - registry.cn-beijing.aliyuncs.com/yunionio/cloudid:dev&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;VERSION&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;dev &lt;span style=&#34;color:#000&#34;&gt;REGISTRY&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.cn-beijing.aliyuncs.com/zexi &lt;span style=&#34;color:#000&#34;&gt;ARCH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;all make image cloudid
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 同时编译多个多架构的组件，并上传&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;VERSION&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;dev &lt;span style=&#34;color:#000&#34;&gt;ARCH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;all &lt;span style=&#34;color:#000&#34;&gt;REGISTRY&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.cn-beijing.aliyuncs.com/zexi make image &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;     ansibleserver apigateway baremetal-agent climc cloudevent &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;     cloudnet devtool esxi-agent glance host host-deployer keystone &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;     logger notify region s3gateway scheduler webconsole yunionconf &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;     vpcagent monitor region-dns cloudid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;开发调试&#34;&gt;开发调试&lt;/h2&gt;
+&lt;p&gt;开发调试的通常步骤是，写好代码后，使用之前说的 &lt;a href=&#34;#docker-%E9%95%9C%E5%83%8F%E7%BC%96%E8%AF%91%E4%B8%8A%E4%BC%A0&#34;&gt;make image&lt;/a&gt; 规则打包上传对应服务的 docker 镜像，然后将镜像发布到自己的 Kubernetes 集群进行测试。&lt;/p&gt;
+&lt;h3 id=&#34;将镜像发布到-kubernetes-集群&#34;&gt;将镜像发布到 Kubernetes 集群&lt;/h3&gt;
+&lt;p&gt;后端的服务都运行在 Kubernetes 的 onecloud namespace 里面，可以通过以下命令查看对应的 Kubernetes 资源。我们的服务使用以下的 Kubernetes 资源进行服务的管理。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;deployment: 管理大部分的服务，这种服务会在 Kubernetes 的任意一个 master 节点启动，比如: region, apigateway 服务等&lt;/li&gt;
+&lt;li&gt;daemonset: 管理需要在每个 Kubernetes 节点都启动的服务，比如: host 服务(私有云计算节点服务)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;说明&lt;/h4&gt;
+&lt;p&gt;另外需要简单了解下 Kubernetes pod 这种资源，pod 是实际运行容器的集合，是 Kubernetes 里面运行容器化服务的最小单元，一个 pod 里面可以运行多个容器，每个容器都有自己对应的镜像。&lt;/p&gt;
+&lt;p&gt;其它 Kubernetes 资源介绍可参考官方的 &lt;a href=&#34;https://kubernetes.io/zh/docs/concepts/workloads/&#34;&gt;工作负载介绍&lt;/a&gt;。&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;下面是使用 kubectl(Kubernetes 命令行工具) 查看各个服务对应资源的命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看 onecloud 命令空间下面的 deployment&lt;/span&gt;
+$ kubectl -n onecloud get deployment
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看 onecloud 命令空间下面的 daemonset&lt;/span&gt;
+$ kubectl -n onecloud get daemonset
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看 onecloud 命名空间下面的 pods&lt;/span&gt;
+$ kubectl -n onecloud get pod 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;对 Kubernetes 资源有了大概了解后，接下来的步骤就是把刚才打包的服务镜像发布到集群里面对应的服务，这里以 region 这个服务为例。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 先在本地编译打包 region 镜像&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 会在 aliyun 生成镜像: registry.cn-beijing.aliyuncs.com/zexi/region:dev-test&lt;/span&gt;
+$ &lt;span style=&#34;color:#000&#34;&gt;VERSION&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;dev-test &lt;span style=&#34;color:#000&#34;&gt;REGISTRY&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.cn-beijing.aliyuncs.com/zexi make image region
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 找到 region 服务对应的 kubernetes 资源名称&lt;/span&gt;
+$ kubectl get deployment -n onecloud &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep region
+default-region                      1/1     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;            &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;           90d
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 更新 default-region deployment 资源里面 image 属性&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后对应的 default-region 的 pod 就会自动拉取镜像重启&lt;/span&gt;
+$ kubectl -n onecloud edit deployment default-region
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用 &lt;code&gt;kubectl -n onecloud edit deployment default-region&lt;/code&gt; 命令后，进入编辑资源 YAML 属性的步骤，只需要将里面的 &lt;code&gt;image&lt;/code&gt; 属性修改成 aliyun 对应镜像地址，截图如下：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/kubectl-edit-image.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;修改完后保存退出，就会拉取刚才指定的镜像创建新的 region pod，删除旧的。可以再次查看 region pod 的当前状态。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/kubectl-get-region-pod.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;查看服务输出日志&#34;&gt;查看服务输出日志&lt;/h3&gt;
+&lt;p&gt;可以使用 &lt;code&gt;kubectl log&lt;/code&gt; 命令查看对应 pod 的输出日志，这里以刚才发布的 region pod 为例。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 先找到 region 服务对应的 pod&lt;/span&gt;
+$ kubectl get pods -n onecloud &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep region
+default-region-6bd8c54d68-sq4gq                     1/1     Running            &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          101m
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看日志&lt;/span&gt;
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 把日志重定向到文件 /tmp/region.log&lt;/span&gt;
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq &amp;gt; /tmp/region.log
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 流式查看日志，类似于 &amp;#39;tail -f&amp;#39;&lt;/span&gt;
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看 5 分钟前的日志&lt;/span&gt;
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f --since 5m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装配置-climc&#34;&gt;安装配置 climc&lt;/h3&gt;
+&lt;p&gt;climc 是访问后端的命令行工具，可以通过该工具向后端各个服务发送API请求，日常开发中会使用改命令行工具进行功能验证和调试，安装和使用方法参考下面的连接。&lt;/p&gt;
+&lt;p&gt;climc 的本地安装参考: &lt;a href=&#34;../../howto/climc/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85&#34;&gt;源码编译安装&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;climc 的本地配置参考: &lt;a href=&#34;../../howto/climc/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE&#34;&gt;非控制节点认证配置&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;climc 的使用简介参考: &lt;a href=&#34;../../howto/climc/#%E4%BD%BF%E7%94%A8&#34;&gt;climc 使用&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;快速开发调试&#34;&gt;快速开发调试&lt;/h2&gt;
+&lt;p&gt;我们的服务都已经容器化运行在 Kubernetes 集群中，使用上面说的 &lt;strong&gt;&amp;ldquo;制作docker镜像-&amp;gt;发布到集群&amp;rdquo;&lt;/strong&gt; 的开发流程有些长，对于快速开发调试并不方便。&lt;/p&gt;
+&lt;p&gt;通过 &lt;a href=&#34;https://www.telepresence.io&#34;&gt;Telepresence&lt;/a&gt; 提供远程 Kubernetes 连接信息上下文，可以在本地开发调试。下面介绍使用 Telepresence 进行本地快速开发。&lt;/p&gt;
 &lt;h3 id=&#34;安装配置-kubectl&#34;&gt;安装配置 kubectl&lt;/h3&gt;
 &lt;p&gt;需要在本地安装 &lt;a href=&#34;https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/&#34;&gt;kubectl&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;需要在本地配置好集群信息，以通过 kubectl 访问；将云联壹云控制节点上的&lt;code&gt;$KUBECONFIG&lt;/code&gt;文件拷贝到本地&lt;code&gt;~/.kube/config&lt;/code&gt;;
 如果本地已经有此文件，参考 &lt;a href=&#34;https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/&#34;&gt;配置多集群访问&lt;/a&gt; 进行合并。&lt;/p&gt;
-&lt;h3 id=&#34;安装配置-climc&#34;&gt;安装配置 climc&lt;/h3&gt;
-&lt;p&gt;climc 的本地安装参考 &lt;a href=&#34;../../howto/climc/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85&#34;&gt;源码编译安装&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;climc 的本地配置参考 &lt;a href=&#34;../../howto/climc/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE&#34;&gt;非控制节点认证配置&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;安装-telepresence&#34;&gt;安装 telepresence&lt;/h3&gt;
-&lt;p&gt;确保有一个已部署的云联壹云 k8s集群，参考&lt;a href=&#34;https://opensource.yunion.cn/docs/setup/&#34;&gt;安装部署&lt;/a&gt;。
-这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href=&#34;https://www.telepresence.io/reference/install&#34;&gt;Installing Telepresence&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href=&#34;https://www.telepresence.io/reference/install&#34;&gt;Installing Telepresence&lt;/a&gt;。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;不建议k8s集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p&gt;
+&lt;p&gt;不建议K8S集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装依赖&lt;/span&gt;
 $ yum install -y python3 sshfs conntrack iptables torsocks sshuttle sudo yum-utils
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 kubectl 用于连接 k8s 集群&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 安装 kubectl 用于连接 K8S 集群&lt;/span&gt;
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;[kubernetes]
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;name=Kubernetes
@@ -89,28 +235,28 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
 $ yum install -y kubectl-1.15.8-0
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 需要自行配置kubctl config&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试kubctl可以访问之前部署的k8s集群&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试kubctl可以访问之前部署的K8S集群&lt;/span&gt;
 $ kubctl version
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 源码安装 telepresence 到 /usr/local/bin/telepresence&lt;/span&gt;
 $ git clone https://github.com/telepresenceio/telepresence
 $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; telepresence
 $ sudo env &lt;span style=&#34;color:#000&#34;&gt;PREFIX&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;/usr/local ./install.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;
-&lt;p&gt;利用 telepresence 本地连通远端 k8s 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 k8s 其它服务的环境。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;macOS中或Linux中本地编译运行 region 服务&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;利用 telepresence 本地连通远端 K8S 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 K8S 其它服务的环境。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;macOS 或 linux 中本地编译运行 region 服务&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 切换到 云联壹云 代码目录&lt;/span&gt;
 $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
  
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 region 服务&lt;/span&gt;
 $ make cmd/region
  
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 telepresence 替换 k8s 里面的 default-region deployment&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后把流量的访问导向本地&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span&gt;
 $ telepresence --swap-deployment default-region --namespace onecloud
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
 接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo chmod &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;777&lt;/span&gt; /etc
  
@@ -139,13 +285,13 @@ $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编译 region 服务&lt;/span&gt;
 $ make cmd/region
  
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 telepresence 替换 k8s 里面的 default-region deployment&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 然后把流量的访问导向本地&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span&gt;
 $ telepresence --swap-deployment default-region --namespace onecloud
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
 接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 设置 max_user_namespaces&lt;/span&gt;
 $ cat /proc/sys/user/max_user_namespaces
@@ -155,7 +301,7 @@ $ &lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#3
  
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启动一个新的 namespace , 但不共享 mount namespace，这样接下来的 mount bind 操作就不会影响到宿主机&lt;/span&gt;
 $ unshare --map-root-user --mount
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# bind k8s /var/run/secrets&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# bind K8S /var/run/secrets&lt;/span&gt;
 $ mount --bind &lt;span style=&#34;color:#000&#34;&gt;$TELEPRESENCE_ROOT&lt;/span&gt;/var/run /var/run
 $ ls /var/run/
 secrets
@@ -171,7 +317,66 @@ $ ./_output/bin/region --config /etc/yunion/region.conf
 $ climc network-list
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 就会发现相关的请求已经被转发到本地开发机启动 region 服务了&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;更多用法，以及 telepresence 的原理请参考&lt;a href=&#34;https://www.telepresence.io/discussion/overview&#34;&gt;官方文档&lt;/a&gt;。&lt;/p&gt;
-&lt;h2 id=&#34;开发流程&#34;&gt;开发流程&lt;/h2&gt;
+&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
+&lt;h3 id=&#34;1-开发环境是-windows-或者-macos怎么开发&#34;&gt;1. 开发环境是 windows 或者 macOS，怎么开发？&lt;/h3&gt;
+&lt;p&gt;因为我们的服务最后会运行在基于 CentOS 7 搭建的 K8S 集群里面，所以日常的开发和打包中一般都是在 CentOS 7 里面做的。&lt;/p&gt;
+&lt;p&gt;如果开发环境是 windows ，可以在 windows 里面写代码，然后创建一个 CentOS 7 的虚拟机，在虚拟机里面把开发环境搭建好，写完代码利用 &lt;code&gt;rsync&lt;/code&gt; 等同步工具，把修改的代码增量拷贝到虚拟机中，然后进行打包发布等流程。&lt;/p&gt;
+&lt;p&gt;对于 Mac 上的 macOS 也是类似的，可以使用和 windows 开发一样的流程。但 macOS 里开发和 Linux 里面开发差异没有很大，在 macOS 里面安装好对应的命令行工具和 docker 后，就可以直接使用 &lt;code&gt;make image&lt;/code&gt; 相关的规则打包生成 docker 镜像了。&lt;/p&gt;
+&lt;h3 id=&#34;2-本地调试启动-region-服务报以下错误&#34;&gt;2. 本地调试启动 region 服务，报以下错误&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;../images/region_error.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;climc service-config-edit region2&lt;/code&gt;编辑 region 服务的配置，修改参数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;fetch_etcd_service_info_and_use_etcd_lock: false 
+enable_host_health_check: false
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;3-使用-telepresence-时上次未正常退出再次使用一直报错&#34;&gt;3. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3&gt;
+&lt;p&gt;尝试手动清理:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；&lt;/li&gt;
+&lt;li&gt;使用&lt;code&gt;kubectl edit deployment default-region -n onecloud&lt;/code&gt;，将 spec 下的 replicas 从0改为1.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以编译cmd下制定的组件，比如：编译 region 和 host 组件&lt;/span&gt;
+$ make cmd/region cmd/host
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看编译好的二进制文件&lt;/span&gt;
+$ ls _output/bin
+region host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;4-本地直接运行-make-cmdhost-会出现-ceph-依赖的报错&#34;&gt;4. 本地直接运行 &lt;code&gt;make cmd/host&lt;/code&gt; 会出现 ceph 依赖的报错&lt;/h3&gt;
+&lt;p&gt;host 组件是私有云里面管理虚拟机的一个关键组件，依赖了 cephfs, rbd 和 rados 相关的库，如果是本地直接编译，则需要安装对应的依赖，操作如下：&lt;/p&gt;
+&lt;ul class=&#34;nav nav-tabs&#34; id=&#34;host_dep_install&#34; role=&#34;tablist&#34;&gt;&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link active&#34; href=&#34;#host_dep_install-0&#34; role=&#34;tab&#34; aria-controls=&#34;host_dep_install-0&#34; aria-selected=&#34;true&#34;&gt;CentOS 7&lt;/a&gt;&lt;/li&gt;
+	  
+		&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link&#34; href=&#34;#host_dep_install-1&#34; role=&#34;tab&#34; aria-controls=&#34;host_dep_install-1&#34;&gt;Ubuntu 20.04&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;div class=&#34;tab-content&#34; id=&#34;host_dep_install&#34;&gt;&lt;div id=&#34;host_dep_install-0&#34; class=&#34;tab-pane show active&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;host_dep_install-0&#34;&gt;
+
+&lt;p&gt;&lt;p&gt;On rpm based systems (dnf, yum, etc):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo rpm --import https://download.ceph.com/keys/release.asc
+sudo yum install -y https://download.ceph.com/rpm-luminous/el7/noarch/ceph-release-1-1.el7.noarch.rpm
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install -y libcephfs-devel librbd-devel librados-devel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;div id=&#34;host_dep_install-1&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;host_dep_install-1&#34;&gt;
+
+&lt;p&gt;&lt;p&gt;On debian systems (apt):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;wget -q -O- &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo apt-key add -
+&lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; deb https://download.ceph.com/debian-luminous/ &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;lsb_release -sc&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt; main &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; sudo tee /etc/apt/sources.list.d/ceph.list
+apt-get update &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get install -y libcephfs-dev librbd-dev librados-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: 提交贡献代码</title>
+      <link>https://opensource.yunion.cn/docs/contribute/contrib/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/docs/contribute/contrib/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;提交代码流程&#34;&gt;提交代码流程&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;从 master checkout 出 feature 或者 bugfix 分支&lt;/li&gt;
 &lt;/ul&gt;
@@ -218,21 +423,13 @@ $ git add xxx &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 解�
 $ git am --continue
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 回到执行 cherry-pick 脚本的 terminal 输入 &amp;#39;y&amp;#39; 即可&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;去 upstream 的 &lt;a href=&#34;https://github.com/yunionio/onecloud/pulls&#34;&gt;PR 页面&lt;/a&gt;, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：&lt;code&gt;Automated cherry pick of #8&lt;/code&gt;，然后重复 PR review 流程合并到 release&lt;/p&gt;
-&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
-&lt;h3 id=&#34;1-本地调试启动-region-服务报以下错误&#34;&gt;1. 本地调试启动 region 服务，报以下错误&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;../images/region_error.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;climc service-config-edit region2&lt;/code&gt;编辑 region 服务的配置，修改参数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;pre&gt;&lt;code&gt;fetch_etcd_service_info_and_use_etcd_lock: false 
-enable_host_health_check: false  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;2-使用-telepresence-时上次未正常退出再次使用一直报错&#34;&gt;2. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3&gt;
-&lt;p&gt;尝试手动清理:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；&lt;/li&gt;
-&lt;li&gt;使用&lt;code&gt;kubectl edit deployment default-region -n onecloud&lt;/code&gt;，将 spec 下的 replicas 从0改为1.&lt;/li&gt;
-&lt;/ol&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
+提交 git 代码后需要书写 commit 内容，规范请参考: &lt;a href=&#34;../git-convention&#34;&gt;Git 提交内容规范&lt;/a&gt;。
+&lt;/div&gt;
+
 
       </description>
     </item>

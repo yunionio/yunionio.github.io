@@ -1,0 +1,193 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OneCloud – Development</title>
+    <link>https://opensource.yunion.cn/en/docs/contribute/</link>
+    <description>Recent content in Development on OneCloud</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="https://opensource.yunion.cn/en/docs/contribute/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Code contribution</title>
+      <link>https://opensource.yunion.cn/en/docs/contribute/contrib/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/en/docs/contribute/contrib/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;how-to-make-a-pull-request&#34;&gt;How to make a Pull Request?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Checkout a branch from master, either for a new feature or a bugfix&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# checkout new branch&lt;/span&gt;
+$ git fetch upstream --tags
+$ git checkout -b feature/implement-x upstream/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Coding on the new branch&lt;/li&gt;
+&lt;li&gt;After coding is done, do the following to prepare for Pull Request&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git fetch upstream         &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# fetch most up-to-date upstream master&lt;/span&gt;
+$ git rebase upstream/master &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# resolv possible conflicts&lt;/span&gt;
+$ git push origin feature/implement-x &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# push your local branch to github&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Submit Pull Request on GitHub&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;../images/submitPR.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Request reviews, set labels to indicate the impact components of the codes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;../images/reviewer_label.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You may use comments to appoint reviwers and set labels. Use &amp;lsquo;/cc&amp;rsquo; and @&lt;userid&gt; to appoint reviwers, use &amp;lsquo;/area&amp;rsquo; to indicate the impact components of the codes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;../images/robot_review_label.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;​	Available labels are listed under issues——Labels, any label prefixed with area can be used for &amp;lsquo;/area&amp;rsquo; command.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If the codes need to be merged into release branch, you should create new cherry-pick PRs to the target release branch.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Donwload github command line tool: https://github.com/github/hub&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For OSX, please execute: brew install hub&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For Debian, please execute: sudo apt install hub&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For other OS, please install binaries: https://github.com/github/hub/releases&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Setup username of github&lt;/span&gt;
+$ &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GITHUB_USER&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;your_username&amp;gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Use the following scripts to cherry-pick PR to release branch&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For exmaple, to cherry-pick the PR with ID #8 to release/2.8.0&lt;/span&gt;
+$ ./scripts/cherry_pick_pull.sh upstream/release/2.8.0 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8&lt;/span&gt;
+ 
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# the cherry pick may have conflicts, please open a new terminal to resolve the conflicts, then input &amp;#39;Y&amp;#39; to continue the cherry-pick process&lt;/span&gt;
+$ git add xxx &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# resolve conflicts&lt;/span&gt;
+$ git am --continue
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# go back to the terminal of cherry-pick, and input &amp;#39;Y&amp;#39; to continue the cherry-pick process&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Go to the Pull Requests of upstream &lt;a href=&#34;https://github.com/yunionio/yunioncloud/pulls&#34;&gt;PR&lt;/a&gt;, you will find the cherry-pick PR，the title of the chery-pick PR should look like: &lt;code&gt;Automated cherry pick of #8: ...&lt;/code&gt;, then procedure the reviwer process and merge the PR to the release branch.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;attention&lt;/h4&gt;
+Git commit should follow &lt;a href=&#34;../git-convention&#34;&gt;Git Commit Convention&lt;/a&gt;。
+&lt;/div&gt;
+
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Git Commit Message Convention</title>
+      <link>https://opensource.yunion.cn/en/docs/contribute/git-convention/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/en/docs/contribute/git-convention/</guid>
+      <description>
+        
+        
+        &lt;p&gt;For the purpose of word-processing the code change history, and statistics, we compile the following Git Commit Message Convention to regulate the format of Git Commit Message.&lt;/p&gt;
+&lt;h2 id=&#34;git-commit-message-convention&#34;&gt;Git Commit Message Convention&lt;/h2&gt;
+&lt;p&gt;Conform to the following format:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;lt;type&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;&amp;lt;scope&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: &amp;lt;subject&amp;gt;
+
+&amp;lt;body&amp;gt;
+
+&amp;lt;footer&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The message is composed of three parts (part is separated by an empty line):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Title: required, describing the type of modification and a concise summary of changes&lt;/li&gt;
+&lt;li&gt;Content: optional, describing in details why the modification is need, how to change, the basic outline of codes, how to make the change take effect, etc.&lt;/li&gt;
+&lt;li&gt;Notes: optional, some additional notes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每个部分的占位符说明如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;type(PR 的类型):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;feat: 新功能&lt;/li&gt;
+&lt;li&gt;fix: 修复&lt;/li&gt;
+&lt;li&gt;refactor: 代码重构&lt;/li&gt;
+&lt;li&gt;test: 测试用例相关修改&lt;/li&gt;
+&lt;li&gt;chore: 其它修改，比如Makefile,Dockerfile等&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;scope(影响范围，相关组件): 比如 region, scheduler, cloudcommon，如果是多个组件，用英文 &amp;lsquo;,&amp;rsquo; 分割，比如: (region,scheduler,monitor)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;subject(commit 的概述): 建议不超过 50 个字符&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;body(commit 具体修改内容): 可以分为多行，建议每行不超过 72 个字符&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;footer(一些备注，选填): 一些备注，通常是相关参考连接、BREAKING CHANGE 或修复 bug 的连接&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;commit-举例&#34;&gt;Commit 举例&lt;/h2&gt;
+&lt;hr&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;region&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: compute NextSyncTime &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; snapshotpolicydisk
+
+1. 如果计算出来的 NextSyncTime 和 base 相等，可以将 base 加1一个小时递归处理。
+2. 对于 retentionday 有效的快照策略，比如某一个 snaphsotpolicy
+是每周一生效，并且打的快照自动保留 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt; 天，那么，就应该在每周一（打快照）
+和每周四（释放快照）进行快照的同步。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;scheduler&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: add cpu filter
+
+Added new cpu filter to scheduler:
+
+- filter host by cpu model
+- &lt;span style=&#34;color:#204a87&#34;&gt;set&lt;/span&gt; host capability by request cpu count
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;apigateway,monitor,influxdb&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: disable influxdb service query proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;climc&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: support disable wrap line
+
+Usage:
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_TRY_TERM_WIDTH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;
+climc server-list
+
+Closes &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;#6710&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id=&#34;辅助工具&#34;&gt;辅助工具&lt;/h2&gt;
+&lt;p&gt;也有相应的工具帮忙生成符合要求的 Commit message，使用 &lt;a href=&#34;https://github.com/lintingzhen/commitizen-go&#34;&gt;commitizen-go&lt;/a&gt; 可以协助生成 Commit message，用法如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# osx 安装 commitizen-go&lt;/span&gt;
+$ brew tap lintingzhen/tap
+$ brew install commitizen-go
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果是 linux 环境，可以 clone 源码编译，这个工具是 golang 写的，编译也简单&lt;/span&gt;
+$ git clone https://github.com/lintingzhen/commitizen-go &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; commitizen-go
+$ make &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./commitizen-go install
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这一部会生成 git cz 命令的配置&lt;/span&gt;
+$ sudo commitizen-go install
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 测试提交&lt;/span&gt;
+$ git add .
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 git cz 命令，就会以交互式的方式帮忙输入 commit&lt;/span&gt;
+$ git cz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;相关配置参考：https://github.com/lintingzhen/commitizen-go/blob/master/README.MD#configure&lt;/p&gt;
+&lt;p&gt;当然工具并不是说强制使用，只是说有工具的帮助，生成的 commit 内容会更统一一点　;)&lt;/p&gt;
+&lt;p&gt;当然也有 nodejs 版本的工具，可能更符合前端的使用: &lt;a href=&#34;https://github.com/commitizen/cz-cli&#34;&gt;https://github.com/commitizen/cz-cli&lt;/a&gt; ，前端的同学也可以使用这个工具。&lt;/p&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&#34;&gt;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&#34;&gt;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/noaman_wgs/article/details/103429171&#34;&gt;https://blog.csdn.net/noaman_wgs/article/details/103429171&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -76,7 +76,7 @@ $ docker buildx create --use --name build --node build --driver-opt &lt;span sty
 &lt;p&gt;访问 &lt;a href=&#34;https://github.com/yunionio/onecloud&#34;&gt;https://github.com/yunionio/onecloud&lt;/a&gt; ，将仓库 fork 到自己的 github 用户下。&lt;/p&gt;
 &lt;h3 id=&#34;clone-源码&#34;&gt;Clone 源码&lt;/h3&gt;
 &lt;p&gt;git clone 前确保 GOPATH 等环境变量已经设置好，clone 你自己 fork 的仓库&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ git clone  https://github.com/&amp;lt;your_name&amp;gt;/onecloud &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ git clone https://github.com/&amp;lt;your_name&amp;gt;/onecloud &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
 $ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/yunion.io/x/onecloud
 $ git remote add upstream https://github.com/yunionio/onecloud
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;二进制编译&#34;&gt;二进制编译&lt;/h3&gt;
@@ -376,7 +376,14 @@ apt-get update &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;a
       <description>
         
         
-        &lt;h2 id=&#34;提交代码流程&#34;&gt;提交代码流程&lt;/h2&gt;
+        &lt;h2 id=&#34;fork-仓库&#34;&gt;Fork 仓库&lt;/h2&gt;
+&lt;p&gt;访问 &lt;a href=&#34;https://github.com/yunionio/onecloud&#34;&gt;https://github.com/yunionio/onecloud&lt;/a&gt; ，将仓库 fork 到自己的 github 用户下。&lt;/p&gt;
+&lt;h2 id=&#34;clone-源码&#34;&gt;Clone 源码&lt;/h2&gt;
+&lt;p&gt;clone 自己 fork 的仓库，并设置 upstream 为源仓库。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git clone https://github.com/&amp;lt;your_name&amp;gt;/onecloud
+$ &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; onecloud
+$ git remote add upstream https://github.com/yunionio/onecloud
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;提交代码流程&#34;&gt;提交代码流程&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;从 master checkout 出 feature 或者 bugfix 分支&lt;/li&gt;
 &lt;/ul&gt;
@@ -415,14 +422,14 @@ $ git push origin feature/implement-x &lt;span style=&#34;color:#8f5902;font-sty
 $ &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GITHUB_USER&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;your_username&amp;gt;
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用脚本自动 cherry-pick PR 到 release 分支&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 比如现在有一个提交的PR的编号为8，要把它合并到 release/2.8.0&lt;/span&gt;
-$ ./scripts/cherry_pick_pull.sh upstream/release/2.8.0 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 比如现在有一个提交的PR的编号为18，要把它合并到 release/3.4&lt;/span&gt;
+$ ./scripts/cherry_pick_pull.sh upstream/release/3.4 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;18&lt;/span&gt;
  
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# cherry pick 可能会出现冲突，冲突时开另外一个 terminal，解决好冲突，再输入 &amp;#39;y&amp;#39; 进行提交&lt;/span&gt;
 $ git add xxx &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 解决完冲突后&lt;/span&gt;
 $ git am --continue
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 回到执行 cherry-pick 脚本的 terminal 输入 &amp;#39;y&amp;#39; 即可&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;去 upstream 的 &lt;a href=&#34;https://github.com/yunionio/onecloud/pulls&#34;&gt;PR 页面&lt;/a&gt;, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：&lt;code&gt;Automated cherry pick of #8&lt;/code&gt;，然后重复 PR review 流程合并到 release&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;去 upstream 的 &lt;a href=&#34;https://github.com/yunionio/onecloud/pulls&#34;&gt;PR 页面&lt;/a&gt;, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：&lt;code&gt;Automated cherry pick of #18&lt;/code&gt;，然后重复 PR review 流程合并到 release&lt;/p&gt;
 
 
 &lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;

@@ -26,13 +26,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/zh/docs/contribute/contrib/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2021-03-11T15:42:55&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2021-04-15T16:45:29&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="提交贡献代码">
 <meta itemprop="description" content="介绍 github 发起 pull requests 和提交代码的流程
 ">
-<meta itemprop="dateModified" content="2021-03-11T15:42:55&#43;08:00" />
-<meta itemprop="wordCount" content="162">
+<meta itemprop="dateModified" content="2021-04-15T16:45:29&#43;08:00" />
+<meta itemprop="wordCount" content="192">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="提交贡献代码"/>
 <meta name="twitter:description" content="介绍 github 发起 pull requests 和提交代码的流程
@@ -188,7 +188,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.733a7d14119efc92378ef234c557411d.json"
+  data-offline-search-index-json-src="/offline-search-index.5e38268e4006213a2395d0f505aa9528.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1229,6 +1229,14 @@
 
 
 
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#fork-仓库">Fork 仓库</a></li>
+    <li><a href="#clone-源码">Clone 源码</a></li>
+    <li><a href="#提交代码流程">提交代码流程</a></li>
+  </ul>
+</nav>
+
 
 
           </div>
@@ -1275,7 +1283,14 @@
 	<h1>提交贡献代码</h1>
     <div class="lead">介绍 github 发起 pull requests 和提交代码的流程</div>
 	       
-	<h2 id="提交代码流程">提交代码流程</h2>
+	<h2 id="fork-仓库">Fork 仓库</h2>
+<p>访问 <a href="https://github.com/yunionio/onecloud">https://github.com/yunionio/onecloud</a> ，将仓库 fork 到自己的 github 用户下。</p>
+<h2 id="clone-源码">Clone 源码</h2>
+<p>clone 自己 fork 的仓库，并设置 upstream 为源仓库。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git clone https://github.com/&lt;your_name&gt;/onecloud
+$ <span style="color:#204a87">cd</span> onecloud
+$ git remote add upstream https://github.com/yunionio/onecloud
+</code></pre></div><h2 id="提交代码流程">提交代码流程</h2>
 <ul>
 <li>从 master checkout 出 feature 或者 bugfix 分支</li>
 </ul>
@@ -1314,14 +1329,14 @@ $ git push origin feature/implement-x <span style="color:#8f5902;font-style:ital
 $ <span style="color:#204a87">export</span> <span style="color:#000">GITHUB_USER</span><span style="color:#ce5c00;font-weight:bold">=</span>&lt;your_username&gt;
 
 <span style="color:#8f5902;font-style:italic"># 使用脚本自动 cherry-pick PR 到 release 分支</span>
-<span style="color:#8f5902;font-style:italic"># 比如现在有一个提交的PR的编号为8，要把它合并到 release/2.8.0</span>
-$ ./scripts/cherry_pick_pull.sh upstream/release/2.8.0 <span style="color:#0000cf;font-weight:bold">8</span>
+<span style="color:#8f5902;font-style:italic"># 比如现在有一个提交的PR的编号为18，要把它合并到 release/3.4</span>
+$ ./scripts/cherry_pick_pull.sh upstream/release/3.4 <span style="color:#0000cf;font-weight:bold">18</span>
  
 <span style="color:#8f5902;font-style:italic"># cherry pick 可能会出现冲突，冲突时开另外一个 terminal，解决好冲突，再输入 &#39;y&#39; 进行提交</span>
 $ git add xxx <span style="color:#8f5902;font-style:italic"># 解决完冲突后</span>
 $ git am --continue
 <span style="color:#8f5902;font-style:italic"># 回到执行 cherry-pick 脚本的 terminal 输入 &#39;y&#39; 即可</span>
-</code></pre></div><p>去 upstream 的 <a href="https://github.com/yunionio/onecloud/pulls">PR 页面</a>, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：<code>Automated cherry pick of #8</code>，然后重复 PR review 流程合并到 release</p>
+</code></pre></div><p>去 upstream 的 <a href="https://github.com/yunionio/onecloud/pulls">PR 页面</a>, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：<code>Automated cherry pick of #18</code>，然后重复 PR review 流程合并到 release</p>
 
 
 <div class="alert alert-primary" role="alert">
@@ -1392,7 +1407,7 @@ $ git am --continue
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 11.03.2021: <a  href="https://github.com/yunionio/docs/commit/e38e6d0a31dda0de378201bde51357ceb330cc6e">feat(dev): add dev docs (e38e6d0)</a>
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 15.04.2021: <a  href="https://github.com/yunionio/docs/commit/9cba802ae35e9a74b294d6909cfa65bea087ab33">fix: implement contrib steps (9cba802)</a>
 </div>
 </div>
 

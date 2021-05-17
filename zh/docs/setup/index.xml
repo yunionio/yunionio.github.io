@@ -1434,27 +1434,28 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;li&gt;&lt;a href=&#34;https://opensource.yunion.cn/v3.2/docs/setup/upgrade&#34;&gt;v3.1.x 升级到 v3.2.x&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://opensource.yunion.cn/v3.3/docs/setup/upgrade&#34;&gt;v3.2.x 升级到 v3.3.x&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://opensource.yunion.cn/v3.4/docs/setup/upgrade&#34;&gt;v3.3.x 升级到 v3.4.x&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://opensource.yunion.cn/v3.6/zh/docs/setup/upgrade&#34;&gt;v3.4.x 升级到 v3.6.x&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;总体来说，升级的步骤如下:&lt;/p&gt;
 &lt;p&gt;使用我们编写的 &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;ocboot&lt;/a&gt; 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;使用 git 拉取最新的 &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;ocboot&lt;/a&gt; 代码，切换到 release/3.6 分支&lt;/li&gt;
+&lt;li&gt;使用 git 拉取最新的 &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;ocboot&lt;/a&gt; 代码，切换到 release/3.7 分支&lt;/li&gt;
 &lt;li&gt;使用 &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;ocboot&lt;/a&gt; 进行大版本升级&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&#34;查看当前版本&#34;&gt;查看当前版本&lt;/h2&gt;
 &lt;p&gt;可以使用 kubectl 查看当前集群的版本&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 kubectl 获得当前集群的版本为 v3.4.5&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 kubectl 获得当前集群的版本为 v3.6.10&lt;/span&gt;
 $ kubectl -n onecloud get onecloudclusters default -o&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;jsonpath&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;{.spec.version}&amp;#39;&lt;/span&gt;
-v3.4.5
+v3.6.10
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;拉取-ocboot-工具&#34;&gt;拉取 ocboot 工具&lt;/h2&gt;
 &lt;p&gt;如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 本地安装 ansible&lt;/span&gt;
 $ yum install -y ansible python-paramiko
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;更新-ocboot-代码&#34;&gt;更新 ocboot 代码&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout release/3.6
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout release/3.7
 $ git pull
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;更新-云联壹云-服务&#34;&gt;更新 云联壹云 服务&lt;/h2&gt;
 &lt;p&gt;更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p&gt;
@@ -1463,12 +1464,12 @@ $ git pull
 &lt;li&gt;PRIMARY_MASTER_HOST 能够 ssh 免密码登录集群中的其它节点&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;如果没有设置免密码登录，请使用 &lt;em&gt;ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em&gt; 命令把公钥下发到自己环境对应的节点。&lt;/p&gt;
-&lt;p&gt;升级的版本号可以到 &lt;a href=&#34;../../changelog/release-3.6/&#34;&gt;CHANGELOG release/3.6 页面&lt;/a&gt; 查询。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 ocboot 相关服务到 v3.6.9 版本&lt;/span&gt;
+&lt;p&gt;升级的版本号可以到 &lt;a href=&#34;../../changelog/release-3.7/&#34;&gt;CHANGELOG release/3.7 页面&lt;/a&gt; 查询。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 ocboot 相关服务到 v3.7.0 版本&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 需要本机能够使用 ssh 密钥登录上去&lt;/span&gt;
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.6.9
+$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.7.0
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 另外可以使用 `./ocboot.py upgrade --help` 查看其它可选参数&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 比如:&lt;/span&gt;
@@ -1546,7 +1547,7 @@ mariadb_node:
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# primary_master_node 表示将 10.127.40.252 作为第一个部署的 master 节点&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 上面会运行云联壹云必要的控制服务&lt;/span&gt;
 primary_master_node:
-  onecloud_version: v3.6.15
+  onecloud_version: v3.7.0
   hostname: 10.127.40.252
   user: root
   db_host: 10.127.40.252

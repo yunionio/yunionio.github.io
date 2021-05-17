@@ -1,0 +1,1628 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.83.1" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v3.6/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v3.6/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v3.6/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v3.6/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v3.6/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v3.6/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v3.6/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v3.6/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v3.6/favicons/android-192x192.png" sizes="192x192">
+
+<title>All in One 安装 | 云联壹云</title><meta property="og:title" content="All in One 安装" />
+<meta property="og:description" content="使用 ocboot 部署工具快速在已有的节点上以 All in One 的方式部署”云联壹云“服务
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/v3.6/zh/docs/quickstart/allinone/" /><meta property="article:section" content="docs" />
+
+<meta property="article:modified_time" content="2021-05-14T17:09:29&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="All in One 安装">
+<meta itemprop="description" content="使用 ocboot 部署工具快速在已有的节点上以 All in One 的方式部署”云联壹云“服务
+">
+<meta itemprop="dateModified" content="2021-05-14T17:09:29&#43;08:00" />
+<meta itemprop="wordCount" content="432">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="All in One 安装"/>
+<meta name="twitter:description" content="使用 ocboot 部署工具快速在已有的节点上以 All in One 的方式部署”云联壹云“服务
+"/>
+
+
+
+
+
+<link rel="preload" href="/v3.6/scss/main.min.2aec3c74fa3dbf905c259a7e42c8c346dbac0bd63d0621e8937e2cce0b603252.css" as="style">
+<link href="/v3.6/scss/main.min.2aec3c74fa3dbf905c259a7e42c8c346dbac0bd63d0621e8937e2cce0b603252.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.3"></script>
+
+
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  
+  <a href="/v3.6/zh/" class="logo flex-shrink-0 navbar-brand">
+    <img src="https://opensource.yunion.cn/v3.6/images/logo.svg" />
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.6
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.7 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.6">v3.6</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.4">v3.4</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.6/zh/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/v3.6/zh/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.6/zh/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.6/zh/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	中文
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/v3.6/en/docs/quickstart/allinone/">English</a>
+	
+</div>
+			</li>
+			
+		</ul>
+	</div>
+  
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; 站内搜索…"
+  aria-label="站内搜索…"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/v3.6/offline-search-index.308a9f29b2ef969b8a7ffe26d9a5641b.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    <div class="nav-item dropdown d-block d-lg-none">
+      
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	中文
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/v3.6/en/docs/quickstart/allinone/">English</a>
+	
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v36zhdocs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/quickstart/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v36zhdocsquickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v36zhdocsquickstartallinone" href="/v3.6/zh/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocsquickstartnodes" href="/v3.6/zh/docs/quickstart/nodes/">多节点安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocsquickstartminikube" href="/v3.6/zh/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocssetup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupintro" href="/v3.6/zh/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupcontrolplane-ha" href="/v3.6/zh/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupdb-ha" href="/v3.6/zh/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupcontrolplane" href="/v3.6/zh/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupcomponents" href="/v3.6/zh/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetuphost" href="/v3.6/zh/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupbaremetal" href="/v3.6/zh/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupce-ee-switch" href="/v3.6/zh/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetupupgrade" href="/v3.6/zh/docs/setup/upgrade/">升级相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocssetuphost-aarch64" href="/v3.6/zh/docs/setup/host-aarch64/">ARM(AArch64) 部署</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocscontribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocscontributedev-env" href="/v3.6/zh/docs/contribute/dev-env/">搭建开发环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocscontributecontrib" href="/v3.6/zh/docs/contribute/contrib/">提交贡献代码</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocscontributegit-convention" href="/v3.6/zh/docs/contribute/git-convention/">Git 提交内容规范</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocscontributeservices" href="/v3.6/zh/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocscontributeframework" href="/v3.6/zh/docs/contribute/framework/">后端服务框架</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocscontributeoperator-intro" href="/v3.6/zh/docs/contribute/operator-intro/">Operator 相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtoclimc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtoimage">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoimageupload" href="/v3.6/zh/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoimagequery" href="/v3.6/zh/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoimagecreate" href="/v3.6/zh/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoimageoperation" href="/v3.6/zh/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtoserver">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtoservercreate">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoserverconnect" href="/v3.6/zh/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoserverothers" href="/v3.6/zh/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoserverimport" href="/v3.6/zh/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoservergpu" href="/v3.6/zh/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoservermigrate" href="/v3.6/zh/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtoserverbackup" href="/v3.6/zh/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtohost">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtohostkvm" href="/v3.6/zh/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtobaremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtobaremetalintro" href="/v3.6/zh/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtobaremetaloperator" href="/v3.6/zh/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtonetwork">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtolb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtostorage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtomulticloud">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtomulticloudcloudaccount" href="/v3.6/zh/docs/howto/multicloud/cloudaccount/">云账号</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtoauth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtocontainer">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocshowtocontainerpre_env" href="/v3.6/zh/docs/howto/container/pre_env/">环境准备</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocshowtoscheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocscontact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocschangelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/changelog/release-3.6/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.6</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocschangelogrelease-36">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-15" href="/v3.6/zh/docs/changelog/release-3.6/3-6-15/">v3.6.15</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-14" href="/v3.6/zh/docs/changelog/release-3.6/3-6-14/">v3.6.14</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-13" href="/v3.6/zh/docs/changelog/release-3.6/3-6-13/">v3.6.13</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-12" href="/v3.6/zh/docs/changelog/release-3.6/3-6-12/">v3.6.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-11" href="/v3.6/zh/docs/changelog/release-3.6/3-6-11/">v3.6.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-10" href="/v3.6/zh/docs/changelog/release-3.6/3-6-10/">v3.6.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-9" href="/v3.6/zh/docs/changelog/release-3.6/3-6-9/">v3.6.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-8" href="/v3.6/zh/docs/changelog/release-3.6/3-6-8/">v3.6.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-7" href="/v3.6/zh/docs/changelog/release-3.6/3-6-7/">v3.6.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-6" href="/v3.6/zh/docs/changelog/release-3.6/3-6-6/">v3.6.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-5" href="/v3.6/zh/docs/changelog/release-3.6/3-6-5/">v3.6.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-4" href="/v3.6/zh/docs/changelog/release-3.6/3-6-4/">v3.6.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-3" href="/v3.6/zh/docs/changelog/release-3.6/3-6-3/">v3.6.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-2" href="/v3.6/zh/docs/changelog/release-3.6/3-6-2/">v3.6.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-1" href="/v3.6/zh/docs/changelog/release-3.6/3-6-1/">v3.6.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-363-6-0" href="/v3.6/zh/docs/changelog/release-3.6/3-6-0/">v3.6.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocschangelogrelease-34">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-16" href="/v3.6/zh/docs/changelog/release-3.4/3-4-16/">v3.4.16</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-15" href="/v3.6/zh/docs/changelog/release-3.4/3-4-15/">v3.4.15</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-14" href="/v3.6/zh/docs/changelog/release-3.4/3-4-14/">v3.4.14</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-13" href="/v3.6/zh/docs/changelog/release-3.4/3-4-13/">v3.4.13</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-12" href="/v3.6/zh/docs/changelog/release-3.4/3-4-12/">v3.4.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-11" href="/v3.6/zh/docs/changelog/release-3.4/3-4-11/">v3.4.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-10" href="/v3.6/zh/docs/changelog/release-3.4/3-4-10/">v3.4.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-9" href="/v3.6/zh/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-8" href="/v3.6/zh/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-7" href="/v3.6/zh/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-6" href="/v3.6/zh/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-5" href="/v3.6/zh/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-4" href="/v3.6/zh/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-3" href="/v3.6/zh/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-2" href="/v3.6/zh/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-1" href="/v3.6/zh/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-343-4-0" href="/v3.6/zh/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocschangelogrelease-33">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-8" href="/v3.6/zh/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-7" href="/v3.6/zh/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-6" href="/v3.6/zh/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-5" href="/v3.6/zh/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-4" href="/v3.6/zh/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-3" href="/v3.6/zh/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-2" href="/v3.6/zh/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-1" href="/v3.6/zh/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v36zhdocschangelogrelease-333-3-0" href="/v3.6/zh/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.6/zh/docs/roadmap/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">ROADMAP</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v36zhdocsroadmap">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/quickstart/allinone.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
+<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/quickstart/allinone.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=All%20in%20One%20%e5%ae%89%e8%a3%85" target="_blank"><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
+
+
+<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a>
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#前提">前提</a></li>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#机器配置要求">机器配置要求</a></li>
+        <li><a href="#本地环境配置要求">本地环境配置要求</a></li>
+      </ul>
+    </li>
+    <li><a href="#开始安装">开始安装</a>
+      <ul>
+        <li><a href="#下载-ocboot">下载 ocboot</a></li>
+        <li><a href="#编写部署配置">编写部署配置</a></li>
+        <li><a href="#开始部署">开始部署</a></li>
+        <li><a href="#创建第一台虚拟机">创建第一台虚拟机</a></li>
+        <li><a href="#导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？</a></li>
+        <li><a href="#2-修改节点的-hostname-有些服务启动失败">2. 修改节点的 hostname ，有些服务启动失败</a></li>
+        <li><a href="#3-如何重装">3. 如何重装</a></li>
+        <li><a href="#4-其它问题">4. 其它问题？</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.6/zh/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.6/zh/docs/quickstart/">快速开始</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/v3.6/zh/docs/quickstart/allinone/">All in One 安装</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>All in One 安装</h1>
+    <div class="lead">使用 ocboot 部署工具快速在已有的节点上以 All in One 的方式部署”云联壹云“服务</div>
+	       
+	<h2 id="前提">前提</h2>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">注意</h4>
+本章内容是通过部署工具快速搭建 云联壹云 服务，如果想了解部署的细节或者部署高可用环境请参考: <a href="../../setup/">安装部署</a> 。
+</div>
+
+<h2 id="环境准备">环境准备</h2>
+<h3 id="机器配置要求">机器配置要求</h3>
+<ul>
+<li>操作系统: 根据 CPU 架构不同，支持的发行版也不一样
+<ul>
+<li>X86_64: <a href="http://isoredirect.centos.org/centos/7/isos/x86_64/">CentOS 7</a></li>
+<li>ARM64: <a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)</a> 或者 <a href="https://www.chinauos.com/">统信 UOS</a></li>
+</ul>
+</li>
+<li>最低配置要求: CPU 4核, 内存 8G, 存储 100G</li>
+</ul>
+<p>以下为待部署机器的环境:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">IP</th>
+<th style="text-align:center">登录用户</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">10.168.26.216</td>
+<td style="text-align:center">root</td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+<blockquote>
+<p>10.168.26.216 是本次测试环境的 IP，请根据自己的环境做相应修改。</p>
+</blockquote>
+
+</div>
+
+<h3 id="本地环境配置要求">本地环境配置要求</h3>
+<p>本地环境即用户进行实际操作部署的环境。本次测试的本地环境为 MAC 操作系统的笔记本，也可在待部署机器上进行操作。</p>
+<ul>
+<li>ssh: 开启 ssh 免密登录</li>
+<li>本地环境安装部署 ansbile，Windows操作系统不支持安装 ansible</li>
+</ul>
+<h4 id="配置-ssh-免密登录">配置 ssh 免密登录</h4>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa.pub 则跳过此步骤)</span>
+$ ssh-keygen
+
+<span style="color:#8f5902;font-style:italic"># 将生成的 ~/.ssh/id_rsa.pub 公钥拷贝到待部署机器</span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+
+<span style="color:#8f5902;font-style:italic"># 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname</span>
+$ ssh root@10.168.26.216 <span style="color:#4e9a06">&#34;hostname&#34;</span>
+</code></pre></div><h2 id="开始安装">开始安装</h2>
+<p>部署的工具是 <a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot</a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 云联壹云 服务，以下操作都在本地环境上进行操作。操作步骤如下:</p>
+<h3 id="下载-ocboot">下载 ocboot</h3>
+<ul class="nav nav-tabs" id="ocboot_install" role="tablist"><li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7</a></li>
+	  
+		<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Debian 10</a></li>
+		<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">其它操作系统</a></li></ul>
+<div class="tab-content" id="ocboot_install"><div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
+
+<p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
+$ yum install -y epel-release ansible
+
+<span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+</code></pre></div></div>
+  <div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
+
+<p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
+$ apt install -y ansible
+
+<span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+</code></pre></div></div>
+  <div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
+
+<p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 本地安装 ansible</span>
+$ pip install ansible
+
+<span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+</code></pre></div></div></div>
+
+<h3 id="编写部署配置">编写部署配置</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 编写 config-allinone.yml 文件</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-allinone.yml
+</span><span style="color:#4e9a06"># mariadb_node 表示需要部署 mariadb 服务的节点
+</span><span style="color:#4e9a06">mariadb_node:
+</span><span style="color:#4e9a06">  # 待部署节点 ip
+</span><span style="color:#4e9a06">  hostname: 10.168.26.216
+</span><span style="color:#4e9a06">  # 待部署节点登录用户
+</span><span style="color:#4e9a06">  user: root
+</span><span style="color:#4e9a06">  # mariadb 的用户
+</span><span style="color:#4e9a06">  db_user: root
+</span><span style="color:#4e9a06">  # mariadb 用户密码
+</span><span style="color:#4e9a06">  db_password: your-sql-password
+</span><span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 云联壹云 服务的节点
+</span><span style="color:#4e9a06">primary_master_node:
+</span><span style="color:#4e9a06">  hostname: 10.168.26.216
+</span><span style="color:#4e9a06">  user: root
+</span><span style="color:#4e9a06">  # 数据库连接地址
+</span><span style="color:#4e9a06">  db_host: 10.168.26.216
+</span><span style="color:#4e9a06">  # 数据库用户
+</span><span style="color:#4e9a06">  db_user: root
+</span><span style="color:#4e9a06">  # 数据库密码
+</span><span style="color:#4e9a06">  db_password: your-sql-password
+</span><span style="color:#4e9a06">  # k8s 控制节点的 ip
+</span><span style="color:#4e9a06">  controlplane_host: 10.168.26.216
+</span><span style="color:#4e9a06">  # k8s 控制节点的端口
+</span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
+</span><span style="color:#4e9a06">  # 云联壹云 版本
+</span><span style="color:#4e9a06">  onecloud_version: &#39;v3.6.15&#39;
+</span><span style="color:#4e9a06">  # 云联壹云 登录用户
+</span><span style="color:#4e9a06">  onecloud_user: admin
+</span><span style="color:#4e9a06">  # 云联壹云 登录用户密码
+</span><span style="color:#4e9a06">  onecloud_user_password: admin@123
+</span><span style="color:#4e9a06">  # 该节点作为 云联壹云 私有云计算节点
+</span><span style="color:#4e9a06">  as_host: true
+</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><h3 id="开始部署">开始部署</h3>
+<p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 <code>./run.py ./config-allinone.yml</code> 部署集群了。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 开始部署</span>
+$ ./run.py ./config-allinone.yml
+....
+<span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功</span>
+<span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216</span>
+<span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面</span>
+Initialized successfully!
+Web page: https://10.168.26.216
+User: admin
+Password: admin@123
+</code></pre></div><p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 <code>admin</code>，密码输入 <code>admin@123</code> 就会进入 云联壹云 的界面。</p>
+<p><img src="../images/index.png" alt="登录页"></p>
+<h3 id="创建第一台虚拟机">创建第一台虚拟机</h3>
+<p>通过如下三步创建出第一台虚拟机：</p>
+<h4 id="1-导入镜像">1. 导入镜像</h4>
+<p>浏览位于 <a href="https://cloud.centos.org/centos/7/images/">CentOS 7云主机镜像</a> ，选择一个GenericCloud 镜像，拷贝镜像URL。</p>
+<p>在 <code>主机</code> 菜单，选择 <code>系统镜像</code>，选择 <code>上传</code>。输入镜像名称，选择 <code>输入镜像URL</code>，粘贴上述CentOS 7镜像URL，选择 <code>确定</code>。</p>
+<p>可以访问 <a href="https://docs.openstack.org/image-guide/obtain-images.html">https://docs.openstack.org/image-guide/obtain-images.html</a> 获得更多的虚拟机镜像。</p>
+<h4 id="2-创建网络vpc和ip子网">2. 创建网络（VPC和IP子网）</h4>
+<p>[新建VPC] 在 <code>网络</code> 菜单，选择 <code>VPC</code> 子菜单，选择 <code>新建</code>。输入名称，例如 <code>vpc0</code>，选择目标网段，例如 <code>192.168.0.0/16</code>。点击 <code>新建</code>。</p>
+<p>[新建IP子网] VPC创建完成后，选择 <code>IP子网</code> 子菜单，选择 <code>新建</code>。输入名称，例如 <code>vnet0</code>，选择VPC为刚才创建的VPC <code>vpc0</code>，选择可用区，输入 <code>子网网段</code>，例如 <code>192.168.100.0/24</code>。点击 <code>新建</code>。</p>
+<h4 id="3-创建虚拟机">3. 创建虚拟机</h4>
+<p>在 <code>主机</code> 菜单，选择 <code>虚拟机</code>，选择 <code>新建</code>。在此界面输入主机名，选择镜像和IP子网，创建虚拟机。</p>
+<h3 id="导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源</h3>
+<p>云联壹云自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。</p>
+<p>在 <code>多云管理</code> 菜单，选择 <code>云账号</code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 云联壹云 服务就会同步相应云平台的资源，同步完成后即可在前端查看。</p>
+<p><img src="../images/cloudaccount.png" alt="多云管理"></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？</h3>
+<p>All in One 部署的节点会部署 云联壹云 host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 云联壹云 环境中没有启用宿主机。</p>
+<p>请到 <code>管理后台</code> 界面，点击 <code>主机/基础资源/宿主机</code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。</p>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">注意</h4>
+<p>如果要使用 云联壹云 私有云虚拟机，需要宿主机使用 云联壹云 编译的内核，可使用以下命令查看宿主机是否使用 云联壹云 内核(包含 yn 关键字)。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核</span>
+$ uname -a <span style="color:#000;font-weight:bold">|</span> grep yn
+Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+<span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核</span>
+$ reboot
+</code></pre></div>
+</div>
+
+<p><img src="../images/host.png" alt="宿主机"></p>
+<h3 id="2-修改节点的-hostname-有些服务启动失败">2. 修改节点的 hostname ，有些服务启动失败</h3>
+<p>k8s 管理节点，依赖于 hostname，请改回去。</p>
+<h3 id="3-如何重装">3. 如何重装</h3>
+<ol>
+<li>
+<p>重新运行 ocboot 的脚本</p>
+</li>
+<li>
+<p>等待运行完毕，使用<code>kubectl edit deployment onecloud-operator -n onecloud</code>加入下列参数，然后保存关闭。</p>
+</li>
+</ol>
+<p><img src="../images/oo_syncuser.png" alt=""></p>
+<ol start="3">
+<li>第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。</li>
+</ol>
+<h3 id="4-其它问题">4. 其它问题？</h3>
+<p>其它问题欢迎在 云联壹云 github issues 界面提交: <a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues</a> , 我们会尽快回复。</p>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 14.05.2021: <a  href="https://github.com/yunionio/docs/commit/2b49a5a076df2aefc1284391b63d7b597f6a6cf7">fix(quickstart): update onecloud_version to v3.6.15 (2b49a5a)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/v3.6/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js" integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

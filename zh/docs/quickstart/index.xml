@@ -94,7 +94,7 @@ $ ssh root@10.168.26.216 &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;host
 $ yum install -y epel-release ansible
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
   &lt;div id=&#34;ocboot_install-1&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-1&#34;&gt;
 
@@ -102,7 +102,7 @@ $ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#3
 $ apt install -y ansible
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
   &lt;div id=&#34;ocboot_install-2&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-2&#34;&gt;
 
@@ -110,7 +110,7 @@ $ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#3
 $ pip install ansible
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&#34;编写部署配置&#34;&gt;编写部署配置&lt;/h3&gt;
@@ -141,13 +141,15 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./co
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # k8s 控制节点的端口
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 云联壹云 版本
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: &amp;#39;v3.6.15&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: &amp;#39;v3.7.0&amp;#39;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 云联壹云 登录用户
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user: admin
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 云联壹云 登录用户密码
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user_password: admin@123
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 该节点作为 云联壹云 私有云计算节点
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  as_host: true
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 启用 minio 作为后端对象存储
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  enable_minio: true
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开始部署&#34;&gt;开始部署&lt;/h3&gt;
 &lt;p&gt;当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code&gt;./run.py ./config-allinone.yml&lt;/code&gt; 部署集群了。&lt;/p&gt;
@@ -189,7 +191,7 @@ Password: admin@123
 &lt;p&gt;如果要使用 云联壹云 私有云虚拟机，需要宿主机使用 云联壹云 编译的内核，可使用以下命令查看宿主机是否使用 云联壹云 内核(包含 yn 关键字)。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看是否使用 yn 内核&lt;/span&gt;
 $ uname -a &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep yn
-Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span&gt;
 $ reboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -212,7 +214,7 @@ $ reboot
 &lt;li&gt;第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;4-其它问题&#34;&gt;4. 其它问题？&lt;/h3&gt;
-&lt;p&gt;其它问题欢迎在 云联壹云 github issues 界面提交: &lt;a href=&#34;https://github.com/yunionio/onecloud/issues&#34;&gt;https://github.com/yunionio/onecloud/issues&lt;/a&gt; , 我们会尽快回复。&lt;/p&gt;
+&lt;p&gt;其它问题欢迎在 云联壹云 github issues 界面提交: &lt;a href=&#34;https://github.com/yunionio/yunioncloud/issues&#34;&gt;https://github.com/yunionio/yunioncloud/issues&lt;/a&gt; , 我们会尽快回复。&lt;/p&gt;
 
       </description>
     </item>
@@ -290,7 +292,7 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./co
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;primary_master_node:
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: v3.6.15
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: v3.7.0
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.127.10.156
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_host: 10.127.10.156

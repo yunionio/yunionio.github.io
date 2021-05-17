@@ -20,29 +20,23 @@
 <link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
-<title>v3.3.8 | OneCloud</title><meta property="og:title" content="v3.3.8" />
-<meta property="og:description" content="Release time: 2020-12-09 17:03:16
- onecloud Repository: https://github.com/yunionio/onecloud
-10 commits to onecloud - v3.3.8 since this release.
-Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid panic (dc8c341a1, Qu Xuan) renew rds (a2391a50c, Qu Xuan) host: make sure it won&rsquo;t match vpc guests by accident (1ee1493d6, Yousong Zhou) monitor: modify monitor serviceType in StartService() (379fbf458, zhaoxiangchun) region: change_ipaddr: retain eip_id on detach and attach (841f5aadc, Yousong Zhou) vpcagent: models: guestnetworks: accomodate change_ipaddr (335f3c6b1, Yousong Zhou)  Features (1)  cloudcommon: db: jointbase: add list:&ldquo;user&rdquo; for RowId (b88c079db, Yousong Zhou)  Scheduler (1)  ignore non running guests only exclude ready status (ba4c506b5, Zexi Li)  Vendor (1)  update yunion." />
+<title>Multi-node Installation | OneCloud</title><meta property="og:title" content="Multi-node Installation" />
+<meta property="og:description" content="Use ocboot installation tool to deploy Yunion OneCloud Platform in multiple nodes
+" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://opensource.yunion.cn/en/docs/changelog/release-3.3/3-3-8/" /><meta property="article:section" content="docs" />
+<meta property="og:url" content="https://opensource.yunion.cn/en/docs/quickstart/nodes/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2021-04-11T15:39:29&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-17T16:43:55&#43;08:00" />
 
-<meta itemprop="name" content="v3.3.8">
-<meta itemprop="description" content="Release time: 2020-12-09 17:03:16
- onecloud Repository: https://github.com/yunionio/onecloud
-10 commits to onecloud - v3.3.8 since this release.
-Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid panic (dc8c341a1, Qu Xuan) renew rds (a2391a50c, Qu Xuan) host: make sure it won&rsquo;t match vpc guests by accident (1ee1493d6, Yousong Zhou) monitor: modify monitor serviceType in StartService() (379fbf458, zhaoxiangchun) region: change_ipaddr: retain eip_id on detach and attach (841f5aadc, Yousong Zhou) vpcagent: models: guestnetworks: accomodate change_ipaddr (335f3c6b1, Yousong Zhou)  Features (1)  cloudcommon: db: jointbase: add list:&ldquo;user&rdquo; for RowId (b88c079db, Yousong Zhou)  Scheduler (1)  ignore non running guests only exclude ready status (ba4c506b5, Zexi Li)  Vendor (1)  update yunion.">
-<meta itemprop="dateModified" content="2021-04-11T15:39:29&#43;08:00" />
-<meta itemprop="wordCount" content="228">
+<meta itemprop="name" content="Multi-node Installation">
+<meta itemprop="description" content="Use ocboot installation tool to deploy Yunion OneCloud Platform in multiple nodes
+">
+<meta itemprop="dateModified" content="2021-05-17T16:43:55&#43;08:00" />
+<meta itemprop="wordCount" content="400">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="v3.3.8"/>
-<meta name="twitter:description" content="Release time: 2020-12-09 17:03:16
- onecloud Repository: https://github.com/yunionio/onecloud
-10 commits to onecloud - v3.3.8 since this release.
-Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid panic (dc8c341a1, Qu Xuan) renew rds (a2391a50c, Qu Xuan) host: make sure it won&rsquo;t match vpc guests by accident (1ee1493d6, Yousong Zhou) monitor: modify monitor serviceType in StartService() (379fbf458, zhaoxiangchun) region: change_ipaddr: retain eip_id on detach and attach (841f5aadc, Yousong Zhou) vpcagent: models: guestnetworks: accomodate change_ipaddr (335f3c6b1, Yousong Zhou)  Features (1)  cloudcommon: db: jointbase: add list:&ldquo;user&rdquo; for RowId (b88c079db, Yousong Zhou)  Scheduler (1)  ignore non running guests only exclude ready status (ba4c506b5, Zexi Li)  Vendor (1)  update yunion."/>
+<meta name="twitter:title" content="Multi-node Installation"/>
+<meta name="twitter:description" content="Use ocboot installation tool to deploy Yunion OneCloud Platform in multiple nodes
+"/>
 
 
 
@@ -148,7 +142,7 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="/zh/docs/changelog/release-3.3/3-3-8/">中文</a>
+	<a class="dropdown-item" href="/zh/docs/quickstart/nodes/">中文</a>
 	
 </div>
 			</li>
@@ -202,7 +196,7 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="/zh/docs/changelog/release-3.3/3-3-8/">中文</a>
+	<a class="dropdown-item" href="/zh/docs/quickstart/nodes/">中文</a>
 	
 </div>
     </div>
@@ -233,10 +227,10 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/en/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Quick Start</a>
+    <a  href="/en/docs/quickstart/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Quick Start</a>
   </li>
   <ul>
-    <li class="collapse " id="endocsquickstart">
+    <li class="collapse show" id="endocsquickstart">
       
       
       
@@ -249,7 +243,7 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocsquickstartnodes" href="/en/docs/quickstart/nodes/">Multi-node Installation</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-endocsquickstartnodes" href="/en/docs/quickstart/nodes/">Multi-node Installation</a>
       
       
     </li>
@@ -303,10 +297,10 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/en/docs/changelog/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+    <a  href="/en/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
   </li>
   <ul>
-    <li class="collapse show" id="endocschangelog">
+    <li class="collapse " id="endocschangelog">
       
       
       
@@ -534,17 +528,17 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/en/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">release/3.3</a>
+    <a  href="/en/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
   </li>
   <ul>
-    <li class="collapse show" id="endocschangelogrelease-33">
+    <li class="collapse " id="endocschangelogrelease-33">
       
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-endocschangelogrelease-333-3-8" href="/en/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-8" href="/en/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
       
       
       
@@ -661,9 +655,9 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 
 
-<a href="https://github.com/yunionio/docs/edit/master/content/en/docs/changelog/release-3.3/3-3-8.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-<a href="https://github.com/yunionio/docs/new/master/content/en/docs/changelog/release-3.3/3-3-8.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-<a href="https://github.com/yunionio/docs/issues/new?title=v3.3.8" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+<a href="https://github.com/yunionio/docs/edit/master/content/en/docs/quickstart/nodes.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+<a href="https://github.com/yunionio/docs/new/master/content/en/docs/quickstart/nodes.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=Multi-node%20Installation" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
 
 
 <a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
@@ -677,26 +671,12 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#onecloud">onecloud</a>
+    <li><a href="#environmental-preparation">Environmental Preparation</a></li>
+    <li><a href="#start-installation">Start Installation</a>
       <ul>
-        <li><a href="#bug-fixes-7">Bug Fixes (7)</a></li>
-        <li><a href="#features-1">Features (1)</a></li>
-        <li><a href="#scheduler-1">Scheduler (1)</a></li>
-        <li><a href="#vendor-1">Vendor (1)</a></li>
-      </ul>
-    </li>
-    <li><a href="#notify-plugins">notify-plugins</a>
-      <ul>
-        <li><a href="#features-1-1">Features (1)</a></li>
-      </ul>
-    </li>
-    <li><a href="#sdnagent">sdnagent</a>
-      <ul>
-        <li><a href="#bug-fixes-1">Bug Fixes (1)</a></li>
-        <li><a href="#build-1">Build (1)</a></li>
-        <li><a href="#flowsource-4">Flowsource (4)</a></li>
-        <li><a href="#others-1">Others (1)</a></li>
-        <li><a href="#vendor-1-1">Vendor (1)</a></li>
+        <li><a href="#download-ocboot">Download ocboot</a></li>
+        <li><a href="#write-deployment-configuration">Write deployment configuration</a></li>
+        <li><a href="#start-deployment">Start Deployment</a></li>
       </ul>
     </li>
   </ul>
@@ -722,9 +702,6 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 
 
-
-
-
 <li class="breadcrumb-item" >
 	<a href="https://opensource.yunion.cn/en/docs/">Documentation</a>
 </li>
@@ -733,21 +710,14 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
 
 <li class="breadcrumb-item" >
-	<a href="https://opensource.yunion.cn/en/docs/changelog/">CHANGELOG</a>
-</li>
-
-
-
-
-<li class="breadcrumb-item" >
-	<a href="https://opensource.yunion.cn/en/docs/changelog/release-3.3/">release/3.3</a>
+	<a href="https://opensource.yunion.cn/en/docs/quickstart/">Quick Start</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://opensource.yunion.cn/en/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+	<a href="https://opensource.yunion.cn/en/docs/quickstart/nodes/">Multi-node Installation</a>
 </li>
 
 	</ol>
@@ -755,71 +725,104 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 
             
 <div class="td-content">
-	<h1>v3.3.8</h1>
-    
+	<h1>Multi-node Installation</h1>
+    <div class="lead">Use ocboot installation tool to deploy Yunion OneCloud Platform in multiple nodes</div>
 	       
-	<p>Release time: 2020-12-09 17:03:16</p>
-<hr>
-<h2 id="onecloud">onecloud</h2>
-<p>Repository: <a href="https://github.com/yunionio/onecloud">https://github.com/yunionio/onecloud</a></p>
-<p>10 commits to <a href="https://github.com/yunionio/onecloud/compare/v3.3.7...v3.3.8">onecloud - v3.3.8</a> since this release.</p>
-<h3 id="bug-fixes-7">Bug Fixes (7)</h3>
+	<p>Like the <a href="../allinone">All in One Installation</a>, the multi-node installation uses installation tool <a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot</a> to deploy the nodes according to the configuration by executing the ansible playbook.</p>
+<h2 id="environmental-preparation">Environmental Preparation</h2>
+<p>Please refer to the <a href="../allinone/#configuration-requirements">All in One Installation/Configuration Requirements</a> for environment preparation and requirements for different architecture CPU and OS.</p>
+<p>The following is the environment for the machines to be deployed, assuming that 5 machines have been prepared with IPs 10.127.10.156-160, and that each node makes the following role plans:</p>
 <ul>
-<li>aws secgroup out rule is deny any (<a href="https://github.com/yunionio/onecloud/commit/6ef75538e010a5d76e90ed6e016b1ac4b1ae68ab">6ef75538e</a>, <a href="mailto:quxuan@yunionyun.com">Qu Xuan</a>)</li>
-<li>avoid panic (<a href="https://github.com/yunionio/onecloud/commit/dc8c341a110e0db7862d22c915eab30ca639340c">dc8c341a1</a>, <a href="mailto:quxuan@yunionyun.com">Qu Xuan</a>)</li>
-<li>renew rds (<a href="https://github.com/yunionio/onecloud/commit/a2391a50c02cf3d13661d9946d982ded5c453021">a2391a50c</a>, <a href="mailto:quxuan@yunionyun.com">Qu Xuan</a>)</li>
-<li><strong>host:</strong> make sure it won&rsquo;t match vpc guests by accident (<a href="https://github.com/yunionio/onecloud/commit/1ee1493d6ccf89712ec142e287f8a6fea08e4c1a">1ee1493d6</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-<li><strong>monitor:</strong> modify monitor serviceType in StartService() (<a href="https://github.com/yunionio/onecloud/commit/379fbf45810d209c77196d750a426340cd877aeb">379fbf458</a>, <a href="mailto:1422928955@qq.com">zhaoxiangchun</a>)</li>
-<li><strong>region:</strong> change_ipaddr: retain eip_id on detach and attach (<a href="https://github.com/yunionio/onecloud/commit/841f5aadc08f3c09b5da914d3f4b46aac861930f">841f5aadc</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-<li><strong>vpcagent:</strong> models: guestnetworks: accomodate change_ipaddr (<a href="https://github.com/yunionio/onecloud/commit/335f3c6b1a629c399f6401951a259c8806727bf4">335f3c6b1</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-</ul>
-<h3 id="features-1">Features (1)</h3>
+<li>mariadb_node: This role indicates that the mariadb database service is deployed and running on that node. This role does not have to be written in the configuration if there is a database already in your environment
 <ul>
-<li><strong>cloudcommon:</strong> db: jointbase: add list:&ldquo;user&rdquo; for RowId (<a href="https://github.com/yunionio/onecloud/commit/b88c079dbb3c49077b305dc823ed9bd2a7c9f3fb">b88c079db</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
+<li>node IP: 10.127.10.156</li>
 </ul>
-<h3 id="scheduler-1">Scheduler (1)</h3>
+</li>
+<li>primary_master_node: This role indicates that the node is the first node to deploy and run the k8s master component, which must be present in the configuration, and that the role also runs the onecloud control services
 <ul>
-<li>ignore non running guests only exclude ready status (<a href="https://github.com/yunionio/onecloud/commit/ba4c506b555bf3ea0b6d6393bf26553f24e27e7d">ba4c506b5</a>, <a href="mailto:zexi.li@qq.com">Zexi Li</a>)</li>
+<li>node IP: 10.127.10.156</li>
 </ul>
-<h3 id="vendor-1">Vendor (1)</h3>
+</li>
+<li>master_nodes: This role indicates that these nodes are running the control service, which is optional, and is primarily used along with primary_master_node to form Kubernetes' etcd 3 node high availability cluster
 <ul>
-<li>update yunion.io/x/jsonutils (<a href="https://github.com/yunionio/onecloud/commit/d6e37aa6b460ba77f6ad2f31e27841e422e155d5">d6e37aa6b</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
+<li>node IP: 10.127.10.157-158</li>
 </ul>
-<hr>
-<h2 id="notify-plugins">notify-plugins</h2>
-<p>Repository: <a href="https://github.com/yunionio/notify-plugins">https://github.com/yunionio/notify-plugins</a></p>
-<p>1 commits to <a href="https://github.com/yunionio/notify-plugins/compare/v3.3.7...v3.3.8">notify-plugins - v3.3.8</a> since this release.</p>
-<h3 id="features-1-1">Features (1)</h3>
+</li>
+<li>worker_nodes: This role indicates that these nodes run private cloud computing services. This role is optional and can be unconfigured if the built-in private cloud functionality is not required
 <ul>
-<li><strong>robot:</strong> support multi WebhookPrefixs (<a href="https://github.com/yunionio/notify-plugins/commit/bae94c7b01cff9706374980fd3289b4221920146">bae94c7</a>, <a href="mailto:mjoycarry@gmail.com">rainzm</a>)</li>
+<li>node IP: 10.127.10.159-160</li>
 </ul>
-<hr>
-<h2 id="sdnagent">sdnagent</h2>
-<p>Repository: <a href="https://github.com/yunionio/sdnagent">https://github.com/yunionio/sdnagent</a></p>
-<p>8 commits to <a href="https://github.com/yunionio/sdnagent/compare/v3.3.7...v3.3.8">sdnagent - v3.3.8</a> since this release.</p>
-<h3 id="bug-fixes-1">Bug Fixes (1)</h3>
-<ul>
-<li><strong>hostconfig:</strong> fix watching hostconfig (<a href="https://github.com/yunionio/sdnagen/commit/22c758c78a447d9fadbc6d2b3e2f8afa7a2028ac">22c758c</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
+</li>
 </ul>
-<h3 id="build-1">Build (1)</h3>
-<ul>
-<li>eipgw: track to ensure stop state as well (<a href="https://github.com/yunionio/sdnagen/commit/e98b195a0ff3cd73b93a793b8449f81c1dd06573">e98b195</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-</ul>
-<h3 id="flowsource-4">Flowsource (4)</h3>
-<ul>
-<li>relax constraint when mac check on and ip check off (<a href="https://github.com/yunionio/sdnagen/commit/f68ca1a42c7628bcfc69254544741cd59c0cd714">f68ca1a</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-<li>reword ref comments on allow_switch_vms (<a href="https://github.com/yunionio/sdnagen/commit/711050d9cd435528da36a4382c3edc8fd3668320">711050d</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-<li>reword ref comments on allow_router_vms (<a href="https://github.com/yunionio/sdnagen/commit/2b5eb6d4c985862ca6c916ba702005f4e1ce0ff5">2b5eb6d</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-<li>remove now unused code for dev (<a href="https://github.com/yunionio/sdnagen/commit/1fc7abafd278daf6731d2cf24798198fa90a7501">1fc7aba</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-</ul>
-<h3 id="others-1">Others (1)</h3>
-<ul>
-<li>.circleci: bump go to 1.14 (<a href="https://github.com/yunionio/sdnagen/commit/f5adb38e9933b93a188b932e6526a9739b58e240">f5adb38</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-</ul>
-<h3 id="vendor-1-1">Vendor (1)</h3>
-<ul>
-<li>bump yunion.io/x/onecloud to current tip of release/3.3 (<a href="https://github.com/yunionio/sdnagen/commit/6747d8f01dc875bd163a4c3e17f05781ab10806d">6747d8f</a>, <a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou</a>)</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">IP</th>
+<th style="text-align:center">Login User</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">10.127.10.156</td>
+<td style="text-align:center">root</td>
+<td>mariadb_node &amp; primary_master_node</td>
+</tr>
+<tr>
+<td style="text-align:center">10.127.10.157-158</td>
+<td style="text-align:center">root</td>
+<td>master_nodes</td>
+</tr>
+<tr>
+<td style="text-align:center">10.127.10.159-160</td>
+<td style="text-align:center">root</td>
+<td>worker_nodes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="start-installation">Start Installation</h2>
+<h3 id="download-ocboot">Download ocboot</h3>
+<p>Please refer to the <a href="../allinone/#download-ocboot">All in One Installation/Download ocboot</a>.</p>
+<h3 id="write-deployment-configuration">Write deployment configuration</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># Write config-nodes.yml configuration file</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-nodes.yml
+</span><span style="color:#4e9a06">mariadb_node:
+</span><span style="color:#4e9a06">  hostname: 10.127.10.156
+</span><span style="color:#4e9a06">  user: root
+</span><span style="color:#4e9a06">  db_user: root
+</span><span style="color:#4e9a06">  db_password: your-sql-password
+</span><span style="color:#4e9a06">primary_master_node:
+</span><span style="color:#4e9a06">  onecloud_version: v3.7.0
+</span><span style="color:#4e9a06">  hostname: 10.127.10.156
+</span><span style="color:#4e9a06">  user: root
+</span><span style="color:#4e9a06">  db_host: 10.127.10.156
+</span><span style="color:#4e9a06">  db_user: root
+</span><span style="color:#4e9a06">  db_password: your-sql-password
+</span><span style="color:#4e9a06">  controlplane_host: 10.127.10.156
+</span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
+</span><span style="color:#4e9a06">master_nodes:
+</span><span style="color:#4e9a06">  hosts:
+</span><span style="color:#4e9a06">  - hostname: 10.127.10.157
+</span><span style="color:#4e9a06">    user: root
+</span><span style="color:#4e9a06">  - hostname: 10.127.10.158
+</span><span style="color:#4e9a06">    user: root
+</span><span style="color:#4e9a06">  controlplane_host: 10.127.10.156
+</span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
+</span><span style="color:#4e9a06">worker_nodes:
+</span><span style="color:#4e9a06">  hosts:
+</span><span style="color:#4e9a06">  - hostname: 10.127.10.159
+</span><span style="color:#4e9a06">    user: root
+</span><span style="color:#4e9a06">  - hostname: 10.127.10.160
+</span><span style="color:#4e9a06">    user: root
+</span><span style="color:#4e9a06">  controlplane_host: 10.127.10.156
+</span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
+</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><h3 id="start-deployment">Start Deployment</h3>
+<p>Once the config-nodes.yml deployment configuration file is filled in, you can execute the ocboot file <code>. /run.py . /config-nodes.yml</code> to deploy the cluster.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># Start deployment</span>
+$ ./run.py ./config-nodes.yml
+</code></pre></div><p>Once the deployment is complete, you can access https://10.168.26.216 (the IP of the primary_master_node) using your browser, and enter he username <code>admin</code> and password <code>admin@123</code> to enter the Web UI.</p>
+<p>Then you can <a href="../allinone/#create-the-first-virtual-machine">create private cloud virtual machines</a> or <a href="../allinone/#import-public-cloud-or-other-private-cloud-platform-resources">import public cloud or other private cloud platform resources</a>.</p>
 
 	
 		<style>
@@ -883,7 +886,7 @@ Bug Fixes (7)  aws secgroup out rule is deny any (6ef75538e, Qu Xuan) avoid pani
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 11.04.2021: <a  href="https://github.com/yunionio/docs/commit/fc50c0d8e2d5750bd548452ac42295cc7aa5371c">add more english materials 20210411, needs further improvements (fc50c0d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 17.05.2021: <a  href="https://github.com/yunionio/docs/commit/0f51a3cf5e39e884d6b04645c6d34be82c5db04f">feat: add v3.7 english translations (0f51a3c)</a>
 </div>
 </div>
 

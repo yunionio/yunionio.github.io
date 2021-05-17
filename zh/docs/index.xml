@@ -10289,7 +10289,7 @@ VMware云账号暂不支持更新账号。
 &lt;li&gt;节点: 10.127.10.157-158&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;worker_nodes: 这个角色表示这些节点运行私有云计算服务，该角色可选，如果需要内置的私有云功能，可以不配置
+&lt;li&gt;worker_nodes: 这个角色表示这些节点运行私有云计算服务，该角色可选，如果不需要内置的私有云功能，可以不配置
 &lt;ul&gt;
 &lt;li&gt;节点: 10.127.10.159-160&lt;/li&gt;
 &lt;/ul&gt;
@@ -10321,11 +10321,11 @@ VMware云账号暂不支持更新账号。
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id=&#34;开始部署&#34;&gt;开始部署&lt;/h2&gt;
+&lt;h2 id=&#34;开始安装&#34;&gt;开始安装&lt;/h2&gt;
 &lt;h3 id=&#34;下载-ocboot&#34;&gt;下载 ocboot&lt;/h3&gt;
 &lt;p&gt;参考 &lt;a href=&#34;../allinone/#%E4%B8%8B%E8%BD%BD-ocboot&#34;&gt;All in One 安装/下载 ocboot&lt;/a&gt;。&lt;/p&gt;
 &lt;h3 id=&#34;编写部署配置&#34;&gt;编写部署配置&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编写 config-allinone.yml 文件&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编写 config-nodes.yml 文件&lt;/span&gt;
 $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.yml
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;mariadb_node:
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.127.10.156
@@ -10358,11 +10358,13 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./co
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.127.10.156
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开始部署-1&#34;&gt;开始部署&lt;/h3&gt;
-&lt;p&gt;当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code&gt;./run.py ./config-allinone.yml&lt;/code&gt; 部署集群了。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开始部署&#34;&gt;开始部署&lt;/h3&gt;
+&lt;p&gt;当填写完 config-nodes.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code&gt;./run.py ./config-nodes.yml&lt;/code&gt; 部署集群了。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开始部署&lt;/span&gt;
 $ ./run.py ./config-nodes.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;等待部署完成后，就可以使用浏览器访问 https://10.168.26.216 (primary_master_node 的 IP), 输入用户名 &lt;code&gt;admin&lt;/code&gt; 和密码 &lt;code&gt;admin@123&lt;/code&gt;，进入前端。&lt;/p&gt;
+&lt;p&gt;然后就可以&lt;a href=&#34;../allinone/#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E5%8F%B0%E8%99%9A%E6%8B%9F%E6%9C%BA&#34;&gt;创建私有云虚拟机&lt;/a&gt;或者&lt;a href=&#34;../allinone/#%E5%AF%BC%E5%85%A5%E5%85%AC%E6%9C%89%E4%BA%91%E6%88%96%E8%80%85%E5%85%B6%E5%AE%83%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B3%E5%8F%B0%E8%B5%84%E6%BA%90&#34;&gt;纳管公有云资源&lt;/a&gt;。&lt;/p&gt;
+
       </description>
     </item>
     

@@ -26,13 +26,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/en/docs/quickstart/allinone/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2021-03-23T10:04:20&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-17T16:43:55&#43;08:00" />
 
 <meta itemprop="name" content="All in One Installation">
 <meta itemprop="description" content="Quickly deploy Yunion OneCloud Platform on an existing CentOS 7 machine using the ansible playbook
 ">
-<meta itemprop="dateModified" content="2021-03-23T10:04:20&#43;08:00" />
-<meta itemprop="wordCount" content="1083">
+<meta itemprop="dateModified" content="2021-05-17T16:43:55&#43;08:00" />
+<meta itemprop="wordCount" content="1115">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="All in One Installation"/>
 <meta name="twitter:description" content="Quickly deploy Yunion OneCloud Platform on an existing CentOS 7 machine using the ansible playbook
@@ -176,7 +176,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.5cb58f8ef5f3bdc9f10b9d66af19b363.json"
+  data-offline-search-index-json-src="/offline-search-index.f9079cd889228370092a95cce6ea9a49.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -238,6 +238,12 @@
       
       
       <a class="td-sidebar-link td-sidebar-link__page  active" id="m-endocsquickstartallinone" href="/en/docs/quickstart/allinone/">All in One Installation</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocsquickstartnodes" href="/en/docs/quickstart/nodes/">Multi-node Installation</a>
       
       
     </li>
@@ -668,7 +674,6 @@
     <li><a href="#environmental-preparation">Environmental Preparation</a>
       <ul>
         <li><a href="#configuration-requirements">Configuration Requirements</a></li>
-        <li><a href="#related-software-dependencies">Related Software Dependencies</a></li>
         <li><a href="#local-environment-requirements">Local environment requirements</a></li>
       </ul>
     </li>
@@ -741,7 +746,12 @@
 	<h2 id="environmental-preparation">Environmental Preparation</h2>
 <h3 id="configuration-requirements">Configuration Requirements</h3>
 <ul>
-<li>OS: CentOS 7.6</li>
+<li>OS: Depending on the CPU architecture, the supported distributions are different
+<ul>
+<li>X86_64: <a href="http://isoredirect.centos.org/centos/7/isos/x86_64/">CentOS 7</a></li>
+<li>ARM64: <a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)</a> or <a href="https://www.chinauos.com/">China UOS</a></li>
+</ul>
+</li>
 <li>Minimum Configuration Requirements: CPU 4 cores, Memory 8G, Storage 100G</li>
 </ul>
 <p>The following is the environment of the machine to be deployed:</p>
@@ -771,12 +781,6 @@
 
 </div>
 
-<h3 id="related-software-dependencies">Related Software Dependencies</h3>
-<ul>
-<li>database: mariadb Ver 15.1 Distrib 5.5.56-MariaDB</li>
-<li>docker: ce-19.03.9</li>
-<li>kubernetes: v1.15.8</li>
-</ul>
 <h3 id="local-environment-requirements">Local environment requirements</h3>
 <p>The local environment is the environment where the user performs the actual operation and deployment. The local environment for this installation is executing on a MAC OS laptop, which can also be operated on the machine to be deployed.</p>
 <h4 id="configure-ssh-unencrypted-login">Configure SSH unencrypted login</h4>
@@ -796,22 +800,31 @@ $ ssh root@10.168.26.216 <span style="color:#4e9a06">&#34;hostname&#34;</span>
 <h3 id="download-ocboot">Download ocboot</h3>
 <ul class="nav nav-tabs" id="ocboot_install" role="tablist"><li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7</a></li>
 	  
-		<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Others</a></li></ul>
+		<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Debian 10</a></li>
+		<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Others</a></li></ul>
 <div class="tab-content" id="ocboot_install"><div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
 
 <p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># Install ansible locally</span>
 $ yum install -y epel-release ansible
 
 <span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally</span>
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
 </code></pre></div></div>
   <div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
+
+<p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># Install ansible locally</span>
+$ apt install -y ansible
+
+<span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally</span>
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+</code></pre></div></div>
+  <div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 
 <p><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># Install ansible locally</span>
 $ pip install ansible
 
 <span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally</span>
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
 </code></pre></div></div></div>
 
 <h3 id="write-deployment-configuration">Write deployment configuration</h3>
@@ -842,7 +855,7 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-allinone.yml
 </span><span style="color:#4e9a06">  # Port of Kubernetes controlplane
 </span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
 </span><span style="color:#4e9a06">  # Yunion OneCloud version
-</span><span style="color:#4e9a06">  onecloud_version: &#39;v3.6.9&#39;
+</span><span style="color:#4e9a06">  onecloud_version: &#39;v3.7.0&#39;
 </span><span style="color:#4e9a06">  # Yunion OneCloud login username
 </span><span style="color:#4e9a06">  onecloud_user: admin
 </span><span style="color:#4e9a06">  # Yunion OneCloud login user&#39;s password
@@ -898,7 +911,7 @@ Password: admin@123
 <p>If you want to use Yunion OneCloud private cloud, you need ensure the computing machine use the kernel compiled by us. You can use the following command to check whether the host uses the kernel including the <code>yn</code> keyword.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># Check if yn keyword kernel is used</span>
 $ uname -a <span style="color:#000;font-weight:bold">|</span> grep yn
-Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
 <span style="color:#8f5902;font-style:italic"># If the kernel is not the version with the yn keyword,</span>
 <span style="color:#8f5902;font-style:italic"># it may be the first time you install it using ocboot,</span>
 <span style="color:#8f5902;font-style:italic"># and you can reboot into the yn kernel</span>
@@ -990,7 +1003,7 @@ $ reboot
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified 23.03.2021: <a  href="https://github.com/yunionio/docs/commit/c3f914af81301f87f84eae2b60333a03bea69c6c">feat: english version (c3f914a)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 17.05.2021: <a  href="https://github.com/yunionio/docs/commit/0f51a3cf5e39e884d6b04645c6d34be82c5db04f">feat: add v3.7 english translations (0f51a3c)</a>
 </div>
 </div>
 

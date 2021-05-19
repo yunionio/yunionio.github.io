@@ -1,175 +1,120 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>OneCloud – Development</title>
-    <link>https://opensource.yunion.cn/en/docs/contribute/</link>
-    <description>Recent content in Development on OneCloud</description>
-    <generator>Hugo -- gohugo.io</generator>
-    
-	  <atom:link href="https://opensource.yunion.cn/en/docs/contribute/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-      
-        
-      
-    
-    
-    <item>
-      <title>Docs: Code contribution</title>
-      <link>https://opensource.yunion.cn/en/docs/contribute/contrib/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://opensource.yunion.cn/en/docs/contribute/contrib/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;how-to-make-a-pull-request&#34;&gt;How to make a Pull Request?&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Checkout a branch from master, either for a new feature or a bugfix&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# checkout new branch&lt;/span&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OneCloud – Development</title><link>https://docs.yunion.io/en/docs/contribute/</link><description>Recent content in Development on OneCloud</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://docs.yunion.io/en/docs/contribute/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Code contribution</title><link>https://docs.yunion.io/en/docs/contribute/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://docs.yunion.io/en/docs/contribute/contrib/</guid><description>
+&lt;h2 id="how-to-make-a-pull-request">How to make a Pull Request?&lt;/h2>
+&lt;ul>
+&lt;li>Checkout a branch from master, either for a new feature or a bugfix&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># checkout new branch&lt;/span>
 $ git fetch upstream --tags
 $ git checkout -b feature/implement-x upstream/master
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Coding on the new branch&lt;/li&gt;
-&lt;li&gt;After coding is done, do the following to prepare for Pull Request&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git fetch upstream         &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# fetch most up-to-date upstream master&lt;/span&gt;
-$ git rebase upstream/master &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# resolv possible conflicts&lt;/span&gt;
-$ git push origin feature/implement-x &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# push your local branch to github&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Submit Pull Request on GitHub&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;../images/submitPR.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Request reviews, set labels to indicate the impact components of the codes&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;../images/reviewer_label.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;You may use comments to appoint reviwers and set labels. Use &amp;lsquo;/cc&amp;rsquo; and @&lt;userid&gt; to appoint reviwers, use &amp;lsquo;/area&amp;rsquo; to indicate the impact components of the codes.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;../images/robot_review_label.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;​	Available labels are listed under issues——Labels, any label prefixed with area can be used for &amp;lsquo;/area&amp;rsquo; command.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;If the codes need to be merged into release branch, you should create new cherry-pick PRs to the target release branch.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Donwload github command line tool: https://github.com/github/hub&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For OSX, please execute: brew install hub&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For Debian, please execute: sudo apt install hub&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For other OS, please install binaries: https://github.com/github/hub/releases&lt;/span&gt;
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Setup username of github&lt;/span&gt;
-$ &lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GITHUB_USER&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;your_username&amp;gt;
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Use the following scripts to cherry-pick PR to release branch&lt;/span&gt;
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# For exmaple, to cherry-pick the PR with ID #8 to release/2.8.0&lt;/span&gt;
-$ ./scripts/cherry_pick_pull.sh upstream/release/2.8.0 &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8&lt;/span&gt;
- 
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# the cherry pick may have conflicts, please open a new terminal to resolve the conflicts, then input &amp;#39;Y&amp;#39; to continue the cherry-pick process&lt;/span&gt;
-$ git add xxx &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# resolve conflicts&lt;/span&gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Coding on the new branch&lt;/li>
+&lt;li>After coding is done, do the following to prepare for Pull Request&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch upstream &lt;span style="color:#8f5902;font-style:italic"># fetch most up-to-date upstream master&lt;/span>
+$ git rebase upstream/master &lt;span style="color:#8f5902;font-style:italic"># resolv possible conflicts&lt;/span>
+$ git push origin feature/implement-x &lt;span style="color:#8f5902;font-style:italic"># push your local branch to github&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Submit Pull Request on GitHub&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/submitPR.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>Request reviews, set labels to indicate the impact components of the codes&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/reviewer_label.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>You may use comments to appoint reviwers and set labels. Use &amp;lsquo;/cc&amp;rsquo; and @&lt;userid> to appoint reviwers, use &amp;lsquo;/area&amp;rsquo; to indicate the impact components of the codes.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/robot_review_label.png" alt="">&lt;/p>
+&lt;p>​ Available labels are listed under issues——Labels, any label prefixed with area can be used for &amp;lsquo;/area&amp;rsquo; command.&lt;/p>
+&lt;ul>
+&lt;li>If the codes need to be merged into release branch, you should create new cherry-pick PRs to the target release branch.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Donwload github command line tool: https://github.com/github/hub&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># For OSX, please execute: brew install hub&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># For Debian, please execute: sudo apt install hub&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># For other OS, please install binaries: https://github.com/github/hub/releases&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Setup username of github&lt;/span>
+$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">GITHUB_USER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;your_username&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># Use the following scripts to cherry-pick PR to release branch&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># For exmaple, to cherry-pick the PR with ID #8 to release/2.8.0&lt;/span>
+$ ./scripts/cherry_pick_pull.sh upstream/release/2.8.0 &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># the cherry pick may have conflicts, please open a new terminal to resolve the conflicts, then input &amp;#39;Y&amp;#39; to continue the cherry-pick process&lt;/span>
+$ git add xxx &lt;span style="color:#8f5902;font-style:italic"># resolve conflicts&lt;/span>
 $ git am --continue
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# go back to the terminal of cherry-pick, and input &amp;#39;Y&amp;#39; to continue the cherry-pick process&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Go to the Pull Requests of upstream &lt;a href=&#34;https://github.com/yunionio/yunioncloud/pulls&#34;&gt;PR&lt;/a&gt;, you will find the cherry-pick PR，the title of the chery-pick PR should look like: &lt;code&gt;Automated cherry pick of #8: ...&lt;/code&gt;, then procedure the reviwer process and merge the PR to the release branch.&lt;/p&gt;
-
-
-&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
-&lt;h4 class=&#34;alert-heading&#34;&gt;attention&lt;/h4&gt;
-Git commit should follow &lt;a href=&#34;../git-convention&#34;&gt;Git Commit Convention&lt;/a&gt;。
-&lt;/div&gt;
-
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: Git Commit Message Convention</title>
-      <link>https://opensource.yunion.cn/en/docs/contribute/git-convention/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://opensource.yunion.cn/en/docs/contribute/git-convention/</guid>
-      <description>
-        
-        
-        &lt;p&gt;For the purpose of word-processing the code change history, and statistics, we compile the following Git Commit Message Convention to regulate the format of Git Commit Message.&lt;/p&gt;
-&lt;h2 id=&#34;git-commit-message-convention&#34;&gt;Git Commit Message Convention&lt;/h2&gt;
-&lt;p&gt;Conform to the following format:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;lt;type&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;&amp;lt;scope&amp;gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: &amp;lt;subject&amp;gt;
-
+&lt;span style="color:#8f5902;font-style:italic"># go back to the terminal of cherry-pick, and input &amp;#39;Y&amp;#39; to continue the cherry-pick process&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Go to the Pull Requests of upstream &lt;a href="https://github.com/yunionio/yunioncloud/pulls">PR&lt;/a>, you will find the cherry-pick PR，the title of the chery-pick PR should look like: &lt;code>Automated cherry pick of #8: ...&lt;/code>, then procedure the reviwer process and merge the PR to the release branch.&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">attention&lt;/h4>
+Git commit should follow &lt;a href="../git-convention">Git Commit Convention&lt;/a>。
+&lt;/div></description></item><item><title>Docs: Git Commit Message Convention</title><link>https://docs.yunion.io/en/docs/contribute/git-convention/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://docs.yunion.io/en/docs/contribute/git-convention/</guid><description>
+&lt;p>For the purpose of word-processing the code change history, and statistics, we compile the following Git Commit Message Convention to regulate the format of Git Commit Message.&lt;/p>
+&lt;h2 id="git-commit-message-convention">Git Commit Message Convention&lt;/h2>
+&lt;p>Conform to the following format:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt;type&amp;gt;&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&amp;lt;scope&amp;gt;&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: &amp;lt;subject&amp;gt;
 &amp;lt;body&amp;gt;
-
 &amp;lt;footer&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The message is composed of three parts (part is separated by an empty line):&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Title: required, describing the type of modification and a concise summary of changes&lt;/li&gt;
-&lt;li&gt;Content: optional, describing in details why the modification is need, how to change, the basic outline of codes, how to make the change take effect, etc.&lt;/li&gt;
-&lt;li&gt;Notes: optional, some additional notes&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The descriptions of tokens of each part are explained as following:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;type(type of PR:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;feat: new feature&lt;/li&gt;
-&lt;li&gt;fix: bug fix&lt;/li&gt;
-&lt;li&gt;refactor: recode, refactoring of codes&lt;/li&gt;
-&lt;li&gt;test: test cases&lt;/li&gt;
-&lt;li&gt;chore: modifications of helping scripts, such as Makefile, Dockerfile, etc.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;scope(components of impact): such as region, scheduler, cloudcommon, etc.，use comma &amp;lsquo;,&amp;rsquo; as separator if impacting multiple components, e.g. (region,scheduler,monitor)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;subject(concise summary of commit): no more than 50 characters&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;body(detailed description of commit, optional): can be multiple lines, each line contains no more than 72 characters&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;footer(some notes, optional): some notes, e.g. references, breaking change, upgrading suggestions or url of related tasks or issue&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;commit-examples&#34;&gt;Commit Examples&lt;/h2&gt;
-&lt;hr&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;region&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: compute NextSyncTime &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; snapshotpolicydisk
-
-1. If calculated NextSyncTime equals to base, increase base by &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; hour to process recusively.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The message is composed of three parts (part is separated by an empty line):&lt;/p>
+&lt;ul>
+&lt;li>Title: required, describing the type of modification and a concise summary of changes&lt;/li>
+&lt;li>Content: optional, describing in details why the modification is need, how to change, the basic outline of codes, how to make the change take effect, etc.&lt;/li>
+&lt;li>Notes: optional, some additional notes&lt;/li>
+&lt;/ul>
+&lt;p>The descriptions of tokens of each part are explained as following:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>type(type of PR:&lt;/p>
+&lt;ul>
+&lt;li>feat: new feature&lt;/li>
+&lt;li>fix: bug fix&lt;/li>
+&lt;li>refactor: recode, refactoring of codes&lt;/li>
+&lt;li>test: test cases&lt;/li>
+&lt;li>chore: modifications of helping scripts, such as Makefile, Dockerfile, etc.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>scope(components of impact): such as region, scheduler, cloudcommon, etc.，use comma &amp;lsquo;,&amp;rsquo; as separator if impacting multiple components, e.g. (region,scheduler,monitor)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>subject(concise summary of commit): no more than 50 characters&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>body(detailed description of commit, optional): can be multiple lines, each line contains no more than 72 characters&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>footer(some notes, optional): some notes, e.g. references, breaking change, upgrading suggestions or url of related tasks or issue&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="commit-examples">Commit Examples&lt;/h2>
+&lt;hr>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">fix&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>region&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: compute NextSyncTime &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> snapshotpolicydisk
+1. If calculated NextSyncTime equals to base, increase base by &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> hour to process recusively.
 2. For snapshotpolicies with effective retentionday, e.g. a snapshotpolicy
-   takes effect on every Monday and the snapshots are kept &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3&lt;/span&gt; days automatically,
-   synchronization will be performed on every Month &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; snapshoting&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt; and Thursday 
-   &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; release snapshots&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;. 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;scheduler&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: add cpu filter
-
+takes effect on every Monday and the snapshots are kept &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> days automatically,
+synchronization will be performed on every Month &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> snapshoting&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> and Thursday
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> release snapshots&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">feat&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>scheduler&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: add cpu filter
 Added new cpu filter to scheduler:
-
 - filter host by cpu model
-- &lt;span style=&#34;color:#204a87&#34;&gt;set&lt;/span&gt; host capability by request cpu count
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;fix&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;apigateway,monitor,influxdb&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: disable influxdb service query proxy
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;feat&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;climc&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;: support disable wrap line
-
+- &lt;span style="color:#204a87">set&lt;/span> host capability by request cpu count
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">fix&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>apigateway,monitor,influxdb&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: disable influxdb service query proxy
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">feat&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>climc&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: support disable wrap line
 Usage:
-&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;OS_TRY_TERM_WIDTH&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt;
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_TRY_TERM_WIDTH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span>
 climc server-list
-
-Closes &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;#6710&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
-&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&#34;&gt;https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&#34;&gt;http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/noaman_wgs/article/details/103429171&#34;&gt;https://blog.csdn.net/noaman_wgs/article/details/103429171&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-
-      </description>
-    </item>
-    
-  </channel>
-</rss>
+Closes &lt;span style="color:#8f5902;font-style:italic">#6710&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby">https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.fpepsvr2gqby&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html">http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://blog.csdn.net/noaman_wgs/article/details/103429171">https://blog.csdn.net/noaman_wgs/article/details/103429171&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

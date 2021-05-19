@@ -1,316 +1,271 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>云联壹云 – 物理机</title>
-    <link>https://opensource.yunion.cn/v3.3/docs/howto/baremetal/</link>
-    <description>Recent content in 物理机 on 云联壹云</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 10 Jul 2019 10:16:53 +0800</lastBuildDate>
-    
-	  <atom:link href="https://opensource.yunion.cn/v3.3/docs/howto/baremetal/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-      
-        
-      
-    
-    
-    <item>
-      <title>Docs: 介绍</title>
-      <link>https://opensource.yunion.cn/v3.3/docs/howto/baremetal/intro/</link>
-      <pubDate>Fri, 19 Jul 2019 20:28:13 +0800</pubDate>
-      
-      <guid>https://opensource.yunion.cn/v3.3/docs/howto/baremetal/intro/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;功能介绍&#34;&gt;功能介绍&lt;/h2&gt;
-&lt;p&gt;云平台支持 Baremetal(物理机) 管理，提供的功能如下:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;自动化上架: 物理机上架加电启动后，自动注册到云管平台，自动分配BMC IP地址，初始化IPMI账号密码，自动上报物理机硬件配置（CPU、内存、序列号、网卡、磁盘等）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;自动化装机: 根据配置要求自动配置 RAID，自动分区格式化磁盘，自动部署操作系统镜像，自动初始化操作系统账号密码，自动分配IP地址，可以植入配置文件&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;生命周期管理: 支持物理机自动化开机，关机，重装系统，远程带外管理，卸载操作系统等操作&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;与虚拟机共享镜像: 使用虚拟机镜像部署物理机，便于虚拟机和物理机统一操作系统运行环境&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;API 支持: 以上操作均支持API操作，便于与其他系统的自动化流程集成&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;服务器型号支持: 支持Dell、HP、华为、浪潮、联想、超微等主流x86服务器厂商和机型&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;RAID 控制器支持: LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;转换为宿主机: 直接将物理机转换为运行虚拟机的宿主机&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;托管已有服务器： 托管已有并装好系统的物理机&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;服务架构&#34;&gt;服务架构&lt;/h2&gt;
-&lt;p&gt;物理机管理服务架构如下:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;../images/baremetal-arch.png&#34; alt=&#34;物理机管理架构&#34;&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Baremetal &amp;lt;-&amp;gt; DHCP Relay： 处理 PXE 网络启动&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;DHCP Relay &amp;lt;-&amp;gt; Baremetal Agent:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;转发 PXE Boot 请求，获取网络启动相关的信息&lt;/li&gt;
-&lt;li&gt;通过 DHCP 和 TFTP 服务下发 PXE 配置
-&lt;ul&gt;
-&lt;li&gt;云平台定制的&lt;a href=&#34;https://github.com/yunionio/yunionos&#34;&gt;网络启动小系统(yunionos)&lt;/a&gt; kernel 和 initramfs: 运行 SSH 服务，制作 RAID，收集硬件信息等&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Baremetal Agent &amp;lt;-&amp;gt; Region Server:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;通过 Region Server 注册物理机记录&lt;/li&gt;
-&lt;li&gt;获取网络 IP 地址&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Baremetal Agent &amp;lt;-&amp;gt; Baremetal:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Baremetal 通知 Agent SSH 相关的登录信息&lt;/li&gt;
-&lt;li&gt;Agent 通过 SSH 配置 Baremetal 的 IPMI&lt;/li&gt;
-&lt;li&gt;Agent 通过 IPMI 控制 Baremetal 开关机等操作&lt;/li&gt;
-&lt;li&gt;Agent 通过 SSH 执行做 RAID，装机，销毁等操作&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Glance Server -&amp;gt; Baremetal: Baremetal 从 Glance server 下载装机镜像&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;在交换机上开启 DHCP Relay 功能(或者使用 DHCP Relay软件)，relay 指向 Baremetal Agent&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;物理机上架通电后，设置 PXE 网络启动，DHCP Relay 会将 PXE Boot 请求转发到 Baremetal Agent，Baremetal Agent 收到 PXE Boot 请求，向 Region Server 注册物理机记录&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;技术细节&#34;&gt;技术细节&lt;/h2&gt;
-&lt;h3 id=&#34;注册物理机&#34;&gt;注册物理机&lt;/h3&gt;
-&lt;p&gt;注册物理机有自动注册和手动注册两种方式，如果 Baremetal Agent 开启了自动注册功能，就会自动在云平台创建 baremetal 记录；如果为手动注册方式，就需要先调用物理机创建接口把对应的 PXE 网卡对应的 MAC 地址注册到平台。&lt;/p&gt;
-&lt;p&gt;注册的流程如下:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;物理机 PXE 启动时会发送 DHCP PXE boot 的请求，通过 DHCP Relay 请求会到 Baremetal Agent;&lt;/li&gt;
-&lt;li&gt;Baremetal Agent 从 DHCP 请求中取出网卡 MAC 地址，拿 MAC 地址向 Region Server 过滤物理机记录;&lt;/li&gt;
-&lt;li&gt;Region Server 告诉 Baremetal Agent 改 MAC 地址没有物理机，Baremetal Agent 就会新建记录，并从 Region Server 获取分配对应网段的 IP 地址, 通过内置 DHCP 服务回包给物理机;&lt;/li&gt;
-&lt;li&gt;物理机 PXE DHCP 请求获得分配的 IP 地址后，会通过 TFTP 从 Baremetal Agent 下载启动引导文件(kernel 和 initramfs)，然后使用 ramdisk 机制进入我们定制的 initramfs 小系统;&lt;/li&gt;
-&lt;li&gt;initramfs 小系统启动后，会启动 sshd 服务，然后修改 root 用户密码，将这些登录信息通知回 Baremetal Agent;&lt;/li&gt;
-&lt;li&gt;Baremetal Agent 收到通知后，记录 ssh 登录的信息，开始进行准备工作;&lt;/li&gt;
-&lt;li&gt;准备工作包括配置 IPMI，收集硬件信息等，当这些操作完成后，将所有信息上报给 Region Server 完成注册&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;yunionos-网络启动小系统&#34;&gt;yunionos 网络启动小系统&lt;/h3&gt;
-&lt;p&gt;yunionos(&lt;a href=&#34;https://github.com/yunionio/yunionos&#34;&gt;https://github.com/yunionio/yunionos&lt;/a&gt;) 是我们使用 &lt;a href=&#34;https://buildroot.org/&#34;&gt;Buildroot&lt;/a&gt; 工具定制的用于 PXE 启动和管理物理机的小型 Linux 系统，作用如下:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;运行 sshd 服务，提供 Baremetal Agent 远程执行命令&lt;/li&gt;
-&lt;li&gt;包含 LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等驱动和工具，用于制作 RAID&lt;/li&gt;
-&lt;li&gt;包含 ipmitool 和相关 driver，用于配置和调用 IPMI BMC 管理物理机&lt;/li&gt;
-&lt;li&gt;包含 qemu-img, sgdisk, parted 等磁盘分区工具，用于创建操作系统&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;ssh-管理&#34;&gt;SSH 管理&lt;/h3&gt;
-&lt;p&gt;当物理机通过 PXE 进入 yunionos 小系统后会启动 sshd 服务，并将 ssh login 信息通知给 Baremetal Agent，Baremetal Agent 会更新 ssh 相关的登录信息&lt;/p&gt;
-&lt;h3 id=&#34;raid-配置&#34;&gt;RAID 配置&lt;/h3&gt;
-&lt;p&gt;RAID 配置由 Baremetal Agent 根据用户的配置，生成 raid 配置命令，通过 ssh 远程控制 yunionos 在物理机上制作 RAID&lt;/p&gt;
-&lt;h3 id=&#34;安装操作系统&#34;&gt;安装操作系统&lt;/h3&gt;
-&lt;p&gt;RAID 做完后，Baremetal Agent 会通过 ssh 远程控制 yunionos 安装操作系统和分区，流程如下:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;调用 &lt;a href=&#34;https://github.com/yunionio/yunionos/blob/master/src/lib/mos/rootcreate.sh&#34;&gt;/lib/mos/rootcreate.sh&lt;/a&gt; 将系统创建到磁盘:&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;通过 wget 从 Glance Server 下载用户指定的 image 镜像&lt;/li&gt;
-&lt;li&gt;通过 qemu-img convert 命名将 image 写入到磁盘&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;创建好系统后，会根据用户的配置将系统盘 resize 分区&lt;/li&gt;
-&lt;li&gt;创建其它分区并格式化&lt;/li&gt;
-&lt;li&gt;Baremetal Agent 进行一些网络，磁盘配置的设置：比如 bonding，ip 设置, /etc/fstab, 改变 hostname 等&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;开关机&#34;&gt;开关机&lt;/h3&gt;
-&lt;p&gt;注册好的的物理机会配置好 IPMI, IPMI 相关的信息会记录在数据库，Baremetal Agent 通过 ipmitool 控制开关机&lt;/p&gt;
-&lt;h3 id=&#34;重装操作系统&#34;&gt;重装操作系统&lt;/h3&gt;
-&lt;p&gt;类似于安装操作系统，流程上会让安装了操作系统的物理机重新进入 yunionos 小系统，然后重新安装操作系统&lt;/p&gt;
-&lt;h3 id=&#34;远程访问&#34;&gt;远程访问&lt;/h3&gt;
-&lt;p&gt;Baremetal Agent 通过 ipmitool sol 接口提供串口控制界面&lt;/p&gt;
-&lt;h3 id=&#34;删除操作系统&#34;&gt;删除操作系统&lt;/h3&gt;
-&lt;p&gt;对正在运行操作系统的物理机重启进入 PXE 网络启动，进入 yunionos 小系统，调用 &lt;a href=&#34;https://github.com/yunionio/yunionos/blob/master/src/lib/mos/partdestroy.sh&#34;&gt;/lib/mos/partdestory.sh&lt;/a&gt; 销毁磁盘分区和相应的 raid 命令销毁 raid 配置&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: 操作相关</title>
-      <link>https://opensource.yunion.cn/v3.3/docs/howto/baremetal/operator/</link>
-      <pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate>
-      
-      <guid>https://opensource.yunion.cn/v3.3/docs/howto/baremetal/operator/</guid>
-      <description>
-        
-        
-        &lt;h3 id=&#34;查询物理机&#34;&gt;查询物理机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# list baremetal 记录&lt;/span&gt;
-climc host-list --baremetal &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt;
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# list 已经安装系统的物理机&lt;/span&gt;
-climc host-list --baremetal &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt; --occupied
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# list 未安装系统的物理机&lt;/span&gt;
-climc host-list --baremetal &lt;span style=&#34;color:#204a87&#34;&gt;true&lt;/span&gt; --empty
-
-&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查询物理机详情，包括硬件信息，机房信息&lt;/span&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 物理机</title><link>https://docs.yunion.io/v3.3/docs/howto/baremetal/</link><description>Recent content in 物理机 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 10 Jul 2019 10:16:53 +0800</lastBuildDate><atom:link href="https://docs.yunion.io/v3.3/docs/howto/baremetal/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 介绍</title><link>https://docs.yunion.io/v3.3/docs/howto/baremetal/intro/</link><pubDate>Fri, 19 Jul 2019 20:28:13 +0800</pubDate><guid>https://docs.yunion.io/v3.3/docs/howto/baremetal/intro/</guid><description>
+&lt;h2 id="功能介绍">功能介绍&lt;/h2>
+&lt;p>云平台支持 Baremetal(物理机) 管理，提供的功能如下:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>自动化上架: 物理机上架加电启动后，自动注册到云管平台，自动分配BMC IP地址，初始化IPMI账号密码，自动上报物理机硬件配置（CPU、内存、序列号、网卡、磁盘等）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>自动化装机: 根据配置要求自动配置 RAID，自动分区格式化磁盘，自动部署操作系统镜像，自动初始化操作系统账号密码，自动分配IP地址，可以植入配置文件&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>生命周期管理: 支持物理机自动化开机，关机，重装系统，远程带外管理，卸载操作系统等操作&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>与虚拟机共享镜像: 使用虚拟机镜像部署物理机，便于虚拟机和物理机统一操作系统运行环境&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>API 支持: 以上操作均支持API操作，便于与其他系统的自动化流程集成&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>服务器型号支持: 支持Dell、HP、华为、浪潮、联想、超微等主流x86服务器厂商和机型&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>RAID 控制器支持: LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>转换为宿主机: 直接将物理机转换为运行虚拟机的宿主机&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>托管已有服务器： 托管已有并装好系统的物理机&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="服务架构">服务架构&lt;/h2>
+&lt;p>物理机管理服务架构如下:&lt;/p>
+&lt;p>&lt;img src="../images/baremetal-arch.png" alt="物理机管理架构">&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Baremetal &amp;lt;-&amp;gt; DHCP Relay： 处理 PXE 网络启动&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>DHCP Relay &amp;lt;-&amp;gt; Baremetal Agent:&lt;/p>
+&lt;ul>
+&lt;li>转发 PXE Boot 请求，获取网络启动相关的信息&lt;/li>
+&lt;li>通过 DHCP 和 TFTP 服务下发 PXE 配置
+&lt;ul>
+&lt;li>云平台定制的&lt;a href="https://github.com/yunionio/yunionos">网络启动小系统(yunionos)&lt;/a> kernel 和 initramfs: 运行 SSH 服务，制作 RAID，收集硬件信息等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Baremetal Agent &amp;lt;-&amp;gt; Region Server:&lt;/p>
+&lt;ul>
+&lt;li>通过 Region Server 注册物理机记录&lt;/li>
+&lt;li>获取网络 IP 地址&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Baremetal Agent &amp;lt;-&amp;gt; Baremetal:&lt;/p>
+&lt;ul>
+&lt;li>Baremetal 通知 Agent SSH 相关的登录信息&lt;/li>
+&lt;li>Agent 通过 SSH 配置 Baremetal 的 IPMI&lt;/li>
+&lt;li>Agent 通过 IPMI 控制 Baremetal 开关机等操作&lt;/li>
+&lt;li>Agent 通过 SSH 执行做 RAID，装机，销毁等操作&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Glance Server -&amp;gt; Baremetal: Baremetal 从 Glance server 下载装机镜像&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在交换机上开启 DHCP Relay 功能(或者使用 DHCP Relay软件)，relay 指向 Baremetal Agent&lt;/p>
+&lt;ul>
+&lt;li>物理机上架通电后，设置 PXE 网络启动，DHCP Relay 会将 PXE Boot 请求转发到 Baremetal Agent，Baremetal Agent 收到 PXE Boot 请求，向 Region Server 注册物理机记录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="技术细节">技术细节&lt;/h2>
+&lt;h3 id="注册物理机">注册物理机&lt;/h3>
+&lt;p>注册物理机有自动注册和手动注册两种方式，如果 Baremetal Agent 开启了自动注册功能，就会自动在云平台创建 baremetal 记录；如果为手动注册方式，就需要先调用物理机创建接口把对应的 PXE 网卡对应的 MAC 地址注册到平台。&lt;/p>
+&lt;p>注册的流程如下:&lt;/p>
+&lt;ol>
+&lt;li>物理机 PXE 启动时会发送 DHCP PXE boot 的请求，通过 DHCP Relay 请求会到 Baremetal Agent;&lt;/li>
+&lt;li>Baremetal Agent 从 DHCP 请求中取出网卡 MAC 地址，拿 MAC 地址向 Region Server 过滤物理机记录;&lt;/li>
+&lt;li>Region Server 告诉 Baremetal Agent 改 MAC 地址没有物理机，Baremetal Agent 就会新建记录，并从 Region Server 获取分配对应网段的 IP 地址, 通过内置 DHCP 服务回包给物理机;&lt;/li>
+&lt;li>物理机 PXE DHCP 请求获得分配的 IP 地址后，会通过 TFTP 从 Baremetal Agent 下载启动引导文件(kernel 和 initramfs)，然后使用 ramdisk 机制进入我们定制的 initramfs 小系统;&lt;/li>
+&lt;li>initramfs 小系统启动后，会启动 sshd 服务，然后修改 root 用户密码，将这些登录信息通知回 Baremetal Agent;&lt;/li>
+&lt;li>Baremetal Agent 收到通知后，记录 ssh 登录的信息，开始进行准备工作;&lt;/li>
+&lt;li>准备工作包括配置 IPMI，收集硬件信息等，当这些操作完成后，将所有信息上报给 Region Server 完成注册&lt;/li>
+&lt;/ol>
+&lt;h3 id="yunionos-网络启动小系统">yunionos 网络启动小系统&lt;/h3>
+&lt;p>yunionos(&lt;a href="https://github.com/yunionio/yunionos">https://github.com/yunionio/yunionos&lt;/a>) 是我们使用 &lt;a href="https://buildroot.org/">Buildroot&lt;/a> 工具定制的用于 PXE 启动和管理物理机的小型 Linux 系统，作用如下:&lt;/p>
+&lt;ol>
+&lt;li>运行 sshd 服务，提供 Baremetal Agent 远程执行命令&lt;/li>
+&lt;li>包含 LSI MegaRaid, HP Smart Array, LSI MPT2SAS, LSI MPT3SAS, Mrarvell RAID等驱动和工具，用于制作 RAID&lt;/li>
+&lt;li>包含 ipmitool 和相关 driver，用于配置和调用 IPMI BMC 管理物理机&lt;/li>
+&lt;li>包含 qemu-img, sgdisk, parted 等磁盘分区工具，用于创建操作系统&lt;/li>
+&lt;/ol>
+&lt;h3 id="ssh-管理">SSH 管理&lt;/h3>
+&lt;p>当物理机通过 PXE 进入 yunionos 小系统后会启动 sshd 服务，并将 ssh login 信息通知给 Baremetal Agent，Baremetal Agent 会更新 ssh 相关的登录信息&lt;/p>
+&lt;h3 id="raid-配置">RAID 配置&lt;/h3>
+&lt;p>RAID 配置由 Baremetal Agent 根据用户的配置，生成 raid 配置命令，通过 ssh 远程控制 yunionos 在物理机上制作 RAID&lt;/p>
+&lt;h3 id="安装操作系统">安装操作系统&lt;/h3>
+&lt;p>RAID 做完后，Baremetal Agent 会通过 ssh 远程控制 yunionos 安装操作系统和分区，流程如下:&lt;/p>
+&lt;ol>
+&lt;li>调用 &lt;a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/rootcreate.sh">/lib/mos/rootcreate.sh&lt;/a> 将系统创建到磁盘:&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>通过 wget 从 Glance Server 下载用户指定的 image 镜像&lt;/li>
+&lt;li>通过 qemu-img convert 命名将 image 写入到磁盘&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>创建好系统后，会根据用户的配置将系统盘 resize 分区&lt;/li>
+&lt;li>创建其它分区并格式化&lt;/li>
+&lt;li>Baremetal Agent 进行一些网络，磁盘配置的设置：比如 bonding，ip 设置, /etc/fstab, 改变 hostname 等&lt;/li>
+&lt;/ol>
+&lt;h3 id="开关机">开关机&lt;/h3>
+&lt;p>注册好的的物理机会配置好 IPMI, IPMI 相关的信息会记录在数据库，Baremetal Agent 通过 ipmitool 控制开关机&lt;/p>
+&lt;h3 id="重装操作系统">重装操作系统&lt;/h3>
+&lt;p>类似于安装操作系统，流程上会让安装了操作系统的物理机重新进入 yunionos 小系统，然后重新安装操作系统&lt;/p>
+&lt;h3 id="远程访问">远程访问&lt;/h3>
+&lt;p>Baremetal Agent 通过 ipmitool sol 接口提供串口控制界面&lt;/p>
+&lt;h3 id="删除操作系统">删除操作系统&lt;/h3>
+&lt;p>对正在运行操作系统的物理机重启进入 PXE 网络启动，进入 yunionos 小系统，调用 &lt;a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/partdestroy.sh">/lib/mos/partdestory.sh&lt;/a> 销毁磁盘分区和相应的 raid 命令销毁 raid 配置&lt;/p></description></item><item><title>Docs: 操作相关</title><link>https://docs.yunion.io/v3.3/docs/howto/baremetal/operator/</link><pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate><guid>https://docs.yunion.io/v3.3/docs/howto/baremetal/operator/</guid><description>
+&lt;h3 id="查询物理机">查询物理机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># list baremetal 记录&lt;/span>
+climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># list 已经安装系统的物理机&lt;/span>
+climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span> --occupied
+&lt;span style="color:#8f5902;font-style:italic"># list 未安装系统的物理机&lt;/span>
+climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span> --empty
+&lt;span style="color:#8f5902;font-style:italic"># 查询物理机详情，包括硬件信息，机房信息&lt;/span>
 climc host-show &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;注册物理机&#34;&gt;注册物理机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-create &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;重新准备物理机&#34;&gt;重新准备物理机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-prepare &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;获取物理机登录信息&#34;&gt;获取物理机登录信息&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-logininfo &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;获取串口登录控制台&#34;&gt;获取串口登录控制台&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc webconsole-baremetal &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开关机&#34;&gt;开/关机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-start/host-stop &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;进入退出维护模式&#34;&gt;进入/退出维护模式&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-maintenance/host-unmaintenance &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;删除物理机&#34;&gt;删除物理机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-delete &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;转换回收宿主机&#34;&gt;转换/回收宿主机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc host-convert-hypervisor
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="注册物理机">注册物理机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-create &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重新准备物理机">重新准备物理机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-prepare &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="获取物理机登录信息">获取物理机登录信息&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-logininfo &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="获取串口登录控制台">获取串口登录控制台&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc webconsole-baremetal &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开关机">开/关机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-start/host-stop &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="进入退出维护模式">进入/退出维护模式&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-maintenance/host-unmaintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="删除物理机">删除物理机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-delete &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="转换回收宿主机">转换/回收宿主机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-convert-hypervisor
 climc host-undo-convert &amp;lt;host_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;裸金属服务器相关&#34;&gt;裸金属服务器相关&lt;/h2&gt;
-&lt;h3 id=&#34;安装操作系统&#34;&gt;安装操作系统&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc server-create &lt;span style=&#34;color:#4e9a06&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --hypervisor baremetal &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 指定 server 的类型为 baremetal&lt;/span&gt;
-    --ncpu &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;24&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建到 24 核 cpu 的物理机&lt;/span&gt;
-    --raid-config &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;raid1:2:MegaRaid&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1&lt;/span&gt;
-    --raid-config &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;none:1&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid&lt;/span&gt;
-    --raid-config &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;raid10:4:MegaRaid&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10&lt;/span&gt;
-    --disk CentOS-7.5.qcow2:100g &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 系统盘使用 CentOS-7.5.qcow2 镜像作为操作系统，大小为 100g，使用第1块 raid1 的盘&lt;/span&gt;
-    --disk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;autoextend:ext4:/opt&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 分区挂载到 /opt, 使用第1块 raid1 的盘，文件系统为 ext4, 大小为(第一块盘总大小 - 该盘其他分区的大小(100g))&lt;/span&gt;
-    --disk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;autoextend:xfs:/data-nonraid&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 分区挂载到 /data-nonraid, 使用第2块没做 raid 的盘, 文件系统为 xfs，使用所有空间&lt;/span&gt;
-    --disk &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;autoextend:ext4:/data-raid10&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 分区挂载到 /data-raid10, 使用第3块 raid10 的盘，文件系统为 ext4, 使用所有空间&lt;/span&gt;
-    &amp;lt;server_name&amp;gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\ &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 裸金属服务器名称&lt;/span&gt;
-    64g &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建到 64g 内存大小的物理机&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;raid-配置和分区&#34;&gt;raid 配置和分区&lt;/h4&gt;
-&lt;p&gt;调用 server-create 接口时通过 &amp;lsquo;&amp;ndash;raid-config&amp;rsquo; 传递参数来配置 raid，每个 raid-config 对应到操作系统可见的磁盘设备(/dev/sdx)。&lt;/p&gt;
-&lt;p&gt;&amp;lsquo;&amp;ndash;disk&amp;rsquo; 参数对应不同磁盘上的分区，分区对应到磁盘的逻辑为: 分区按照顺序创建到第1块磁盘上，当 disk 设置 autoextend 参数后，表示接下来的 disk 分区会创建到下一个磁盘，以此类推。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;raid 配置 API 参数:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Key&lt;/th&gt;
-&lt;th&gt;Type&lt;/th&gt;
-&lt;th&gt;value&lt;/th&gt;
-&lt;th&gt;解释&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;type(磁盘类型)&lt;/td&gt;
-&lt;td&gt;string&lt;/td&gt;
-&lt;td&gt;rotate(机械盘), ssd(固态盘), hybrid(未知)&lt;/td&gt;
-&lt;td&gt;-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;conf (raid)&lt;/td&gt;
-&lt;td&gt;string&lt;/td&gt;
-&lt;td&gt;none, raid0, raid1, raid5, raid10&lt;/td&gt;
-&lt;td&gt;做raid几或者不做&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;count (磁盘数量)&lt;/td&gt;
-&lt;td&gt;int&lt;/td&gt;
-&lt;td&gt;e.g. 0, 2, 4&lt;/td&gt;
-&lt;td&gt;小于等于物理机实际的盘数&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;range (磁盘范围)&lt;/td&gt;
-&lt;td&gt;[]int&lt;/td&gt;
-&lt;td&gt;e.g. [0,1,2,3], [4,7], [5,6]&lt;/td&gt;
-&lt;td&gt;物理磁盘在控制器上的索引号&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;splits (切割物理盘)&lt;/td&gt;
-&lt;td&gt;string&lt;/td&gt;
-&lt;td&gt;(30%,20%,), (300g,100g,)&lt;/td&gt;
-&lt;td&gt;做好 raid 的物理盘再切割为多块物理盘&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;adapter (控制器号)&lt;/td&gt;
-&lt;td&gt;int&lt;/td&gt;
-&lt;td&gt;0, 1&lt;/td&gt;
-&lt;td&gt;对应driver的 Adapter 控制器&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;driver  (控制器名称)&lt;/td&gt;
-&lt;td&gt;string&lt;/td&gt;
-&lt;td&gt;MegaRaid,HPSARaid,Mpt2SAS,MarvelRaid,Linux,PCIE&lt;/td&gt;
-&lt;td&gt;1台物理机上有多个控制器时用于选择盘&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;strip  (设置raid strip 大小)&lt;/td&gt;
-&lt;td&gt;*int&lt;/td&gt;
-&lt;td&gt;e.g. 64*1024&lt;/td&gt;
-&lt;td&gt;设置strip size, 可选&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;ra&lt;/td&gt;
-&lt;td&gt;*bool&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;设置读模式&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;wt&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;设置写模式&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;cachedbadbbu&lt;/td&gt;
-&lt;td&gt;*bool&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;direct&lt;/td&gt;
-&lt;td&gt;*bool&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;命令行格式:&lt;/p&gt;
-&lt;p&gt;&amp;lsquo;(none,raid0,raid1,raid5,raid10):%d:(MegaRaid|HPSARaid|Mpt2SAS|MarvelRaid|Linux|PCIE):(rotate|ssd|hybrid):[0-n]:strip%dk:adapter%d:ra:nora:wt:wb:direct:cachedbadbbu:nocachedbadbbu&amp;rsquo;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;查询裸金属服务器&#34;&gt;查询裸金属服务器&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc server-list --hypervisor baremetal
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="裸金属服务器相关">裸金属服务器相关&lt;/h2>
+&lt;h3 id="安装操作系统">安装操作系统&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-create &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --hypervisor baremetal &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 指定 server 的类型为 baremetal&lt;/span>
+--ncpu &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 创建到 24 核 cpu 的物理机&lt;/span>
+--raid-config &lt;span style="color:#4e9a06">&amp;#39;raid1:2:MegaRaid&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1&lt;/span>
+--raid-config &lt;span style="color:#4e9a06">&amp;#39;none:1&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid&lt;/span>
+--raid-config &lt;span style="color:#4e9a06">&amp;#39;raid10:4:MegaRaid&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10&lt;/span>
+--disk CentOS-7.5.qcow2:100g &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 系统盘使用 CentOS-7.5.qcow2 镜像作为操作系统，大小为 100g，使用第1块 raid1 的盘&lt;/span>
+--disk &lt;span style="color:#4e9a06">&amp;#39;autoextend:ext4:/opt&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 分区挂载到 /opt, 使用第1块 raid1 的盘，文件系统为 ext4, 大小为(第一块盘总大小 - 该盘其他分区的大小(100g))&lt;/span>
+--disk &lt;span style="color:#4e9a06">&amp;#39;autoextend:xfs:/data-nonraid&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-nonraid, 使用第2块没做 raid 的盘, 文件系统为 xfs，使用所有空间&lt;/span>
+--disk &lt;span style="color:#4e9a06">&amp;#39;autoextend:ext4:/data-raid10&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-raid10, 使用第3块 raid10 的盘，文件系统为 ext4, 使用所有空间&lt;/span>
+&amp;lt;server_name&amp;gt; &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 裸金属服务器名称&lt;/span>
+64g &lt;span style="color:#8f5902;font-style:italic"># 创建到 64g 内存大小的物理机&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="raid-配置和分区">raid 配置和分区&lt;/h4>
+&lt;p>调用 server-create 接口时通过 &amp;lsquo;&amp;ndash;raid-config&amp;rsquo; 传递参数来配置 raid，每个 raid-config 对应到操作系统可见的磁盘设备(/dev/sdx)。&lt;/p>
+&lt;p>&amp;lsquo;&amp;ndash;disk&amp;rsquo; 参数对应不同磁盘上的分区，分区对应到磁盘的逻辑为: 分区按照顺序创建到第1块磁盘上，当 disk 设置 autoextend 参数后，表示接下来的 disk 分区会创建到下一个磁盘，以此类推。&lt;/p>
+&lt;ul>
+&lt;li>raid 配置 API 参数:&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Key&lt;/th>
+&lt;th>Type&lt;/th>
+&lt;th>value&lt;/th>
+&lt;th>解释&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>type(磁盘类型)&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>rotate(机械盘), ssd(固态盘), hybrid(未知)&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>conf (raid)&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>none, raid0, raid1, raid5, raid10&lt;/td>
+&lt;td>做raid几或者不做&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>count (磁盘数量)&lt;/td>
+&lt;td>int&lt;/td>
+&lt;td>e.g. 0, 2, 4&lt;/td>
+&lt;td>小于等于物理机实际的盘数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>range (磁盘范围)&lt;/td>
+&lt;td>[]int&lt;/td>
+&lt;td>e.g. [0,1,2,3], [4,7], [5,6]&lt;/td>
+&lt;td>物理磁盘在控制器上的索引号&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>splits (切割物理盘)&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>(30%,20%,), (300g,100g,)&lt;/td>
+&lt;td>做好 raid 的物理盘再切割为多块物理盘&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>adapter (控制器号)&lt;/td>
+&lt;td>int&lt;/td>
+&lt;td>0, 1&lt;/td>
+&lt;td>对应driver的 Adapter 控制器&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>driver (控制器名称)&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>MegaRaid,HPSARaid,Mpt2SAS,MarvelRaid,Linux,PCIE&lt;/td>
+&lt;td>1台物理机上有多个控制器时用于选择盘&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>strip (设置raid strip 大小)&lt;/td>
+&lt;td>*int&lt;/td>
+&lt;td>e.g. 64*1024&lt;/td>
+&lt;td>设置strip size, 可选&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ra&lt;/td>
+&lt;td>*bool&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>设置读模式&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>wt&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>设置写模式&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cachedbadbbu&lt;/td>
+&lt;td>*bool&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>direct&lt;/td>
+&lt;td>*bool&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>
+&lt;p>命令行格式:&lt;/p>
+&lt;p>&amp;lsquo;(none,raid0,raid1,raid5,raid10):%d:(MegaRaid|HPSARaid|Mpt2SAS|MarvelRaid|Linux|PCIE):(rotate|ssd|hybrid):[0-n]:strip%dk:adapter%d:ra:nora:wt:wb:direct:cachedbadbbu:nocachedbadbbu&amp;rsquo;&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="查询裸金属服务器">查询裸金属服务器&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-list --hypervisor baremetal
 climc server-show &amp;lt;server_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;重装操作系统&#34;&gt;重装操作系统&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc server-rebuild --image &amp;lt;image_id&amp;gt; &amp;lt;server_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开关机-1&#34;&gt;开/关机&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc server-start &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重装操作系统">重装操作系统&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-rebuild --image &amp;lt;image_id&amp;gt; &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开关机-1">开/关机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-start &amp;lt;server_id&amp;gt;
 climc server-stop &amp;lt;server_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;删除裸金属服务器&#34;&gt;删除裸金属服务器&lt;/h3&gt;
-&lt;p&gt;删除 server 裸金属服务器会销毁物理机上的操作系统和 raid 配置，对应的 baremetal 重新进入未分配状态&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;climc server-delete &amp;lt;server_id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-      </description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="删除裸金属服务器">删除裸金属服务器&lt;/h3>
+&lt;p>删除 server 裸金属服务器会销毁物理机上的操作系统和 raid 配置，对应的 baremetal 重新进入未分配状态&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-delete &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

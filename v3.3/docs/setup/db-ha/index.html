@@ -1,1371 +1,307 @@
-<!doctype html>
-<html lang="zh" class="no-js">
-  <head>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.83.1" />
-
-<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
-
-
-
-<link rel="shortcut icon" href="/favicons/favicon.ico" >
-<link rel="apple-touch-icon" href="/v3.3/favicons/apple-touch-icon-180x180.png" sizes="180x180">
-<link rel="icon" type="image/png" href="/v3.3/favicons/favicon-16x16.png" sizes="16x16">
-<link rel="icon" type="image/png" href="/v3.3/favicons/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/v3.3/favicons/android-36x36.png" sizes="36x36">
-<link rel="icon" type="image/png" href="/v3.3/favicons/android-48x48.png" sizes="48x48">
-<link rel="icon" type="image/png" href="/v3.3/favicons/android-72x72.png" sizes="72x72">
-<link rel="icon" type="image/png" href="/v3.3/favicons/android-96x96.png" sizes="96x96">
-<link rel="icon" type="image/png" href="/v3.3/favicons/android-144x144.png" sizes="144x144">
-<link rel="icon" type="image/png" href="/v3.3/favicons/android-192x192.png" sizes="192x192">
-
-<title>部署 DB HA 环境 | 云联壹云</title><meta property="og:title" content="部署 DB HA 环境" />
-<meta property="og:description" content="部署高可用数据库集群
-" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://opensource.yunion.cn/v3.3/docs/setup/db-ha/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2020-02-12T12:55:46&#43;08:00" />
-<meta property="article:modified_time" content="2020-10-20T15:52:21&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
-
-<meta itemprop="name" content="部署 DB HA 环境">
-<meta itemprop="description" content="部署高可用数据库集群
-"><meta itemprop="datePublished" content="2020-02-12T12:55:46&#43;08:00" />
-<meta itemprop="dateModified" content="2020-10-20T15:52:21&#43;08:00" />
-<meta itemprop="wordCount" content="832">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="部署 DB HA 环境"/>
-<meta name="twitter:description" content="部署高可用数据库集群
-"/>
-
-
-
-
-
-<link rel="preload" href="/v3.3/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" as="style">
-<link href="/v3.3/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" rel="stylesheet" integrity="">
-
-
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-  crossorigin="anonymous"></script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.3"></script>
-
-
-
-
-  </head>
-  <body class="td-page">
-    <header>
-      
-<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
-  
-  <a href="/v3.3/" class="logo flex-shrink-0 navbar-brand">
-    <img src="https://opensource.yunion.cn/v3.3/images/logo.svg" />
-  </a>
-
-	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
-		<ul class="navbar-nav mt-2 mt-lg-0">
-      
-			<li class="nav-item dropdown d-none d-lg-block">
-				
-
-<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    
-    v3.3
-</a>
-<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-    
-    
-    
-        
-            <a class="dropdown-item" href="/">v3.7 (latest)</a>
-        
-    
-        
-            <a class="dropdown-item" href="/v3.6">v3.6</a>
-        
-    
-        
-            <a class="dropdown-item" href="/v3.4">v3.4</a>
-        
-    
-        
-            <a class="dropdown-item" href="/v3.3">v3.3</a>
-        
-    
-        
-            <a class="dropdown-item" href="/v3.2">v3.2</a>
-        
-    
-</div>
-
-			</li>
-      
-			
-			
-			<li class="nav-item mr-4 mb-2 mb-lg-0">
-				
-				
-				
-				
-				<a class="nav-link" href="/v3.3/docs/quickstart/" ><span>快速开始</span></a>
-			</li>
-			
-			<li class="nav-item mr-4 mb-2 mb-lg-0">
-				
-				
-				
-				
-				
-				
-				<a class="nav-link active" href="/v3.3/docs/" ><span class="active">文档</span></a>
-			</li>
-			
-			<li class="nav-item mr-4 mb-2 mb-lg-0">
-				
-				
-				
-				
-				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
-			</li>
-			
-			<li class="nav-item mr-4 mb-2 mb-lg-0">
-				
-				
-				
-				
-				<a class="nav-link" href="/v3.3/docs/changelog" ><span>CHANGELOG</span></a>
-			</li>
-			
-			<li class="nav-item mr-4 mb-2 mb-lg-0">
-				
-				
-				
-				
-				<a class="nav-link" href="/v3.3/docs/contact" ><span>联系我们</span></a>
-			</li>
-			
-			
-		</ul>
-	</div>
-  
-</nav>
-
-    </header>
-    <div class="container-fluid td-outer">
-      <div class="td-main">
-        <div class="row flex-xl-nowrap">
-          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
-            
-
-
-
-
-<div id="td-sidebar-menu" class="td-sidebar__inner">
-  
-  <form class="td-sidebar__search d-flex align-items-center">
-    
-
-
-
-<input
-  type="search"
-  class="form-control td-search-input"
-  placeholder="&#xf002; 站内搜索…"
-  aria-label="站内搜索…"
-  autocomplete="off"
-  
-  data-offline-search-index-json-src="/v3.3/offline-search-index.1c5e135f87171f1e3b7ce6094b2c13ba.json"
-  data-offline-search-base-href="/"
-  data-offline-search-max-results="10"
->
-
-
-    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
-    </button>
-  </form>
-  
-  <nav class="collapse td-sidebar-nav" id="td-section-nav">
-    
-    
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
-  </li>
-  <ul>
-    <li class="collapse show" id="v33docs">
-      
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docsquickstart">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docsquickstartallinone" href="/v3.3/docs/quickstart/allinone/">All in One 安装</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docsquickstartminikube" href="/v3.3/docs/quickstart/minikube/">MiniKube 安装</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/setup/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">安装部署</a>
-  </li>
-  <ul>
-    <li class="collapse show" id="v33docssetup">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupintro" href="/v3.3/docs/setup/intro/">组件概览</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupcontrolplane-ha" href="/v3.3/docs/setup/controlplane-ha/">部署 HA 环境</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v33docssetupdb-ha" href="/v3.3/docs/setup/db-ha/">部署 DB HA 环境</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupcontrolplane" href="/v3.3/docs/setup/controlplane/">部署集群</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupcomponents" href="/v3.3/docs/setup/components/">添加 K8S 节点</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetuphost" href="/v3.3/docs/setup/host/">添加计算节点</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupbaremetal" href="/v3.3/docs/setup/baremetal/">物理机管理服务</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupce-ee-switch" href="/v3.3/docs/setup/ce-ee-switch/">切换到企业版</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docssetupupgrade" href="/v3.3/docs/setup/upgrade/">升级相关</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docscontribute">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributecontrib" href="/v3.3/docs/contribute/contrib/">开发贡献</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributegit-convention" href="/v3.3/docs/contribute/git-convention/">Git 提交内容规范</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributeservices" href="/v3.3/docs/contribute/services/">服务组件介绍</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docscontributeframework" href="/v3.3/docs/contribute/framework/">后端服务框架</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowto">
-      
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtoclimc">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtoimage">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimageupload" href="/v3.3/docs/howto/image/upload/">上传镜像</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimagequery" href="/v3.3/docs/howto/image/query/">查询镜像</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimagecreate" href="/v3.3/docs/howto/image/create/">制作镜像</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoimageoperation" href="/v3.3/docs/howto/image/operation/">其他操作</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtoserver">
-      
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtoservercreate">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverconnect" href="/v3.3/docs/howto/server/connect/">登录云主机</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverothers" href="/v3.3/docs/howto/server/others/">其他操作</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverimport" href="/v3.3/docs/howto/server/import/">libvirt管理虚机导入</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoservergpu" href="/v3.3/docs/howto/server/gpu/">GPU相关</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoservermigrate" href="/v3.3/docs/howto/server/migrate/">迁移相关</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtoserverbackup" href="/v3.3/docs/howto/server/backup/">主备机</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtohost">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtohostkvm" href="/v3.3/docs/howto/host/kvm/">KVM 宿主机</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtobaremetal">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtobaremetalintro" href="/v3.3/docs/howto/baremetal/intro/">介绍</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtobaremetaloperator" href="/v3.3/docs/howto/baremetal/operator/">操作相关</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtonetwork">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtolb">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtostorage">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtomulticloud">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docshowtomulticloudcloudaccount" href="/v3.3/docs/howto/multicloud/cloudaccount/">云账号</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtoauth">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtocontainer">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docshowtoscheduler">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docscontact">
-      
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docschangelog">
-      
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docschangelogrelease-34">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-12" href="/v3.3/docs/changelog/release-3.4/3-4-12/">v3.4.12</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-11" href="/v3.3/docs/changelog/release-3.4/3-4-11/">v3.4.11</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-10" href="/v3.3/docs/changelog/release-3.4/3-4-10/">v3.4.10</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-9" href="/v3.3/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-8" href="/v3.3/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-7" href="/v3.3/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-6" href="/v3.3/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-5" href="/v3.3/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-4" href="/v3.3/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-3" href="/v3.3/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-2" href="/v3.3/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-1" href="/v3.3/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-343-4-0" href="/v3.3/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-      
-      
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/v3.3/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
-  </li>
-  <ul>
-    <li class="collapse " id="v33docschangelogrelease-33">
-      
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-8" href="/v3.3/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-7" href="/v3.3/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-6" href="/v3.3/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-5" href="/v3.3/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-4" href="/v3.3/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-3" href="/v3.3/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-2" href="/v3.3/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-1" href="/v3.3/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
-      
-      
-      
-      
-      
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v33docschangelogrelease-333-3-0" href="/v3.3/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-    </li>
-  </ul>
-</ul>
-
-      
-      
-    </li>
-  </ul>
-</ul>
-
-  </nav>
-</div>
-
-
-
-
-          </div>
-          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
-            
-
-
-
-
-
-
-<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-
-
-
-
-
-
-
-
-
-
-
-<a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/setup/db-ha.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
-<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/setup/db-ha.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
-<a href="https://github.com/yunionio/docs/issues/new?title=%e9%83%a8%e7%bd%b2%20DB%20HA%20%e7%8e%af%e5%a2%83" target="_blank"><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
-
-
-<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a>
-
-</div>
-
-
-
-
-
-
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#部署">部署</a>
-      <ul>
-        <li><a href="#部署配置-mariadb-主主复制">部署配置 Mariadb 主主复制</a></li>
-        <li><a href="#部署配置-keepalived">部署配置 keepalived</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
-
-          </div>
-          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
-            
-  
-
-            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
-	<ol class="breadcrumb spb-1">
-		
-
-
-
-
-
-
-
-
-
-
-<li class="breadcrumb-item" >
-	<a href="https://opensource.yunion.cn/v3.3/docs/">文档</a>
-</li>
-
-
-
-
-<li class="breadcrumb-item" >
-	<a href="https://opensource.yunion.cn/v3.3/docs/setup/">安装部署</a>
-</li>
-
-
-
-
-<li class="breadcrumb-item active" aria-current="page">
-	<a href="https://opensource.yunion.cn/v3.3/docs/setup/db-ha/">部署 DB HA 环境</a>
-</li>
-
-	</ol>
-</nav	>
-
-            
-<div class="td-content">
-	<h1>部署 DB HA 环境</h1>
-    <div class="lead">部署高可用数据库集群</div>
-	       
-	<p>云联壹云 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。</p>
-<h2 id="部署">部署</h2>
-<p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。</p>
-<h3 id="部署配置-mariadb-主主复制">部署配置 Mariadb 主主复制</h3>
-<p>安装并启动 Mariadb</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y mariadb-server
-$ systemctl <span style="color:#204a87">enable</span> --now mariadb
-</code></pre></div><p>运行 Mariadb 安全配置向导，设置密码等</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mysql_secure_installation
+<!doctype html><html lang=zh class=no-js><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.83.1"><meta name=ROBOTS content="NOINDEX, NOFOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/v3.3/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/v3.3/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/v3.3/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/v3.3/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/v3.3/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/v3.3/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/v3.3/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/v3.3/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/v3.3/favicons/android-192x192.png sizes=192x192><title>部署 DB HA 环境 | 云联壹云</title><meta property="og:title" content="部署 DB HA 环境"><meta property="og:description" content="部署高可用数据库集群
+"><meta property="og:type" content="article"><meta property="og:url" content="https://docs.yunion.io/v3.3/docs/setup/db-ha/"><meta property="article:section" content="docs"><meta property="article:published_time" content="2020-02-12T12:55:46+08:00"><meta property="article:modified_time" content="2020-10-20T15:52:21+08:00"><meta property="og:site_name" content="云联壹云"><meta itemprop=name content="部署 DB HA 环境"><meta itemprop=description content="部署高可用数据库集群
+"><meta itemprop=datePublished content="2020-02-12T12:55:46+08:00"><meta itemprop=dateModified content="2020-10-20T15:52:21+08:00"><meta itemprop=wordCount content="832"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="部署 DB HA 环境"><meta name=twitter:description content="部署高可用数据库集群
+"><link rel=preload href=/v3.3/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css as=style><link href=/v3.3/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css rel=stylesheet integrity><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/fuse.js@6.4.3></script></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar"><a href=/v3.3/ class="logo flex-shrink-0 navbar-brand"><img src=https://docs.yunion.io/v3.3/images/logo.svg></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item dropdown d-none d-lg-block"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>v3.3</a><div class=dropdown-menu aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/>v3.7 (latest)</a>
+<a class=dropdown-item href=/v3.6>v3.6</a>
+<a class=dropdown-item href=/v3.4>v3.4</a>
+<a class=dropdown-item href=/v3.3>v3.3</a>
+<a class=dropdown-item href=/v3.2>v3.2</a></div></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=/v3.3/docs/quickstart/><span>快速开始</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link active" href=/v3.3/docs/><span class=active>文档</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=https://github.com/yunionio/onecloud target=_blank><span>Github</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=/v3.3/docs/changelog><span>CHANGELOG</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=/v3.3/docs/contact><span>联系我们</span></a></li></ul></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none"><div id=td-sidebar-menu class=td-sidebar__inner><form class="td-sidebar__search d-flex align-items-center"><input type=search class="form-control td-search-input" placeholder="&#xf002; 站内搜索…" aria-label=站内搜索… autocomplete=off data-offline-search-index-json-src=/v3.3/offline-search-index.1c5e135f87171f1e3b7ce6094b2c13ba.json data-offline-search-base-href=/ data-offline-search-max-results=10>
+<button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type=button data-toggle=collapse data-target=#td-section-nav aria-controls=td-docs-nav aria-expanded=false aria-label="Toggle section navigation"></button></form><nav class="collapse td-sidebar-nav" id=td-section-nav><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/ class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a></li><ul><li class="collapse show" id=v33docs><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/quickstart/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a></li><ul><li class=collapse id=v33docsquickstart><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docsquickstartallinone href=/v3.3/docs/quickstart/allinone/>All in One 安装</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docsquickstartminikube href=/v3.3/docs/quickstart/minikube/>MiniKube 安装</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/setup/ class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">安装部署</a></li><ul><li class="collapse show" id=v33docssetup><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupintro href=/v3.3/docs/setup/intro/>组件概览</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupcontrolplane-ha href=/v3.3/docs/setup/controlplane-ha/>部署 HA 环境</a>
+<a class="td-sidebar-link td-sidebar-link__page active" id=m-v33docssetupdb-ha href=/v3.3/docs/setup/db-ha/>部署 DB HA 环境</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupcontrolplane href=/v3.3/docs/setup/controlplane/>部署集群</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupcomponents href=/v3.3/docs/setup/components/>添加 K8S 节点</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetuphost href=/v3.3/docs/setup/host/>添加计算节点</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupbaremetal href=/v3.3/docs/setup/baremetal/>物理机管理服务</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupce-ee-switch href=/v3.3/docs/setup/ce-ee-switch/>切换到企业版</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docssetupupgrade href=/v3.3/docs/setup/upgrade/>升级相关</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/contribute/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a></li><ul><li class=collapse id=v33docscontribute><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docscontributecontrib href=/v3.3/docs/contribute/contrib/>开发贡献</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docscontributegit-convention href=/v3.3/docs/contribute/git-convention/>Git 提交内容规范</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docscontributeservices href=/v3.3/docs/contribute/services/>服务组件介绍</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docscontributeframework href=/v3.3/docs/contribute/framework/>后端服务框架</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a></li><ul><li class=collapse id=v33docshowto><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/climc/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a></li><ul><li class=collapse id=v33docshowtoclimc></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/image/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a></li><ul><li class=collapse id=v33docshowtoimage><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoimageupload href=/v3.3/docs/howto/image/upload/>上传镜像</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoimagequery href=/v3.3/docs/howto/image/query/>查询镜像</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoimagecreate href=/v3.3/docs/howto/image/create/>制作镜像</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoimageoperation href=/v3.3/docs/howto/image/operation/>其他操作</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/server/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a></li><ul><li class=collapse id=v33docshowtoserver><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/server/create/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a></li><ul><li class=collapse id=v33docshowtoservercreate></li></ul></ul><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoserverconnect href=/v3.3/docs/howto/server/connect/>登录云主机</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoserverothers href=/v3.3/docs/howto/server/others/>其他操作</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoserverimport href=/v3.3/docs/howto/server/import/>libvirt管理虚机导入</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoservergpu href=/v3.3/docs/howto/server/gpu/>GPU相关</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoservermigrate href=/v3.3/docs/howto/server/migrate/>迁移相关</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtoserverbackup href=/v3.3/docs/howto/server/backup/>主备机</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/host/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a></li><ul><li class=collapse id=v33docshowtohost><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtohostkvm href=/v3.3/docs/howto/host/kvm/>KVM 宿主机</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/baremetal/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a></li><ul><li class=collapse id=v33docshowtobaremetal><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtobaremetalintro href=/v3.3/docs/howto/baremetal/intro/>介绍</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtobaremetaloperator href=/v3.3/docs/howto/baremetal/operator/>操作相关</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/network/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a></li><ul><li class=collapse id=v33docshowtonetwork></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/lb/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a></li><ul><li class=collapse id=v33docshowtolb></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/storage/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a></li><ul><li class=collapse id=v33docshowtostorage></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/multicloud/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a></li><ul><li class=collapse id=v33docshowtomulticloud><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docshowtomulticloudcloudaccount href=/v3.3/docs/howto/multicloud/cloudaccount/>云账号</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/auth/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a></li><ul><li class=collapse id=v33docshowtoauth></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/container/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a></li><ul><li class=collapse id=v33docshowtocontainer></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/howto/scheduler/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a></li><ul><li class=collapse id=v33docshowtoscheduler></li></ul></ul></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/contact/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a></li><ul><li class=collapse id=v33docscontact></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/changelog/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a></li><ul><li class=collapse id=v33docschangelog><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/changelog/release-3.4/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a></li><ul><li class=collapse id=v33docschangelogrelease-34><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-12 href=/v3.3/docs/changelog/release-3.4/3-4-12/>v3.4.12</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-11 href=/v3.3/docs/changelog/release-3.4/3-4-11/>v3.4.11</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-10 href=/v3.3/docs/changelog/release-3.4/3-4-10/>v3.4.10</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-9 href=/v3.3/docs/changelog/release-3.4/3-4-9/>v3.4.9</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-8 href=/v3.3/docs/changelog/release-3.4/3-4-8/>v3.4.8</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-7 href=/v3.3/docs/changelog/release-3.4/3-4-7/>v3.4.7</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-6 href=/v3.3/docs/changelog/release-3.4/3-4-6/>v3.4.6</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-5 href=/v3.3/docs/changelog/release-3.4/3-4-5/>v3.4.5</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-4 href=/v3.3/docs/changelog/release-3.4/3-4-4/>v3.4.4</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-3 href=/v3.3/docs/changelog/release-3.4/3-4-3/>v3.4.3</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-2 href=/v3.3/docs/changelog/release-3.4/3-4-2/>v3.4.2</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-1 href=/v3.3/docs/changelog/release-3.4/3-4-1/>v3.4.1</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-343-4-0 href=/v3.3/docs/changelog/release-3.4/3-4-0/>v3.4.0</a></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/v3.3/docs/changelog/release-3.3/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a></li><ul><li class=collapse id=v33docschangelogrelease-33><a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-8 href=/v3.3/docs/changelog/release-3.3/3-3-8/>v3.3.8</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-7 href=/v3.3/docs/changelog/release-3.3/3-3-7/>v3.3.7</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-6 href=/v3.3/docs/changelog/release-3.3/3-3-6/>v3.3.6</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-5 href=/v3.3/docs/changelog/release-3.3/3-3-5/>v3.3.5</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-4 href=/v3.3/docs/changelog/release-3.3/3-3-4/>v3.3.4</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-3 href=/v3.3/docs/changelog/release-3.3/3-3-3/>v3.3.3</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-2 href=/v3.3/docs/changelog/release-3.3/3-3-2/>v3.3.2</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-1 href=/v3.3/docs/changelog/release-3.3/3-3-1/>v3.3.1</a>
+<a class="td-sidebar-link td-sidebar-link__page" id=m-v33docschangelogrelease-333-3-0 href=/v3.3/docs/changelog/release-3.3/3-3-0/>v3.3.0</a></li></ul></ul></li></ul></ul></li></ul></ul></nav></div></div><div class="d-none d-xl-block col-xl-2 td-toc d-print-none"><div class="td-page-meta ml-2 pb-1 pt-2 mb-0"><a href=https://github.com/yunionio/docs/edit/master/content/zh/docs/setup/db-ha.md target=_blank><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
+<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/setup/db-ha.md?filename=change-me.md&value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" target=_blank><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=%e9%83%a8%e7%bd%b2%20DB%20HA%20%e7%8e%af%e5%a2%83" target=_blank><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
+<a href=https://github.com/yunionio/onecloud/issues/new target=_blank><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a></div><nav id=TableOfContents><ul><li><a href=#部署>部署</a><ul><li><a href=#部署配置-mariadb-主主复制>部署配置 Mariadb 主主复制</a></li><li><a href=#部署配置-keepalived>部署配置 keepalived</a></li></ul></li></ul></nav></div><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://docs.yunion.io/v3.3/docs/>文档</a></li><li class=breadcrumb-item><a href=https://docs.yunion.io/v3.3/docs/setup/>安装部署</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://docs.yunion.io/v3.3/docs/setup/db-ha/>部署 DB HA 环境</a></li></ol></nav><div class=td-content><h1>部署 DB HA 环境</h1><div class=lead>部署高可用数据库集群</div><p>云联壹云 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。</p><h2 id=部署>部署</h2><p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。</p><h3 id=部署配置-mariadb-主主复制>部署配置 Mariadb 主主复制</h3><p>安装并启动 Mariadb</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ yum install -y mariadb-server
+$ systemctl <span style=color:#204a87>enable</span> --now mariadb
+</code></pre></div><p>运行 Mariadb 安全配置向导，设置密码等</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ mysql_secure_installation
  ... ...
-Change the root password? <span style="color:#ce5c00;font-weight:bold">[</span>Y/n<span style="color:#ce5c00;font-weight:bold">]</span> y
+Change the root password? <span style=color:#ce5c00;font-weight:700>[</span>Y/n<span style=color:#ce5c00;font-weight:700>]</span> y
 New password:
 Re-enter new password:
 Password updated successfully!
 Reloading privilege tables..
  ... Success!
  ... ...
-Remove anonymous users? <span style="color:#ce5c00;font-weight:bold">[</span>Y/n<span style="color:#ce5c00;font-weight:bold">]</span> y
+Remove anonymous users? <span style=color:#ce5c00;font-weight:700>[</span>Y/n<span style=color:#ce5c00;font-weight:700>]</span> y
  ... Success!
  ... ...
-Disallow root login remotely? <span style="color:#ce5c00;font-weight:bold">[</span>Y/n<span style="color:#ce5c00;font-weight:bold">]</span> y
+Disallow root login remotely? <span style=color:#ce5c00;font-weight:700>[</span>Y/n<span style=color:#ce5c00;font-weight:700>]</span> y
  ... Success!
  ... ...
-Remove <span style="color:#204a87">test</span> database and access to it? <span style="color:#ce5c00;font-weight:bold">[</span>Y/n<span style="color:#ce5c00;font-weight:bold">]</span> y
- - Dropping <span style="color:#204a87">test</span> database...
+Remove <span style=color:#204a87>test</span> database and access to it? <span style=color:#ce5c00;font-weight:700>[</span>Y/n<span style=color:#ce5c00;font-weight:700>]</span> y
+ - Dropping <span style=color:#204a87>test</span> database...
  ... Success!
- - Removing privileges on <span style="color:#204a87">test</span> database...
+ - Removing privileges on <span style=color:#204a87>test</span> database...
  ... Success! ... ...
-Reload privilege tables now? <span style="color:#ce5c00;font-weight:bold">[</span>Y/n<span style="color:#ce5c00;font-weight:bold">]</span> y
+Reload privilege tables now? <span style=color:#ce5c00;font-weight:700>[</span>Y/n<span style=color:#ce5c00;font-weight:700>]</span> y
  ... Success!
  ... ...
-</code></pre></div><p>修改 Mariadb 配置文件，准备配置主主复制</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 主节点</span>
-$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/my.cnf
-</span><span style="color:#4e9a06">[mysqld]
-</span><span style="color:#4e9a06">datadir=/var/lib/mysql
-</span><span style="color:#4e9a06">socket=/var/lib/mysql/mysql.sock
-</span><span style="color:#4e9a06"># Disabling symbolic-links is recommended to prevent assorted security risks
-</span><span style="color:#4e9a06">symbolic-links=0
-</span><span style="color:#4e9a06"># Settings user and group are ignored when systemd is used.
-</span><span style="color:#4e9a06"># If you need to run mysqld under a different user or group,
-</span><span style="color:#4e9a06"># customize your systemd unit file for mariadb according to the
-</span><span style="color:#4e9a06"># instructions in http://fedoraproject.org/wiki/Systemd
-</span><span style="color:#4e9a06"># skip domain name resolve
-</span><span style="color:#4e9a06">skip_name_resolve
-</span><span style="color:#4e9a06"># auto delete binlog older than 30 days
-</span><span style="color:#4e9a06">expire_logs_days=30
-</span><span style="color:#4e9a06">innodb_file_per_table=ON
-</span><span style="color:#4e9a06">max_connections = 300
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">server-id = 1
-</span><span style="color:#4e9a06">auto_increment_offset = 1
-</span><span style="color:#4e9a06">auto_increment_increment = 2
-</span><span style="color:#4e9a06">log-bin = mysql-bin
-</span><span style="color:#4e9a06">binlog-format = row
-</span><span style="color:#4e9a06">log-slave-updates
-</span><span style="color:#4e9a06">max_binlog_size = 1G
-</span><span style="color:#4e9a06">replicate-ignore-db = information_schema
-</span><span style="color:#4e9a06">replicate-ignore-db = performance_schema
-</span><span style="color:#4e9a06">max_connections = 1000
-</span><span style="color:#4e9a06">max_connect_errors = 0
-</span><span style="color:#4e9a06">max_allowed_packet = 1G
-</span><span style="color:#4e9a06">slave-net-timeout=10
-</span><span style="color:#4e9a06">master-retry-count=0
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">slow_query_log = 1
-</span><span style="color:#4e9a06">long_query_time = 2
-</span><span style="color:#4e9a06">slow_query_log_file = /var/log/mariadb/slow-query.log
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">[mysql]
-</span><span style="color:#4e9a06">no-auto-rehash
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">[mysqld_safe]
-</span><span style="color:#4e9a06">log-error=/var/log/mariadb/mariadb.log
-</span><span style="color:#4e9a06">pid-file=/var/run/mariadb/mariadb.pid
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">#
-</span><span style="color:#4e9a06"># include all files from the config directory
-</span><span style="color:#4e9a06">#
-</span><span style="color:#4e9a06">!includedir /etc/my.cnf.d
-</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><p>修改 Mariadb 配置文件，准备配置主主复制</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8f5902;font-style:italic># 主节点</span>
+$ cat <span style=color:#4e9a06>&lt;&lt;EOF &gt; /etc/my.cnf
+</span><span style=color:#4e9a06>[mysqld]
+</span><span style=color:#4e9a06>datadir=/var/lib/mysql
+</span><span style=color:#4e9a06>socket=/var/lib/mysql/mysql.sock
+</span><span style=color:#4e9a06># Disabling symbolic-links is recommended to prevent assorted security risks
+</span><span style=color:#4e9a06>symbolic-links=0
+</span><span style=color:#4e9a06># Settings user and group are ignored when systemd is used.
+</span><span style=color:#4e9a06># If you need to run mysqld under a different user or group,
+</span><span style=color:#4e9a06># customize your systemd unit file for mariadb according to the
+</span><span style=color:#4e9a06># instructions in http://fedoraproject.org/wiki/Systemd
+</span><span style=color:#4e9a06># skip domain name resolve
+</span><span style=color:#4e9a06>skip_name_resolve
+</span><span style=color:#4e9a06># auto delete binlog older than 30 days
+</span><span style=color:#4e9a06>expire_logs_days=30
+</span><span style=color:#4e9a06>innodb_file_per_table=ON
+</span><span style=color:#4e9a06>max_connections = 300
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>server-id = 1
+</span><span style=color:#4e9a06>auto_increment_offset = 1
+</span><span style=color:#4e9a06>auto_increment_increment = 2
+</span><span style=color:#4e9a06>log-bin = mysql-bin
+</span><span style=color:#4e9a06>binlog-format = row
+</span><span style=color:#4e9a06>log-slave-updates
+</span><span style=color:#4e9a06>max_binlog_size = 1G
+</span><span style=color:#4e9a06>replicate-ignore-db = information_schema
+</span><span style=color:#4e9a06>replicate-ignore-db = performance_schema
+</span><span style=color:#4e9a06>max_connections = 1000
+</span><span style=color:#4e9a06>max_connect_errors = 0
+</span><span style=color:#4e9a06>max_allowed_packet = 1G
+</span><span style=color:#4e9a06>slave-net-timeout=10
+</span><span style=color:#4e9a06>master-retry-count=0
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>slow_query_log = 1
+</span><span style=color:#4e9a06>long_query_time = 2
+</span><span style=color:#4e9a06>slow_query_log_file = /var/log/mariadb/slow-query.log
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>[mysql]
+</span><span style=color:#4e9a06>no-auto-rehash
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>[mysqld_safe]
+</span><span style=color:#4e9a06>log-error=/var/log/mariadb/mariadb.log
+</span><span style=color:#4e9a06>pid-file=/var/run/mariadb/mariadb.pid
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>#
+</span><span style=color:#4e9a06># include all files from the config directory
+</span><span style=color:#4e9a06>#
+</span><span style=color:#4e9a06>!includedir /etc/my.cnf.d
+</span><span style=color:#4e9a06>EOF</span>
 
-<span style="color:#8f5902;font-style:italic"># 备节点</span>
-$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/my.cnf
-</span><span style="color:#4e9a06">[mysqld]
-</span><span style="color:#4e9a06">datadir=/var/lib/mysql
-</span><span style="color:#4e9a06">socket=/var/lib/mysql/mysql.sock
-</span><span style="color:#4e9a06"># Disabling symbolic-links is recommended to prevent assorted security risks
-</span><span style="color:#4e9a06">symbolic-links=0
-</span><span style="color:#4e9a06"># Settings user and group are ignored when systemd is used.
-</span><span style="color:#4e9a06"># If you need to run mysqld under a different user or group,
-</span><span style="color:#4e9a06"># customize your systemd unit file for mariadb according to the
-</span><span style="color:#4e9a06"># instructions in http://fedoraproject.org/wiki/Systemd
-</span><span style="color:#4e9a06"># skip domain name resolve
-</span><span style="color:#4e9a06">skip_name_resolve
-</span><span style="color:#4e9a06"># auto delete binlog older than 30 days
-</span><span style="color:#4e9a06">expire_logs_days=30
-</span><span style="color:#4e9a06">innodb_file_per_table=ON
-</span><span style="color:#4e9a06">max_connections = 300
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">server-id = 2
-</span><span style="color:#4e9a06">auto_increment_offset = 2
-</span><span style="color:#4e9a06">auto_increment_increment = 2
-</span><span style="color:#4e9a06">log-bin = mysql-bin
-</span><span style="color:#4e9a06">binlog-format = row
-</span><span style="color:#4e9a06">log-slave-updates
-</span><span style="color:#4e9a06">max_binlog_size = 1G
-</span><span style="color:#4e9a06">replicate-ignore-db = information_schema
-</span><span style="color:#4e9a06">replicate-ignore-db = performance_schema
-</span><span style="color:#4e9a06">max_connections = 1000
-</span><span style="color:#4e9a06">max_connect_errors = 0
-</span><span style="color:#4e9a06">max_allowed_packet = 1G
-</span><span style="color:#4e9a06">slave-net-timeout=10
-</span><span style="color:#4e9a06">master-retry-count=0
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">slow_query_log = 1
-</span><span style="color:#4e9a06">long_query_time = 2
-</span><span style="color:#4e9a06">slow_query_log_file = /var/log/mariadb/slow-query.log
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">[mysql]
-</span><span style="color:#4e9a06">no-auto-rehash
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">[mysqld_safe]
-</span><span style="color:#4e9a06">log-error=/var/log/mariadb/mariadb.log
-</span><span style="color:#4e9a06">pid-file=/var/run/mariadb/mariadb.pid
-</span><span style="color:#4e9a06"> 
-</span><span style="color:#4e9a06">#
-</span><span style="color:#4e9a06"># include all files from the config directory
-</span><span style="color:#4e9a06">#
-</span><span style="color:#4e9a06">!includedir /etc/my.cnf.d
-</span><span style="color:#4e9a06">EOF</span>
+<span style=color:#8f5902;font-style:italic># 备节点</span>
+$ cat <span style=color:#4e9a06>&lt;&lt;EOF &gt; /etc/my.cnf
+</span><span style=color:#4e9a06>[mysqld]
+</span><span style=color:#4e9a06>datadir=/var/lib/mysql
+</span><span style=color:#4e9a06>socket=/var/lib/mysql/mysql.sock
+</span><span style=color:#4e9a06># Disabling symbolic-links is recommended to prevent assorted security risks
+</span><span style=color:#4e9a06>symbolic-links=0
+</span><span style=color:#4e9a06># Settings user and group are ignored when systemd is used.
+</span><span style=color:#4e9a06># If you need to run mysqld under a different user or group,
+</span><span style=color:#4e9a06># customize your systemd unit file for mariadb according to the
+</span><span style=color:#4e9a06># instructions in http://fedoraproject.org/wiki/Systemd
+</span><span style=color:#4e9a06># skip domain name resolve
+</span><span style=color:#4e9a06>skip_name_resolve
+</span><span style=color:#4e9a06># auto delete binlog older than 30 days
+</span><span style=color:#4e9a06>expire_logs_days=30
+</span><span style=color:#4e9a06>innodb_file_per_table=ON
+</span><span style=color:#4e9a06>max_connections = 300
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>server-id = 2
+</span><span style=color:#4e9a06>auto_increment_offset = 2
+</span><span style=color:#4e9a06>auto_increment_increment = 2
+</span><span style=color:#4e9a06>log-bin = mysql-bin
+</span><span style=color:#4e9a06>binlog-format = row
+</span><span style=color:#4e9a06>log-slave-updates
+</span><span style=color:#4e9a06>max_binlog_size = 1G
+</span><span style=color:#4e9a06>replicate-ignore-db = information_schema
+</span><span style=color:#4e9a06>replicate-ignore-db = performance_schema
+</span><span style=color:#4e9a06>max_connections = 1000
+</span><span style=color:#4e9a06>max_connect_errors = 0
+</span><span style=color:#4e9a06>max_allowed_packet = 1G
+</span><span style=color:#4e9a06>slave-net-timeout=10
+</span><span style=color:#4e9a06>master-retry-count=0
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>slow_query_log = 1
+</span><span style=color:#4e9a06>long_query_time = 2
+</span><span style=color:#4e9a06>slow_query_log_file = /var/log/mariadb/slow-query.log
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>[mysql]
+</span><span style=color:#4e9a06>no-auto-rehash
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>[mysqld_safe]
+</span><span style=color:#4e9a06>log-error=/var/log/mariadb/mariadb.log
+</span><span style=color:#4e9a06>pid-file=/var/run/mariadb/mariadb.pid
+</span><span style=color:#4e9a06> 
+</span><span style=color:#4e9a06>#
+</span><span style=color:#4e9a06># include all files from the config directory
+</span><span style=color:#4e9a06>#
+</span><span style=color:#4e9a06>!includedir /etc/my.cnf.d
+</span><span style=color:#4e9a06>EOF</span>
 
-<span style="color:#8f5902;font-style:italic"># 重启服务</span>
+<span style=color:#8f5902;font-style:italic># 重启服务</span>
 $ systemctl restart mariadb
-</code></pre></div><p>主节点创建只读账号，导出全部数据，导入备节点。记录binlog日志文件名和position。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 以下命令在主节点执行</span>
+</code></pre></div><p>主节点创建只读账号，导出全部数据，导入备节点。记录binlog日志文件名和position。</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8f5902;font-style:italic># 以下命令在主节点执行</span>
 
-<span style="color:#8f5902;font-style:italic"># 此密码为上面设置的 Mariadb root 密码，为了方便，只读账号也使用此密码</span>
-$ <span style="color:#000">MYSQL_PASSWD</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;your-sql-passwd&#39;</span>
+<span style=color:#8f5902;font-style:italic># 此密码为上面设置的 Mariadb root 密码，为了方便，只读账号也使用此密码</span>
+$ <span style=color:#000>MYSQL_PASSWD</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#39;your-sql-passwd&#39;</span>
 
-<span style="color:#8f5902;font-style:italic"># 开启 Mariadb 的远程访问</span>
-$ mysql -uroot -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;GRANT ALL PRIVILEGES ON *.* TO &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39; WITH GRANT OPTION;FLUSH PRIVILEGES&#34;</span>
+<span style=color:#8f5902;font-style:italic># 开启 Mariadb 的远程访问</span>
+$ mysql -uroot -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;GRANT ALL PRIVILEGES ON *.* TO &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;</span><span style=color:#000>$MYSQL_PASSWD</span><span style=color:#4e9a06>&#39; WITH GRANT OPTION;FLUSH PRIVILEGES&#34;</span>
 
-<span style="color:#8f5902;font-style:italic"># 创建只读账号</span>
-$ mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;GRANT REPLICATION SLAVE ON *.* TO repl@&#39;%&#39; IDENTIFIED BY &#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39;;FLUSH PRIVILEGES&#34;</span>
+<span style=color:#8f5902;font-style:italic># 创建只读账号</span>
+$ mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;GRANT REPLICATION SLAVE ON *.* TO repl@&#39;%&#39; IDENTIFIED BY &#39;</span><span style=color:#000>$MYSQL_PASSWD</span><span style=color:#4e9a06>&#39;;FLUSH PRIVILEGES&#34;</span>
 
-<span style="color:#8f5902;font-style:italic"># 示例是全新安装的 Mariadb ，还没有使用。如果是正在使用的数据库做主主复制，需要锁表后再导出数据</span>
-$ mysql -uroot -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;SHOW PROCESSLIST&#34;</span>
+<span style=color:#8f5902;font-style:italic># 示例是全新安装的 Mariadb ，还没有使用。如果是正在使用的数据库做主主复制，需要锁表后再导出数据</span>
+$ mysql -uroot -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;SHOW PROCESSLIST&#34;</span>
 +----+------+-----------+------+---------+------+-------+------------------+----------+
-<span style="color:#000;font-weight:bold">|</span> Id <span style="color:#000;font-weight:bold">|</span> User <span style="color:#000;font-weight:bold">|</span> Host      <span style="color:#000;font-weight:bold">|</span> db   <span style="color:#000;font-weight:bold">|</span> Command <span style="color:#000;font-weight:bold">|</span> Time <span style="color:#000;font-weight:bold">|</span> State <span style="color:#000;font-weight:bold">|</span> Info             <span style="color:#000;font-weight:bold">|</span> Progress <span style="color:#000;font-weight:bold">|</span>
+<span style=color:#000;font-weight:700>|</span> Id <span style=color:#000;font-weight:700>|</span> User <span style=color:#000;font-weight:700>|</span> Host      <span style=color:#000;font-weight:700>|</span> db   <span style=color:#000;font-weight:700>|</span> Command <span style=color:#000;font-weight:700>|</span> Time <span style=color:#000;font-weight:700>|</span> State <span style=color:#000;font-weight:700>|</span> Info             <span style=color:#000;font-weight:700>|</span> Progress <span style=color:#000;font-weight:700>|</span>
 +----+------+-----------+------+---------+------+-------+------------------+----------+
-<span style="color:#000;font-weight:bold">|</span>  <span style="color:#0000cf;font-weight:bold">4</span> <span style="color:#000;font-weight:bold">|</span> root <span style="color:#000;font-weight:bold">|</span> localhost <span style="color:#000;font-weight:bold">|</span> NULL <span style="color:#000;font-weight:bold">|</span> Query   <span style="color:#000;font-weight:bold">|</span>    <span style="color:#0000cf;font-weight:bold">0</span> <span style="color:#000;font-weight:bold">|</span> NULL  <span style="color:#000;font-weight:bold">|</span> SHOW PROCESSLIST <span style="color:#000;font-weight:bold">|</span>    0.000 <span style="color:#000;font-weight:bold">|</span>
+<span style=color:#000;font-weight:700>|</span>  <span style=color:#0000cf;font-weight:700>4</span> <span style=color:#000;font-weight:700>|</span> root <span style=color:#000;font-weight:700>|</span> localhost <span style=color:#000;font-weight:700>|</span> NULL <span style=color:#000;font-weight:700>|</span> Query   <span style=color:#000;font-weight:700>|</span>    <span style=color:#0000cf;font-weight:700>0</span> <span style=color:#000;font-weight:700>|</span> NULL  <span style=color:#000;font-weight:700>|</span> SHOW PROCESSLIST <span style=color:#000;font-weight:700>|</span>    0.000 <span style=color:#000;font-weight:700>|</span>
 +----+------+-----------+------+---------+------+-------+------------------+----------+
 
-<span style="color:#8f5902;font-style:italic"># 记录binlog日志文件名和position</span>
-$ mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;SHOW MASTER STATUS\G&#34;</span>
+<span style=color:#8f5902;font-style:italic># 记录binlog日志文件名和position</span>
+$ mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;SHOW MASTER STATUS\G&#34;</span>
 *************************** 1. row ***************************
             File: mysql-bin.000001
-        Position: <span style="color:#0000cf;font-weight:bold">2023</span>
+        Position: <span style=color:#0000cf;font-weight:700>2023</span>
     Binlog_Do_DB:
 Binlog_Ignore_DB:
 
-<span style="color:#8f5902;font-style:italic"># 导出全部数据</span>
-$ mysqldump --all-databases -p<span style="color:#000">$MYSQL_PASSWD</span> &gt; alldb.db
+<span style=color:#8f5902;font-style:italic># 导出全部数据</span>
+$ mysqldump --all-databases -p<span style=color:#000>$MYSQL_PASSWD</span> &gt; alldb.db
 
-<span style="color:#8f5902;font-style:italic"># 拷贝 alldb.db 到备节点</span>
+<span style=color:#8f5902;font-style:italic># 拷贝 alldb.db 到备节点</span>
 $ scp alldb.db db2:/root/
 
 
-<span style="color:#8f5902;font-style:italic"># 以下命令在备节点执行</span>
+<span style=color:#8f5902;font-style:italic># 以下命令在备节点执行</span>
 
-<span style="color:#8f5902;font-style:italic"># 此密码为上面设置的 Mariadb root 密码</span>
-$ <span style="color:#000">MYSQL_PASSWD</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;your-sql-passwd&#39;</span>
+<span style=color:#8f5902;font-style:italic># 此密码为上面设置的 Mariadb root 密码</span>
+$ <span style=color:#000>MYSQL_PASSWD</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#39;your-sql-passwd&#39;</span>
 
-<span style="color:#8f5902;font-style:italic"># 导入主节点导出的数据</span>
-mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> &lt; alldb.db
+<span style=color:#8f5902;font-style:italic># 导入主节点导出的数据</span>
+mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> &lt; alldb.db
 
-<span style="color:#8f5902;font-style:italic"># 重载权限</span>
-mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;FLUSH PRIVILEGES&#34;</span>
+<span style=color:#8f5902;font-style:italic># 重载权限</span>
+mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;FLUSH PRIVILEGES&#34;</span>
 
-<span style="color:#8f5902;font-style:italic"># 记录binlog日志文件名和position</span>
-mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;SHOW MASTER STATUS\G&#34;</span>
+<span style=color:#8f5902;font-style:italic># 记录binlog日志文件名和position</span>
+mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;SHOW MASTER STATUS\G&#34;</span>
 *************************** 1. row ***************************
             File: mysql-bin.000001
-        Position: <span style="color:#0000cf;font-weight:bold">509778</span>
+        Position: <span style=color:#0000cf;font-weight:700>509778</span>
     Binlog_Do_DB:
 Binlog_Ignore_DB:
-</code></pre></div><p>设置主主复制</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 以下命令在主节点执行</span>
+</code></pre></div><p>设置主主复制</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8f5902;font-style:italic># 以下命令在主节点执行</span>
 
-<span style="color:#8f5902;font-style:italic"># 修改MASTER_HOST为备节点IP，修改MASTER_LOG_FILE和MASTER_LOG_POS为上面备节点记录的信息</span>
-mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;CHANGE MASTER TO MASTER_HOST=&#39;192.168.199.99&#39;,MASTER_USER=&#39;repl&#39;,MASTER_PASSWORD=&#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39;,MASTER_PORT=3306,MASTER_LOG_FILE=&#39;mysql-bin.000001&#39;,MASTER_LOG_POS=509778,MASTER_CONNECT_RETRY=2;START SLAVE&#34;</span>
-
-
-<span style="color:#8f5902;font-style:italic"># 以下命令在备节点执行</span>
-
-<span style="color:#8f5902;font-style:italic"># 修改MASTER_HOST为主节点IP，修改MASTER_LOG_FILE和MASTER_LOG_POS为上面主节点记录的信息</span>
-mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;CHANGE MASTER TO MASTER_HOST=&#39;192.168.199.98&#39;,MASTER_USER=&#39;repl&#39;,MASTER_PASSWORD=&#39;</span><span style="color:#000">$MYSQL_PASSWD</span><span style="color:#4e9a06">&#39;,MASTER_PORT=3306,MASTER_LOG_FILE=&#39;mysql-bin.000001&#39;,MASTER_LOG_POS=2023,MASTER_CONNECT_RETRY=2;START SLAVE&#34;</span>
+<span style=color:#8f5902;font-style:italic># 修改MASTER_HOST为备节点IP，修改MASTER_LOG_FILE和MASTER_LOG_POS为上面备节点记录的信息</span>
+mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;CHANGE MASTER TO MASTER_HOST=&#39;192.168.199.99&#39;,MASTER_USER=&#39;repl&#39;,MASTER_PASSWORD=&#39;</span><span style=color:#000>$MYSQL_PASSWD</span><span style=color:#4e9a06>&#39;,MASTER_PORT=3306,MASTER_LOG_FILE=&#39;mysql-bin.000001&#39;,MASTER_LOG_POS=509778,MASTER_CONNECT_RETRY=2;START SLAVE&#34;</span>
 
 
-<span style="color:#8f5902;font-style:italic"># 主备都执行，验证同步状态，都输出2个 Yes 表示正常</span>
-mysql -u root -p<span style="color:#000">$MYSQL_PASSWD</span> -e <span style="color:#4e9a06">&#34;SHOW SLAVE STATUS\G&#34;</span> <span style="color:#000;font-weight:bold">|</span> grep Running
+<span style=color:#8f5902;font-style:italic># 以下命令在备节点执行</span>
+
+<span style=color:#8f5902;font-style:italic># 修改MASTER_HOST为主节点IP，修改MASTER_LOG_FILE和MASTER_LOG_POS为上面主节点记录的信息</span>
+mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;CHANGE MASTER TO MASTER_HOST=&#39;192.168.199.98&#39;,MASTER_USER=&#39;repl&#39;,MASTER_PASSWORD=&#39;</span><span style=color:#000>$MYSQL_PASSWD</span><span style=color:#4e9a06>&#39;,MASTER_PORT=3306,MASTER_LOG_FILE=&#39;mysql-bin.000001&#39;,MASTER_LOG_POS=2023,MASTER_CONNECT_RETRY=2;START SLAVE&#34;</span>
+
+
+<span style=color:#8f5902;font-style:italic># 主备都执行，验证同步状态，都输出2个 Yes 表示正常</span>
+mysql -u root -p<span style=color:#000>$MYSQL_PASSWD</span> -e <span style=color:#4e9a06>&#34;SHOW SLAVE STATUS\G&#34;</span> <span style=color:#000;font-weight:700>|</span> grep Running
              Slave_IO_Running: Yes
             Slave_SQL_Running: Yes
-</code></pre></div><p>至此，DB 主主复制部署完成，可以测试在任一节点进行数据库操作，另一节点验证。不过对外提供服务还是需要通过 vip，不然发生切换还需要业务端切换 ip，下面配置 keepalived 对外提供服务。</p>
-<h3 id="部署配置-keepalived">部署配置 keepalived</h3>
-<p>设置相关的环境变量，根据不同的环境自行配置。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># keepalived vip 地址</span>
-<span style="color:#204a87">export</span> <span style="color:#000">DB_VIP</span><span style="color:#ce5c00;font-weight:bold">=</span>192.168.199.97
+</code></pre></div><p>至此，DB 主主复制部署完成，可以测试在任一节点进行数据库操作，另一节点验证。不过对外提供服务还是需要通过 vip，不然发生切换还需要业务端切换 ip，下面配置 keepalived 对外提供服务。</p><h3 id=部署配置-keepalived>部署配置 keepalived</h3><p>设置相关的环境变量，根据不同的环境自行配置。</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8f5902;font-style:italic># keepalived vip 地址</span>
+<span style=color:#204a87>export</span> <span style=color:#000>DB_VIP</span><span style=color:#ce5c00;font-weight:700>=</span>192.168.199.97
 
-<span style="color:#8f5902;font-style:italic"># keepalived auth toke</span>
-<span style="color:#204a87">export</span> <span style="color:#000">DBHA_KA_AUTH</span><span style="color:#ce5c00;font-weight:bold">=</span>onecloud
+<span style=color:#8f5902;font-style:italic># keepalived auth toke</span>
+<span style=color:#204a87>export</span> <span style=color:#000>DBHA_KA_AUTH</span><span style=color:#ce5c00;font-weight:700>=</span>onecloud
 
-<span style="color:#8f5902;font-style:italic"># keepalived network interface</span>
-<span style="color:#204a87">export</span> <span style="color:#000">DB_NETIF</span><span style="color:#ce5c00;font-weight:bold">=</span>eth0
-</code></pre></div><p>设置 sysctl 选项</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;&gt;/etc/sysctl.conf
-</span><span style="color:#4e9a06">net.ipv4.ip_forward = 1
-</span><span style="color:#4e9a06">net.ipv4.ip_nonlocal_bind = 1
-</span><span style="color:#4e9a06">EOF</span>
+<span style=color:#8f5902;font-style:italic># keepalived network interface</span>
+<span style=color:#204a87>export</span> <span style=color:#000>DB_NETIF</span><span style=color:#ce5c00;font-weight:700>=</span>eth0
+</code></pre></div><p>设置 sysctl 选项</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ cat <span style=color:#4e9a06>&lt;&lt;EOF &gt;&gt;/etc/sysctl.conf
+</span><span style=color:#4e9a06>net.ipv4.ip_forward = 1
+</span><span style=color:#4e9a06>net.ipv4.ip_nonlocal_bind = 1
+</span><span style=color:#4e9a06>EOF</span>
 
 $ sysctl -p
-</code></pre></div><p>安装 keepalived nc</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y keepalived nc
-</code></pre></div><p>添加配置</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 请确保 virtual_router_id 不会和局域网内的其他 keepalived 集群冲突</span>
-$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/keepalived/keepalived.conf
-</span><span style="color:#4e9a06">global_defs {
-</span><span style="color:#4e9a06">    router_id onecloud
-</span><span style="color:#4e9a06">}
-</span><span style="color:#4e9a06">  
-</span><span style="color:#4e9a06">vrrp_script chk_mysql {
-</span><span style="color:#4e9a06">    script &#34;/etc/keepalived/chk_mysql&#34;
-</span><span style="color:#4e9a06">    interval 1
-</span><span style="color:#4e9a06">}
-</span><span style="color:#4e9a06">  
-</span><span style="color:#4e9a06">vrrp_instance VI_1 {
-</span><span style="color:#4e9a06">    state MASTER
-</span><span style="color:#4e9a06">    interface $DB_NETIF         
-</span><span style="color:#4e9a06">    virtual_router_id 99
-</span><span style="color:#4e9a06">    priority 100
-</span><span style="color:#4e9a06">    advert_int 1
-</span><span style="color:#4e9a06">    nopreempt
-</span><span style="color:#4e9a06">    authentication {
-</span><span style="color:#4e9a06">        auth_type PASS
-</span><span style="color:#4e9a06">        auth_pass $DBHA_KA_AUTH
-</span><span style="color:#4e9a06">    }
-</span><span style="color:#4e9a06">  
-</span><span style="color:#4e9a06">    track_script {
-</span><span style="color:#4e9a06">        chk_mysql
-</span><span style="color:#4e9a06">    }
-</span><span style="color:#4e9a06">  
-</span><span style="color:#4e9a06">    virtual_ipaddress {
-</span><span style="color:#4e9a06">        $DB_VIP
-</span><span style="color:#4e9a06">    }
-</span><span style="color:#4e9a06">}
-</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><p>安装 keepalived nc</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ yum install -y keepalived nc
+</code></pre></div><p>添加配置</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8f5902;font-style:italic># 请确保 virtual_router_id 不会和局域网内的其他 keepalived 集群冲突</span>
+$ cat <span style=color:#4e9a06>&lt;&lt;EOF &gt;/etc/keepalived/keepalived.conf
+</span><span style=color:#4e9a06>global_defs {
+</span><span style=color:#4e9a06>    router_id onecloud
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>  
+</span><span style=color:#4e9a06>vrrp_script chk_mysql {
+</span><span style=color:#4e9a06>    script &#34;/etc/keepalived/chk_mysql&#34;
+</span><span style=color:#4e9a06>    interval 1
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>  
+</span><span style=color:#4e9a06>vrrp_instance VI_1 {
+</span><span style=color:#4e9a06>    state MASTER
+</span><span style=color:#4e9a06>    interface $DB_NETIF         
+</span><span style=color:#4e9a06>    virtual_router_id 99
+</span><span style=color:#4e9a06>    priority 100
+</span><span style=color:#4e9a06>    advert_int 1
+</span><span style=color:#4e9a06>    nopreempt
+</span><span style=color:#4e9a06>    authentication {
+</span><span style=color:#4e9a06>        auth_type PASS
+</span><span style=color:#4e9a06>        auth_pass $DBHA_KA_AUTH
+</span><span style=color:#4e9a06>    }
+</span><span style=color:#4e9a06>  
+</span><span style=color:#4e9a06>    track_script {
+</span><span style=color:#4e9a06>        chk_mysql
+</span><span style=color:#4e9a06>    }
+</span><span style=color:#4e9a06>  
+</span><span style=color:#4e9a06>    virtual_ipaddress {
+</span><span style=color:#4e9a06>        $DB_VIP
+</span><span style=color:#4e9a06>    }
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span>
 
-$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/keepalived/chk_mysql
-</span><span style="color:#4e9a06">#!/bin/bash
-</span><span style="color:#4e9a06">echo | nc 127.0.0.1 3306 &amp;&gt;/dev/null
-</span><span style="color:#4e9a06">EOF</span>
+$ cat <span style=color:#4e9a06>&lt;&lt;EOF &gt; /etc/keepalived/chk_mysql
+</span><span style=color:#4e9a06>#!/bin/bash
+</span><span style=color:#4e9a06>echo | nc 127.0.0.1 3306 &amp;&gt;/dev/null
+</span><span style=color:#4e9a06>EOF</span>
   
 $ chmod +x /etc/keepalived/chk_mysql
-</code></pre></div><p>启动 keepalived</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> --now keepalived
-$ ip addr show <span style="color:#000">$DB_NETIF</span>
-2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#0000cf;font-weight:bold">1500</span> qdisc pfifo_fast state UP group default qlen <span style="color:#0000cf;font-weight:bold">1000</span>
+</code></pre></div><p>启动 keepalived</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ systemctl <span style=color:#204a87>enable</span> --now keepalived
+$ ip addr show <span style=color:#000>$DB_NETIF</span>
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style=color:#0000cf;font-weight:700>1500</span> qdisc pfifo_fast state UP group default qlen <span style=color:#0000cf;font-weight:700>1000</span>
     link/ether 00:22:cf:40:1e:29 brd ff:ff:ff:ff:ff:ff
     inet 192.168.199.99/24 brd 192.168.199.255 scope global dynamic eth0
        valid_lft 100651906sec preferred_lft 100651906sec
@@ -1373,101 +309,5 @@ $ ip addr show <span style="color:#000">$DB_NETIF</span>
        valid_lft forever preferred_lft forever
     inet6 fe80::222:cfff:fe40:1e29/64 scope link
        valid_lft forever preferred_lft forever
-</code></pre></div><p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。</p>
-
-	
-		<style>
-  .feedback--answer {
-    display: inline-block;
-  }
-  .feedback--answer-no {
-    margin-left: 1em;
-  }
-  .feedback--response {
-    display: none;
-    margin-top: 1em;
-  }
-  .feedback--response__visible {
-    display: block;
-  }
-</style>
-<h2 class="feedback--title">Feedback</h2>
-<p class="feedback--question">Was this page helpful?</p>
-<button class="feedback--answer feedback--answer-yes">Yes</button>
-<button class="feedback--answer feedback--answer-no">No</button>
-<p class="feedback--response feedback--response-yes">
-  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
-</p>
-<p class="feedback--response feedback--response-no">
-  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
-</p>
-<script>
-  const yesButton = document.querySelector('.feedback--answer-yes');
-  const noButton = document.querySelector('.feedback--answer-no');
-  const yesResponse = document.querySelector('.feedback--response-yes');
-  const noResponse = document.querySelector('.feedback--response-no');
-  const disableButtons = () => {
-    yesButton.disabled = true;
-    noButton.disabled = true;
-  };
-  const sendFeedback = (value) => {
-    if (typeof ga !== 'function') return;
-    const args = {
-      command: 'send',
-      hitType: 'event',
-      category: 'Helpful',
-      action: 'click',
-      label: window.location.pathname,
-      value: value
-    };
-    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
-  };
-  yesButton.addEventListener('click', () => {
-    yesResponse.classList.add('feedback--response__visible');
-    disableButtons();
-    sendFeedback(1);
-  });
-  noButton.addEventListener('click', () => {
-    noResponse.classList.add('feedback--response__visible');
-    disableButtons();
-    sendFeedback(0);
-  });
-</script>
-
-		<br />
-	
-	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a>
-</div>
-</div>
-
-
-          </main>
-        </div>
-      </div>
-      
-
-    </div>
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script src="/v3.3/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js" integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin="anonymous"></script>
-
-
-
-
-  </body>
-</html>
+</code></pre></div><p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。</p><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><h2 class=feedback--title>Feedback</h2><p class=feedback--question>Was this page helpful?</p><button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button><p class="feedback--response feedback--response-yes">Glad to hear it! Please <a href=https://github.com/yunionio/docs/issues/new>tell us how we can improve</a>.</p><p class="feedback--response feedback--response-no">Sorry to hear that. Please <a href=https://github.com/yunionio/docs/issues/new>tell us how we can improve</a>.</p><script>const yesButton=document.querySelector('.feedback--answer-yes'),noButton=document.querySelector('.feedback--answer-no'),yesResponse=document.querySelector('.feedback--response-yes'),noResponse=document.querySelector('.feedback--response-no'),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=b=>{if(typeof ga!='function')return;const a={command:'send',hitType:'event',category:'Helpful',action:'click',label:window.location.pathname,value:b};ga(a.command,a.hitType,a.category,a.action,a.label,a.value)};yesButton.addEventListener('click',()=>{yesResponse.classList.add('feedback--response__visible'),disableButtons(),sendFeedback(1)}),noButton.addEventListener('click',()=>{noResponse.classList.add('feedback--response__visible'),disableButtons(),sendFeedback(0)})</script><br><div class="text-muted mt-5 pt-3 border-top">最后修改 20.10.2020: <a href=https://github.com/yunionio/docs/commit/964d99341c21a6ab7b0cd35a989b6406591eac88>1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (964d993)</a></div></div></main></div></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js integrity=sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49 crossorigin=anonymous></script><script src=https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js integrity=sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy crossorigin=anonymous></script><script src=/v3.3/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin=anonymous></script></body></html>

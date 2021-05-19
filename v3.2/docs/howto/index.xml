@@ -1,6 +1,6 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 操作管理</title><link>https://docs.yunion.io/v3.2/docs/howto/</link><description>Recent content in 操作管理 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://docs.yunion.io/v3.2/docs/howto/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 命令行工具</title><link>https://docs.yunion.io/v3.2/docs/howto/climc/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://docs.yunion.io/v3.2/docs/howto/climc/</guid><description>
 &lt;p>云平台的命令行管理工具是 &lt;code>climc&lt;/code>, 可以通过该工具向后端各个服务发送API请求, 实现对资源的操控。&lt;/p>
-&lt;p>通过快速开始的&lt;a href="../../quickstart/allinone/">All in One安装&lt;/a>或&lt;a href="../../setup">安装部署&lt;/a>章节搭建开源版云联壹云环境时，控制节点都会安装climc，可直接跳过安装climc章节直接查看使用climc章节。&lt;/p>
+&lt;p>通过快速开始的&lt;a href="../../quickstart/allinone/">All in One安装&lt;/a>或&lt;a href="../../setup">安装部署&lt;/a>章节搭建开源版OneCloud环境时，控制节点都会安装climc，可直接跳过安装climc章节直接查看使用climc章节。&lt;/p>
 &lt;p>下面介绍如何在非控制节点上安装climc。&lt;/p>
 &lt;h2 id="安装">安装&lt;/h2>
 &lt;p>可以通过 yum 或者源码编译的方式安装climc。&lt;/p>
@@ -61,11 +61,10 @@ $ ocadm cluster rcadmin
 $ &lt;span style="color:#204a87">source&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ocadm cluster rcadmin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>注意: 如果执行 climc 时出现 &lt;em>Error: Missing OS_AUTH_URL&lt;/em> 的错误提示时，请重新执行 &lt;code>source &amp;lt;(ocadm cluster rcadmin)&lt;/code> 命令。&lt;/p>
 &lt;h4 id="非控制节点认证配置">非控制节点认证配置&lt;/h4>
-&lt;p>在非控制节点做认证配置上首先需要在对应的控制节点上执行&lt;code>ocadm cluster rcadmin&lt;/code>；
-将输出的认证信息保存到本地的文件中，通过source命令认证配置。&lt;/p>
+&lt;p>在非控制节点做认证配置上首先需要在对应的控制节点上获取相关参数，并将认证信息保存到文件中，通过source命令认证配置。&lt;/p>
 &lt;p>以下为用户名／密码认证的配置文件模板，通过OS_USERNAME, OS_DOMAIN_NAME, OS_PASSWORD, OS_PROJECT_NAME, OS_PROJECT_DOMAIN等字段指定用户的信息和项目的信息。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在控制节点上获取认证所需要的配置信息。&lt;/span>
-$ ocadm cluster rcadmin
+&lt;span style="color:#8f5902;font-style:italic"># ocadm cluster rcadmin&lt;/span>
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_AUTH_URL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https://192.168.0.246:5000/v3
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_USERNAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>sysadmin
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_PASSWORD&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3hV3***84srk
@@ -73,25 +72,36 @@ $ ocadm cluster rcadmin
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">YUNION_INSECURE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span>
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_REGION_NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>region0
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_ENDPOINT_TYPE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>publicURL
-&lt;span style="color:#8f5902;font-style:italic"># 将上述认证信息保存到文件中，方便 source 使用&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_admin
-&lt;/span>&lt;span style="color:#4e9a06"># keystone 认证地址
-&lt;/span>&lt;span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
 &lt;/span>&lt;span style="color:#4e9a06"># 用户名
 &lt;/span>&lt;span style="color:#4e9a06">export OS_USERNAME=sysadmin
+&lt;/span>&lt;span style="color:#4e9a06"># 用户所属域名称(如果为Default域,可以省略)
+&lt;/span>&lt;span style="color:#4e9a06">export OS_DOMAIN_NAME=Default
 &lt;/span>&lt;span style="color:#4e9a06"># 用户密码
-&lt;/span>&lt;span style="color:#4e9a06">export OS_PASSWORD=3hV3***84srk
+&lt;/span>&lt;span style="color:#4e9a06">export OS_PASSWORD=***
 &lt;/span>&lt;span style="color:#4e9a06"># 用户所属项目名称
 &lt;/span>&lt;span style="color:#4e9a06">export OS_PROJECT_NAME=system
-&lt;/span>&lt;span style="color:#4e9a06"># 允许 insecure https 连接
-&lt;/span>&lt;span style="color:#4e9a06">export YUNION_INSECURE=true
+&lt;/span>&lt;span style="color:#4e9a06"># 项目所属域名称(如果为Default域,可以省略)
+&lt;/span>&lt;span style="color:#4e9a06">export OS_PROJECT_DOMAIN=Default
+&lt;/span>&lt;span style="color:#4e9a06"># keystone 认证地址
+&lt;/span>&lt;span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
 &lt;/span>&lt;span style="color:#4e9a06"># 对应的 region
-&lt;/span>&lt;span style="color:#4e9a06">export OS_REGION_NAME=region0
-&lt;/span>&lt;span style="color:#4e9a06"># endpoint 类型为 public
-&lt;/span>&lt;span style="color:#4e9a06">export OS_ENDPOINT_TYPE=publicURL
+&lt;/span>&lt;span style="color:#4e9a06">export OS_REGION_NAME=Beijing
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>以下为Access Key/Secret认证的配置文件模板，通过OS_ACCESS_KEY, OS_SECRET_KEY等两个字段指定用户的Access Key/secret。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在控制节点上获取用户在一个项目中的Access Key/Secret&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用&lt;/span>
+$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_admin
+&lt;/span>&lt;span style="color:#4e9a06"># Access Key
+&lt;/span>&lt;span style="color:#4e9a06">export OS_ACCESS_KEY=0d184a3c9c484e4c892f4855935e37e7
+&lt;/span>&lt;span style="color:#4e9a06"># Secret
+&lt;/span>&lt;span style="color:#4e9a06">export OS_SECRET_KEY=VG***5mUXM=
+&lt;/span>&lt;span style="color:#4e9a06"># keystone 认证地址
+&lt;/span>&lt;span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
+&lt;/span>&lt;span style="color:#4e9a06"># 对应的 region
+&lt;/span>&lt;span style="color:#4e9a06">export OS_REGION_NAME=Beijing
+&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 在控制节点上获取用户在一个项目中的Access Key/Secret&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 生成 Secret Key&lt;/span>
 $ climc credential-create-aksk
 +--------+----------------------------------------------+
@@ -111,24 +121,9 @@ $ climc credential-list
 &lt;/span>&lt;span style="color:#4e9a06">| XM=&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +-----------------------+------------+------------+-----------------------+---------+---------+-----------+---------+-----------------------+-------------+--------------+-----------------------+------+-----------------------+----------------------+----------+----------------------+
 *** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">2048&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
-&lt;span style="color:#8f5902;font-style:italic"># 将认证信息保存到文件中，方便 source 使用&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_aksk
-&lt;/span>&lt;span style="color:#4e9a06"># Access Key
-&lt;/span>&lt;span style="color:#4e9a06">export OS_ACCESS_KEY=0d184a3c9c484e4c892f4855935e37e7
-&lt;/span>&lt;span style="color:#4e9a06"># Secret
-&lt;/span>&lt;span style="color:#4e9a06">export OS_SECRET_KEY=VG***5mUXM=
-&lt;/span>&lt;span style="color:#4e9a06"># 允许 insecure https 连接
-&lt;/span>&lt;span style="color:#4e9a06">export YUNION_INSECURE=true
-&lt;/span>&lt;span style="color:#4e9a06"># keystone 认证地址
-&lt;/span>&lt;span style="color:#4e9a06">export OS_AUTH_URL=https://192.168.0.246:5000/v3
-&lt;/span>&lt;span style="color:#4e9a06"># 对应的 region
-&lt;/span>&lt;span style="color:#4e9a06">export OS_REGION_NAME=region0
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>模板配置完成后，通过以下名称认证环境变量。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># source 认证环境变量&lt;/span>
 $ &lt;span style="color:#204a87">source&lt;/span> ~/test_rc_admin
-&lt;span style="color:#8f5902;font-style:italic"># 或者想要使用 Access Key/Secret 登陆&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># source ~/test_rc_aksk&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 执行climc。例如，查看虚拟机列表&lt;/span>
 $ climc server-list
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>注意: 如果执行 climc 时出现 &lt;em>Error: Missing OS_AUTH_URL&lt;/em> 的错误提示时，请 source 或设置认证云平台的环境变量。&lt;/p>
@@ -247,7 +242,7 @@ Image format
 &lt;li>image: glance 管理的镜像，由用户上传或者外部导入;&lt;/li>
 &lt;li>cached-image:
 &lt;ul>
-&lt;li>包括公有云和其他私有云的镜像，不由 glance 管理，一般在创建 云联壹云 之外的公/私有云主机的时候用到;&lt;/li>
+&lt;li>包括公有云和其他私有云的镜像，不由 glance 管理，一般在创建 OneCloud 之外的公/私有云主机的时候用到;&lt;/li>
 &lt;li>不提供创建接口，只能查询，刷新和删除;&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -272,11 +267,11 @@ Image format
 &lt;tbody>
 &lt;tr>
 &lt;td style="text-align:center">kvm&lt;/td>
-&lt;td style="text-align:center">云联壹云 私有云虚拟机&lt;/td>
+&lt;td style="text-align:center">onecloud 私有云虚拟机&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">baremetal&lt;/td>
-&lt;td style="text-align:center">云联壹云 私有云裸金属&lt;/td>
+&lt;td style="text-align:center">onecloud 私有云裸金属&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">esxi&lt;/td>
@@ -327,11 +322,11 @@ Image format
 &lt;tbody>
 &lt;tr>
 &lt;td style="text-align:center">hypervisor&lt;/td>
-&lt;td style="text-align:center">云联壹云 私有云宿主机&lt;/td>
+&lt;td style="text-align:center">onecloud 私有云宿主机&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">baremetal&lt;/td>
-&lt;td style="text-align:center">云联壹云 私有云物理机&lt;/td>
+&lt;td style="text-align:center">onecloud 私有云物理机&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">esxi&lt;/td>

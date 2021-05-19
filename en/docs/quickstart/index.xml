@@ -1,0 +1,219 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OneCloud – Quick Start</title>
+    <link>https://opensource.yunion.cn/en/docs/quickstart/</link>
+    <description>Recent content in Quick Start on OneCloud</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="https://opensource.yunion.cn/en/docs/quickstart/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: All in One Installation</title>
+      <link>https://opensource.yunion.cn/en/docs/quickstart/allinone/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/en/docs/quickstart/allinone/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;environmental-preparation&#34;&gt;Environmental Preparation&lt;/h2&gt;
+&lt;h3 id=&#34;configuration-requirements&#34;&gt;Configuration Requirements&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;OS: CentOS 7.6&lt;/li&gt;
+&lt;li&gt;Minimum Configuration Requirements: CPU 4 cores, Memory 8G, Storage 100G&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following is the environment of the machine to be deployed:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;IP&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Login User&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;OS&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;10.168.26.216&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;root&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;CentOS 7.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Tips&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;10.168.26.216 is the IP of this test environment, please modify accordingly according to your own environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;related-software-dependencies&#34;&gt;Related Software Dependencies&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;database: mariadb Ver 15.1 Distrib 5.5.56-MariaDB&lt;/li&gt;
+&lt;li&gt;docker: ce-19.03.9&lt;/li&gt;
+&lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;local-environment-requirements&#34;&gt;Local environment requirements&lt;/h3&gt;
+&lt;p&gt;The local environment is the environment where the user performs the actual operation and deployment. The local environment for this installation is executing on a MAC OS laptop, which can also be operated on the machine to be deployed.&lt;/p&gt;
+&lt;h4 id=&#34;configure-ssh-unencrypted-login&#34;&gt;Configure SSH unencrypted login&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Generate the local ssh keypair&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# (SKIP this stekp if you already have ~/.ssh/id_rsa.pub locally)&lt;/span&gt;
+$ ssh-keygen
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Copy the generated ~/.ssh/id_rsa.pub public key to the machine to be deployed&lt;/span&gt;
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Try to login to the machine to be deployed without password,&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# should be able to get the hostname of the deployed machine&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# without entering the login password&lt;/span&gt;
+$ ssh root@10.168.26.216 &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;hostname&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;start-installation&#34;&gt;Start Installation&lt;/h2&gt;
+&lt;p&gt;The installation tool is &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;https://github.com/yunionio/ocboot&lt;/a&gt; , then according to the configuration of the machine to be deployed, use ansbile playbook to install and configure the Yunion OneCloud platform. The following operations are performed on the local environment and steps are as follows:&lt;/p&gt;
+&lt;h3 id=&#34;download-ocboot&#34;&gt;Download ocboot&lt;/h3&gt;
+&lt;ul class=&#34;nav nav-tabs&#34; id=&#34;ocboot_install&#34; role=&#34;tablist&#34;&gt;&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link active&#34; href=&#34;#ocboot_install-0&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-0&#34; aria-selected=&#34;true&#34;&gt;CentOS 7&lt;/a&gt;&lt;/li&gt;
+	  
+		&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link&#34; href=&#34;#ocboot_install-1&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-1&#34;&gt;Others&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;div class=&#34;tab-content&#34; id=&#34;ocboot_install&#34;&gt;&lt;div id=&#34;ocboot_install-0&#34; class=&#34;tab-pane show active&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-0&#34;&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Install ansible locally&lt;/span&gt;
+$ yum install -y epel-release ansible
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Git clone the ocboot installation tool locally&lt;/span&gt;
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;div id=&#34;ocboot_install-1&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-1&#34;&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Install ansible locally&lt;/span&gt;
+$ pip install ansible
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Git clone the ocboot installation tool locally&lt;/span&gt;
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;write-deployment-configuration&#34;&gt;Write deployment configuration&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Write config-allinone.yml configuration file&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# mariadb_node indicates the node where the mariadb service needs to be deployed
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;mariadb_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # IP of the machine to be deployed
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # SSH Login username of the machine to be deployed
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Username of mariadb
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Password of mariadb
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# primary_master_node indicates the machine running Kubernetes and OneCloud Platform
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;primary_master_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Database connection address
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_host: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Database connection username
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Database connection password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # IP of Kubernetes controlplane
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Port of Kubernetes controlplane
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Yunion OneCloud version
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: &amp;#39;v3.6.9&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Yunion OneCloud login username
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user: admin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Yunion OneCloud login user&amp;#39;s password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user_password: admin@123
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # This machine serves as a Yunion OneCloud private cloud computing node
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  as_host: true
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;start-deployment&#34;&gt;Start Deployment&lt;/h3&gt;
+&lt;p&gt;Once the config-allinone.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code&gt;. /run.py . /config-allinone.yml&lt;/code&gt; to deploy the cluster.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Start deployment&lt;/span&gt;
+$ ./run.py ./config-allinone.yml
+....
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# The following output will be displayed when the deployment is completed,&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# indicating successful operation&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Open with your browser at https://10.168.26.216&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Login with admin/admin@123 user password to access the Web UI&lt;/span&gt;
+Initialized successfully!
+Web page: https://10.168.26.216
+User: admin
+Password: admin@123
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then use your browser to visit https://10.168.26.216, enter &lt;code&gt;admin&lt;/code&gt; for username and &lt;code&gt;admin@123&lt;/code&gt; for password and you will see the Web UI.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/index.png&#34; alt=&#34;Login UI&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;create-the-first-virtual-machine&#34;&gt;Create the first virtual machine&lt;/h3&gt;
+&lt;p&gt;The first virtual machine is created in three steps as follows.&lt;/p&gt;
+&lt;h4 id=&#34;1-import-images&#34;&gt;1. Import Images&lt;/h4&gt;
+&lt;p&gt;Browse to &lt;a href=&#34;https://cloud.centos.org/centos/7/images/&#34;&gt;CentOS 7 cloud hosting image&lt;/a&gt;, select a GenericCloud image, and copy the image URL.&lt;/p&gt;
+&lt;p&gt;In the &lt;code&gt;Compute&lt;/code&gt; menu, select &lt;code&gt;Images&lt;/code&gt; then select &lt;code&gt;Upload&lt;/code&gt; menu. Enter the image name, select &lt;code&gt;Enter the image URL&lt;/code&gt;, paste the above CentOS 7 image URL and select &lt;code&gt;OK&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Additional virtual machine images can be obtained by visiting &lt;a href=&#34;https://docs.openstack.org/image-guide/obtain-images.html&#34;&gt;https://docs.openstack.org/image-guide/obtain-images.html&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;2-create-networks-vpc-and-ip-subnets&#34;&gt;2. Create networks (VPC and IP subnets)&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Create VPC&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In the &lt;code&gt;Network&lt;/code&gt; menu, select the &lt;code&gt;VPC&lt;/code&gt; submenu and choose &lt;code&gt;Create&lt;/code&gt;. Enter a name, e.g. &lt;code&gt;vpc0&lt;/code&gt;, and select the target segment, e.g. &lt;code&gt;192.168.0.0/16&lt;/code&gt;. Click &lt;code&gt;Create&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create IP Subnetes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After the VPC is created, select the &lt;code&gt;IP Subnets&lt;/code&gt; submenu and choose &lt;code&gt;Create&lt;/code&gt;. Enter a name, for example &lt;code&gt;vnet0&lt;/code&gt;, select VPC as the VPC you just created &lt;code&gt;vpc0&lt;/code&gt;, select the available zone. Enter &lt;code&gt;subnet segment&lt;/code&gt;, e.g. &lt;code&gt;192.168.100.0/24&lt;/code&gt;. Click &lt;code&gt;Create&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;3-create-virtual-machine&#34;&gt;3. Create Virtual Machine&lt;/h4&gt;
+&lt;p&gt;In the &lt;code&gt;Compute&lt;/code&gt; menu, select &lt;code&gt;Servers&lt;/code&gt; and choose &lt;code&gt;Create&lt;/code&gt;. In this UI, enter the hostname, select the mirror and IP subnet, and create the virtual machine.&lt;/p&gt;
+&lt;h3 id=&#34;import-public-cloud-or-other-private-cloud-platform-resources&#34;&gt;Import public cloud or other private cloud platform resources&lt;/h3&gt;
+&lt;p&gt;Yunion OneCloud itself is a complete private cloud, and can also unify and manage resources from other cloud platforms.&lt;/p&gt;
+&lt;p&gt;In the &lt;code&gt;Multicloud&lt;/code&gt; menu, select &lt;code&gt;Accounts&lt;/code&gt; and create a new one, fill in the authentication information of the corresponding cloud platform according to your needs, and after configuring the cloud account, the Yunion OneCloud service will synchronize the resources of the corresponding cloud platform, and you can view them in the Web UI after the synchronization is completed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/cloudaccount.png&#34; alt=&#34;Multicloud Management&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
+&lt;h3 id=&#34;1-cant-find-the-virtual-machine-menu-in-web-ui&#34;&gt;1. Can&amp;rsquo;t find the virtual machine menu in Web UI?&lt;/h3&gt;
+&lt;p&gt;Machine deployed using the All in One way is treated as Yunion OneCloud private cloud computing node by default, which has the ability to create and manage virtual machines.&lt;/p&gt;
+&lt;p&gt;If there is no virtual machine creation button it should be that the private cloud computing node is not enabled.&lt;/p&gt;
+&lt;p&gt;Please go to the Web UI, click &lt;code&gt;Compute/Physical Resources/Hosts&lt;/code&gt; to view the list of hosts, enable the corresponding hosts, refresh the interface and the virtual machine creation button will appear.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Attention&lt;/h4&gt;
+&lt;p&gt;If you want to use Yunion OneCloud private cloud, you need ensure the computing machine use the kernel compiled by us. You can use the following command to check whether the host uses the kernel including the &lt;code&gt;yn&lt;/code&gt; keyword.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Check if yn keyword kernel is used&lt;/span&gt;
+$ uname -a &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep yn
+Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# If the kernel is not the version with the yn keyword,&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# it may be the first time you install it using ocboot,&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# and you can reboot into the yn kernel&lt;/span&gt;
+$ reboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/host.png&#34; alt=&#34;Host&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-change-the-hostname-of-the-node-some-services-fail-to-start&#34;&gt;2. Change the hostname of the node, some services fail to start&lt;/h3&gt;
+&lt;p&gt;Yunion OneCloud uses Kubernetes management node, depends on hostname, please change it back.&lt;/p&gt;
+&lt;h3 id=&#34;3-how-to-reinstall&#34;&gt;3. How to reinstall&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;SSH login the remote machine, execute the command &lt;code&gt;ocadm reset -f&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Rerun ocboot &lt;code&gt;run.py&lt;/code&gt; script.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Waiting for the run to finish，use command &lt;code&gt;kubectl edit deployment onecloud-operator -n onecloud&lt;/code&gt;. Add the following parameters, then save to close.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;../images/oo_syncuser.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;The modification in step 3 will affect the performance of onecloud-operator, so you can restore the parameters in step 3 when all services are started.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;4-other-questions&#34;&gt;4. Other questions？&lt;/h3&gt;
+&lt;p&gt;Other questions are welcome to submit Yunion OneCloud github issues: &lt;a href=&#34;https://github.com/yunionio/onecloud/issues&#34;&gt;https://github.com/yunionio/onecloud/issues&lt;/a&gt; , we will reply as soon as possible.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

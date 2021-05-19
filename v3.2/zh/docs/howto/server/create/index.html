@@ -1,0 +1,1853 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.83.1" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+<link rel="alternate" type="application/rss&#43;xml" href="https://opensource.yunion.cn/v3.2/zh/docs/howto/server/create/index.xml">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v3.2/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v3.2/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v3.2/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v3.2/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v3.2/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v3.2/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v3.2/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v3.2/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v3.2/favicons/android-192x192.png" sizes="192x192">
+
+<title>创建云主机 | 云联壹云</title><meta property="og:title" content="创建云主机" />
+<meta property="og:description" content="云联壹云文档" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.yunion.cn/v3.2/zh/docs/howto/server/create/" /><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="创建云主机">
+<meta itemprop="description" content="云联壹云文档"><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="创建云主机"/>
+<meta name="twitter:description" content="云联壹云文档"/>
+
+
+
+
+
+<link rel="preload" href="/v3.2/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" as="style">
+<link href="/v3.2/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.3"></script>
+
+
+
+
+  </head>
+  <body class="td-section">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  
+  <a href="/v3.2/zh/" class="logo flex-shrink-0 navbar-brand">
+    <img src="https://opensource.yunion.cn/v3.2/images/logo.svg" />
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.2
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.7 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.6">v3.6</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.4">v3.4</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.2/zh/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/v3.2/zh/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.2/zh/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.2/zh/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	中文
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/v3.2/en/">English</a>
+	
+</div>
+			</li>
+			
+		</ul>
+	</div>
+  
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; 站内搜索…"
+  aria-label="站内搜索…"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/v3.2/offline-search-index.819efc1a2e7abc5edad6ecf2171108ae.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    <div class="nav-item dropdown d-block d-lg-none">
+      
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	中文
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/v3.2/en/">English</a>
+	
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v32zhdocs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocsquickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocsquickstartallinone" href="/v3.2/zh/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocsquickstartnodes" href="/v3.2/zh/docs/quickstart/nodes/">多节点安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocsquickstartminikube" href="/v3.2/zh/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocssetup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupintro" href="/v3.2/zh/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupcontrolplane-ha" href="/v3.2/zh/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupdb-ha" href="/v3.2/zh/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupcontrolplane" href="/v3.2/zh/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupcomponents" href="/v3.2/zh/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetuphost" href="/v3.2/zh/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupbaremetal" href="/v3.2/zh/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupce-ee-switch" href="/v3.2/zh/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetupupgrade" href="/v3.2/zh/docs/setup/upgrade/">升级相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocssetuphost-aarch64" href="/v3.2/zh/docs/setup/host-aarch64/">ARM(AArch64) 部署</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocscontribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocscontributedev-env" href="/v3.2/zh/docs/contribute/dev-env/">搭建开发环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocscontributecontrib" href="/v3.2/zh/docs/contribute/contrib/">提交贡献代码</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocscontributegit-convention" href="/v3.2/zh/docs/contribute/git-convention/">Git 提交内容规范</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocscontributeservices" href="/v3.2/zh/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocscontributeframework" href="/v3.2/zh/docs/contribute/framework/">后端服务框架</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocscontributeoperator-intro" href="/v3.2/zh/docs/contribute/operator-intro/">Operator 相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v32zhdocshowto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtoclimc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtoimage">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoimageupload" href="/v3.2/zh/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoimagequery" href="/v3.2/zh/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoimagecreate" href="/v3.2/zh/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoimageoperation" href="/v3.2/zh/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/server/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v32zhdocshowtoserver">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/server/create/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v32zhdocshowtoservercreate">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoserverconnect" href="/v3.2/zh/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoserverothers" href="/v3.2/zh/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoserverimport" href="/v3.2/zh/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoservergpu" href="/v3.2/zh/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoservermigrate" href="/v3.2/zh/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtoserverbackup" href="/v3.2/zh/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtohost">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtohostkvm" href="/v3.2/zh/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtobaremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtobaremetalintro" href="/v3.2/zh/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtobaremetaloperator" href="/v3.2/zh/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtonetwork">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtolb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtostorage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtomulticloud">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtomulticloudcloudaccount" href="/v3.2/zh/docs/howto/multicloud/cloudaccount/">云账号</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtoauth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtocontainer">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocshowtocontainerpre_env" href="/v3.2/zh/docs/howto/container/pre_env/">环境准备</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocshowtoscheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocscontact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocschangelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/changelog/release-3.6/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.6</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocschangelogrelease-36">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-15" href="/v3.2/zh/docs/changelog/release-3.6/3-6-15/">v3.6.15</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-14" href="/v3.2/zh/docs/changelog/release-3.6/3-6-14/">v3.6.14</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-13" href="/v3.2/zh/docs/changelog/release-3.6/3-6-13/">v3.6.13</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-12" href="/v3.2/zh/docs/changelog/release-3.6/3-6-12/">v3.6.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-11" href="/v3.2/zh/docs/changelog/release-3.6/3-6-11/">v3.6.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-10" href="/v3.2/zh/docs/changelog/release-3.6/3-6-10/">v3.6.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-9" href="/v3.2/zh/docs/changelog/release-3.6/3-6-9/">v3.6.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-8" href="/v3.2/zh/docs/changelog/release-3.6/3-6-8/">v3.6.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-7" href="/v3.2/zh/docs/changelog/release-3.6/3-6-7/">v3.6.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-6" href="/v3.2/zh/docs/changelog/release-3.6/3-6-6/">v3.6.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-5" href="/v3.2/zh/docs/changelog/release-3.6/3-6-5/">v3.6.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-4" href="/v3.2/zh/docs/changelog/release-3.6/3-6-4/">v3.6.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-3" href="/v3.2/zh/docs/changelog/release-3.6/3-6-3/">v3.6.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-2" href="/v3.2/zh/docs/changelog/release-3.6/3-6-2/">v3.6.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-1" href="/v3.2/zh/docs/changelog/release-3.6/3-6-1/">v3.6.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-363-6-0" href="/v3.2/zh/docs/changelog/release-3.6/3-6-0/">v3.6.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocschangelogrelease-34">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-16" href="/v3.2/zh/docs/changelog/release-3.4/3-4-16/">v3.4.16</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-15" href="/v3.2/zh/docs/changelog/release-3.4/3-4-15/">v3.4.15</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-14" href="/v3.2/zh/docs/changelog/release-3.4/3-4-14/">v3.4.14</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-13" href="/v3.2/zh/docs/changelog/release-3.4/3-4-13/">v3.4.13</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-12" href="/v3.2/zh/docs/changelog/release-3.4/3-4-12/">v3.4.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-11" href="/v3.2/zh/docs/changelog/release-3.4/3-4-11/">v3.4.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-10" href="/v3.2/zh/docs/changelog/release-3.4/3-4-10/">v3.4.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-9" href="/v3.2/zh/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-8" href="/v3.2/zh/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-7" href="/v3.2/zh/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-6" href="/v3.2/zh/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-5" href="/v3.2/zh/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-4" href="/v3.2/zh/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-3" href="/v3.2/zh/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-2" href="/v3.2/zh/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-1" href="/v3.2/zh/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-343-4-0" href="/v3.2/zh/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocschangelogrelease-33">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-8" href="/v3.2/zh/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-7" href="/v3.2/zh/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-6" href="/v3.2/zh/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-5" href="/v3.2/zh/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-4" href="/v3.2/zh/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-3" href="/v3.2/zh/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-2" href="/v3.2/zh/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-1" href="/v3.2/zh/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v32zhdocschangelogrelease-333-3-0" href="/v3.2/zh/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.2/zh/docs/roadmap/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">ROADMAP</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v32zhdocsroadmap">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/howto/server/create/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
+<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/howto/server/create/_index.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=%e5%88%9b%e5%bb%ba%e4%ba%91%e4%b8%bb%e6%9c%ba" target="_blank"><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
+
+
+<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a>
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#云联壹云-虚拟机">云联壹云 虚拟机</a></li>
+        <li><a href="#vmware-esxi-虚拟机">VMware ESXI 虚拟机</a></li>
+        <li><a href="#私有云">私有云</a></li>
+        <li><a href="#公有云">公有云</a></li>
+      </ul>
+    </li>
+    <li><a href="#创建机器">创建机器</a>
+      <ul>
+        <li><a href="#私有云主机">私有云主机</a></li>
+        <li><a href="#公有云主机">公有云主机</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.2/zh/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.2/zh/docs/howto/">操作管理</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.2/zh/docs/howto/server/">云主机</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/v3.2/zh/docs/howto/server/create/">创建云主机</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>创建云主机</h1>
+        
+	
+	<p><code>climc server-create</code> 命令提供创建云主机的操作。 云联壹云 可以同时管理多个私有云和公有云，不同供应商有各自的认证方式，在创建云主机之前需要做一些不同的准备工作。</p>
+<h2 id="环境准备">环境准备</h2>
+<h3 id="云联壹云-虚拟机">云联壹云 虚拟机</h3>
+<p>云联壹云 提供自研的 kvm 虚拟机私有云管理平台，创建 kvm 虚拟机时需要有相应的宿主机，如果还没有添加 kvm 宿主机，请参考 <a href="../../../setup/host/">安装部署/计算节点</a> 注册对应的宿主机到云平台。</p>
+<h3 id="vmware-esxi-虚拟机">VMware ESXI 虚拟机</h3>
+<p>TODO</p>
+<h3 id="私有云">私有云</h3>
+<p>私有云和公有云都有自己的认证体系，为了让 云联壹云 能够管理各个云平台，需要把他们的认证信息导入到 云联壹云 平台。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">平台</th>
+<th style="text-align:center">准备工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">openstack</td>
+<td style="text-align:center">TODO</td>
+</tr>
+<tr>
+<td style="text-align:center">zstack</td>
+<td style="text-align:center">TODO</td>
+</tr>
+</tbody>
+</table>
+<h3 id="公有云">公有云</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">平台</th>
+<th style="text-align:right">准备工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">阿里云</td>
+<td style="text-align:right">TODO</td>
+</tr>
+<tr>
+<td style="text-align:left">腾讯云</td>
+<td style="text-align:right">TODO</td>
+</tr>
+<tr>
+<td style="text-align:left">华为云</td>
+<td style="text-align:right">TODO</td>
+</tr>
+<tr>
+<td style="text-align:left">AWS</td>
+<td style="text-align:right">TODO</td>
+</tr>
+<tr>
+<td style="text-align:left">Azure</td>
+<td style="text-align:right">TODO</td>
+</tr>
+<tr>
+<td style="text-align:left">UCloud</td>
+<td style="text-align:right">TODO</td>
+</tr>
+</tbody>
+</table>
+<h2 id="创建机器">创建机器</h2>
+<p>创建机器命令为 <code>server-create</code>，可以使用 <code>climc help server-create</code> 查看创建 server 的所有参数，常用的参数如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数名称</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">&ndash;ncpu</td>
+<td style="text-align:center">int</td>
+<td style="text-align:center">虚拟机 cpu 个数</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;disk</td>
+<td style="text-align:center">[]string</td>
+<td style="text-align:center">指定创建的系统盘镜像，指定多次表示虚拟机创建多块磁盘</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;net</td>
+<td style="text-align:center">[]string</td>
+<td style="text-align:center">指定虚拟机使用的网络，指定多次将在虚拟机里面添加多个网卡</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;allow-delete</td>
+<td style="text-align:center">bool</td>
+<td style="text-align:center">允许删除虚拟机</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;auto-start</td>
+<td style="text-align:center">bool</td>
+<td style="text-align:center">创建完自动启动</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;password</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">设置虚拟机密码</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;tenant</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">创建到指定的项目</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;prefer-region</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">创建到指定的 region</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;prefer-zone</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">创建到指定的 zone</td>
+</tr>
+<tr>
+<td style="text-align:center">&ndash;prefer-host</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">创建到指定的 host</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意以下几点:</strong></p>
+<ol>
+<li>名称、内存或者套餐类型在创建主机时必须使用;</li>
+<li>系统盘的镜像通过 <code>image-list</code> 或者 <code>cached-image-list</code>，公有云的镜像列表通过 <code>cached-image-list</code> 接口查询，参考: <a href="../howto/image/query/">查询镜像</a>;</li>
+</ol>
+<p>下面以举例的方式创建机器：</p>
+<h3 id="私有云主机">私有云主机</h3>
+<p>待创建规格:</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>平台</th>
+<th>套餐</th>
+<th>内存</th>
+<th>cpu</th>
+<th>系统盘</th>
+<th>网络</th>
+<th>其他</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vm1</td>
+<td>kvm</td>
+<td>-</td>
+<td>4g</td>
+<td>4</td>
+<td>centos7.qcow2 60g</td>
+<td>net1</td>
+<td>2块数据盘， 一块100g ext4 挂载到 /opt，另外一块 50g xfs 挂载到 /data; 自动启动</td>
+</tr>
+<tr>
+<td>vm2</td>
+<td>esxi</td>
+<td>-</td>
+<td>2g</td>
+<td>2</td>
+<td>ubuntu18.04.qcow2 100g</td>
+<td>net2</td>
+<td>允许删除</td>
+</tr>
+<tr>
+<td>vm3</td>
+<td>opnstack</td>
+<td>t2.nano</td>
+<td>-</td>
+<td>-</td>
+<td>centos6.qcow2</td>
+<td>net3</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建 kvm vm1</span>
+$ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4:/opt --disk 50g:xfs:/data --ncpu <span style="color:#0000cf;font-weight:bold">4</span> --net net1 --auto-start vm1 4g
+
+<span style="color:#8f5902;font-style:italic"># 创建 esxi vm2</span>
+$ climc server-create --hypervisor esxi --disk ubuntu18.04.qcow2:100g --net net2 --ncpu <span style="color:#0000cf;font-weight:bold">2</span> --allow-delete vm2 2g
+
+<span style="color:#8f5902;font-style:italic"># 创建 openstack vm3</span>
+$ climc server-create --hypervisor openstack --disk centos6.qcow2 --net net3 vm3 t2.nano
+</code></pre></div><h3 id="公有云主机">公有云主机</h3>
+<p>创建共有云主机和虚拟机的参数一致，但通常情况下需要通过 <code>cloud-region-list</code> 、<code>zone-list</code> 和 <code>vpc-list</code> 子命令挑选出各个公有云可用的 region, zone 和 network。</p>
+<p>然后 server-create 的时候通过 <code>--prefer-region</code> 或 <code>--prefer-zone</code> 创建到指定的区域，<code>--net</code> 创建到指定的 vpc 子网。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查询 aliyun 的可用的 vpc</span>
+$ climc vpc-list --provider Aliyun --details
++--------------------------------------+-------------------------------------------+---------+-----------+--------------------------------------+------------+----------------+------------------------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>                   Name                    <span style="color:#000;font-weight:bold">|</span> Enabled <span style="color:#000;font-weight:bold">|</span>  Status   <span style="color:#000;font-weight:bold">|</span>            Cloudregion_Id            <span style="color:#000;font-weight:bold">|</span> Is_default <span style="color:#000;font-weight:bold">|</span>   Cidr_Block   <span style="color:#000;font-weight:bold">|</span>         Region         <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------------------------------------------+---------+-----------+--------------------------------------+------------+----------------+------------------------+
+<span style="color:#000;font-weight:bold">|</span> 6aabd4c5-8a6a-4ffb-83cd-39f924f773b7 <span style="color:#000;font-weight:bold">|</span> test12                                    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> available <span style="color:#000;font-weight:bold">|</span> 9b0fdc39-701b-44fc-8842-664fe89359f1 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>      <span style="color:#000;font-weight:bold">|</span> 192.168.0.0/16 <span style="color:#000;font-weight:bold">|</span> 阿里云 华北2（北京）   <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> 8f4d444f-cce4-4797-8441-e1b58c72ed26 <span style="color:#000;font-weight:bold">|</span> ali-yunion-bj                             <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> available <span style="color:#000;font-weight:bold">|</span> 9b0fdc39-701b-44fc-8842-664fe89359f1 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>       <span style="color:#000;font-weight:bold">|</span> 172.17.0.0/16  <span style="color:#000;font-weight:bold">|</span> 阿里云 华北2（北京）   <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> bb8c1ec5-4577-4f84-8117-efab6586b799 <span style="color:#000;font-weight:bold">|</span> ali-transit-bj                            <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> available <span style="color:#000;font-weight:bold">|</span> 9b0fdc39-701b-44fc-8842-664fe89359f1 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>      <span style="color:#000;font-weight:bold">|</span> 10.0.0.0/8     <span style="color:#000;font-weight:bold">|</span> 阿里云 华北2（北京）   <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> c4e1a012-5f2a-48fc-80ef-4ac0371006eb <span style="color:#000;font-weight:bold">|</span> hello                                     <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> available <span style="color:#000;font-weight:bold">|</span> dbbfea2f-8bf4-4676-8036-4ad6f6e6b1ea <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>      <span style="color:#000;font-weight:bold">|</span> 10.0.0.0/8     <span style="color:#000;font-weight:bold">|</span> 阿里云 阿联酋（迪拜）  <span style="color:#000;font-weight:bold">|</span>
+...
+
+<span style="color:#8f5902;font-style:italic"># 查询 vpc 6aabd4c5-8a6a-4ffb-83cd-39f924f773b7 下可用的 network</span>
+$ climc network-list --vpc 6aabd4c5-8a6a-4ffb-83cd-39f924f773b7
++--------------------------------------+------------+----------------+-----------------+---------------+--------------------------------------+-----------+--------------+-----------------+-------------+-----------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>    Name    <span style="color:#000;font-weight:bold">|</span> Guest_ip_start <span style="color:#000;font-weight:bold">|</span>  Guest_ip_end   <span style="color:#000;font-weight:bold">|</span> Guest_ip_mask <span style="color:#000;font-weight:bold">|</span>               wire_id                <span style="color:#000;font-weight:bold">|</span> is_public <span style="color:#000;font-weight:bold">|</span> public_scope <span style="color:#000;font-weight:bold">|</span>  guest_gateway  <span style="color:#000;font-weight:bold">|</span> server_type <span style="color:#000;font-weight:bold">|</span>  Status   <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+------------+----------------+-----------------+---------------+--------------------------------------+-----------+--------------+-----------------+-------------+-----------+
+<span style="color:#000;font-weight:bold">|</span> b3dee5e6-0dce-403c-80b2-ad62880b662f <span style="color:#000;font-weight:bold">|</span> esrdfsfsd  <span style="color:#000;font-weight:bold">|</span> 192.168.0.1    <span style="color:#000;font-weight:bold">|</span> 192.168.127.252 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">17</span>            <span style="color:#000;font-weight:bold">|</span> a421934d-9cb4-4163-85b9-ad0038e9cb89 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>      <span style="color:#000;font-weight:bold">|</span> system       <span style="color:#000;font-weight:bold">|</span> 192.168.127.254 <span style="color:#000;font-weight:bold">|</span> guest       <span style="color:#000;font-weight:bold">|</span> available <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> d131de82-1be5-4f70-8b22-2303f4f409bb <span style="color:#000;font-weight:bold">|</span> sdfsdfdsff <span style="color:#000;font-weight:bold">|</span> 192.168.128.1  <span style="color:#000;font-weight:bold">|</span> 192.168.255.252 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">17</span>            <span style="color:#000;font-weight:bold">|</span> 8ccdbe42-0c62-456f-842d-bc279a5c2786 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>      <span style="color:#000;font-weight:bold">|</span> system       <span style="color:#000;font-weight:bold">|</span> 192.168.255.254 <span style="color:#000;font-weight:bold">|</span> guest       <span style="color:#000;font-weight:bold">|</span> available <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+------------+----------------+-----------------+---------------+--------------------------------------+-----------+--------------+-----------------+-------------+-----------+
+
+<span style="color:#8f5902;font-style:italic"># 查询 region 9b0fdc39-701b-44fc-8842-664fe89359f1 下可用的 sku</span>
+$ climc server-sku-list --region 9b0fdc39-701b-44fc-8842-664fe89359f1 --provider Aliyun
+
+<span style="color:#8f5902;font-style:italic"># 创建 ecs.t5-lc2m1.nano aliyun vm4 虚拟机到 region 9b0fdc39-701b-44fc-8842-664fe89359f1 的子网 b3dee5e6-0dce-403c-80b2-ad62880b662f</span>
+$ climc server-create --prefer-region 9b0fdc39-701b-44fc-8842-664fe89359f1 vm4 --hypervisor aliyun --net b3dee5e6-0dce-403c-80b2-ad62880b662f vm4 ecs.t5-lc2m1.nano
+</code></pre></div>
+        <div class="section-index">
+    
+    
+    
+    
+    <hr class="panel-line">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+</div>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 20.10.2020: <a  href="https://github.com/yunionio/docs/commit/e1d95c42f12b47af9c30d13c24ac66b8bf51be00">1. 3.4分支补充升级内容；2. 统一替换成云联壹云； (e1d95c4)</a>
+</div>
+</div>
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/v3.2/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js" integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

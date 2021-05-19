@@ -1,0 +1,336 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>云联壹云 – 快速开始</title>
+    <link>https://opensource.yunion.cn/v3.4/docs/quickstart/</link>
+    <description>Recent content in 快速开始 on 云联壹云</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="https://opensource.yunion.cn/v3.4/docs/quickstart/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: All in One 安装</title>
+      <link>https://opensource.yunion.cn/v3.4/docs/quickstart/allinone/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.4/docs/quickstart/allinone/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;前提&#34;&gt;前提&lt;/h2&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
+本章内容是通过部署工具快速搭建 云联壹云 服务，如果想了解部署的细节或者部署高可用环境请参考: &lt;a href=&#34;https://opensource.yunion.cn/v3.4/docs/setup/&#34;&gt;安装部署&lt;/a&gt; 。
+&lt;/div&gt;
+
+&lt;h2 id=&#34;环境准备&#34;&gt;环境准备&lt;/h2&gt;
+&lt;p&gt;云联壹云 相关的组件运行在 kubernetes 之上。&lt;/p&gt;
+&lt;h3 id=&#34;服务器配置要求&#34;&gt;服务器配置要求&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;操作系统: CentOS 7.6&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以下为待部署机器的环境:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;IP&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;登录用户&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;操作系统&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;10.168.26.216&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;root&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;CentOS 7.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;提示&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;10.168.26.216 是本次测试环境 ip，请根据自己的环境做相应修改。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;云联壹云相关软件依赖&#34;&gt;云联壹云相关软件依赖&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB&lt;/li&gt;
+&lt;li&gt;docker: ce-19.03.9&lt;/li&gt;
+&lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;本地环境配置要求&#34;&gt;本地环境配置要求&lt;/h3&gt;
+&lt;p&gt;本地环境即用户进行实际操作部署的环境。本次测试的本地环境为MAC操作系统的笔记本，也可在待部署机器上进行操作。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ssh: 开启 ssh 免密登录&lt;/li&gt;
+&lt;li&gt;本地环境安装部署 ansbile，Windows操作系统不支持安装 ansible&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;配置-ssh-免密登录&#34;&gt;配置 ssh 免密登录&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa.pub 则跳过此步骤)&lt;/span&gt;
+$ ssh-keygen
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将生成的 ~/.ssh/id_rsa.pub 公钥拷贝到待部署机器&lt;/span&gt;
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span&gt;
+$ ssh root@10.168.26.216 &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;hostname&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;开始部署&#34;&gt;开始部署&lt;/h2&gt;
+&lt;p&gt;部署的工具是 &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;https://github.com/yunionio/ocboot&lt;/a&gt; , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 云联壹云 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p&gt;
+&lt;h3 id=&#34;下载-ocboot&#34;&gt;下载 ocboot&lt;/h3&gt;
+&lt;ul class=&#34;nav nav-tabs&#34; id=&#34;ocboot_install&#34; role=&#34;tablist&#34;&gt;&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link active&#34; href=&#34;#ocboot_install-0&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-0&#34; aria-selected=&#34;true&#34;&gt;CentOS 7&lt;/a&gt;&lt;/li&gt;
+	  
+		&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link&#34; href=&#34;#ocboot_install-1&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-1&#34;&gt;其它操作系统&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;div class=&#34;tab-content&#34; id=&#34;ocboot_install&#34;&gt;&lt;div id=&#34;ocboot_install-0&#34; class=&#34;tab-pane show active&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-0&#34;&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 本地安装 ansible&lt;/span&gt;
+$ yum install -y epel-release ansible
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;div id=&#34;ocboot_install-1&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-1&#34;&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 本地安装 ansible&lt;/span&gt;
+$ pip install ansible
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 ocboot 工具到本地&lt;/span&gt;
+$ git clone -b release/3.4 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;编写部署配置&#34;&gt;编写部署配置&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 编写 config-allinone.yml 文件&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# mariadb_node 表示需要部署 mariadb 服务的节点
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;mariadb_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 待部署节点 ip
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 待部署节点登录用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # mariadb 的用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # mariadb 用户密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;# primary_master_node 表示运行 k8s 和 云联壹云 服务的节点
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;primary_master_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 数据库连接地址
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_host: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 数据库用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 数据库密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # k8s 控制节点的 ip
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.168.26.216
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # k8s 控制节点的端口
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 云联壹云 登录用户
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user: admin
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 云联壹云 登录用户密码
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user_password: admin@123
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # 该节点作为 云联壹云 私有云计算节点
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  as_host: true
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开始部署-1&#34;&gt;开始部署&lt;/h3&gt;
+&lt;p&gt;当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code&gt;./run.py ./config-allinone.yml&lt;/code&gt; 部署集群了。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 开始部署&lt;/span&gt;
+$ ./run.py ./config-allinone.yml
+....
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 部署完成后会有如下输出，表示运行成功&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 浏览器打开 https://10.168.26.216&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span&gt;
+Initialized successfully!
+Web page: https://10.168.26.216
+User: admin
+Password: admin@123
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code&gt;admin&lt;/code&gt;，密码输入 &lt;code&gt;admin@123&lt;/code&gt; 就会进入 云联壹云 的界面。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/index.png&#34; alt=&#34;登录页&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
+&lt;h3 id=&#34;1-在-all-in-one-中找不到虚拟机界面&#34;&gt;1. 在 All in One 中找不到虚拟机界面？&lt;/h3&gt;
+&lt;p&gt;All in One 部署的节点会部署 云联壹云 host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 云联壹云 环境中没有启用宿主机。&lt;/p&gt;
+&lt;p&gt;请到 &lt;code&gt;管理后台&lt;/code&gt; 界面，点击 &lt;code&gt;主机/基础资源/宿主机&lt;/code&gt; 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
+&lt;p&gt;如果要使用 云联壹云 私有云虚拟机，需要宿主机使用 云联壹云 编译的内核，可使用以下命令查看宿主机是否使用 云联壹云 内核(包含 yn 关键字)。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 查看是否使用 yn 内核&lt;/span&gt;
+$ uname -a &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep yn
+Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span&gt;
+$ reboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/host.png&#34; alt=&#34;宿主机&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-如何导入公有云或者其它私有云平台资源&#34;&gt;2. 如何导入公有云或者其它私有云平台资源？&lt;/h3&gt;
+&lt;p&gt;在 &lt;code&gt;多云管理&lt;/code&gt; 菜单，选择 &lt;code&gt;云账号&lt;/code&gt; 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 云联壹云 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/cloudaccount.png&#34; alt=&#34;多云管理&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-修改节点的-hostname-有些服务启动失败&#34;&gt;3. 修改节点的 hostname ，有些服务启动失败&lt;/h3&gt;
+&lt;p&gt;k8s 管理节点，依赖于 hostname，请改回去。&lt;/p&gt;
+&lt;h3 id=&#34;4-如何重装&#34;&gt;4. 如何重装&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;重新运行 ocboot 的脚本&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;等待运行完毕，使用&lt;code&gt;kubectl edit deployment onecloud-operator -n onecloud&lt;/code&gt;加入下列参数，然后保存关闭。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;../images/oo_syncuser.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;5-其它问题&#34;&gt;5. 其它问题？&lt;/h3&gt;
+&lt;p&gt;其它问题欢迎在 云联壹云 github issues 界面提交: &lt;a href=&#34;https://github.com/yunionio/onecloud/issues&#34;&gt;https://github.com/yunionio/onecloud/issues&lt;/a&gt; , 我们会尽快回复。&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: MiniKube 安装</title>
+      <link>https://opensource.yunion.cn/v3.4/docs/quickstart/minikube/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/v3.4/docs/quickstart/minikube/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;前提&#34;&gt;前提&lt;/h2&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;注意&lt;/h4&gt;
+&lt;p&gt;本章内容是方便快速体验云联壹云, 通过 MiniKube 快速搭建云联壹云服务，无法在生产环境使用，也无法验证云联内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)。&lt;/p&gt;
+&lt;p&gt;仅适用于多云管理功能的体验，比如管理 VMware, 公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)。&lt;/p&gt;
+&lt;p&gt;如果想部署生产可用的环境请参考: &lt;a href=&#34;https://opensource.yunion.cn/v3.4/docs/setup/&#34;&gt;安装部署&lt;/a&gt; 。&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;h2 id=&#34;环境准备&#34;&gt;环境准备&lt;/h2&gt;
+&lt;p&gt;云联壹云 相关的组件运行在 MiniKube 之上，环境以及相关的软件依赖如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;操作系统: CentOS 7.6&lt;/li&gt;
+&lt;li&gt;最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;部署&#34;&gt;部署&lt;/h2&gt;
+&lt;h3 id=&#34;启动-minikube-集群&#34;&gt;启动 minikube 集群&lt;/h3&gt;
+&lt;p&gt;下载 minikue/kubectl, 并启动 minikube 集群, 具体请参考： &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-minikube/&#34;&gt;https://kubernetes.io/docs/tasks/tools/install-minikube/&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 配置 minikube&lt;/span&gt;
+$ minikube config -p onecloud &lt;span style=&#34;color:#204a87&#34;&gt;set&lt;/span&gt; memory &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8192&lt;/span&gt; 
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启动 kubernetes 集群, 并且从 aliyun 拉取镜像，这样速度会快一点&lt;/span&gt;
+$ minikube start  -p onecloud --image-repository&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;registry.aliyuncs.com/google_containers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;部署云联壹云-onecloud-operator&#34;&gt;部署云联壹云 onecloud operator&lt;/h3&gt;
+&lt;p&gt;云联壹云 k8s operator地址： &lt;a href=&#34;https://github.com/yunionio/onecloud-operator&#34;&gt;https://github.com/yunionio/onecloud-operator&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 onecloud-operator 的 yaml 文件&lt;/span&gt;
+$ wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/onecloud-operator.yaml
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 部署 onecloud-operator 到集群&lt;/span&gt;
+$ kubectl apply -f onecloud-operator.yaml
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将 kubernetes node 打上 onecloud.yunion.io/controller=enable 标签&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 如果不打标签，operator 服务就不会把对应的后端服务调度到这个节点&lt;/span&gt;
+$ kubectl get nodes
+NAME       STATUS   ROLES    AGE   VERSION
+onecloud   Ready    master   20m   v1.15.9-beta.0
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 加上标签，这个 node 就可以运行 onecloud 相关服务&lt;/span&gt;
+$ kubectl label nodes onecloud onecloud.yunion.io/controller&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;enable&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这里需要等待 onecloud-operator 的 pod 状态变为 Running&lt;/span&gt;
+$ kubectl get pods -n onecloud
+NAME                                 READY   STATUS    RESTARTS   AGE
+onecloud-operator-7fd65d6489-kwdkr   1/1     Running   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          5m2s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;部署云联壹云服务&#34;&gt;部署云联壹云服务&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 下载 onecloud cluster 的 yaml 文件&lt;/span&gt;
+$ wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/example-onecloud-cluster.yaml -O onecloud-cluster.yaml
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 部署云联壹云服务&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将 onecloud-cluster.yaml 部署到 kubernetes 集群&lt;/span&gt;
+$ kubectl apply -f onecloud-cluster.yaml
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 等待 onecloud 相关服务启动，这个过程会拉取各个服务的镜像，配置服务&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 需要等待几分钟让所有服务状态变为 Running&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 可以多次使用下面的命令查看 pods 状态&lt;/span&gt;
+$ kubectl get pods -n onecloud
+NAME                                                 READY   STATUS              RESTARTS   AGE
+default-ansibleserver-6955fb8d66-gb8w7               1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m57s
+default-apigateway-57f78c9cfb-8xvgw                  1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m54s
+default-autoupdate-5f8bf779dd-6drtb                  1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m41s
+default-climc-6c49f88df9-s4f5g                       1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m45s
+default-cloudevent-6775bf8d66-bppcv                  1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m39s
+default-cloudid-7798948bc8-blkxw                     1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m30s
+default-cloudnet-55fd8ff98b-2gnm4                    1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m36s
+default-devtool-7db6b87cf9-bvxsm                     1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m32s
+default-esxi-agent-bb555858c-ft6dz                   1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m50s
+default-etcd-dvfcg6jfjp                              1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          11m
+default-glance-86d99c66-7v4lg                        1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          9m1s
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 这里注意下，如果 host-deployer 一直为 ContainerCreating 的状态，可以先忽略，不影响使用&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 因为是 minikube 部署的，没有注入一些默认的配置，这个问题以后会解决&lt;/span&gt;
+default-host-deployer-vmkxm                          0/1     ContainerCreating   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m17s
+default-influxdb-69dcbdb4c-l4lp9                     1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m44s
+default-keystone-78f45cc8db-xstk2                    1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          9m48s
+default-logger-5576dbc7f4-8mdl4                      1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m35s
+default-monitor-64d9c65b7b-4wf8t                     1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m33s
+default-notify-59cc65d479-hccs8                      11/11   Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m38s
+default-onecloud-service-operator-584989c746-8ndvf   2/2     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m31s
+default-ovn-north-866c9fbc6f-87wkg                   1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m49s
+default-region-5bc599845-nb882                       1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          9m36s
+default-region-dns-hdj5k                             1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m55s
+default-s3gateway-69b9c5b56c-hb64l                   1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m32s
+default-scheduler-57c66964b7-qh9f2                   1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          9m1s
+default-telegraf-f7rvx                               2/2     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m27s
+default-vpcagent-8ff58c47d-5b4j8                     1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m41s
+default-web-79df8f97b9-c6lgm                         1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m52s
+default-webconsole-79cc5cfb9-xd9tk                   1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m36s
+default-yunionconf-5f79b9655f-trmls                  1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          8m37s
+mysql-7d4f67979b-8gl4g                               1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          11m
+onecloud-operator-69bf9fb476-dsw6d                   1/1     Running             &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;          13m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;也可打开 kubernetes dashboard 确认相关服务正常启动完成。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 启用 kubernetes dashboard&lt;/span&gt;
+$ minikube dashboard -p onecloud
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;创建账号登录-web-ui&#34;&gt;创建账号登录 Web UI&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;创建账号: 部署完成后，需要使用我们的命令行工具 climc 创建帐号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 进入 climc 容器&lt;/span&gt;
+$ kubectl &lt;span style=&#34;color:#204a87&#34;&gt;exec&lt;/span&gt; -n onecloud &lt;span style=&#34;color:#4e9a06&#34;&gt;`&lt;/span&gt;kubectl -n onecloud get pods  &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;default-climc&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; cut -f1 -d&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;`&lt;/span&gt; -c climc  -i -t -- /bin/bash -il
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 创建用户 demo , 密码为 demo123A 的管理员&lt;/span&gt;
+$ /opt/yunion/bin/climc user-create demo --password demo123A --enabled
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 将用户 demo 加入 system 项目，并且赋予 admin 权限&lt;/span&gt;
+$ /opt/yunion/bin/climc project-add-user system demo admin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;登陆 web 前端 UI 界面&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 使用 kubectl port-forward 将 web 前端 forward 到本地 9999 端口&lt;/span&gt;
+$ kubectl -n onecloud port-forward &lt;span style=&#34;color:#4e9a06&#34;&gt;`&lt;/span&gt;kubectl -n onecloud get pods &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;default-web-&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; cut -f1 -d&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;`&lt;/span&gt; 9999:443 --address&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;0.0.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;打开浏览器：https://localhost:9999&lt;/p&gt;
+&lt;h2 id=&#34;集群清理&#34;&gt;集群清理&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 删除所有 onecloud 服务&lt;/span&gt;
+$ kubectl delete -f onecloud-cluster.yaml
+$ kubectl delete -f onecloud-operator.yaml
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# stop kubernetes 集群，以后还可以用 minikube start 开启&lt;/span&gt;
+$ minikube -p onecloud stop
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# 以下命令删除整个 minikube 创建的 kubernetes 集群&lt;/span&gt;
+$ minikube -p onecloud delete
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;待解决的问题&#34;&gt;待解决的问题&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;default-host-deployer pod 无法启动，会处于 ContainerCreating 状态，这个是没有用 ocadm 部署集群导致的。未来会想办法支持该服务在 minikube 的集群里面运行，目前启动不了，不影响体验云联壹云。&lt;a href=&#34;https://github.com/yunionio/onecloud/issues/8910&#34;&gt;issue #8910&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

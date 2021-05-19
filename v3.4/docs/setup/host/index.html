@@ -1,0 +1,1532 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.83.1" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v3.4/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v3.4/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v3.4/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-192x192.png" sizes="192x192">
+
+<title>添加计算节点 | 云联壹云</title><meta property="og:title" content="添加计算节点" />
+<meta property="og:description" content="如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/v3.4/docs/setup/host/" /><meta property="article:section" content="docs" />
+
+<meta property="article:modified_time" content="2021-03-08T17:33:36&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="添加计算节点">
+<meta itemprop="description" content="如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
+">
+<meta itemprop="dateModified" content="2021-03-08T17:33:36&#43;08:00" />
+<meta itemprop="wordCount" content="1017">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="添加计算节点"/>
+<meta name="twitter:description" content="如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件
+"/>
+
+
+
+
+
+<link rel="preload" href="/v3.4/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" as="style">
+<link href="/v3.4/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.3"></script>
+
+
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  
+  <a href="/v3.4/" class="logo flex-shrink-0 navbar-brand">
+    <img src="https://opensource.yunion.cn/v3.4/images/logo.svg" />
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.4
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.7 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.6">v3.6</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.4">v3.4</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.4/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/v3.4/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.4/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.4/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+		</ul>
+	</div>
+  
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; 站内搜索…"
+  aria-label="站内搜索…"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/v3.4/offline-search-index.390c1b38e40b897b039cc9a38e4b6f07.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v34docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docsquickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docsquickstartallinone" href="/v3.4/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docsquickstartminikube" href="/v3.4/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/setup/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v34docssetup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupintro" href="/v3.4/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupcontrolplane-ha" href="/v3.4/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupdb-ha" href="/v3.4/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupcontrolplane" href="/v3.4/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupcomponents" href="/v3.4/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v34docssetuphost" href="/v3.4/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupbaremetal" href="/v3.4/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupce-ee-switch" href="/v3.4/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupupgrade" href="/v3.4/docs/setup/upgrade/">升级相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docscontribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributecontrib" href="/v3.4/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributegit-convention" href="/v3.4/docs/contribute/git-convention/">Git 提交内容规范</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributeservices" href="/v3.4/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributeframework" href="/v3.4/docs/contribute/framework/">后端服务框架</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoclimc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoimage">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimageupload" href="/v3.4/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimagequery" href="/v3.4/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimagecreate" href="/v3.4/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimageoperation" href="/v3.4/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoserver">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoservercreate">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverconnect" href="/v3.4/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverothers" href="/v3.4/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverimport" href="/v3.4/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoservergpu" href="/v3.4/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoservermigrate" href="/v3.4/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverbackup" href="/v3.4/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtohost">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtohostkvm" href="/v3.4/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/baremetal/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtobaremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtobaremetalintro" href="/v3.4/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtobaremetaloperator" href="/v3.4/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtonetwork">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtolb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtostorage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtomulticloud">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtomulticloudcloudaccount" href="/v3.4/docs/howto/multicloud/cloudaccount/">云账号</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoauth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtocontainer">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoscheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docscontact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docschangelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docschangelogrelease-34">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-12" href="/v3.4/docs/changelog/release-3.4/3-4-12/">v3.4.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-11" href="/v3.4/docs/changelog/release-3.4/3-4-11/">v3.4.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-10" href="/v3.4/docs/changelog/release-3.4/3-4-10/">v3.4.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-9" href="/v3.4/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-8" href="/v3.4/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-7" href="/v3.4/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-6" href="/v3.4/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-5" href="/v3.4/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-4" href="/v3.4/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-3" href="/v3.4/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-2" href="/v3.4/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-1" href="/v3.4/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-0" href="/v3.4/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docschangelogrelease-33">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-8" href="/v3.4/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-7" href="/v3.4/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-6" href="/v3.4/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-5" href="/v3.4/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-4" href="/v3.4/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-3" href="/v3.4/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-2" href="/v3.4/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-1" href="/v3.4/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-0" href="/v3.4/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/setup/host.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
+<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/setup/host.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=%e6%b7%bb%e5%8a%a0%e8%ae%a1%e7%ae%97%e8%8a%82%e7%82%b9" target="_blank"><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
+
+
+<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a>
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境">环境</a></li>
+    <li><a href="#安装依赖">安装依赖</a>
+      <ul>
+        <li><a href="#安装-docker-和-kubelet">安装 docker 和 kubelet</a></li>
+      </ul>
+    </li>
+    <li><a href="#控制节点操作">控制节点操作</a>
+      <ul>
+        <li><a href="#创建计算节点所在的网段">创建计算节点所在的网段</a></li>
+      </ul>
+    </li>
+    <li><a href="#计算节点host操作">计算节点(host)操作</a>
+      <ul>
+        <li><a href="#配置-host-服务">配置 host 服务</a></li>
+      </ul>
+    </li>
+    <li><a href="#控制节点启用-host">控制节点启用 host</a></li>
+    <li><a href="#创建虚拟机测试">创建虚拟机测试</a>
+      <ul>
+        <li><a href="#上传-cirrors-测试镜像">上传 cirrors 测试镜像</a></li>
+        <li><a href="#创建测试网络">创建测试网络</a></li>
+        <li><a href="#创建虚拟机">创建虚拟机</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.4/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.4/docs/setup/">安装部署</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/v3.4/docs/setup/host/">添加计算节点</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>添加计算节点</h1>
+    <div class="lead">如果要运行 云联壹云 私有云虚拟机，需要添加对应的计算节点，本节介绍如何部署相应组件</div>
+	       
+	<p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">组件</th>
+<th style="text-align:center">用途</th>
+<th style="text-align:center">安装方式</th>
+<th style="text-align:center">运行方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">host</td>
+<td style="text-align:center">管理 kvm 虚拟机和存储</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">docker</td>
+</tr>
+<tr>
+<td style="text-align:center">host-deployer</td>
+<td style="text-align:center">虚拟机部署服务</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">docker</td>
+</tr>
+<tr>
+<td style="text-align:center">sdnagent</td>
+<td style="text-align:center">管理虚拟机网络和安全组</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">docker</td>
+</tr>
+<tr>
+<td style="text-align:center">openvswitch</td>
+<td style="text-align:center">虚拟机网络端口和流表配置</td>
+<td style="text-align:center">rpm</td>
+<td style="text-align:center">systemd</td>
+</tr>
+<tr>
+<td style="text-align:center">qemu</td>
+<td style="text-align:center">运行虚拟机</td>
+<td style="text-align:center">rpm</td>
+<td style="text-align:center">process</td>
+</tr>
+<tr>
+<td style="text-align:center">kernel</td>
+<td style="text-align:center">云联壹云 提供的内核</td>
+<td style="text-align:center">rpm</td>
+<td style="text-align:center">-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="环境">环境</h2>
+<ul>
+<li>
+<p>操作系统: CentOS 7.x</p>
+</li>
+<li>
+<p>硬件要求:</p>
+<ul>
+<li>Virtualization: CPU 要支持虚拟化，用于虚拟机 KVM 加速</li>
+<li>打开 iommu，VT-d: 用于 GPU 透传(不用GPU可以不开)</li>
+</ul>
+</li>
+<li>
+<p>网络:</p>
+<ul>
+<li>当前可用的网段: 虚拟机可以直接使用和计算节点所在的扁平网段，需要预先划分保留对应端给云平台虚拟机使用，防止被其它设备占用，最后 IP 冲突</li>
+</ul>
+</li>
+<li>
+<p>备注:</p>
+<ul>
+<li>如果是以测试为目的，可以拿一台虚拟机部署计算节点的服务，但可能无法使用 KVM 加速和 GPU 透传</li>
+</ul>
+</li>
+</ul>
+<h2 id="安装依赖">安装依赖</h2>
+<p>计算节点所需的依赖以 rpm 的方式安装</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 添加 yum 源</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/yum.repos.d/yunion.repo
+</span><span style="color:#4e9a06">[yunion]
+</span><span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
+</span><span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.4
+</span><span style="color:#4e9a06">sslverify=0
+</span><span style="color:#4e9a06">failovermethod=priority
+</span><span style="color:#4e9a06">enabled=1
+</span><span style="color:#4e9a06">gpgcheck=0
+</span><span style="color:#4e9a06">EOF</span>
+
+<span style="color:#8f5902;font-style:italic"># 禁用防火墙和selinux</span>
+$ systemctl disable firewalld
+$ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/g&#39;</span> /etc/selinux/config
+</code></pre></div><p>安装 rpm 包</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum --disablerepo<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;*&#39;</span> --enablerepo<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#39;yunion*&#39;</span> install -y <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  yunion-qemu-2.12.1 yunion-executor-server <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-devel-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kernel-headers-3.10.0-1062.4.3.el7.yn20191203 <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  kmod-openvswitch <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  openvswitch net-tools
+
+$ systemctl <span style="color:#204a87">enable</span> --now yunion-executor
+
+<span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核</span>
+$ reboot
+
+<span style="color:#8f5902;font-style:italic"># 重启完成后，查看当前节点内核信息，确保为 yn 内核</span>
+$ uname -r
+3.10.0-1062.4.3.el7.yn20191203.x86_64
+</code></pre></div><h3 id="安装-docker-和-kubelet">安装 docker 和 kubelet</h3>
+<p>参考 <a href="/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&ldquo;部署集群/环境准备&rdquo;</a> 的流程，安装好 docker 和 kubelet。</p>
+<h4 id="安装配置-docker">安装配置 docker</h4>
+<p>安装 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
+<span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源</span>
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.4/yunion.repo
+$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
+</code></pre></div><p>配置 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;/etc/docker/daemon.json
+</span><span style="color:#4e9a06">{
+</span><span style="color:#4e9a06">  &#34;bridge&#34;: &#34;none&#34;,
+</span><span style="color:#4e9a06">  &#34;iptables&#34;: false,
+</span><span style="color:#4e9a06">  &#34;exec-opts&#34;:
+</span><span style="color:#4e9a06">    [
+</span><span style="color:#4e9a06">      &#34;native.cgroupdriver=systemd&#34;
+</span><span style="color:#4e9a06">    ],
+</span><span style="color:#4e9a06">  &#34;data-root&#34;: &#34;/opt/docker&#34;,
+</span><span style="color:#4e9a06">  &#34;live-restore&#34;: true,
+</span><span style="color:#4e9a06">  &#34;log-driver&#34;: &#34;json-file&#34;,
+</span><span style="color:#4e9a06">  &#34;log-opts&#34;:
+</span><span style="color:#4e9a06">    {
+</span><span style="color:#4e9a06">      &#34;max-size&#34;: &#34;100m&#34;
+</span><span style="color:#4e9a06">    },
+</span><span style="color:#4e9a06">  &#34;registry-mirrors&#34;:
+</span><span style="color:#4e9a06">    [
+</span><span style="color:#4e9a06">      &#34;https://lje6zxpk.mirror.aliyuncs.com&#34;,
+</span><span style="color:#4e9a06">      &#34;https://lms7sxqp.mirror.aliyuncs.com&#34;,
+</span><span style="color:#4e9a06">      &#34;https://registry.docker-cn.com&#34;
+</span><span style="color:#4e9a06">    ]
+</span><span style="color:#4e9a06">}
+</span><span style="color:#4e9a06">EOF</span>
+</code></pre></div><p>启动 docker</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ systemctl <span style="color:#204a87">enable</span> --now docker
+</code></pre></div><h4 id="安装配置-kubelet">安装配置 kubelet</h4>
+<p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
+$ <span style="color:#204a87">echo</span> <span style="color:#4e9a06">&#39;source &lt;(kubectl completion bash)&#39;</span> &gt;&gt; ~/.bashrc <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">source</span> ~/.bashrc
+$ <span style="color:#204a87">source</span> /etc/profile
+$ systemctl <span style="color:#204a87">enable</span> kubelet
+</code></pre></div><p>安装完 kubernetes 相关的二进制后，还需要对系统做一些配置并启用 ipvs 作为 kube-proxy 内部的 service 负载均衡</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 禁用 swap</span>
+$ swapoff -a
+<span style="color:#8f5902;font-style:italic"># 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行</span>
+
+<span style="color:#8f5902;font-style:italic"># 关闭 selinux</span>
+$ setenforce  <span style="color:#0000cf;font-weight:bold">0</span>
+$ sed -i <span style="color:#4e9a06">&#39;s/SELINUX=enforcing/SELINUX=disabled/&#39;</span> /etc/selinux/config
+
+<span style="color:#8f5902;font-style:italic"># 禁用 firewalld</span>
+$ systemctl stop firewalld
+$ systemctl disable firewalld
+
+<span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager</span>
+$ systemctl stop NetworkManager
+$ systemctl disable NetworkManager
+$ ps -ef<span style="color:#000;font-weight:bold">|</span>grep dhcp <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $2}&#39;</span> <span style="color:#000;font-weight:bold">|</span>xargs <span style="color:#204a87">kill</span> -9
+ 
+<span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求</span>
+$ modprobe br_netfilter
+
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;&gt; /etc/sysctl.conf
+</span><span style="color:#4e9a06">net.bridge.bridge-nf-call-iptables=1
+</span><span style="color:#4e9a06">net.bridge.bridge-nf-call-ip6tables=1
+</span><span style="color:#4e9a06">net.ipv4.ip_forward=1
+</span><span style="color:#4e9a06">EOF</span>
+
+$ sysctl -p
+
+<span style="color:#8f5902;font-style:italic"># 配置并开启 ipvs</span>
+$ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt; /etc/sysconfig/modules/ipvs.modules
+</span><span style="color:#4e9a06">#!/bin/bash
+</span><span style="color:#4e9a06">ipvs_modules=&#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&#34;
+</span><span style="color:#4e9a06">for kernel_module in \${ipvs_modules}; do
+</span><span style="color:#4e9a06">    /sbin/modinfo -F filename \${kernel_module} &gt; /dev/null 2&gt;&amp;1
+</span><span style="color:#4e9a06">    if [ $? -eq 0 ]; then
+</span><span style="color:#4e9a06">        /sbin/modprobe \${kernel_module}
+</span><span style="color:#4e9a06">    fi
+</span><span style="color:#4e9a06">done
+</span><span style="color:#4e9a06">EOF</span>
+
+$ chmod <span style="color:#0000cf;font-weight:bold">755</span> /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> bash /etc/sysconfig/modules/ipvs.modules <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> lsmod <span style="color:#000;font-weight:bold">|</span> grep ip_vs
+</code></pre></div><h2 id="控制节点操作">控制节点操作</h2>
+<p>以下操作在控制节点进行。</p>
+<h3 id="创建计算节点所在的网段">创建计算节点所在的网段</h3>
+<p>我的环境<strong>计算节点</strong>的 ip 为 10.168.222.140，就创建一个对应的 <strong>计算节点(host)网段</strong>。</p>
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">提示</h4>
+需要根据自己的计算节点环境创建对应的网段，如果不创建该网段，计算节点就没法注册进来。
+</div>
+
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看当前环境的 zone</span>
+$ climc zone-list
++--------------------------------------+-------+--------+----------------+
+<span style="color:#000;font-weight:bold">|</span> ID                                   <span style="color:#000;font-weight:bold">|</span> Name  <span style="color:#000;font-weight:bold">|</span> Status <span style="color:#000;font-weight:bold">|</span> Cloudregion_ID <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------+--------+----------------+
+<span style="color:#000;font-weight:bold">|</span> f73a2120-1206-45fa-8d43-de374ab0f494 <span style="color:#000;font-weight:bold">|</span> zone0 <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">enable</span> <span style="color:#000;font-weight:bold">|</span> default        <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------+--------+----------------+
+
+<span style="color:#8f5902;font-style:italic"># 在 zone0 里面创建一个 wire bcast0，该资源抽象计算节点所在的二层广播域信息</span>
+$ climc wire-create zone0 bcast0 <span style="color:#0000cf;font-weight:bold">1000</span>
+
+<span style="color:#8f5902;font-style:italic"># 在 wire bcast0 之上创建一个计算节点的网络，计算节点的 host 服务注册会用到，如果 host 注册时没有在云平台找到对应的网络，将会注册失败</span>
+$ climc network-create --gateway 10.168.222.1 --server-type baremetal bcast0 adm0 10.168.222.140 10.168.222.140 <span style="color:#0000cf;font-weight:bold">24</span>
+</code></pre></div><h2 id="计算节点host操作">计算节点(host)操作</h2>
+<p>以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。</p>
+<h3 id="配置-host-服务">配置 host 服务</h3>
+<p>参考 <a href="/docs/setup/components/#%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4-token">&ldquo;添加节点/获取加入集群token&rdquo;</a> 的流程获取join所需的信息</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 ocadm join 来创建一台计算节点</span>
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-networks: 配置host服务的网络，比如: &#39;eth0/br0/10.168.222.140&#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip</span>
+<span style="color:#8f5902;font-style:italic"># 获取计算节点 IP</span>
+$ <span style="color:#000">host_addr</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>ip route get <span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000;font-weight:bold">|</span> awk <span style="color:#4e9a06">&#39;{print $NF;exit}&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
+$ <span style="color:#204a87">echo</span> <span style="color:#000">$host_addr</span>
+10.168.222.140
+
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，比如: &#39;/opt/cloud/workspace/disks&#39;</span>
+<span style="color:#8f5902;font-style:italic"># 注意：容器部署的host服务只会挂载/opt/cloud目录</span>
+<span style="color:#8f5902;font-style:italic"># 如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&#39;/src /opt/cloud/dst none defaults,bind 0 0&#39;</span>
+<span style="color:#8f5902;font-style:italic"># 可选参数 --host-hostname: 配置宿主机的hostname, 比如: &#39;node1&#39;</span>
+$ ./ocadm join <span style="color:#000">$api_server_addr</span> <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --enable-host-agent <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --token <span style="color:#000">$token</span> <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --discovery-token-unsafe-skip-ca-verification
+
+<span style="color:#8f5902;font-style:italic"># 然后等待宿主机上的host pod和host-deployer pod为running状态</span>
+</code></pre></div><h2 id="控制节点启用-host">控制节点启用 host</h2>
+<p>回到控制节点，启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 使用 climc 查看注册的 host 列表</span>
+$ climc host-list
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>          Name           <span style="color:#000;font-weight:bold">|</span>    Access_mac     <span style="color:#000;font-weight:bold">|</span>   Access_ip    <span style="color:#000;font-weight:bold">|</span>        Manager_URI         <span style="color:#000;font-weight:bold">|</span> Status  <span style="color:#000;font-weight:bold">|</span> enabled <span style="color:#000;font-weight:bold">|</span> host_status <span style="color:#000;font-weight:bold">|</span> mem_size <span style="color:#000;font-weight:bold">|</span> cpu_count <span style="color:#000;font-weight:bold">|</span> node_count <span style="color:#000;font-weight:bold">|</span>      sn       <span style="color:#000;font-weight:bold">|</span> storage_type <span style="color:#000;font-weight:bold">|</span> host_type  <span style="color:#000;font-weight:bold">|</span>         version         <span style="color:#000;font-weight:bold">|</span> storage_size <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+<span style="color:#000;font-weight:bold">|</span> 3830870e-a499-459d-89df-bb6979b5e1ff <span style="color:#000;font-weight:bold">|</span> lzx-allinone-standalone <span style="color:#000;font-weight:bold">|</span> 00:22:39:4c:6c:e9 <span style="color:#000;font-weight:bold">|</span> 10.168.222.140 <span style="color:#000;font-weight:bold">|</span> http://10.168.222.140:8885 <span style="color:#000;font-weight:bold">|</span> running <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>   <span style="color:#000;font-weight:bold">|</span> online      <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">8192</span>     <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">4</span>         <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">1</span>          <span style="color:#000;font-weight:bold">|</span> Not Specified <span style="color:#000;font-weight:bold">|</span> rotate       <span style="color:#000;font-weight:bold">|</span> hypervisor <span style="color:#000;font-weight:bold">|</span> master<span style="color:#ce5c00;font-weight:bold">(</span>7ab047419092301<span style="color:#ce5c00;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">50141</span>        <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+***  Total: <span style="color:#0000cf;font-weight:bold">0</span> Pages: <span style="color:#0000cf;font-weight:bold">0</span> Limit: <span style="color:#0000cf;font-weight:bold">20</span> Offset: <span style="color:#0000cf;font-weight:bold">0</span> Page: <span style="color:#0000cf;font-weight:bold">1</span>  ***
+
+<span style="color:#8f5902;font-style:italic"># 启动 host</span>
+$ climc host-enable lzx-allinone-standalone
+</code></pre></div><h2 id="创建虚拟机测试">创建虚拟机测试</h2>
+<h3 id="上传-cirrors-测试镜像">上传 cirrors 测试镜像</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 下载 cirros 测试镜像</span>
+$ wget https://iso.yunion.cn/yumrepo-2.10/images/cirros-0.4.0-x86_64-disk.qcow2
+
+<span style="color:#8f5902;font-style:italic"># 将镜像上传到 glance</span>
+$ climc image-upload --format qcow2 --os-type Linux --min-disk <span style="color:#0000cf;font-weight:bold">10240</span> cirros-0.4.0-x86_64-disk.qcow2 ./cirros-0.4.0-x86_64-disk.qcow2
+
+<span style="color:#8f5902;font-style:italic"># 查看上传的镜像</span>
+$ climc image-list
++--------------------------------------+--------------------------------+-------------+----------+-----------+----------+---------+--------+----------------------------------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>              Name              <span style="color:#000;font-weight:bold">|</span> Disk_format <span style="color:#000;font-weight:bold">|</span>   Size   <span style="color:#000;font-weight:bold">|</span> Is_public <span style="color:#000;font-weight:bold">|</span> Min_disk <span style="color:#000;font-weight:bold">|</span> Min_ram <span style="color:#000;font-weight:bold">|</span> Status <span style="color:#000;font-weight:bold">|</span>             Checksum             <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+--------------------------------+-------------+----------+-----------+----------+---------+--------+----------------------------------+
+<span style="color:#000;font-weight:bold">|</span> 63f6f2af-4db2-4e30-85f5-0ad3baa27bd9 <span style="color:#000;font-weight:bold">|</span> cirros-0.4.0-x86_64-disk.qcow2 <span style="color:#000;font-weight:bold">|</span> qcow2       <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">22806528</span> <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>     <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">30720</span>    <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">0</span>       <span style="color:#000;font-weight:bold">|</span> active <span style="color:#000;font-weight:bold">|</span> 76dc07d1a730a92d0db7fb2d3c305ecd <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+--------------------------------+-------------+----------+-----------+----------+---------+--------+----------------------------------+
+
+<span style="color:#8f5902;font-style:italic"># 如果使用虚拟机作为计算节点，存储可能不大，可以把镜像的默认大小30g调整到10g</span>
+$ climc image-update --min-disk <span style="color:#0000cf;font-weight:bold">10240</span> cirros-0.4.0-x86_64-disk.qcow2
+</code></pre></div><h3 id="创建测试网络">创建测试网络</h3>
+<p>下面是随机创建了一个主机间不可达的网络用于测试，如果有划分好的扁平二层可用网络，可以直接拿来给虚拟机使用。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ climc network-create --gateway 10.20.30.1 --server-type guest bcast0 vnet0 10.20.30.2 10.20.30.254 <span style="color:#0000cf;font-weight:bold">24</span>
+$ climc network-public vnet0
+</code></pre></div><h3 id="创建虚拟机">创建虚拟机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 创建虚拟机 testvm01，512M内存, 1个CPU, 系统盘 10g, 第二块磁盘 5g 格式化为 ext4 并挂载到 /opt 的虚拟机</span>
+$ climc server-create  --auto-start --allow-delete <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>		--disk cirros-0.4.0-x86_64-disk.qcow2:10g --disk 5g:ext4:/opt <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>		--net vnet0 --ncpu <span style="color:#0000cf;font-weight:bold">1</span> --mem-spec 512M testvm01
+
+<span style="color:#8f5902;font-style:italic"># 查看创建的虚拟机，1分钟后应该会变为 running 状态</span>
+$ climc server-list --details
++--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-------------------------+--------+-----------+
+<span style="color:#000;font-weight:bold">|</span>                  ID                  <span style="color:#000;font-weight:bold">|</span>   Name   <span style="color:#000;font-weight:bold">|</span> Billing_type <span style="color:#000;font-weight:bold">|</span>     IPs      <span style="color:#000;font-weight:bold">|</span> Disk  <span style="color:#000;font-weight:bold">|</span> Status  <span style="color:#000;font-weight:bold">|</span> vcpu_count <span style="color:#000;font-weight:bold">|</span> vmem_size <span style="color:#000;font-weight:bold">|</span> Secgroup <span style="color:#000;font-weight:bold">|</span>         Created_at          <span style="color:#000;font-weight:bold">|</span> Hypervisor <span style="color:#000;font-weight:bold">|</span> os_type <span style="color:#000;font-weight:bold">|</span>          Host           <span style="color:#000;font-weight:bold">|</span> Tenant <span style="color:#000;font-weight:bold">|</span> is_system <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-------------------------+--------+-----------+
+<span style="color:#000;font-weight:bold">|</span> bcda7d18-decc-4b5f-8654-2d201a84d1fb <span style="color:#000;font-weight:bold">|</span> testvm01 <span style="color:#000;font-weight:bold">|</span> postpaid     <span style="color:#000;font-weight:bold">|</span> 10.20.30.254 <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">35840</span> <span style="color:#000;font-weight:bold">|</span> running <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">1</span>          <span style="color:#000;font-weight:bold">|</span> <span style="color:#0000cf;font-weight:bold">512</span>       <span style="color:#000;font-weight:bold">|</span> Default  <span style="color:#000;font-weight:bold">|</span> 2019-09-23T05:08:49.000000Z <span style="color:#000;font-weight:bold">|</span> kvm        <span style="color:#000;font-weight:bold">|</span> Linux   <span style="color:#000;font-weight:bold">|</span> lzx-allinone-standalone <span style="color:#000;font-weight:bold">|</span> system <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">false</span>     <span style="color:#000;font-weight:bold">|</span>
++--------------------------------------+----------+--------------+--------------+-------+---------+------------+-----------+----------+-----------------------------+------------+---------+-------------------------+--------+-----------+
+***  Total: <span style="color:#0000cf;font-weight:bold">0</span> Pages: <span style="color:#0000cf;font-weight:bold">0</span> Limit: <span style="color:#0000cf;font-weight:bold">20</span> Offset: <span style="color:#0000cf;font-weight:bold">0</span> Page: <span style="color:#0000cf;font-weight:bold">1</span>  ***
+
+<span style="color:#8f5902;font-style:italic"># 获取虚拟机登录信息</span>
+$ climc server-logininfo testvm01
++-----------+------------------------------------------+
+<span style="color:#000;font-weight:bold">|</span>   Field   <span style="color:#000;font-weight:bold">|</span>                  Value                   <span style="color:#000;font-weight:bold">|</span>
++-----------+------------------------------------------+
+<span style="color:#000;font-weight:bold">|</span> login_key <span style="color:#000;font-weight:bold">|</span> <span style="color:#000">49wqh5OWGW3jSr1A8RfrMoH69iRRECzaMZITBA</span><span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> password  <span style="color:#000;font-weight:bold">|</span> zS27FwwUFr96                             <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> updated   <span style="color:#000;font-weight:bold">|</span> 2019-09-23T05:11:29.306403Z              <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#000;font-weight:bold">|</span> username  <span style="color:#000;font-weight:bold">|</span> root                                     <span style="color:#000;font-weight:bold">|</span>
++-----------+------------------------------------------+
+
+<span style="color:#8f5902;font-style:italic"># 在计算节点联通测试网络(如果你是直接用的二层网络，应该能直接 ping 通虚拟机的 ip 了，不需要做这一步)</span>
+$ ip address add 10.20.30.1/24 dev br0
+
+<span style="color:#8f5902;font-style:italic"># 用之前 server-logininfo 命令获取的用户名密码，直接登录到虚拟机里面</span>
+$ ssh root@10.20.30.254
+PING 10.20.30.254 <span style="color:#ce5c00;font-weight:bold">(</span>10.20.30.254<span style="color:#ce5c00;font-weight:bold">)</span> 56<span style="color:#ce5c00;font-weight:bold">(</span>84<span style="color:#ce5c00;font-weight:bold">)</span> bytes of data.
+<span style="color:#0000cf;font-weight:bold">64</span> bytes from 10.20.30.254: <span style="color:#000">icmp_seq</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">1</span> <span style="color:#000">ttl</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">64</span> <span style="color:#000">time</span><span style="color:#ce5c00;font-weight:bold">=</span>1.31 ms
+
+<span style="color:#8f5902;font-style:italic"># 如果网络不通，也可以通过 vnc 的方式打开虚拟机的 tty 登录界面，操作如下</span>
+<span style="color:#8f5902;font-style:italic"># 打开 vnc 链接，用浏览器打开下面的链接</span>
+<span style="color:#8f5902;font-style:italic"># 打开 vnc 链接时会出现不安全认证，导致 websocket 无法握手，需要在浏览器信任 webconsole server 对应的 endpoint</span>
+$ climc endpoint-list --details <span style="color:#000;font-weight:bold">|</span> grep webconsole <span style="color:#000;font-weight:bold">|</span> grep public
+<span style="color:#000;font-weight:bold">|</span> 3da1e476aa7b4ff68e206754aed72d8f <span style="color:#000;font-weight:bold">|</span> region0   <span style="color:#000;font-weight:bold">|</span> 16120e8f3eec46dc86c59b3e426b0502 <span style="color:#000;font-weight:bold">|</span> webconsole      <span style="color:#000;font-weight:bold">|</span> webconsole      <span style="color:#000;font-weight:bold">|</span> https://10.168.222.218:8899         <span style="color:#000;font-weight:bold">|</span> public    <span style="color:#000;font-weight:bold">|</span> <span style="color:#204a87">true</span>    <span style="color:#000;font-weight:bold">|</span>
+<span style="color:#8f5902;font-style:italic"># 然后用浏览器访问下 https://10.168.222.218:8899 , 信任该链接即可</span>
+
+<span style="color:#8f5902;font-style:italic"># 在通过 webconsole-server 命令获取 vnc web 界面的链接地址，然后用浏览器打开该地址</span>
+$ climc webconsole-server testvm01
+https://console.yunion.cn/web-console?access_token<span style="color:#ce5c00;font-weight:bold">=</span>FI-VXQSAonhzfSnxVTKCCbwHinp7swlRkmi-4p6s-4OfZpg6TG9YhWuwbHEUA1D7XoKu_w%3D%3D<span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000">api_server</span><span style="color:#ce5c00;font-weight:bold">=</span>https%3A%2F%2F10.168.222.216%3A8899<span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000">password</span><span style="color:#ce5c00;font-weight:bold">=</span>65xB2kaE<span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000">protocol</span><span style="color:#ce5c00;font-weight:bold">=</span>vnc
+</code></pre></div>
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 08.03.2021: <a  href="https://github.com/yunionio/docs/commit/0a9aac2936a3131bbd3eea0c98d8fa087bc909dd">feat(shortcodes): add tabs (0a9aac2)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/v3.4/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js" integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

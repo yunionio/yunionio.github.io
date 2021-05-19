@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.83.1" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>v3.6.12 | OneCloud</title><meta property="og:title" content="v3.6.12" />
+<meta property="og:description" content="Release time: 2021-04-06 08:18:55
+ onecloud Repo: https://github.com/yunionio/onecloud
+11 commits to onecloud - v3.6.12 since this release.
+Bug Fixes (9)  adjust primary key length when sqlchemy utf8 default to utf8mb4 (d090d76f9, Qiu Jian) new aws region (d6a0764b2, Qu Xuan) time sync duration (e841a4214, Qu Xuan) baremetal: sas2iru parse line (aa9ad9fe0, Zexi Li) esxi: determine whether the disk is a root disk more reasonably (4cf674992, rainzm) esxi: add ListPath for storage and use it to check iso (aede49450, rainzm) hostman: recycle local disk file when rebuilding root (1333d39c6, Qiu Jian) region: add usage cache, speedup response (d7ff1314e, Qiu Jian) region: allow ipmi probe when probe fail (615cb1e33, Qiu Jian)  Features (1)  esxi: change parameters for NewDiskDev and avoid unnecessary deploy (5565bb306, rainzm)  Others (1)  response scope-specific metrics (dcb8898c0, Qiu Jian)  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/en/docs/changelog/release-3.6/3-6-12/" /><meta property="article:section" content="docs" />
+
+<meta property="article:modified_time" content="2021-05-17T17:11:54&#43;08:00" />
+
+<meta itemprop="name" content="v3.6.12">
+<meta itemprop="description" content="Release time: 2021-04-06 08:18:55
+ onecloud Repo: https://github.com/yunionio/onecloud
+11 commits to onecloud - v3.6.12 since this release.
+Bug Fixes (9)  adjust primary key length when sqlchemy utf8 default to utf8mb4 (d090d76f9, Qiu Jian) new aws region (d6a0764b2, Qu Xuan) time sync duration (e841a4214, Qu Xuan) baremetal: sas2iru parse line (aa9ad9fe0, Zexi Li) esxi: determine whether the disk is a root disk more reasonably (4cf674992, rainzm) esxi: add ListPath for storage and use it to check iso (aede49450, rainzm) hostman: recycle local disk file when rebuilding root (1333d39c6, Qiu Jian) region: add usage cache, speedup response (d7ff1314e, Qiu Jian) region: allow ipmi probe when probe fail (615cb1e33, Qiu Jian)  Features (1)  esxi: change parameters for NewDiskDev and avoid unnecessary deploy (5565bb306, rainzm)  Others (1)  response scope-specific metrics (dcb8898c0, Qiu Jian)  ">
+<meta itemprop="dateModified" content="2021-05-17T17:11:54&#43;08:00" />
+<meta itemprop="wordCount" content="128">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="v3.6.12"/>
+<meta name="twitter:description" content="Release time: 2021-04-06 08:18:55
+ onecloud Repo: https://github.com/yunionio/onecloud
+11 commits to onecloud - v3.6.12 since this release.
+Bug Fixes (9)  adjust primary key length when sqlchemy utf8 default to utf8mb4 (d090d76f9, Qiu Jian) new aws region (d6a0764b2, Qu Xuan) time sync duration (e841a4214, Qu Xuan) baremetal: sas2iru parse line (aa9ad9fe0, Zexi Li) esxi: determine whether the disk is a root disk more reasonably (4cf674992, rainzm) esxi: add ListPath for storage and use it to check iso (aede49450, rainzm) hostman: recycle local disk file when rebuilding root (1333d39c6, Qiu Jian) region: add usage cache, speedup response (d7ff1314e, Qiu Jian) region: allow ipmi probe when probe fail (615cb1e33, Qiu Jian)  Features (1)  esxi: change parameters for NewDiskDev and avoid unnecessary deploy (5565bb306, rainzm)  Others (1)  response scope-specific metrics (dcb8898c0, Qiu Jian)  "/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" as="style">
+<link href="/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.3"></script>
+
+
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  
+  <a href="/en/" class="logo flex-shrink-0 navbar-brand">
+    <img src="https://opensource.yunion.cn//images/logo.svg" />
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.7
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.7 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.6">v3.6</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.4">v3.4</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/en/docs/quickstart/" ><span>Quick Start</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/en/docs/" ><span class="active">Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/en/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	English
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/zh/docs/changelog/release-3.6/3-6-12/">中文</a>
+	
+</div>
+			</li>
+			
+		</ul>
+	</div>
+  
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; Search this site…"
+  aria-label="Search this site…"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/offline-search-index.1af8060cc96aa3ac85af7dccddd6f3df.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    <div class="nav-item dropdown d-block d-lg-none">
+      
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	English
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/zh/docs/changelog/release-3.6/3-6-12/">中文</a>
+	
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Documentation</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="endocs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Quick Start</a>
+  </li>
+  <ul>
+    <li class="collapse " id="endocsquickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocsquickstartallinone" href="/en/docs/quickstart/allinone/">All in One Installation</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocsquickstartnodes" href="/en/docs/quickstart/nodes/">Multi-node Installation</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Development</a>
+  </li>
+  <ul>
+    <li class="collapse " id="endocscontribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocscontributecontrib" href="/en/docs/contribute/contrib/">Code contribution</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocscontributegit-convention" href="/en/docs/contribute/git-convention/">Git Commit Message Convention</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/changelog/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="endocschangelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/changelog/release-3.7/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.7</a>
+  </li>
+  <ul>
+    <li class="collapse " id="endocschangelogrelease-37">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-373-7-0" href="/en/docs/changelog/release-3.7/3-7-0/">v3.7.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/changelog/release-3.6/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">release/3.6</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="endocschangelogrelease-36">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-15" href="/en/docs/changelog/release-3.6/3-6-15/">v3.6.15</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-14" href="/en/docs/changelog/release-3.6/3-6-14/">v3.6.14</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-13" href="/en/docs/changelog/release-3.6/3-6-13/">v3.6.13</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-endocschangelogrelease-363-6-12" href="/en/docs/changelog/release-3.6/3-6-12/">v3.6.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-11" href="/en/docs/changelog/release-3.6/3-6-11/">v3.6.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-10" href="/en/docs/changelog/release-3.6/3-6-10/">v3.6.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-9" href="/en/docs/changelog/release-3.6/3-6-9/">v3.6.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-8" href="/en/docs/changelog/release-3.6/3-6-8/">v3.6.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-7" href="/en/docs/changelog/release-3.6/3-6-7/">v3.6.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-6" href="/en/docs/changelog/release-3.6/3-6-6/">v3.6.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-5" href="/en/docs/changelog/release-3.6/3-6-5/">v3.6.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-4" href="/en/docs/changelog/release-3.6/3-6-4/">v3.6.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-3" href="/en/docs/changelog/release-3.6/3-6-3/">v3.6.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-2" href="/en/docs/changelog/release-3.6/3-6-2/">v3.6.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-1" href="/en/docs/changelog/release-3.6/3-6-1/">v3.6.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-363-6-0" href="/en/docs/changelog/release-3.6/3-6-0/">v3.6.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse " id="endocschangelogrelease-34">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-16" href="/en/docs/changelog/release-3.4/3-4-16/">v3.4.16</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-15" href="/en/docs/changelog/release-3.4/3-4-15/">v3.4.15</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-14" href="/en/docs/changelog/release-3.4/3-4-14/">v3.4.14</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-13" href="/en/docs/changelog/release-3.4/3-4-13/">v3.4.13</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-12" href="/en/docs/changelog/release-3.4/3-4-12/">v3.4.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-11" href="/en/docs/changelog/release-3.4/3-4-11/">v3.4.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-10" href="/en/docs/changelog/release-3.4/3-4-10/">v3.4.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-9" href="/en/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-8" href="/en/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-7" href="/en/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-6" href="/en/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-5" href="/en/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-4" href="/en/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-3" href="/en/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-2" href="/en/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-1" href="/en/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-343-4-0" href="/en/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse " id="endocschangelogrelease-33">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-8" href="/en/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-7" href="/en/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-6" href="/en/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-5" href="/en/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-4" href="/en/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-3" href="/en/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-2" href="/en/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-1" href="/en/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-endocschangelogrelease-333-3-0" href="/en/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/en/docs/roadmap/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">ROADMAP</a>
+  </li>
+  <ul>
+    <li class="collapse " id="endocsroadmap">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/yunionio/docs/edit/master/content/en/docs/changelog/release-3.6/3-6-12.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+<a href="https://github.com/yunionio/docs/new/master/content/en/docs/changelog/release-3.6/3-6-12.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=v3.6.12" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+
+
+<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#onecloud">onecloud</a>
+      <ul>
+        <li><a href="#bug-fixes-9">Bug Fixes (9)</a></li>
+        <li><a href="#features-1">Features (1)</a></li>
+        <li><a href="#others-1">Others (1)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/en/docs/">Documentation</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/en/docs/changelog/">CHANGELOG</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/en/docs/changelog/release-3.6/">release/3.6</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/en/docs/changelog/release-3.6/3-6-12/">v3.6.12</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>v3.6.12</h1>
+    
+	       
+	<p>Release time: 2021-04-06 08:18:55</p>
+<hr>
+<h2 id="onecloud">onecloud</h2>
+<p>Repo: <a href="https://github.com/yunionio/onecloud">https://github.com/yunionio/onecloud</a></p>
+<p>11 commits to <a href="https://github.com/yunionio/onecloud/compare/v3.6.11...v3.6.12">onecloud - v3.6.12</a> since this release.</p>
+<h3 id="bug-fixes-9">Bug Fixes (9)</h3>
+<ul>
+<li>adjust primary key length when sqlchemy utf8 default to utf8mb4 (<a href="https://github.com/yunionio/onecloud/commit/d090d76f92fe428da5b10af0364f4c97e6b6610e">d090d76f9</a>, <a href="mailto:qiujian@yunionyun.com">Qiu Jian</a>)</li>
+<li>new aws region (<a href="https://github.com/yunionio/onecloud/commit/d6a0764b297027fd92f30191230ddd89486c9455">d6a0764b2</a>, <a href="mailto:qu_xuan@icloud.com">Qu Xuan</a>)</li>
+<li>time sync duration (<a href="https://github.com/yunionio/onecloud/commit/e841a421430f33963c05b33b2c526a9a175e5539">e841a4214</a>, <a href="mailto:quxuan@yunionyun.com">Qu Xuan</a>)</li>
+<li><strong>baremetal:</strong> sas2iru parse line (<a href="https://github.com/yunionio/onecloud/commit/aa9ad9fe00c58f43d6a33111992f2a6f1f7cd1d6">aa9ad9fe0</a>, <a href="mailto:zexi.li@qq.com">Zexi Li</a>)</li>
+<li><strong>esxi:</strong> determine whether the disk is a root disk more reasonably (<a href="https://github.com/yunionio/onecloud/commit/4cf674992cd3ec91d34e5763cf133605b5e32c6d">4cf674992</a>, <a href="mailto:mjoycarry@gmail.com">rainzm</a>)</li>
+<li><strong>esxi:</strong> add ListPath for storage and use it to check iso (<a href="https://github.com/yunionio/onecloud/commit/aede49450e79065e41eb9d09503d988540781f2b">aede49450</a>, <a href="mailto:mjoycarry@gmail.com">rainzm</a>)</li>
+<li><strong>hostman:</strong> recycle local disk file when rebuilding root (<a href="https://github.com/yunionio/onecloud/commit/1333d39c6053d63a8bd6a7725738f6cb309411ac">1333d39c6</a>, <a href="mailto:qiujian@yunionyun.com">Qiu Jian</a>)</li>
+<li><strong>region:</strong> add usage cache, speedup response (<a href="https://github.com/yunionio/onecloud/commit/d7ff1314e6cfbbc09b37206eed3d09127eb6bfbf">d7ff1314e</a>, <a href="mailto:qiujian@yunionyun.com">Qiu Jian</a>)</li>
+<li><strong>region:</strong> allow ipmi probe when probe fail (<a href="https://github.com/yunionio/onecloud/commit/615cb1e331ba6971c5664df728dcaf06a1b6157f">615cb1e33</a>, <a href="mailto:qiujian@yunionyun.com">Qiu Jian</a>)</li>
+</ul>
+<h3 id="features-1">Features (1)</h3>
+<ul>
+<li><strong>esxi:</strong> change parameters for NewDiskDev and avoid unnecessary deploy (<a href="https://github.com/yunionio/onecloud/commit/5565bb3064b874f57ce1c9205488066cfaa31e96">5565bb306</a>, <a href="mailto:mjoycarry@gmail.com">rainzm</a>)</li>
+</ul>
+<h3 id="others-1">Others (1)</h3>
+<ul>
+<li>response scope-specific metrics (<a href="https://github.com/yunionio/onecloud/commit/dcb8898c0686590205c278a633ccec61a421584d">dcb8898c0</a>, <a href="mailto:qiujian@yunionyun.com">Qiu Jian</a>)</li>
+</ul>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified 17.05.2021: <a  href="https://github.com/yunionio/docs/commit/fafa92bb74af2c9f7cf26690c551598f3bcbddd8">sync changelog for english version (fafa92b)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js" integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

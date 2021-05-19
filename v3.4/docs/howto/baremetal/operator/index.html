@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.83.1" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v3.4/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v3.4/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v3.4/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v3.4/favicons/android-192x192.png" sizes="192x192">
+
+<title>操作相关 | 云联壹云</title><meta property="og:title" content="操作相关" />
+<meta property="og:description" content="查询物理机 # list baremetal 记录 climc host-list --baremetal true # list 已经安装系统的物理机 climc host-list --baremetal true --occupied # list 未安装系统的物理机 climc host-list --baremetal true --empty # 查询物理机详情，包括硬件信息，机房信息 climc host-show &lt;host_id&gt; 注册物理机 climc host-create &lt;host_id&gt; 重新准备物理机 climc host-prepare &lt;host_id&gt; 获取物理机登录信息 climc host-logininfo &lt;host_id&gt; 获取串口登录控制台 climc webconsole-baremetal &lt;host_id&gt; 开/关机 climc host-start/host-stop &lt;host_id&gt; 进入/退出维护模式 climc host-maintenance/host-unmaintenance &lt;host_id&gt; 删除物理机 climc host-delete &lt;host_id&gt; 转换/回收宿主机 climc host-convert-hypervisor climc host-undo-convert &lt;host_id&gt; 裸金属服务器相关 安装操作系统 climc server-create \  --hypervisor baremetal \ # 指定 server 的类型为 baremetal --ncpu 24 \ # 创建到 24 核 cpu 的物理机 --raid-config &#39;raid1:2:MegaRaid&#39; \ # 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1 --raid-config &#39;none:1&#39; \ # 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid --raid-config &#39;raid10:4:MegaRaid&#39; \ # 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10 --disk CentOS-7." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://opensource.yunion.cn/v3.4/docs/howto/baremetal/operator/" /><meta property="article:section" content="docs" />
+<meta property="article:published_time" content="2019-07-19T20:25:05&#43;08:00" />
+<meta property="article:modified_time" content="2019-07-30T14:08:01&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+
+<meta itemprop="name" content="操作相关">
+<meta itemprop="description" content="查询物理机 # list baremetal 记录 climc host-list --baremetal true # list 已经安装系统的物理机 climc host-list --baremetal true --occupied # list 未安装系统的物理机 climc host-list --baremetal true --empty # 查询物理机详情，包括硬件信息，机房信息 climc host-show &lt;host_id&gt; 注册物理机 climc host-create &lt;host_id&gt; 重新准备物理机 climc host-prepare &lt;host_id&gt; 获取物理机登录信息 climc host-logininfo &lt;host_id&gt; 获取串口登录控制台 climc webconsole-baremetal &lt;host_id&gt; 开/关机 climc host-start/host-stop &lt;host_id&gt; 进入/退出维护模式 climc host-maintenance/host-unmaintenance &lt;host_id&gt; 删除物理机 climc host-delete &lt;host_id&gt; 转换/回收宿主机 climc host-convert-hypervisor climc host-undo-convert &lt;host_id&gt; 裸金属服务器相关 安装操作系统 climc server-create \  --hypervisor baremetal \ # 指定 server 的类型为 baremetal --ncpu 24 \ # 创建到 24 核 cpu 的物理机 --raid-config &#39;raid1:2:MegaRaid&#39; \ # 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1 --raid-config &#39;none:1&#39; \ # 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid --raid-config &#39;raid10:4:MegaRaid&#39; \ # 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10 --disk CentOS-7."><meta itemprop="datePublished" content="2019-07-19T20:25:05&#43;08:00" />
+<meta itemprop="dateModified" content="2019-07-30T14:08:01&#43;08:00" />
+<meta itemprop="wordCount" content="296">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="操作相关"/>
+<meta name="twitter:description" content="查询物理机 # list baremetal 记录 climc host-list --baremetal true # list 已经安装系统的物理机 climc host-list --baremetal true --occupied # list 未安装系统的物理机 climc host-list --baremetal true --empty # 查询物理机详情，包括硬件信息，机房信息 climc host-show &lt;host_id&gt; 注册物理机 climc host-create &lt;host_id&gt; 重新准备物理机 climc host-prepare &lt;host_id&gt; 获取物理机登录信息 climc host-logininfo &lt;host_id&gt; 获取串口登录控制台 climc webconsole-baremetal &lt;host_id&gt; 开/关机 climc host-start/host-stop &lt;host_id&gt; 进入/退出维护模式 climc host-maintenance/host-unmaintenance &lt;host_id&gt; 删除物理机 climc host-delete &lt;host_id&gt; 转换/回收宿主机 climc host-convert-hypervisor climc host-undo-convert &lt;host_id&gt; 裸金属服务器相关 安装操作系统 climc server-create \  --hypervisor baremetal \ # 指定 server 的类型为 baremetal --ncpu 24 \ # 创建到 24 核 cpu 的物理机 --raid-config &#39;raid1:2:MegaRaid&#39; \ # 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1 --raid-config &#39;none:1&#39; \ # 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid --raid-config &#39;raid10:4:MegaRaid&#39; \ # 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10 --disk CentOS-7."/>
+
+
+
+
+
+<link rel="preload" href="/v3.4/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" as="style">
+<link href="/v3.4/scss/main.min.7922bf78d159b48b339c1bb63cb6c8dc7aaccc12d1af3ff68a146bd3a6a06db3.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.3"></script>
+
+
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  
+  <a href="/v3.4/" class="logo flex-shrink-0 navbar-brand">
+    <img src="https://opensource.yunion.cn/v3.4/images/logo.svg" />
+  </a>
+
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+      
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+    v3.4
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    
+    
+    
+        
+            <a class="dropdown-item" href="/">v3.7 (latest)</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.6">v3.6</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.4">v3.4</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.3">v3.3</a>
+        
+    
+        
+            <a class="dropdown-item" href="/v3.2">v3.2</a>
+        
+    
+</div>
+
+			</li>
+      
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.4/docs/quickstart/" ><span>快速开始</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/v3.4/docs/" ><span class="active">文档</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/yunionio/onecloud" target="_blank" ><span>Github</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.4/docs/changelog" ><span>CHANGELOG</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/v3.4/docs/contact" ><span>联系我们</span></a>
+			</li>
+			
+			
+		</ul>
+	</div>
+  
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; 站内搜索…"
+  aria-label="站内搜索…"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/v3.4/offline-search-index.390c1b38e40b897b039cc9a38e4b6f07.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="10"
+>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v34docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/quickstart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docsquickstart">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docsquickstartallinone" href="/v3.4/docs/quickstart/allinone/">All in One 安装</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docsquickstartminikube" href="/v3.4/docs/quickstart/minikube/">MiniKube 安装</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/setup/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">安装部署</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docssetup">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupintro" href="/v3.4/docs/setup/intro/">组件概览</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupcontrolplane-ha" href="/v3.4/docs/setup/controlplane-ha/">部署 HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupdb-ha" href="/v3.4/docs/setup/db-ha/">部署 DB HA 环境</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupcontrolplane" href="/v3.4/docs/setup/controlplane/">部署集群</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupcomponents" href="/v3.4/docs/setup/components/">添加 K8S 节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetuphost" href="/v3.4/docs/setup/host/">添加计算节点</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupbaremetal" href="/v3.4/docs/setup/baremetal/">物理机管理服务</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupce-ee-switch" href="/v3.4/docs/setup/ce-ee-switch/">切换到企业版</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docssetupupgrade" href="/v3.4/docs/setup/upgrade/">升级相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/contribute/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发相关</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docscontribute">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributecontrib" href="/v3.4/docs/contribute/contrib/">开发贡献</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributegit-convention" href="/v3.4/docs/contribute/git-convention/">Git 提交内容规范</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributeservices" href="/v3.4/docs/contribute/services/">服务组件介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docscontributeframework" href="/v3.4/docs/contribute/framework/">后端服务框架</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">操作管理</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v34docshowto">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/climc/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">命令行工具</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoclimc">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/image/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">镜像</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoimage">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimageupload" href="/v3.4/docs/howto/image/upload/">上传镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimagequery" href="/v3.4/docs/howto/image/query/">查询镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimagecreate" href="/v3.4/docs/howto/image/create/">制作镜像</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoimageoperation" href="/v3.4/docs/howto/image/operation/">其他操作</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/server/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoserver">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/server/create/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">创建云主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoservercreate">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverconnect" href="/v3.4/docs/howto/server/connect/">登录云主机</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverothers" href="/v3.4/docs/howto/server/others/">其他操作</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverimport" href="/v3.4/docs/howto/server/import/">libvirt管理虚机导入</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoservergpu" href="/v3.4/docs/howto/server/gpu/">GPU相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoservermigrate" href="/v3.4/docs/howto/server/migrate/">迁移相关</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtoserverbackup" href="/v3.4/docs/howto/server/backup/">主备机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/host/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">宿主机</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtohost">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtohostkvm" href="/v3.4/docs/howto/host/kvm/">KVM 宿主机</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/baremetal/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">物理机</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v34docshowtobaremetal">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtobaremetalintro" href="/v3.4/docs/howto/baremetal/intro/">介绍</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v34docshowtobaremetaloperator" href="/v3.4/docs/howto/baremetal/operator/">操作相关</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/network/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">网络</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtonetwork">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/lb/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">负载均衡</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtolb">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/storage/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">存储</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtostorage">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/multicloud/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">多云管理</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtomulticloud">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docshowtomulticloudcloudaccount" href="/v3.4/docs/howto/multicloud/cloudaccount/">云账号</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/auth/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">认证与权限</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoauth">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/container/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">容器集群</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtocontainer">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/howto/scheduler/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">资源调度</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docshowtoscheduler">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/contact/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">联系我们</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docscontact">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/changelog/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">CHANGELOG</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docschangelog">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/changelog/release-3.4/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.4</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docschangelogrelease-34">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-12" href="/v3.4/docs/changelog/release-3.4/3-4-12/">v3.4.12</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-11" href="/v3.4/docs/changelog/release-3.4/3-4-11/">v3.4.11</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-10" href="/v3.4/docs/changelog/release-3.4/3-4-10/">v3.4.10</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-9" href="/v3.4/docs/changelog/release-3.4/3-4-9/">v3.4.9</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-8" href="/v3.4/docs/changelog/release-3.4/3-4-8/">v3.4.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-7" href="/v3.4/docs/changelog/release-3.4/3-4-7/">v3.4.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-6" href="/v3.4/docs/changelog/release-3.4/3-4-6/">v3.4.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-5" href="/v3.4/docs/changelog/release-3.4/3-4-5/">v3.4.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-4" href="/v3.4/docs/changelog/release-3.4/3-4-4/">v3.4.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-3" href="/v3.4/docs/changelog/release-3.4/3-4-3/">v3.4.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-2" href="/v3.4/docs/changelog/release-3.4/3-4-2/">v3.4.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-1" href="/v3.4/docs/changelog/release-3.4/3-4-1/">v3.4.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-343-4-0" href="/v3.4/docs/changelog/release-3.4/3-4-0/">v3.4.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v3.4/docs/changelog/release-3.3/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">release/3.3</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v34docschangelogrelease-33">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-8" href="/v3.4/docs/changelog/release-3.3/3-3-8/">v3.3.8</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-7" href="/v3.4/docs/changelog/release-3.3/3-3-7/">v3.3.7</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-6" href="/v3.4/docs/changelog/release-3.3/3-3-6/">v3.3.6</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-5" href="/v3.4/docs/changelog/release-3.3/3-3-5/">v3.3.5</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-4" href="/v3.4/docs/changelog/release-3.3/3-3-4/">v3.3.4</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-3" href="/v3.4/docs/changelog/release-3.3/3-3-3/">v3.3.3</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-2" href="/v3.4/docs/changelog/release-3.3/3-3-2/">v3.3.2</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-1" href="/v3.4/docs/changelog/release-3.3/3-3-1/">v3.3.1</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v34docschangelogrelease-333-3-0" href="/v3.4/docs/changelog/release-3.3/3-3-0/">v3.3.0</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/yunionio/docs/edit/master/content/zh/docs/howto/baremetal/operator.md" target="_blank"><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
+<a href="https://github.com/yunionio/docs/new/master/content/zh/docs/howto/baremetal/operator.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
+<a href="https://github.com/yunionio/docs/issues/new?title=%e6%93%8d%e4%bd%9c%e7%9b%b8%e5%85%b3" target="_blank"><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
+
+
+<a href="https://github.com/yunionio/onecloud/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a>
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#查询物理机">查询物理机</a></li>
+        <li><a href="#注册物理机">注册物理机</a></li>
+        <li><a href="#重新准备物理机">重新准备物理机</a></li>
+        <li><a href="#获取物理机登录信息">获取物理机登录信息</a></li>
+        <li><a href="#获取串口登录控制台">获取串口登录控制台</a></li>
+        <li><a href="#开关机">开/关机</a></li>
+        <li><a href="#进入退出维护模式">进入/退出维护模式</a></li>
+        <li><a href="#删除物理机">删除物理机</a></li>
+        <li><a href="#转换回收宿主机">转换/回收宿主机</a></li>
+      </ul>
+    </li>
+    <li><a href="#裸金属服务器相关">裸金属服务器相关</a>
+      <ul>
+        <li><a href="#安装操作系统">安装操作系统</a></li>
+        <li><a href="#查询裸金属服务器">查询裸金属服务器</a></li>
+        <li><a href="#重装操作系统">重装操作系统</a></li>
+        <li><a href="#开关机-1">开/关机</a></li>
+        <li><a href="#删除裸金属服务器">删除裸金属服务器</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.4/docs/">文档</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.4/docs/howto/">操作管理</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://opensource.yunion.cn/v3.4/docs/howto/baremetal/">物理机</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://opensource.yunion.cn/v3.4/docs/howto/baremetal/operator/">操作相关</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>操作相关</h1>
+    
+	       
+	<h3 id="查询物理机">查询物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># list baremetal 记录</span>
+climc host-list --baremetal <span style="color:#204a87">true</span>
+
+<span style="color:#8f5902;font-style:italic"># list 已经安装系统的物理机</span>
+climc host-list --baremetal <span style="color:#204a87">true</span> --occupied
+
+<span style="color:#8f5902;font-style:italic"># list 未安装系统的物理机</span>
+climc host-list --baremetal <span style="color:#204a87">true</span> --empty
+
+<span style="color:#8f5902;font-style:italic"># 查询物理机详情，包括硬件信息，机房信息</span>
+climc host-show &lt;host_id&gt;
+</code></pre></div><h3 id="注册物理机">注册物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-create &lt;host_id&gt;
+</code></pre></div><h3 id="重新准备物理机">重新准备物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-prepare &lt;host_id&gt;
+</code></pre></div><h3 id="获取物理机登录信息">获取物理机登录信息</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-logininfo &lt;host_id&gt;
+</code></pre></div><h3 id="获取串口登录控制台">获取串口登录控制台</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc webconsole-baremetal &lt;host_id&gt;
+</code></pre></div><h3 id="开关机">开/关机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-start/host-stop &lt;host_id&gt;
+</code></pre></div><h3 id="进入退出维护模式">进入/退出维护模式</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-maintenance/host-unmaintenance &lt;host_id&gt;
+</code></pre></div><h3 id="删除物理机">删除物理机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-delete &lt;host_id&gt;
+</code></pre></div><h3 id="转换回收宿主机">转换/回收宿主机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc host-convert-hypervisor
+climc host-undo-convert &lt;host_id&gt;
+</code></pre></div><h2 id="裸金属服务器相关">裸金属服务器相关</h2>
+<h3 id="安装操作系统">安装操作系统</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-create <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>    --hypervisor baremetal <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 指定 server 的类型为 baremetal</span>
+    --ncpu <span style="color:#0000cf;font-weight:bold">24</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 创建到 24 核 cpu 的物理机</span>
+    --raid-config <span style="color:#4e9a06">&#39;raid1:2:MegaRaid&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1</span>
+    --raid-config <span style="color:#4e9a06">&#39;none:1&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid</span>
+    --raid-config <span style="color:#4e9a06">&#39;raid10:4:MegaRaid&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10</span>
+    --disk CentOS-7.5.qcow2:100g <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 系统盘使用 CentOS-7.5.qcow2 镜像作为操作系统，大小为 100g，使用第1块 raid1 的盘</span>
+    --disk <span style="color:#4e9a06">&#39;autoextend:ext4:/opt&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 分区挂载到 /opt, 使用第1块 raid1 的盘，文件系统为 ext4, 大小为(第一块盘总大小 - 该盘其他分区的大小(100g))</span>
+    --disk <span style="color:#4e9a06">&#39;autoextend:xfs:/data-nonraid&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-nonraid, 使用第2块没做 raid 的盘, 文件系统为 xfs，使用所有空间</span>
+    --disk <span style="color:#4e9a06">&#39;autoextend:ext4:/data-raid10&#39;</span> <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-raid10, 使用第3块 raid10 的盘，文件系统为 ext4, 使用所有空间</span>
+    &lt;server_name&gt; <span style="color:#4e9a06">\ </span><span style="color:#8f5902;font-style:italic"># 裸金属服务器名称</span>
+    64g <span style="color:#8f5902;font-style:italic"># 创建到 64g 内存大小的物理机</span>
+</code></pre></div><h4 id="raid-配置和分区">raid 配置和分区</h4>
+<p>调用 server-create 接口时通过 &lsquo;&ndash;raid-config&rsquo; 传递参数来配置 raid，每个 raid-config 对应到操作系统可见的磁盘设备(/dev/sdx)。</p>
+<p>&lsquo;&ndash;disk&rsquo; 参数对应不同磁盘上的分区，分区对应到磁盘的逻辑为: 分区按照顺序创建到第1块磁盘上，当 disk 设置 autoextend 参数后，表示接下来的 disk 分区会创建到下一个磁盘，以此类推。</p>
+<ul>
+<li>raid 配置 API 参数:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>value</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type(磁盘类型)</td>
+<td>string</td>
+<td>rotate(机械盘), ssd(固态盘), hybrid(未知)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>conf (raid)</td>
+<td>string</td>
+<td>none, raid0, raid1, raid5, raid10</td>
+<td>做raid几或者不做</td>
+</tr>
+<tr>
+<td>count (磁盘数量)</td>
+<td>int</td>
+<td>e.g. 0, 2, 4</td>
+<td>小于等于物理机实际的盘数</td>
+</tr>
+<tr>
+<td>range (磁盘范围)</td>
+<td>[]int</td>
+<td>e.g. [0,1,2,3], [4,7], [5,6]</td>
+<td>物理磁盘在控制器上的索引号</td>
+</tr>
+<tr>
+<td>splits (切割物理盘)</td>
+<td>string</td>
+<td>(30%,20%,), (300g,100g,)</td>
+<td>做好 raid 的物理盘再切割为多块物理盘</td>
+</tr>
+<tr>
+<td>adapter (控制器号)</td>
+<td>int</td>
+<td>0, 1</td>
+<td>对应driver的 Adapter 控制器</td>
+</tr>
+<tr>
+<td>driver  (控制器名称)</td>
+<td>string</td>
+<td>MegaRaid,HPSARaid,Mpt2SAS,MarvelRaid,Linux,PCIE</td>
+<td>1台物理机上有多个控制器时用于选择盘</td>
+</tr>
+<tr>
+<td>strip  (设置raid strip 大小)</td>
+<td>*int</td>
+<td>e.g. 64*1024</td>
+<td>设置strip size, 可选</td>
+</tr>
+<tr>
+<td>ra</td>
+<td>*bool</td>
+<td></td>
+<td>设置读模式</td>
+</tr>
+<tr>
+<td>wt</td>
+<td></td>
+<td></td>
+<td>设置写模式</td>
+</tr>
+<tr>
+<td>cachedbadbbu</td>
+<td>*bool</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>direct</td>
+<td>*bool</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>命令行格式:</p>
+<p>&lsquo;(none,raid0,raid1,raid5,raid10):%d:(MegaRaid|HPSARaid|Mpt2SAS|MarvelRaid|Linux|PCIE):(rotate|ssd|hybrid):[0-n]:strip%dk:adapter%d:ra:nora:wt:wb:direct:cachedbadbbu:nocachedbadbbu&rsquo;</p>
+</li>
+</ul>
+<h3 id="查询裸金属服务器">查询裸金属服务器</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-list --hypervisor baremetal
+climc server-show &lt;server_id&gt;
+</code></pre></div><h3 id="重装操作系统">重装操作系统</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-rebuild --image &lt;image_id&gt; &lt;server_id&gt;
+</code></pre></div><h3 id="开关机-1">开/关机</h3>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-start &lt;server_id&gt;
+climc server-stop &lt;server_id&gt;
+</code></pre></div><h3 id="删除裸金属服务器">删除裸金属服务器</h3>
+<p>删除 server 裸金属服务器会销毁物理机上的操作系统和 raid 配置，对应的 baremetal 重新进入未分配状态</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">climc server-delete &lt;server_id&gt;
+</code></pre></div>
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/yunionio/docs/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 30.07.2019: <a  href="https://github.com/yunionio/docs/commit/61a5e0c8caf98ca74b477bbebe4113c295c79cec">update theme to docsy (61a5e0c)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/v3.4/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js" integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

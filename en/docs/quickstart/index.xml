@@ -25,7 +25,12 @@
         &lt;h2 id=&#34;environmental-preparation&#34;&gt;Environmental Preparation&lt;/h2&gt;
 &lt;h3 id=&#34;configuration-requirements&#34;&gt;Configuration Requirements&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;OS: CentOS 7.6&lt;/li&gt;
+&lt;li&gt;OS: Depending on the CPU architecture, the supported distributions are different
+&lt;ul&gt;
+&lt;li&gt;X86_64: &lt;a href=&#34;http://isoredirect.centos.org/centos/7/isos/x86_64/&#34;&gt;CentOS 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ARM64: &lt;a href=&#34;https://www.debian.org/releases/stable/arm64/&#34;&gt;Debian 10(buster)&lt;/a&gt; or &lt;a href=&#34;https://www.chinauos.com/&#34;&gt;China UOS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;li&gt;Minimum Configuration Requirements: CPU 4 cores, Memory 8G, Storage 100G&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The following is the environment of the machine to be deployed:&lt;/p&gt;
@@ -55,12 +60,6 @@
 
 &lt;/div&gt;
 
-&lt;h3 id=&#34;related-software-dependencies&#34;&gt;Related Software Dependencies&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;database: mariadb Ver 15.1 Distrib 5.5.56-MariaDB&lt;/li&gt;
-&lt;li&gt;docker: ce-19.03.9&lt;/li&gt;
-&lt;li&gt;kubernetes: v1.15.8&lt;/li&gt;
-&lt;/ul&gt;
 &lt;h3 id=&#34;local-environment-requirements&#34;&gt;Local environment requirements&lt;/h3&gt;
 &lt;p&gt;The local environment is the environment where the user performs the actual operation and deployment. The local environment for this installation is executing on a MAC OS laptop, which can also be operated on the machine to be deployed.&lt;/p&gt;
 &lt;h4 id=&#34;configure-ssh-unencrypted-login&#34;&gt;Configure SSH unencrypted login&lt;/h4&gt;
@@ -80,22 +79,31 @@ $ ssh root@10.168.26.216 &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;host
 &lt;h3 id=&#34;download-ocboot&#34;&gt;Download ocboot&lt;/h3&gt;
 &lt;ul class=&#34;nav nav-tabs&#34; id=&#34;ocboot_install&#34; role=&#34;tablist&#34;&gt;&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link active&#34; href=&#34;#ocboot_install-0&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-0&#34; aria-selected=&#34;true&#34;&gt;CentOS 7&lt;/a&gt;&lt;/li&gt;
 	  
-		&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link&#34; href=&#34;#ocboot_install-1&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-1&#34;&gt;Others&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+		&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link&#34; href=&#34;#ocboot_install-1&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-1&#34;&gt;Debian 10&lt;/a&gt;&lt;/li&gt;
+		&lt;li class=&#34;nav-item&#34;&gt;&lt;a data-toggle=&#34;tab&#34; class=&#34;nav-link&#34; href=&#34;#ocboot_install-2&#34; role=&#34;tab&#34; aria-controls=&#34;ocboot_install-2&#34;&gt;Others&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 &lt;div class=&#34;tab-content&#34; id=&#34;ocboot_install&#34;&gt;&lt;div id=&#34;ocboot_install-0&#34; class=&#34;tab-pane show active&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-0&#34;&gt;
 
 &lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Install ansible locally&lt;/span&gt;
 $ yum install -y epel-release ansible
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Git clone the ocboot installation tool locally&lt;/span&gt;
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
   &lt;div id=&#34;ocboot_install-1&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-1&#34;&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Install ansible locally&lt;/span&gt;
+$ apt install -y ansible
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Git clone the ocboot installation tool locally&lt;/span&gt;
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;div id=&#34;ocboot_install-2&#34; class=&#34;tab-pane&#34; role=&#34;tabpanel&#34; aria-labelledby=&#34;ocboot_install-2&#34;&gt;
 
 &lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Install ansible locally&lt;/span&gt;
 $ pip install ansible
 
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Git clone the ocboot installation tool locally&lt;/span&gt;
-$ git clone -b release/3.6 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; ./ocboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&#34;write-deployment-configuration&#34;&gt;Write deployment configuration&lt;/h3&gt;
@@ -126,7 +134,7 @@ $ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./co
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Port of Kubernetes controlplane
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Yunion OneCloud version
-&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: &amp;#39;v3.6.9&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: &amp;#39;v3.7.0&amp;#39;
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Yunion OneCloud login username
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_user: admin
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  # Yunion OneCloud login user&amp;#39;s password
@@ -182,7 +190,7 @@ Password: admin@123
 &lt;p&gt;If you want to use Yunion OneCloud private cloud, you need ensure the computing machine use the kernel compiled by us. You can use the following command to check whether the host uses the kernel including the &lt;code&gt;yn&lt;/code&gt; keyword.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Check if yn keyword kernel is used&lt;/span&gt;
 $ uname -a &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep yn
-Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# If the kernel is not the version with the yn keyword,&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# it may be the first time you install it using ocboot,&lt;/span&gt;
 &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# and you can reboot into the yn kernel&lt;/span&gt;
@@ -211,6 +219,114 @@ $ reboot
 &lt;/ol&gt;
 &lt;h3 id=&#34;4-other-questions&#34;&gt;4. Other questions？&lt;/h3&gt;
 &lt;p&gt;Other questions are welcome to submit Yunion OneCloud github issues: &lt;a href=&#34;https://github.com/yunionio/onecloud/issues&#34;&gt;https://github.com/yunionio/onecloud/issues&lt;/a&gt; , we will reply as soon as possible.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Multi-node Installation</title>
+      <link>https://opensource.yunion.cn/en/docs/quickstart/nodes/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://opensource.yunion.cn/en/docs/quickstart/nodes/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Like the &lt;a href=&#34;../allinone&#34;&gt;All in One Installation&lt;/a&gt;, the multi-node installation uses installation tool &lt;a href=&#34;https://github.com/yunionio/ocboot&#34;&gt;https://github.com/yunionio/ocboot&lt;/a&gt; to deploy the nodes according to the configuration by executing the ansible playbook.&lt;/p&gt;
+&lt;h2 id=&#34;environmental-preparation&#34;&gt;Environmental Preparation&lt;/h2&gt;
+&lt;p&gt;Please refer to the &lt;a href=&#34;../allinone/#configuration-requirements&#34;&gt;All in One Installation/Configuration Requirements&lt;/a&gt; for environment preparation and requirements for different architecture CPU and OS.&lt;/p&gt;
+&lt;p&gt;The following is the environment for the machines to be deployed, assuming that 5 machines have been prepared with IPs 10.127.10.156-160, and that each node makes the following role plans:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mariadb_node: This role indicates that the mariadb database service is deployed and running on that node. This role does not have to be written in the configuration if there is a database already in your environment
+&lt;ul&gt;
+&lt;li&gt;node IP: 10.127.10.156&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;primary_master_node: This role indicates that the node is the first node to deploy and run the k8s master component, which must be present in the configuration, and that the role also runs the onecloud control services
+&lt;ul&gt;
+&lt;li&gt;node IP: 10.127.10.156&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;master_nodes: This role indicates that these nodes are running the control service, which is optional, and is primarily used along with primary_master_node to form Kubernetes&#39; etcd 3 node high availability cluster
+&lt;ul&gt;
+&lt;li&gt;node IP: 10.127.10.157-158&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;worker_nodes: This role indicates that these nodes run private cloud computing services. This role is optional and can be unconfigured if the built-in private cloud functionality is not required
+&lt;ul&gt;
+&lt;li&gt;node IP: 10.127.10.159-160&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;IP&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Login User&lt;/th&gt;
+&lt;th&gt;Role&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;10.127.10.156&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;root&lt;/td&gt;
+&lt;td&gt;mariadb_node &amp;amp; primary_master_node&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;10.127.10.157-158&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;root&lt;/td&gt;
+&lt;td&gt;master_nodes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;10.127.10.159-160&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;root&lt;/td&gt;
+&lt;td&gt;worker_nodes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;start-installation&#34;&gt;Start Installation&lt;/h2&gt;
+&lt;h3 id=&#34;download-ocboot&#34;&gt;Download ocboot&lt;/h3&gt;
+&lt;p&gt;Please refer to the &lt;a href=&#34;../allinone/#download-ocboot&#34;&gt;All in One Installation/Download ocboot&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;write-deployment-configuration&#34;&gt;Write deployment configuration&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Write config-nodes.yml configuration file&lt;/span&gt;
+$ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.yml
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;mariadb_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.127.10.156
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;primary_master_node:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  onecloud_version: v3.7.0
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hostname: 10.127.10.156
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_host: 10.127.10.156
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  db_password: your-sql-password
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.127.10.156
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;master_nodes:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hosts:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  - hostname: 10.127.10.157
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  - hostname: 10.127.10.158
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.127.10.156
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;worker_nodes:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  hosts:
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  - hostname: 10.127.10.159
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  - hostname: 10.127.10.160
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;    user: root
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_host: 10.127.10.156
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;  controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;start-deployment&#34;&gt;Start Deployment&lt;/h3&gt;
+&lt;p&gt;Once the config-nodes.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code&gt;. /run.py . /config-nodes.yml&lt;/code&gt; to deploy the cluster.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Start deployment&lt;/span&gt;
+$ ./run.py ./config-nodes.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the deployment is complete, you can access https://10.168.26.216 (the IP of the primary_master_node) using your browser, and enter he username &lt;code&gt;admin&lt;/code&gt; and password &lt;code&gt;admin@123&lt;/code&gt; to enter the Web UI.&lt;/p&gt;
+&lt;p&gt;Then you can &lt;a href=&#34;../allinone/#create-the-first-virtual-machine&#34;&gt;create private cloud virtual machines&lt;/a&gt; or &lt;a href=&#34;../allinone/#import-public-cloud-or-other-private-cloud-platform-resources&#34;&gt;import public cloud or other private cloud platform resources&lt;/a&gt;.&lt;/p&gt;
 
       </description>
     </item>

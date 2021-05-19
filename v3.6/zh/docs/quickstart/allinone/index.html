@@ -26,13 +26,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://opensource.yunion.cn/v3.6/zh/docs/quickstart/allinone/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2021-04-14T14:25:36&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
+<meta property="article:modified_time" content="2021-05-14T17:09:29&#43;08:00" /><meta property="og:site_name" content="云联壹云" />
 
 <meta itemprop="name" content="All in One 安装">
 <meta itemprop="description" content="使用 ocboot 部署工具快速在已有的节点上以 All in One 的方式部署”云联壹云“服务
 ">
-<meta itemprop="dateModified" content="2021-04-14T14:25:36&#43;08:00" />
-<meta itemprop="wordCount" content="438">
+<meta itemprop="dateModified" content="2021-05-14T17:09:29&#43;08:00" />
+<meta itemprop="wordCount" content="432">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="All in One 安装"/>
 <meta name="twitter:description" content="使用 ocboot 部署工具快速在已有的节点上以 All in One 的方式部署”云联壹云“服务
@@ -192,7 +192,7 @@
   aria-label="站内搜索…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/v3.6/offline-search-index.77588689163bd3f8c7f6d1777c8623fd.json"
+  data-offline-search-index-json-src="/v3.6/offline-search-index.308a9f29b2ef969b8a7ffe26d9a5641b.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1410,7 +1410,7 @@ $ ssh root@10.168.26.216 <span style="color:#4e9a06">&#34;hostname&#34;</span>
 $ yum install -y epel-release ansible
 
 <span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
 </code></pre></div></div>
   <div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
 
@@ -1418,7 +1418,7 @@ $ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color
 $ apt install -y ansible
 
 <span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
 </code></pre></div></div>
   <div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 
@@ -1426,7 +1426,7 @@ $ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color
 $ pip install ansible
 
 <span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地</span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
+$ git clone -b release/3.6 https://github.com/yunionio/ocboot <span style="color:#ce5c00;font-weight:bold">&amp;&amp;</span> <span style="color:#204a87">cd</span> ./ocboot
 </code></pre></div></div></div>
 
 <h3 id="编写部署配置">编写部署配置</h3>
@@ -1457,15 +1457,13 @@ $ cat <span style="color:#4e9a06">&lt;&lt;EOF &gt;./config-allinone.yml
 </span><span style="color:#4e9a06">  # k8s 控制节点的端口
 </span><span style="color:#4e9a06">  controlplane_port: &#34;6443&#34;
 </span><span style="color:#4e9a06">  # 云联壹云 版本
-</span><span style="color:#4e9a06">  onecloud_version: &#39;v3.7.0-20210414.0&#39;
+</span><span style="color:#4e9a06">  onecloud_version: &#39;v3.6.15&#39;
 </span><span style="color:#4e9a06">  # 云联壹云 登录用户
 </span><span style="color:#4e9a06">  onecloud_user: admin
 </span><span style="color:#4e9a06">  # 云联壹云 登录用户密码
 </span><span style="color:#4e9a06">  onecloud_user_password: admin@123
 </span><span style="color:#4e9a06">  # 该节点作为 云联壹云 私有云计算节点
 </span><span style="color:#4e9a06">  as_host: true
-</span><span style="color:#4e9a06">  # 启用 minio 作为后端对象存储
-</span><span style="color:#4e9a06">  enable_minio: true
 </span><span style="color:#4e9a06">EOF</span>
 </code></pre></div><h3 id="开始部署">开始部署</h3>
 <p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 <code>./run.py ./config-allinone.yml</code> 部署集群了。</p>
@@ -1507,7 +1505,7 @@ Password: admin@123
 <p>如果要使用 云联壹云 私有云虚拟机，需要宿主机使用 云联壹云 编译的内核，可使用以下命令查看宿主机是否使用 云联壹云 内核(包含 yn 关键字)。</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核</span>
 $ uname -a <span style="color:#000;font-weight:bold">|</span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
 <span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核</span>
 $ reboot
 </code></pre></div>
@@ -1594,7 +1592,7 @@ $ reboot
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">最后修改 14.04.2021: <a  href="https://github.com/yunionio/docs/commit/5634a90b40e3c35c63d7b7252dd2daf8d73e5fde">add enable_minio option (5634a90)</a>
+	<div class="text-muted mt-5 pt-3 border-top">最后修改 14.05.2021: <a  href="https://github.com/yunionio/docs/commit/2b49a5a076df2aefc1284391b63d7b597f6a6cf7">fix(quickstart): update onecloud_version to v3.6.15 (2b49a5a)</a>
 </div>
 </div>
 

@@ -1183,11 +1183,8 @@ $ climc agent-list
 $ ocadm cluster update --use-ee --wait
 &lt;span style="color:#8f5902;font-style:italic"># 切换到开源版的 web 前端&lt;/span>
 $ ocadm cluster update --use-ce --wait
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>ocadm cluster update --use-ee/--use-ce&lt;/code> 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p>
-&lt;h2 id="常见问题">常见问题&lt;/h2>
-&lt;h3 id="访问前端出现错误">访问前端出现错误&lt;/h3>
-&lt;p>&lt;strong>问题原因&lt;/strong>: 开源与企业版本的前端分别依赖不同的 default-web configmap，直接切换过去会导致 default-web configmap 没有更新，会造成企业版本使用开源版本 configmap 的问题。&lt;/p>
-&lt;p>&lt;strong>解决办法&lt;/strong>: 在控制节点上删除 web 服务的 nginx configmap 配置文件，并重启 web 服务即可。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>ocadm cluster update --use-ee/--use-ce&lt;/code> 命令会更新替换当前的 default-web deployment&lt;/p>
+&lt;p>待所有pod启动后，由于开源版和企业版的前端分别依赖不同的 default-web configmap，直接切换过去会导致 default-web configmap 没有更新，web前端无法访问，因为需要删除web服务的nginx configmap，并重启 web 服务。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除 default-web 的 configmap 文件&lt;/span>
 $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>

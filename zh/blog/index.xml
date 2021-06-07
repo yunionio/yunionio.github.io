@@ -1,0 +1,249 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – Cloudpods 博客</title><link>https://docs.yunion.io/zh/blog/</link><description>Recent content in Cloudpods 博客 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://docs.yunion.io/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Nvidia GPU 虚拟化透传记录</title><link>https://docs.yunion.io/zh/blog/2021/06/07/nvidia-gpu-passthrough-record/</link><pubDate>Mon, 07 Jun 2021 00:00:00 +0000</pubDate><guid>https://docs.yunion.io/zh/blog/2021/06/07/nvidia-gpu-passthrough-record/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
+&lt;p>Linux 上虚拟机 GPU 透传需要使用 vfio 的方式。主要是因为在 vfio 方式下对虚拟设备的权限和 DMA 隔离上做的更好。但是这么做也有个缺点，这个物理设备在主机和其他虚拟机都不能使用了。&lt;/p>
+&lt;p>qemu 直接使用物理设备本身命令行是很简单的，关键在于事先在主机上对系统、内核和物理设备的一些配置。&lt;/p>
+&lt;p>单纯从 qemu 的命令行来看，其实和普通虚拟机启动就差了最后那个 &lt;code>-device&lt;/code> 的选项。这个选项也比较容易理解，就是把主机上的设备 0000:00:01.0 传给了虚拟机使用。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ qemu-system-x86_64 -m &lt;span style="color:#0000cf;font-weight:bold">4096&lt;/span> -smp &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> --enable-kvm &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> -drive &lt;span style="color:#000">file&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>~/guest/fedora.img &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> -device vfio-pci,host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0000:00:01.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="系统及硬件准备">系统及硬件准备&lt;/h2>
+&lt;h3 id="bios中打开iommu">BIOS中打开IOMMU&lt;/h3>
+&lt;p>设备直通在 x86 平台上需要打开 iommu 功能。这是 Intel 虚拟技术 VT-d(Virtualization Technology for Device IO) 中的一个部分。有时候这部分的功能没有被打开。&lt;/p>
+&lt;p>打开的方式在 BIOS 设置中 Security-&amp;gt;Virtualization-&amp;gt;VT-d 这个位置。当然不同的 BIOS 位置可能会略有不同。记得在使用直通设备前要将这个选项打开。&lt;/p>
+&lt;h3 id="内核配置勾选iommu">内核配置勾选IOMMU&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">INTEL_IOMMU
+│ Location: │
+│ -&amp;gt; Device Drivers │
+│ &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>2&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> -&amp;gt; IOMMU Hardware Support &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>IOMMU_SUPPORT &lt;span style="color:#ce5c00;font-weight:bold">[=&lt;/span>y&lt;span style="color:#ce5c00;font-weight:bold">])&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="内核启动参数enable-iommu">内核启动参数enable IOMMU&lt;/h3>
+&lt;p>BIOS 中打开，内核编译选项勾选还不够。还需要在引导程序中添加上内核启动参数&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 对应编辑 /etc/default/grub, 设置 GRUB_CMDLINE_LINUX=&lt;/span>
+$ cat /etc/default/grub
+...
+&lt;span style="color:#000">GRUB_CMDLINE_LINUX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;intel_iommu=on iommu=pt vfio_iommu_type1.allow_unsafe_interrupts=1 rdblacklist=nouveau nouveau.modeset=0&amp;#34;&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 重新生成 grub 引导配置文件&lt;/span>
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+&lt;span style="color:#8f5902;font-style:italic"># 将vfio相关 module 设置为开机load&lt;/span>
+$ cat /etc/modules-load.d/vfio.conf
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF#Setting_up_IOMMU">Setting up IOMMU&lt;/a>
+&lt;a href="https://wiki.archlinux.org/index.php/Kernel_parameters">Kernel parameters&lt;/a>&lt;/p>
+&lt;h3 id="找到-nvidia-gpu-busid">找到 nvidia GPU BusID&lt;/h3>
+&lt;p>record PCI addresses and hardware IDs of the GPU&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+41:00.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: vfio-pci
+Kernel modules: nouveau
+41:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: snd_hda_intel
+Kernel modules: snd_hda_intel
+&lt;span style="color:#8f5902;font-style:italic"># pci address =&amp;gt; 41:00.0,41:00.1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># device id =&amp;gt; 1b4c:11bf&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里找到了两张 nvidia 卡，它们的 device id 都是 1b4c:11bf, 一张是 Audio device&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这样是不能 passthrough 进去的，因为:&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># vfio-pci use your vendor and device id pair to identify which device they need to bind to at boot,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># if you have two GPUs sharing such an ID pair you will not be able to get your passthough driver to bind with just one of them&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用下面的脚本解决这种情况：&lt;/span>
+$ cat /usr/bin/vfio-pci-override.sh
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/sh&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> i in &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>find /sys/devices/pci* -name boot_vga&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>cat &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$i&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -eq &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;span style="color:#000">GPU&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">i&lt;/span>&lt;span style="color:#000;font-weight:bold">%/boot_vga&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#000">AUDIO&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$GPU&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sed -e &lt;span style="color:#4e9a06">&amp;#34;s/0&lt;/span>$&lt;span style="color:#4e9a06">/1/&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;vfio-pci&amp;#34;&lt;/span> &amp;gt; &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$GPU&lt;/span>&lt;span style="color:#4e9a06">/driver_override&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> -d &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$AUDIO&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;vfio-pci&amp;#34;&lt;/span> &amp;gt; &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$AUDIO&lt;/span>&lt;span style="color:#4e9a06">/driver_override&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
+modprobe -i vfio-pci
+&lt;span style="color:#8f5902;font-style:italic"># 把脚本传入 /etc/modprobe.d/vfio.conf&lt;/span>
+$ cat /etc/modprobe.d/vfio.conf
+install vfio-pci /usr/bin/vfio-pci-override.sh
+options vfio-pci &lt;span style="color:#000">ids&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10de:1c82 &lt;span style="color:#000">disable_vga&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用-vfio-管理-gpu">使用 vfio 管理 GPU&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># /etc/modprobe.d/vfio.conf, ids 为 lspci 找到的 hardware id, 多个设备的话用&amp;#39;,&amp;#39;分割&lt;/span>
+$ cat /etc/modprobe.d/vfio.conf
+options vfio-pci &lt;span style="color:#000">ids&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10de:134d &lt;span style="color:#000">disable_vga&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 禁用NVIDIA nouveau 开源驱动, /etc/modprobe.d/blacklist.conf&lt;/span>
+$ cat /etc/modprobe.d/blacklist.conf
+blacklist nouveau
+&lt;span style="color:#8f5902;font-style:italic"># kvm 模块配置, /etc/modprobe.d/kvm.conf&lt;/span>
+$ cat /etc/modprobe.d/kvm.conf
+options kvm &lt;span style="color:#000">ignore_msrs&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>重启系统，启动完成后查看当前的 nvidia GPU 是否被 vfio-pci 模块使用, 确认IOMMU功能确实打开。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ dmesg &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -e DMAR -e IOMMU &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep enabled
+&lt;span style="color:#8f5902;font-style:italic"># 如果能搜索到&lt;/span>
+DMAR: IOMMU enabled
+&lt;span style="color:#8f5902;font-style:italic"># 表示上述配置成功。&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看 GPU 是否被 vfio-pci 使用&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 另外注意检查看看 41:00.1 Audio device 是否也被 vfio-pci 使用&lt;/span>
+$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i -e nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+41:00.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: vfio-pci &lt;span style="color:#8f5902;font-style:italic"># GTX 1050 Ti GPU 被 vfio-pci 使用&lt;/span>
+Kernel modules: nouveau
+41:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: vfio-pci &lt;span style="color:#8f5902;font-style:italic"># 发现 Audio device 也被 vfio-pci 使用了&lt;/span>
+Kernel modules: snd_hda_intel
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># list GPU IOMMU group&lt;/span>
+$ find /sys/kernel/iommu_groups/ -type l &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 41:00
+/sys/kernel/iommu_groups/27/devices/0000:41:00.0
+/sys/kernel/iommu_groups/27/devices/0000:41:00.1
+&lt;span style="color:#8f5902;font-style:italic"># 找到IOMMU Group 管理的 PCI 设备&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/bash&lt;/span>
+&lt;span style="color:#204a87">shopt&lt;/span> -s nullglob
+&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> d in /sys/kernel/iommu_groups/*/devices/*&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
+&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">d&lt;/span>&lt;span style="color:#000;font-weight:bold">#*/iommu_groups/*&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">%%/*&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>
+&lt;span style="color:#204a87">printf&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;IOMMU Group %s &amp;#39;&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$n&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+lspci -nns &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">d&lt;/span>&lt;span style="color:#000;font-weight:bold">##*/&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用-qemu-透传-nvidia-gpu">使用 qemu 透传 nvidia GPU&lt;/h3>
+&lt;p>准备好centos7镜像，然后在虚拟机里面安装 nvidia 官方闭源驱动和 cuda SDK&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 我从服务器上拷贝过来的是 vmdk 的镜像，先把它转换成 qcow2 的格式&lt;/span>
+$ /usr/local/qemu-2.9.0/bin/qemu-img convert -f vmdk -O qcow2 centos-7.3.1611-20180104.vmdk centos-7.3.1611-20180104.qcow2
+&lt;span style="color:#8f5902;font-style:italic"># 使用 qemu 启动，注意-cpu 需要 kvm=off 参数&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># kvm=off will hide the kvm hypervisor signature, this is required for NVIDIA cards&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># since its driver will refuse to work on an hypervisor and result in Code 43 on windows&lt;/span>
+$ cat startvm.sh
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/sh&lt;/span>
+/usr/local/qemu-2.9.0/bin/qemu-system-x86_64 -enable-kvm &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-m &lt;span style="color:#0000cf;font-weight:bold">4096&lt;/span> -cpu host,kvm&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>off -smp 4,sockets&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>1,cores&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>4,threads&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-drive &lt;span style="color:#000">file&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>./centos-7.3.1611-20180104.qcow2 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-device vfio-pci,host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>41:00.0,multifunction&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>on,addr&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0x16 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-device vfio-pci,host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>41:00.1 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-net nic,model&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>e1000 -net user,hostfwd&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>tcp::5022-:22 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-vnc :1
+&lt;span style="color:#8f5902;font-style:italic"># 这台虚拟机开了vnc和ssh 端口转发，可以使用vnc或者ssh访问&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 从host进入虚拟机&lt;/span>
+$ ssh 127.0.0.1 -p &lt;span style="color:#0000cf;font-weight:bold">5022&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机透传进来的显卡&lt;/span>
+$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+00:04.0 Audio device: NVIDIA Corporation Device 0fb9 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: snd_hda_intel
+Kernel modules: snd_hda_intel
+00:16.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel modules: nouveau
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="安装nvidia-驱动和-cuda">安装nvidia 驱动和 Cuda&lt;/h2>
+&lt;p>nvidia 驱动需要从官方下载，如果先安装 cuda 的话会一同安装 nvidia 驱动。
+接下来采用虚拟机先安装驱动再安装 cuda 的步骤。&lt;/p>
+&lt;p>参考：
+&lt;a href="http://www.advancedclustering.com/act_kb/installing-nvidia-drivers-rhel-centos-7/">installing-nvidia-drivers-centos-7&lt;/a>
+&lt;a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">NVIDIA CUDA GETTINGS STARTED GUIDE FOR LINUX&lt;/a>&lt;/p>
+&lt;h3 id="安装-nvidia-驱动">安装 nvidia 驱动&lt;/h3>
+&lt;p>下载地址：http://www.nvidia.com/object/unix.html&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># update 后如果更新内核，需要重启&lt;/span>
+$ yum -y update
+&lt;span style="color:#8f5902;font-style:italic"># 安装 gcc、make、glibc等工具和库&lt;/span>
+$ yum -y groupinstall &lt;span style="color:#4e9a06">&amp;#34;Development Tools&amp;#34;&lt;/span>
+$ yum -y install kernel-devel
+&lt;span style="color:#8f5902;font-style:italic"># Download the latest NVIDIA driver for unix.&lt;/span>
+$ wget http://us.download.nvidia.com/XFree86/Linux-x86_64/390.42/NVIDIA-Linux-x86_64-390.42.run
+$ yum -y install epel-release
+$ yum -y install dkms
+&lt;span style="color:#8f5902;font-style:italic"># Edit /etc/default/grub. Append the following to “GRUB_CMDLINE_LINUX”&lt;/span>
+rd.driver.blacklist&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>nouveau nouveau.modeset&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Generate a new grub configuration to include the above changes.&lt;/span>
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+&lt;span style="color:#8f5902;font-style:italic"># Edit/create /etc/modprobe.d/blacklist.conf and append:&lt;/span>
+blacklist nouveau
+&lt;span style="color:#8f5902;font-style:italic"># Backup your old initramfs and then build a new one&lt;/span>
+$ mv /boot/initramfs-&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>.img /boot/initramfs-&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>-nouveau.img
+$ dracut /boot/initramfs-&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>.img &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 重启again&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Run the NVIDIA driver installer and enter yes to all options.&lt;/span>
+$ sh NVIDIA-Linux-x86_64-*.run
+&lt;span style="color:#8f5902;font-style:italic"># 装好后再一次重启，lspci -k 看下gpu使用的驱动是否是nvidia&lt;/span>
+$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+00:04.0 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+00:16.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Kernel driver in use: nvidia &lt;span style="color:#8f5902;font-style:italic"># 发现已经使用nvidia驱动&lt;/span>
+Kernel modules: nouveau, nvidia_drm, nvidia
+&lt;span style="color:#8f5902;font-style:italic"># 执行 nvidia-smi 看下输出和温度&lt;/span>
+$ nvidia-smi
+Thu Mar &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> 01:31:09 &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span>
++-----------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> NVIDIA-SMI 390.42 Driver Version: 390.42 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>-------------------------------+----------------------+----------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU Name Persistence-M&lt;span style="color:#000;font-weight:bold">|&lt;/span> Bus-Id Disp.A &lt;span style="color:#000;font-weight:bold">|&lt;/span> Volatile Uncorr. ECC &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Fan Temp Perf Pwr:Usage/Cap&lt;span style="color:#000;font-weight:bold">|&lt;/span> Memory-Usage &lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU-Util Compute M. &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">===============================&lt;/span>+&lt;span style="color:#ce5c00;font-weight:bold">======================&lt;/span>+&lt;span style="color:#ce5c00;font-weight:bold">======================&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> GeForce GTX 105... Off &lt;span style="color:#000;font-weight:bold">|&lt;/span> 00000000:00:16.0 Off &lt;span style="color:#000;font-weight:bold">|&lt;/span> N/A &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 40% 32C P0 N/A / 100W &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0MiB / 4040MiB &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0% Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------------------------------+----------------------+----------------------+
++-----------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Processes: GPU Memory &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU PID Type Process name Usage &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=============================================================================&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> No running processes found &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-----------------------------------------------------------------------------+
+$ nvidia-smi -q -d &lt;span style="color:#000">TEMPERATURE&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">==============&lt;/span>NVSMI &lt;span style="color:#000">LOG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==============&lt;/span>
+Timestamp : Thu Mar &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> 01:32:42 &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span>
+Driver Version : 390.42
+Attached GPUs : &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+GPU 00000000:00:16.0
+Temperature
+GPU Current Temp : &lt;span style="color:#0000cf;font-weight:bold">32&lt;/span> C
+GPU Shutdown Temp : &lt;span style="color:#0000cf;font-weight:bold">102&lt;/span> C
+GPU Slowdown Temp : &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> C
+GPU Max Operating Temp : N/A
+Memory Current Temp : N/A
+Memory Max Operating Temp : N/A
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-cuda">安装 cuda&lt;/h3>
+&lt;p>下载地址： &lt;a href="https://developer.nvidia.com/cuda-downloads">https://developer.nvidia.com/cuda-downloads&lt;/a>
+这里选择 runfile，以后为了方便也可以选择 rpm(network)的方式，会自动帮我们安装 nvidia 驱动&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ wget https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/cuda_9.1.85_387.26_linux
+&lt;span style="color:#8f5902;font-style:italic"># Say no to installing the NVIDIA driver.&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># The standalone driver you already installed is typically newer than what is packaged with CUDA.&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Use the default option for all other choices.&lt;/span>
+$ sh cuda_*.run
+&lt;span style="color:#8f5902;font-style:italic"># 添加 CUDA 相关的环境变量&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">PATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$PATH&lt;/span>:/usr/local/cuda/bin
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">LD_LIBRARY_PATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/usr/local/cuda/lib64:&lt;span style="color:#000">$LD_LIBRARY_PATH&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># make samples&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ~/NVIDIA_CUDA-9.1_Samples&lt;span style="color:#000;font-weight:bold">;&lt;/span> make -j &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> bin/x86_64/linux/release
+$ ./deviceQuery &lt;span style="color:#8f5902;font-style:italic"># 查询gpu信息&lt;/span>
+./deviceQuery Starting...
+CUDA Device Query &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Runtime API&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> version &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>CUDART static linking&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Detected &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> CUDA Capable device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Device 0: &lt;span style="color:#4e9a06">&amp;#34;GeForce GTX 1050 Ti&amp;#34;&lt;/span>
+CUDA Driver Version / Runtime Version 9.1 / 9.1
+CUDA Capability Major/Minor version number: 6.1
+Total amount of global memory: &lt;span style="color:#0000cf;font-weight:bold">4040&lt;/span> MBytes &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">4236312576&lt;/span> bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span> 6&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Multiprocessors, &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>128&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> CUDA Cores/MP: &lt;span style="color:#0000cf;font-weight:bold">768&lt;/span> CUDA Cores
+GPU Max Clock rate: &lt;span style="color:#0000cf;font-weight:bold">1481&lt;/span> MHz &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>1.48 GHz&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Memory Clock rate: &lt;span style="color:#0000cf;font-weight:bold">3504&lt;/span> Mhz
+Memory Bus Width: 128-bit
+L2 Cache Size: &lt;span style="color:#0000cf;font-weight:bold">1048576&lt;/span> bytes
+...
+$ ./bandwidtTest &lt;span style="color:#8f5902;font-style:italic"># 使用 cuda 测试gpu bandwidth&lt;/span>
+Running on...
+Device 0: GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti
+Quick Mode
+Host to Device Bandwidth, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+PINNED Memory Transfers
+Transfer Size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Bandwidth&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>MB/s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#0000cf;font-weight:bold">33554432&lt;/span> 9719.0
+Device to Host Bandwidth, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+PINNED Memory Transfers
+Transfer Size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Bandwidth&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>MB/s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#0000cf;font-weight:bold">33554432&lt;/span> 9215.8
+Device to Device Bandwidth, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+PINNED Memory Transfers
+Transfer Size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Bandwidth&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>MB/s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#0000cf;font-weight:bold">33554432&lt;/span> 95525.1
+&lt;span style="color:#000">Result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> PASS
+NOTE: The CUDA Samples are not meant &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> performance measurements. Results may vary when GPU Boost is enabled.
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

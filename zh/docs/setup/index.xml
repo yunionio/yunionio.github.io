@@ -1349,4 +1349,29 @@ Password: admin@123
 &lt;p>镜像和对应的网路准备完成后，就可以到虚拟机创建界面根据需要选择不同 CPU 架构创建虚拟机。创建界面截图如下：&lt;/p>
 &lt;p>&lt;img src="../images/vm-hybrid-create.png" alt="虚拟机创建页面">&lt;/p>
 &lt;p>分别创建 aarch64 和 x86_64 架构的虚拟机后，可以在虚拟机的列表页面看到每台虚拟机的 CPU 架构，截图如下:&lt;/p>
-&lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item><item><title>Docs: 更换前端证书</title><link>https://docs.yunion.io/zh/docs/setup/config-ssl-certs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://docs.yunion.io/zh/docs/setup/config-ssl-certs/</guid><description>
+&lt;p>默认部署完成后，访问前端界面，浏览器会提示不安全的 SSL 连接，原因是前端默认使用的是自签发的证书。本文介绍如何使用自定义证书替换掉前端默认的证书。&lt;/p>
+&lt;h2 id="操作步骤">操作步骤&lt;/h2>
+&lt;p>假设已经准备好的证书文件为：&lt;code>cert.pem&lt;/code> 和 &lt;code>cert.key&lt;/code>，域名为 &lt;code>foo.bar.com&lt;/code> 。&lt;/p>
+&lt;h3 id="1-将证书导入-kubernetes-集群">1. 将证书导入 kubernetes 集群&lt;/h3>
+&lt;p>kubernetes 使用 secret 这种资源保存证书内容，然后前端服务使用 ingress 引用对应的证书，提供 HTTPS 连接。为了使用自定证书，需要先把证书保存到集群。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建证书&lt;/span>
+$ kubectl create secret tls yunion-io-web-secret --key cert.key --cert cert.pem -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-编辑-ingress-规则">2. 编辑 ingress 规则&lt;/h3>
+&lt;p>编辑 &lt;code>default-web&lt;/code> ingress 规则，引用刚才创建的 yunion-io-web-secret 证书。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit ingress -n onecloud default-web
+...
+tls:
+&lt;span style="color:#8f5902;font-style:italic"># 修改这个 secretName 为 yunion-io-web-secret&lt;/span>
+- secretName: yunion-io-web-secret
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-重启-ingress-controller">3. 重启 ingress controller&lt;/h3>
+&lt;p>设置完 default-web ingress 规则后，可以重启下 ingress controller 服务，让证书生效。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl rollout restart daemonset -n kube-system traefik-ingress-controller
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-修改服务-api_server-入口配置">4. 修改服务 api_server 入口配置&lt;/h3>
+&lt;p>因为使用域名 &lt;code>foo.bar.com&lt;/code> 访问，需要修改云平台的默认 api_server 配置，这个配置会影响前端 VNC 连接的地址。将旧的 https://&lt;ip> 访问地址改为 &lt;code>http://foo.bar.com&lt;/code>，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc service-config-edit common
+default:
+api_server: https://foo.bar.com
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后就可以通过 &lt;code>https://foo.bar.com&lt;/code> 访问前端了。&lt;/p></description></item></channel></rss>

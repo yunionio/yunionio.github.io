@@ -45,7 +45,7 @@ $ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
 &lt;span style="color:#8f5902;font-style:italic"># should be able to get the hostname of the deployed machine&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># without entering the login password&lt;/span>
 $ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-ansible-and-git">Install ansible and git&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="install-ansible-and-git">Install ansible and git&lt;/h4>
 &lt;p>We first install ansible and git. The commends depends on the OS of the box.&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Debian 10&lt;/a>&lt;/li>
@@ -62,15 +62,15 @@ $ apt install -y ansible
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
 $ pip install ansible
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
-&lt;h3 id="install-cloudpods">Install cloudpods&lt;/h3>
+&lt;h2 id="install-cloudpods">Install Cloudpods&lt;/h2>
 &lt;p>The installation tool is &lt;a href="https://github.com/yunionio/ocboot,">https://github.com/yunionio/ocboot,&lt;/a> then according to the configuration of the machine to be deployed, use ansbile playbook to install and configure the Cloudpods. The following commands are performed on the local environment and steps are as follows:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
 $ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="quick-installation">Quick installation&lt;/h4>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="quick-installation">Quick installation&lt;/h3>
 &lt;p>Simplely execute run.py with the IP address of the Linux box to start the AllInOne installation.&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">./run.py 10.168.26.216
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will automatically generate a configuration yaml config-allinone-current.yaml in the working directory. You may check the default values of the installation parameters in this YAML.&lt;/p>
-&lt;h4 id="customized-installation">Customized installation&lt;/h4>
+&lt;h3 id="customized-installation">Customized installation&lt;/h3>
 &lt;p>You may also use a customized installation YAML to start the installation. An example configuration file is shown as following.&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Write config-allinone.yml configuration file&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
@@ -119,9 +119,10 @@ Initialized successfully!
 Web page: https://10.168.26.216
 User: admin
 Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="done">Done&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="done">Done&lt;/h2>
 &lt;p>Then use your browser to visit https://10.168.26.216, enter &lt;code>admin&lt;/code> for username and &lt;code>admin@123&lt;/code> for password and you will see the Web UI.&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="Login UI">&lt;/p>
+&lt;h2 id="start-using-cloudpods">Start using Cloudpods&lt;/h2>
 &lt;h3 id="create-the-first-virtual-machine">Create the first virtual machine&lt;/h3>
 &lt;p>The first virtual machine is created in three steps as follows.&lt;/p>
 &lt;h4 id="1-import-images">1. Import Images&lt;/h4>

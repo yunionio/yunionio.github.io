@@ -5254,8 +5254,8 @@ VMware云账号暂不支持更新账号。
 &lt;/ul>
 &lt;/div>
 &lt;p>接下来介绍如何搭建开发环境。&lt;/p>
-&lt;h2 id="部署云联壹云服务">部署云联壹云服务&lt;/h2>
-&lt;p>在开始开发之前，请先参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 或者 &lt;a href="../../quickstart/minikube">MiniKube 安装&lt;/a> 部署云联壹云服务。我们的服务全部使用容器的方式运行在 Kubernetes 集群里面，所以需要先搭建好我们的服务，把这个环境作为自己的开发环境。&lt;/p>
+&lt;h2 id="部署-cloudpods-服务">部署 cloudpods 服务&lt;/h2>
+&lt;p>在开始开发之前，请先参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 或者 &lt;a href="../../quickstart/minikube">MiniKube 安装&lt;/a> 部署 cloudpods 服务。我们的服务全部使用容器的方式运行在 Kubernetes 集群里面，所以需要先搭建好我们的服务，把这个环境作为自己的开发环境。&lt;/p>
 &lt;p>这里建议使用一个单独的 CentOS 7 虚拟机，配置(至少 4C8G + 100G 系统盘)，安装部署我们的服务。&lt;/p>
 &lt;h2 id="安装-go">安装 Go&lt;/h2>
 &lt;p>Golang 版本要求 1.15 以上&lt;/p>
@@ -5285,14 +5285,14 @@ $ cat /etc/docker/daemon.json
 $ systemctl restart docker
 &lt;span style="color:#8f5902;font-style:italic"># 创建 buildx context&lt;/span>
 $ docker buildx create --use --name build --node build --driver-opt &lt;span style="color:#000">network&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>host
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编译-云联壹云-组件">编译 云联壹云 组件&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编译-cloudpods-组件">编译 cloudpods 组件&lt;/h2>
 &lt;h3 id="fork-仓库">Fork 仓库&lt;/h3>
-&lt;p>访问 &lt;a href="https://github.com/yunionio/onecloud">https://github.com/yunionio/onecloud&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
+&lt;p>访问 &lt;a href="https://github.com/yunionio/cloudpods">https://github.com/yunionio/cloudpods&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
 &lt;h3 id="clone-源码">Clone 源码&lt;/h3>
 &lt;p>git clone 前确保 GOPATH 等环境变量已经设置好，clone 你自己 fork 的仓库&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ git clone https://github.com/&amp;lt;your_name&amp;gt;/onecloud &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
-$ git remote add upstream https://github.com/yunionio/onecloud
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ git clone https://github.com/&amp;lt;your_name&amp;gt;/cloudpods &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
+$ git remote add upstream https://github.com/yunionio/cloudpods
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="二进制编译">二进制编译&lt;/h3>
 &lt;p>编译是直接调用 go 编译器在本地编译出二进制，对应的 Makefile 规则为 &lt;code>make cmd/%&lt;/code> ，&lt;code>%&lt;/code> 对应的是 &lt;code>cmd&lt;/code> 目录里面的组件名称。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># cmd 目录下面存放着所有的组件:&lt;/span>
@@ -5409,7 +5409,7 @@ $ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f --since 5m
 &lt;p>通过 &lt;a href="https://www.telepresence.io">Telepresence&lt;/a> 提供远程 Kubernetes 连接信息上下文，可以在本地开发调试。下面介绍使用 Telepresence 进行本地快速开发。&lt;/p>
 &lt;h3 id="安装配置-kubectl">安装配置 kubectl&lt;/h3>
 &lt;p>需要在本地安装 &lt;a href="https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/">kubectl&lt;/a>。&lt;/p>
-&lt;p>需要在本地配置好集群信息，以通过 kubectl 访问；将云联壹云控制节点上的&lt;code>$KUBECONFIG&lt;/code>文件拷贝到本地&lt;code>~/.kube/config&lt;/code>;
+&lt;p>需要在本地配置好集群信息，以通过 kubectl 访问；将 cloudpods 控制节点上的&lt;code>$KUBECONFIG&lt;/code>文件拷贝到本地&lt;code>~/.kube/config&lt;/code>;
 如果本地已经有此文件，参考 &lt;a href="https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">配置多集群访问&lt;/a> 进行合并。&lt;/p>
 &lt;h3 id="安装-telepresence">安装 telepresence&lt;/h3>
 &lt;p>这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href="https://www.telepresence.io/reference/install">Installing Telepresence&lt;/a>。&lt;/p>
@@ -5439,8 +5439,8 @@ $ sudo env &lt;span style="color:#000">PREFIX&lt;/span>&lt;span style="color:#ce
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用">使用&lt;/h3>
 &lt;p>利用 telepresence 本地连通远端 K8S 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 K8S 其它服务的环境。&lt;/p>
 &lt;p>&lt;strong>macOS 或 linux 中本地编译运行 region 服务&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 云联壹云 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
 &lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
 $ make cmd/region
 &lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
@@ -5469,8 +5469,8 @@ T: Cleaning up Pod
 $ rm /etc/yunion
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Linux系统中本地编译运行 region 服务&lt;/strong>&lt;/p>
 &lt;p>这种方式相比上一种方式，更加干净；但是相对复杂&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 云联壹云 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
 &lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
 $ make cmd/region
 &lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
@@ -5492,7 +5492,7 @@ $ unshare --map-root-user --mount
 $ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/var/run /var/run
 $ ls /var/run/
 secrets
-&lt;span style="color:#8f5902;font-style:italic"># bind 云联壹云 config&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># bind cloudpods config&lt;/span>
 $ mkdir /etc/yunion
 $ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/etc/yunion /etc/yunion
 $ ls /etc/yunion/

@@ -1,0 +1,197 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 快速开始</title><link>https://www.cloudpods.org/v3.2/docs/quickstart/</link><description>Recent content in 快速开始 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.2/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: All in One 安装</title><link>https://www.cloudpods.org/v3.2/docs/quickstart/allinone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/quickstart/allinone/</guid><description>
+&lt;h2 id="前提">前提&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+本章内容是通过部署工具快速搭建 OneCloud 服务，如果想了解部署的细节或者部署高可用环境请参考: &lt;a href="https://www.cloudpods.org/v3.2/docs/setup/">安装部署&lt;/a> 。
+&lt;/div>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;p>OneCloud 相关的组件运行在 kubernetes 之上。&lt;/p>
+&lt;h3 id="服务器配置要求">服务器配置要求&lt;/h3>
+&lt;ul>
+&lt;li>操作系统: Centos 7.6&lt;/li>
+&lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li>
+&lt;/ul>
+&lt;p>以下为待部署机器的环境:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">IP&lt;/th>
+&lt;th style="text-align:center">登录用户&lt;/th>
+&lt;th style="text-align:center">操作系统&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">10.168.26.216&lt;/td>
+&lt;td style="text-align:center">root&lt;/td>
+&lt;td style="text-align:center">Centos 7.6&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">提示&lt;/h4>
+&lt;blockquote>
+&lt;p>10.168.26.216 是本次测试环境 ip，请根据自己的环境做相应修改。&lt;/p>
+&lt;/blockquote>
+&lt;/div>
+&lt;h3 id="onecloud相关软件依赖">OneCloud相关软件依赖&lt;/h3>
+&lt;ul>
+&lt;li>数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB&lt;/li>
+&lt;li>docker: ce-19.03.9&lt;/li>
+&lt;li>kubernetes: v1.15.8&lt;/li>
+&lt;/ul>
+&lt;h3 id="本地环境配置要求">本地环境配置要求&lt;/h3>
+&lt;p>本地环境即用户进行实际操作部署的环境。本次测试的本地环境为MAC操作系统的笔记本，也可在待部署机器上进行操作。&lt;/p>
+&lt;ul>
+&lt;li>ssh: 开启 ssh 免密登录&lt;/li>
+&lt;li>本地环境安装部署 ansbile，Windows操作系统不支持安装 ansible&lt;/li>
+&lt;/ul>
+&lt;h4 id="配置-ssh-免密登录">配置 ssh 免密登录&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 生成本机的 ssh 秘钥 (如果本地已有 ~/.ssh/id_rsa.pub 则跳过此步骤)&lt;/span>
+$ ssh-keygen
+&lt;span style="color:#8f5902;font-style:italic"># 将生成的 ~/.ssh/id_rsa.pub 公钥拷贝到待部署机器&lt;/span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+&lt;span style="color:#8f5902;font-style:italic"># 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span>
+$ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="开始部署">开始部署&lt;/h2>
+&lt;p>部署的工具是 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 onecloud 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p>
+&lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
+$ pip install ansible
+&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
+$ git clone -b release/3.2 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="编写部署配置">编写部署配置&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编写 config-allinone.yml 文件&lt;/span>
+$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
+&lt;/span>&lt;span style="color:#4e9a06"># mariadb_node 表示需要部署 mariadb 服务的节点
+&lt;/span>&lt;span style="color:#4e9a06">mariadb_node:
+&lt;/span>&lt;span style="color:#4e9a06"> # 待部署节点 ip
+&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
+&lt;/span>&lt;span style="color:#4e9a06"> # 待部署节点登录用户
+&lt;/span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;span style="color:#4e9a06"> # mariadb 的用户
+&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
+&lt;/span>&lt;span style="color:#4e9a06"> # mariadb 用户密码
+&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
+&lt;/span>&lt;span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 onecloud 服务的节点
+&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
+&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
+&lt;/span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库连接地址
+&lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.168.26.216
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库用户
+&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库密码
+&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
+&lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的 ip
+&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.168.26.216
+&lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的端口
+&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # onecloud 登录用户
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
+&lt;/span>&lt;span style="color:#4e9a06"> # onecloud 登录用户密码
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_user_password: admin@123
+&lt;/span>&lt;span style="color:#4e9a06"> # 该节点作为 OneCloud 私有云计算节点
+&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
+&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署-1">开始部署&lt;/h3>
+&lt;p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py ./config-allinone.yml&lt;/code> 部署集群了。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开始部署&lt;/span>
+$ ./run.py ./config-allinone.yml
+....
+&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
+Initialized successfully!
+Web page: https://10.168.26.216
+User: admin
+Password: admin@123
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 OneCloud 的界面。&lt;/p>
+&lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
+&lt;h2 id="faq">FAQ&lt;/h2>
+&lt;h3 id="1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？&lt;/h3>
+&lt;p>All in One 部署的节点会部署 OneCloud host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 OneCloud 环境中没有启用宿主机。&lt;/p>
+&lt;p>请到 &lt;code>管理后台&lt;/code> 界面，点击 &lt;code>主机/基础资源/宿主机&lt;/code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;p>如果要使用 OneCloud 私有云虚拟机，需要宿主机使用 OneCloud 编译的内核，可使用以下命令查看宿主机是否使用 OneCloud 内核(包含 yn 关键字)。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
+$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
+$ reboot
+&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
+&lt;h3 id="2-如何导入公有云或者其它私有云平台资源">2. 如何导入公有云或者其它私有云平台资源？&lt;/h3>
+&lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 OneCloud 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
+&lt;p>&lt;img src="../images/cloudaccount.png" alt="多云管理">&lt;/p>
+&lt;h3 id="3-其它问题">3. 其它问题？&lt;/h3>
+&lt;p>其它问题欢迎在 OneCloud github issues 界面提交: &lt;a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: MiniKube 安装</title><link>https://www.cloudpods.org/v3.2/docs/quickstart/minikube/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/quickstart/minikube/</guid><description>
+&lt;h2 id="前提">前提&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+本章内容是方便快速体验OneCloud, 通过MiniKube快速搭建OneCloud服务，如果想了解部署的细节或者部署高可用环境请参考: &lt;a href="https://www.cloudpods.org/v3.2/docs/setup/">安装部署&lt;/a> 。
+&lt;/div>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;p>OneCloud 相关的组件运行在MiniKube之上，环境以及相关的软件依赖如下:&lt;/p>
+&lt;ul>
+&lt;li>操作系统: Centos 7.6&lt;/li>
+&lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 100G&lt;/li>
+&lt;li>数据库: mariadb Ver 15.1 Distrib 5.5.56-MariaDB&lt;/li>
+&lt;/ul>
+&lt;p>安装MySQL开启远程访问&lt;/p>
+&lt;pre>&lt;code># 此密码为上面设置的 MySQL root 密码，为了方便，只读账号也使用此密码
+$ MYSQL_PASSWD='your-sql-passwd'
+$ mysql -uroot -p$MYSQL_PASSWD -e &amp;quot;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_PASSWD' WITH GRANT OPTION;FLUSH PRIVILEGES&amp;quot;
+&lt;/code>&lt;/pre>&lt;h2 id="开始部署">开始部署&lt;/h2>
+&lt;h3 id="启动minikube">启动minikube&lt;/h3>
+&lt;p>下载minikue/kubectl, 并启动minikube集群, 具体请参考： &lt;a href="https://kubernetes.io/docs/tasks/tools/install-minikube/">https://kubernetes.io/docs/tasks/tools/install-minikube/&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">minikube config -p onecloud &lt;span style="color:#204a87">set&lt;/span> memory &lt;span style="color:#0000cf;font-weight:bold">8192&lt;/span>
+minikube start --nodes &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> -p onecloud
+minikube dashboard -p onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署local-path-storage">部署local-path-storage&lt;/h3>
+&lt;p>参考：https://github.com/rancher/local-path-provisioner, 在minikube部署local-path-storage&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml -O local-path-storage.yaml
+kubectl apply -f local-path-storage.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署onecloud-k8s-operator">部署onecloud k8s operator&lt;/h3>
+&lt;p>onecloud k8s operator地址： &lt;a href="https://github.com/yunionio/onecloud-operator">https://github.com/yunionio/onecloud-operator&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/onecloud-operator.yaml -O onecloud-operator.yaml
+kubectl apply -f onecloud-operator.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署onecloud-集群">部署onecloud 集群&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/example-onecloud-cluster.yaml -O onecloud-cluster.yaml
+vim onecloud-cluster.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>修改onecloud-cluster.yaml mysql相关配额&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code> host: $MYSQL_HOST
+port: $MYSQL_PORT
+username: &amp;quot;$MYSQL_USERNAME&amp;quot;
+password: &amp;quot;$MYSQL_PASSWD&amp;quot;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>其他集群配置请参考： &lt;a href="https://github.com/yunionio/onecloud-operator/blob/4c871ae1d3d6774a827834464c480287b7b8b433/pkg/apis/onecloud/v1alpha1/types.go#L97">OnecloudClusterSpec&lt;/a>::&lt;/li>
+&lt;li>启动onecloud集群&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>kubectl apply -f onecloud-cluster.yaml
+&lt;/code>&lt;/pre>&lt;p>打开K8s Dashboard确认相关服务正常启动完成&lt;/p>
+&lt;h3 id="创建账号登录webui">创建账号登录WebUI&lt;/h3>
+&lt;p>创建账号&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl &lt;span style="color:#204a87">exec&lt;/span> -n onecloud &lt;span style="color:#4e9a06">`&lt;/span>kubectl -n onecloud get pods &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#34;example-onecloud-cluster-climc&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span> cut -f1 -d&lt;span style="color:#4e9a06">&amp;#34; &amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span> -c climc -i -t -- /bin/bash -il
+$ climc user-create demo --password demo123A --system-account --enabled
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>登陆webUI&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud port-forward &lt;span style="color:#4e9a06">`&lt;/span>kubectl -n onecloud get pods &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#34;example-onecloud-cluster-web&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span> cut -f1 -d&lt;span style="color:#4e9a06">&amp;#34; &amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span> 9999:443 --address&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0.0.0.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>打开浏览器：https://localhost:9999&lt;/p>
+&lt;h3 id="待解决的问题">待解决的问题&lt;/h3>
+&lt;p>4类Pod启动失败，问题还在分析中，但不影响体验onecloud&lt;/p>
+&lt;ul>
+&lt;li>example-onecloud-cluster-notify&lt;/li>
+&lt;li>example-onecloud-cluster-host-deployer&lt;/li>
+&lt;li>example-onecloud-cluster-monitor&lt;/li>
+&lt;li>example-onecloud-cluster-autoupdate&lt;/li>
+&lt;/ul>
+&lt;h3 id="集群清理">集群清理&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl delete -f onecloud-cluster.yaml
+kubectl delete -f onecloud-operator.yaml
+kubectl delete -f local-path-storage.yaml
+minikube -p onecloud stop
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

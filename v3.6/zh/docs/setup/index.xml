@@ -1366,7 +1366,7 @@ tls:
 ...
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-重启-ingress-controller">3. 重启 ingress controller&lt;/h3>
 &lt;p>设置完 default-web ingress 规则后，可以重启下 ingress controller 服务，让证书生效。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl rollout restart daemonset -n kube-system traefik-ingress-controller
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n kube-system
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-修改服务-api_server-入口配置">4. 修改服务 api_server 入口配置&lt;/h3>
 &lt;p>因为使用域名 &lt;code>foo.bar.com&lt;/code> 访问，需要修改云平台的默认 api_server 配置，这个配置会影响前端 VNC 连接的地址。将旧的 https://&lt;ip> 访问地址改为 &lt;code>http://foo.bar.com&lt;/code>，操作如下：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc service-config-edit common

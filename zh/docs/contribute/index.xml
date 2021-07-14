@@ -298,7 +298,222 @@ sudo yum install -y libcephfs-devel librbd-devel librados-devel
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">wget -q -O- &lt;span style="color:#4e9a06">&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo apt-key add -
 &lt;span style="color:#204a87">echo&lt;/span> deb https://download.ceph.com/debian-luminous/ &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>lsb_release -sc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> main &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo tee /etc/apt/sources.list.d/ceph.list
 apt-get update &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> apt-get install -y libcephfs-dev librbd-dev librados-dev
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div></description></item><item><title>Docs: 提交贡献代码</title><link>https://www.cloudpods.org/zh/docs/contribute/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/contribute/contrib/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div></description></item><item><title>Docs: Ceph对接</title><link>https://www.cloudpods.org/zh/docs/contribute/ceph/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/contribute/ceph/</guid><description>
+&lt;h2 id="说明">说明&lt;/h2>
+&lt;ul>
+&lt;li>部分厂商针对ceph存储做不同程度的优化，因此若使用开源版ceph提供的lib库，cloudpods在运行过程中可能会出现各种问题&lt;/li>
+&lt;li>cloudpods涉及ceph的服务只有host和host-deployer，同时qemu相关的程序也部分依赖ceph(nbd模块)&lt;/li>
+&lt;li>此文根据各个存储厂商涉及的优化，指导如何适配各类ceph存储&lt;/li>
+&lt;/ul>
+&lt;h2 id="ceph对接cloudpods步骤">ceph对接cloudpods步骤&lt;/h2>
+&lt;ul>
+&lt;li>编译host、host-deployer二进制&lt;/li>
+&lt;li>打包librados、librbd库到host及host-deployer镜像&lt;/li>
+&lt;li>挂载ceph相关目录到host、host-deployer pod&lt;/li>
+&lt;/ul>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 这里使用 CentOS 7.6 环境&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 安装 golang 编译器&lt;/span>
+$ yum install golang
+&lt;span style="color:#8f5902;font-style:italic"># 安装 docker 环境&lt;/span>
+$ curl -fsSL https://get.docker.com &lt;span style="color:#000;font-weight:bold">|&lt;/span> bash -s docker --mirror aliyun
+&lt;span style="color:#8f5902;font-style:italic"># 启动 docker daemon&lt;/span>
+$ systemctl start docker
+&lt;span style="color:#8f5902;font-style:italic"># 安装ceph依赖包&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里假设安装包分别是:&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># librados2-SDS_4.1.000.2-0.el7.centos.x86_64.rpm&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># librados-devel-SDS_4.1.000.2-0.el7.centos.x86_64.rpm&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># librbd1-devel-SDS_4.1.000.2-0.el7.centos.x86_64.rpm&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># librbd1-SDS_4.1.000.2-0.el7.centos.x86_64.2.rpm&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># librbd1-SDS_4.1.000.2-0.el7.centos.x86_64.rpm&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 若存在相关依赖问题，请自行解决(或联系存储厂商)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里我碰见少一个基础库，可使用 yum install libibverbs.x86_64 解决&lt;/span>
+$ rpm -ivh librados2-SDS_4.1.000.2-0.el7.centos.x86_64.rpm librados-devel-SDS_4.1.000.2-0.el7.centos.x86_64.rpm librbd1-devel-SDS_4.1.000.2-0.el7.centos.x86_64.rpm librbd1-SDS_4.1.000.2-0.el7.centos.x86_64.rpm
+准备中... &lt;span style="color:#8f5902;font-style:italic">################################# [100%]&lt;/span>
+正在升级/安装...
+1:librados2-2:SDS_4.1.000.2-0.el7.c################################# &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> 25%&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+2:librados-devel-2:SDS_4.1.000.2-0.################################# &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> 50%&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+3:librbd1-2:SDS_4.1.000.2-0.el7.cen################################# &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> 75%&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+4:librbd1-devel-2:SDS_4.1.000.2-0.e################################# &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>100%&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="适配步骤">适配步骤&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 1. 克隆cloudpods代码, 可根据需要切换不同的release版本, 这里选择3.6版本&lt;/span>
+$ git clone -b release/3.6 https://github.com/yunionio/cloudpods.git
+&lt;span style="color:#8f5902;font-style:italic"># 2. 进入cloudpods目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> cloudpods
+&lt;span style="color:#8f5902;font-style:italic"># 3. 尝试编译host、host-deployer二进制&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 若无编译错误，可以忽略第4步&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 若出现类似 vendor/github.com/ceph/go-ceph/rados/conn.go:5:29: fatal error: rados/librados.h: No such file or directory 这样的错误，请检查rados、librbd相关的rpm包是否安装正常&lt;/span>
+$ make cmd/host cmd/host-deployer
+&lt;span style="color:#8f5902;font-style:italic"># 4. 解决编译错误(仅用适用于厂商修改了librados、librbd等基础库)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 说明: 修改go-ceph(vendor/github.com/ceph/go-ceph)库，需要咨询存储厂商,避免使用rbd存储时出现异常&lt;/span>
+$ make cmd/host
+go build -mod vendor -ldflags &lt;span style="color:#4e9a06">&amp;#34;-w -X yunion.io/x/pkg/util/version.gitVersion=v3.6.19-26-g4038fdc2b1d560 -X yunion.io/x/pkg/util/version.gitCommit=4038fdc -X yunion.io/x/pkg/util/version.gitBranch=release/3.6 -X yunion.io/x/pkg/util/version.buildDate=2021-07-14T03:57:21Z -X yunion.io/x/pkg/util/version.gitTreeState=clean -X yunion.io/x/pkg/util/version.gitMajor=0 -X yunion.io/x/pkg/util/version.gitMinor=0&amp;#34;&lt;/span> -o /root/cloudpods/_output/bin/host yunion.io/x/onecloud/cmd/host
+&lt;span style="color:#8f5902;font-style:italic"># yunion.io/x/onecloud/cmd/host&lt;/span>
+/usr/lib/golang/pkg/tool/linux_amd64/link: running gcc failed: &lt;span style="color:#204a87">exit&lt;/span> status &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+/tmp/go-link-681866212/000006.o：在函数‘_cgo_3262cb398845_Cfunc_rbd_trash_list_cleanup’中：
+/tmp/go-build/cgo-gcc-prolog:895：对‘rbd_trash_list_cleanup’未定义的引用
+collect2: 错误：ld 返回 &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 出现如上的错误，咨询存储厂商，确认移除了开源版的rbd_trash_list_cleanup函数，因此需要移除go-ceph相应的rbd_trash_list_cleanup调用&lt;/span>
+$ git diff vendor/github.com/ceph/go-ceph/rbd/rbd.go
+diff --git a/vendor/github.com/ceph/go-ceph/rbd/rbd.go b/vendor/github.com/ceph/go-ceph/rbd/rbd.go
+index 6dfd249..fc19c36 &lt;span style="color:#0000cf;font-weight:bold">100644&lt;/span>
+--- a/vendor/github.com/ceph/go-ceph/rbd/rbd.go
++++ b/vendor/github.com/ceph/go-ceph/rbd/rbd.go
+@@ -945,38 +945,6 @@ func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>snapshot *Snapshot&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Set&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span> error &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> GetError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>C.rbd_snap_set&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>snapshot.image.image, c_snapname&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+-// GetTrashList returns a slice of TrashInfo structs, containing information about all RBD images
+-// currently residing in the trash.
+-func GetTrashList&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ioctx *rados.IOContext&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">([]&lt;/span>TrashInfo, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+- var num_entries C.size_t
+-
+- // Call rbd_trash_list with nil pointer to get number of trash entries.
+- &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> C.rbd_trash_list&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>C.rados_ioctx_t&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ioctx.Pointer&lt;span style="color:#ce5c00;font-weight:bold">())&lt;/span>, nil, &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>num_entries&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">num_entries&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+- &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> nil, nil
+- &lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+-
+- c_entries :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> make&lt;span style="color:#ce5c00;font-weight:bold">([]&lt;/span>C.rbd_trash_image_info_t, num_entries&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+- trashList :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> make&lt;span style="color:#ce5c00;font-weight:bold">([]&lt;/span>TrashInfo, num_entries&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+-
+- &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ret :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.rbd_trash_list&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>C.rados_ioctx_t&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ioctx.Pointer&lt;span style="color:#ce5c00;font-weight:bold">())&lt;/span>, &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>c_entries&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>0&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>, &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>num_entries&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> ret &amp;lt; &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+- &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> nil, RBDError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ret&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+- &lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+-
+- &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> i, ti :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> range c_entries &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+- trashList&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>i&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> TrashInfo&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+- Id: C.GoString&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ti.id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+- Name: C.GoString&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ti.name&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+- DeletionTime: time.Unix&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>int64&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ti.deletion_time&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, 0&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+- DefermentEndTime: time.Unix&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>int64&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ti.deferment_end_time&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, 0&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+- &lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+- &lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+-
+- // Free rbd_trash_image_info_t pointers
+- C.rbd_trash_list_cleanup&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>c_entries&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>0&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>, num_entries&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+-
+- &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> trashList, nil
+-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+-
+// TrashRemove permanently deletes the trashed RBD with the specified id.
+func TrashRemove&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ioctx *rados.IOContext, id string, force bool&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> error &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+c_id :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.CString&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 再次编译，报错:&lt;/span>
+$ make cmd/host
+go build -mod vendor -ldflags &lt;span style="color:#4e9a06">&amp;#34;-w -X yunion.io/x/pkg/util/version.gitVersion=v3.6.19-26-g4038fdc2b1d560 -X yunion.io/x/pkg/util/version.gitCommit=4038fdc -X yunion.io/x/pkg/util/version.gitBranch=release/3.6 -X yunion.io/x/pkg/util/version.buildDate=2021-07-14T06:07:09Z -X yunion.io/x/pkg/util/version.gitTreeState=dirty -X yunion.io/x/pkg/util/version.gitMajor=0 -X yunion.io/x/pkg/util/version.gitMinor=0&amp;#34;&lt;/span> -o /root/cloudpods/_output/bin/host yunion.io/x/onecloud/cmd/host
+&lt;span style="color:#8f5902;font-style:italic"># github.com/ceph/go-ceph/rbd&lt;/span>
+vendor/github.com/ceph/go-ceph/rbd/rbd.go:30:28: could not determine kind of name &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> C.RBD_FEATURE_JOURNALING
+make: *** &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>cmd/host&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> 错误 &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 相应的需要，移除 RBD_FEATURE_JOURNALING 定义&lt;/span>
+$ git diff vendor/github.com/ceph/go-ceph/rbd/rbd.go
+diff --git a/vendor/github.com/ceph/go-ceph/rbd/rbd.go b/vendor/github.com/ceph/go-ceph/rbd/rbd.go
+index 6dfd249..fa40475 &lt;span style="color:#0000cf;font-weight:bold">100644&lt;/span>
+--- a/vendor/github.com/ceph/go-ceph/rbd/rbd.go
++++ b/vendor/github.com/ceph/go-ceph/rbd/rbd.go
+@@ -27,7 +27,6 @@ const &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>
+&lt;span style="color:#000">RbdFeatureObjectMap&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.RBD_FEATURE_OBJECT_MAP
+&lt;span style="color:#000">RbdFeatureFastDiff&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.RBD_FEATURE_FAST_DIFF
+&lt;span style="color:#000">RbdFeatureDeepFlatten&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.RBD_FEATURE_DEEP_FLATTEN
+- &lt;span style="color:#000">RbdFeatureJournaling&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.RBD_FEATURE_JOURNALING
+&lt;span style="color:#000">RbdFeatureDataPool&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.RBD_FEATURE_DATA_POOL
+&lt;span style="color:#000">RbdFeaturesDefault&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> C.RBD_FEATURES_DEFAULT
+@@ -945,38 +944,6 @@ func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>snapshot *Snapshot&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Set&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span> error &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> GetError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>C.rbd_snap_set&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>snapshot.image.image, c_snapname&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 若存在其他编译错误，请咨询存储厂商对开源版ceph做出的改动，并据此更新go-ceph相应的代码, 直至 make cmd/host cmd/host-deployer 可以正常编译通过&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="镜像编译打包">镜像编译打包&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 找到基础so依赖库&lt;/span>
+$ whereis libsoftokn3.so libsqlite3.so.0 libfreeblpriv3.so
+libsoftokn3: /usr/lib64/libsoftokn3.so /usr/lib64/libsoftokn3.chk
+libsqlite3.so: /usr/lib64/libsqlite3.so.0
+libfreeblpriv3: /usr/lib/libfreeblpriv3.chk /usr/lib/libfreeblpriv3.so /usr/lib64/libfreeblpriv3.chk /usr/lib64/libfreeblpriv3.so
+&lt;span style="color:#8f5902;font-style:italic"># 查看host程序依赖ceph相关的ceph库文件位置&lt;/span>
+$ ldd _output/bin/host &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep &lt;span style="color:#4e9a06">&amp;#39;(rbd|ceph|rados)&amp;#39;&lt;/span>
+librbd.so.1 &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;gt; /lib64/librbd.so.1 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>0x00007f3ae12dd000&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+librados.so.2 &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;gt; /lib64/librados.so.2 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>0x00007f3ae0fa5000&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+libceph-common.so.0 &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;gt; /usr/lib64/ceph/libceph-common.so.0 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>0x00007f3ad7c75000&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里需要根据链接文件找到真实的文件路径&lt;/span>
+$ readlink -f /lib64/librbd.so.1 /lib64/librados.so.2 /usr/lib64/ceph/libceph-common.so.0 /usr/lib64/libsoftokn3.so /usr/lib64/libsqlite3.so.0 /usr/lib64/libfreeblpriv3.so
+/usr/lib64/librbd.so.1.0.0
+/usr/lib64/librados.so.2.0.0
+/usr/lib64/ceph/libceph-common.so.0
+/usr/lib64/libsoftokn3.so
+/usr/lib64/libsqlite3.so.0.8.6
+/usr/lib64/libfreeblpriv3.so
+&lt;span style="color:#8f5902;font-style:italic"># 拷贝so库文件到指定目录&lt;/span>
+$ mkdir -p _output/lib/
+$ cp /usr/lib64/librbd.so.1.0.0 /usr/lib64/librados.so.2.0.0 /usr/lib64/ceph/libceph-common.so.0 /usr/lib64/libsoftokn3.so /usr/lib64/libsqlite3.so.0.8.6 /usr/lib64/libfreeblpriv3.so _output/lib/
+&lt;span style="color:#8f5902;font-style:italic"># 修改host Dockerfile&lt;/span>
+$ git diff build/docker/Dockerfile.host
+diff --git a/build/docker/Dockerfile.host b/build/docker/Dockerfile.host
+index 97bc60b..6450361 &lt;span style="color:#0000cf;font-weight:bold">100644&lt;/span>
+--- a/build/docker/Dockerfile.host
++++ b/build/docker/Dockerfile.host
+@@ -4,6 +4,14 @@ MAINTAINER &lt;span style="color:#4e9a06">&amp;#34;Yaoqi Wan wanyaoqi@yunionyun.com&amp;#34;&lt;/span>
+ENV TZ Asia/Shanghai
+-RUN apk add librados librbd
+RUN mkdir -p /opt/yunion/bin
+-ADD ./_output/alpine-build/bin/host /opt/yunion/bin/host
++
++ADD ./_output/bin/host /opt/yunion/bin/host
++ADD ./_output/bin/.host.bin /opt/yunion/bin/.host.bin
++ADD ./_output/bin/bundles/host /opt/yunion/bin/bundles/host
++ADD ./_output/lib /usr/lib/
+&lt;span style="color:#8f5902;font-style:italic"># 修改host-deployer Dockerfile&lt;/span>
+$ git diff build/docker/Dockerfile.host-deployer
+diff --git a/build/docker/Dockerfile.host-deployer b/build/docker/Dockerfile.host-deployer
+index c6d55dd..e376823 &lt;span style="color:#0000cf;font-weight:bold">100644&lt;/span>
+--- a/build/docker/Dockerfile.host-deployer
++++ b/build/docker/Dockerfile.host-deployer
+@@ -6,4 +6,12 @@ ENV TZ Asia/Shanghai
+RUN mkdir -p /opt/yunion/bin
+-ADD ./_output/centos-build/bin/host-deployer /opt/yunion/bin/host-deployer
++ADD ./_output/bin/host-deployer /opt/yunion/bin/host-deployer
++ADD ./_output/bin/.host-deployer.bin /opt/yunion/bin/.host-deployer.bin
++ADD ./_output/bin/bundles/host-deployer /opt/yunion/bin/bundles/host-deployer
++ADD ./_output/lib /usr/lib/
+&lt;span style="color:#8f5902;font-style:italic"># 切换编译方式，并且打包相关lib&lt;/span>
+$ git diff scripts/docker_push.sh
+diff --git a/scripts/docker_push.sh b/scripts/docker_push.sh
+index f46161e..27deda0 &lt;span style="color:#0000cf;font-weight:bold">100755&lt;/span>
+--- a/scripts/docker_push.sh
++++ b/scripts/docker_push.sh
+@@ -76,9 +76,12 @@ build_bin&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+env &lt;span style="color:#000">$BUILD_ARCH&lt;/span> &lt;span style="color:#000">$BUILD_CGO&lt;/span> make -C &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$SRC_DIR&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> docker-alpine-build &lt;span style="color:#000">F&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;cmd/&lt;/span>&lt;span style="color:#000">$1&lt;/span>&lt;span style="color:#4e9a06"> cmd/*cli&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#000;font-weight:bold">;;&lt;/span>
+- host-deployer &lt;span style="color:#000;font-weight:bold">|&lt;/span> telegraf-raid-plugin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
++ telegraf-raid-plugin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+env &lt;span style="color:#000">$BUILD_ARCH&lt;/span> &lt;span style="color:#000">$BUILD_CGO&lt;/span> make -C &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$SRC_DIR&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> docker-centos-build &lt;span style="color:#000">F&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;cmd/&lt;/span>&lt;span style="color:#000">$1&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">;;&lt;/span>
++ host-deployer &lt;span style="color:#000;font-weight:bold">|&lt;/span> host&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
++ &lt;span style="color:#000">GOOS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>linux make cmd/&lt;span style="color:#000">$1&lt;/span>
++ &lt;span style="color:#000;font-weight:bold">;;&lt;/span>
+*&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+env &lt;span style="color:#000">$BUILD_ARCH&lt;/span> &lt;span style="color:#000">$BUILD_CGO&lt;/span> make -C &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$SRC_DIR&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> docker-alpine-build &lt;span style="color:#000">F&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;cmd/&lt;/span>&lt;span style="color:#000">$1&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">;;&lt;/span>
+@@ -87,7 +90,7 @@ build_bin&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+build_bundle_libraries&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+- &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> bundle_component in &lt;span style="color:#4e9a06">&amp;#39;baremetal-agent&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
++ &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> bundle_component in &lt;span style="color:#4e9a06">&amp;#39;baremetal-agent&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;host&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;host-deployer&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> &lt;span style="color:#000">$1&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#000">$bundle_component&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;span style="color:#000">$CUR_DIR&lt;/span>/bundle_libraries.sh _output/bin/bundles/&lt;span style="color:#000">$1&lt;/span> _output/bin/&lt;span style="color:#000">$1&lt;/span>
+&lt;span style="color:#204a87">break&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 编译host、host-deployer镜像, 需替换自己的namespace&lt;/span>
+$ &lt;span style="color:#000">TAG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>v3.6-ceph &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>namespace&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> ./scripts/docker_push.sh host
+$ &lt;span style="color:#000">TAG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>v3.6-ceph &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>namespace&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> ./scripts/docker_push.sh host-deployer
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="替换计算节点ceph库文件">替换计算节点ceph库文件&lt;/h2>
+&lt;ul>
+&lt;li>为了避免计算节点qemu-image或qemu-system连接ceph集群时卡死&lt;/li>
+&lt;li>这里需要把上面提取的ceph rbd rados相关的so文件(_output/lib/)替换到计算节点相应的文件(若已经使用存储厂商的so库，此步骤忽略)&lt;/li>
+&lt;/ul>
+&lt;h2 id="替换镜像挂载目录">替换镜像&amp;amp;挂载目录&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将 image: registry.cn-beijing.aliyuncs.com/yunionio/host:v3.6.... 替换为上面打包好的镜像&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 修改 volumeMounts 相关选项,将存储厂商ceph所需要访问的目录, 挂载到相应的地方(可选)&lt;/span>
+$ kubectl edit daemonsets. -n onecloud default-host
+&lt;span style="color:#8f5902;font-style:italic"># 将 image: registry.cn-beijing.aliyuncs.com/yunionio/host-deployer:v3.6.... 替换为上面打包好的镜像&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 修改 volumeMounts 相关选项,将存储厂商ceph所需要访问的目录, 挂载到相应的地方(可选)&lt;/span>
+$ kubectl edit daemonsets. -n onecloud default-host-deployer
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 提交贡献代码</title><link>https://www.cloudpods.org/zh/docs/contribute/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/contribute/contrib/</guid><description>
 &lt;h2 id="fork-仓库">Fork 仓库&lt;/h2>
 &lt;p>访问 &lt;a href="https://github.com/yunionio/cloudpods">https://github.com/yunionio/cloudpods&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
 &lt;h2 id="clone-源码">Clone 源码&lt;/h2>

@@ -2932,22 +2932,6 @@ definitions:
         x-go-name: UpdateFailReason
     type: object
     x-go-package: yunion.io/x/onecloud/pkg/apis
-  StatusStatistic:
-    properties:
-      pending_deleted_count:
-        description: |-
-          回收站数量
-          需要指定pending_delete=all
-        format: int64
-        type: integer
-        x-go-name: PendingDeletedCount
-      total_count:
-        description: 资源总数
-        format: int64
-        type: integer
-        x-go-name: TotalCount
-    type: object
-    x-go-package: yunion.io/x/onecloud/pkg/apis
   TConfigs:
     additionalProperties:
       additionalProperties:
@@ -3523,7 +3507,7 @@ paths:
       - credential
     get:
       description: 获取详情
-      operationId: credential_FetchCustomizeColumns
+      operationId: credential_GetExtraDetails
       parameters:
       - description: The Id or Name of credential
         in: path
@@ -3533,7 +3517,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/credential_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/credential_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - credential
@@ -3879,7 +3863,7 @@ paths:
       - domain
     get:
       description: 获取详情
-      operationId: domain_FetchCustomizeColumns
+      operationId: domain_GetExtraDetails
       parameters:
       - description: The Id or Name of domain
         in: path
@@ -3889,7 +3873,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/domain_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/domain_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - domain
@@ -4270,7 +4254,7 @@ paths:
       - endpoint
     get:
       description: 获取详情
-      operationId: endpoint_FetchCustomizeColumns
+      operationId: endpoint_GetExtraDetails
       parameters:
       - description: The Id or Name of endpoint
         in: path
@@ -4280,7 +4264,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/endpoint_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/endpoint_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - endpoint
@@ -4654,7 +4638,7 @@ paths:
       - group
     get:
       description: 获取详情
-      operationId: group_FetchCustomizeColumns
+      operationId: group_GetExtraDetails
       parameters:
       - description: The Id or Name of group
         in: path
@@ -4664,7 +4648,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/group_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/group_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - group
@@ -5166,7 +5150,7 @@ paths:
       - identity_provider
     get:
       description: 获取详情
-      operationId: identity_provider_FetchCustomizeColumns
+      operationId: identity_provider_GetExtraDetails
       parameters:
       - description: The Id or Name of identity_provider
         in: path
@@ -5176,7 +5160,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/identity_provider_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/identity_provider_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - identity_provider
@@ -5206,7 +5190,9 @@ paths:
       - identity_provider
   /identity_providers/{id}/config:
     get:
-      description: 获取指定信息Config
+      description: |-
+        output error: invalid type yunion.io/x/jsonutils.JSONObject
+        获取指定信息Config
       operationId: identity_provider_GetDetailsConfig
       parameters:
       - description: The Id or Name of identity_provider
@@ -5218,7 +5204,7 @@ paths:
       responses:
         "200":
           $ref: '#/responses/identity_provider_GetDetailsConfigOutput'
-      summary: 获取指定信息Config
+      summary: input or output error exists
       tags:
       - identity_provider
     post:
@@ -5525,16 +5511,6 @@ paths:
         "200":
           $ref: '#/responses/identity_provider_GetPropertySplitableOutput'
       summary: 获取指定资源类的信息Splitable
-      tags:
-      - identity_provider
-  /identity_providers/statistics:
-    get:
-      description: 获取指定资源类的信息Statistics
-      operationId: identity_provider_GetPropertyStatistics
-      responses:
-        "200":
-          $ref: '#/responses/identity_provider_GetPropertyStatisticsOutput'
-      summary: 获取指定资源类的信息Statistics
       tags:
       - identity_provider
   /identity_quotas/domains:
@@ -5876,7 +5852,7 @@ paths:
       - policy
     get:
       description: 获取详情
-      operationId: policy_FetchCustomizeColumns
+      operationId: policy_GetExtraDetails
       parameters:
       - description: The Id or Name of policy
         in: path
@@ -5886,7 +5862,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/policy_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/policy_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - policy
@@ -6341,7 +6317,7 @@ paths:
       - project
     get:
       description: 获取详情
-      operationId: project_FetchCustomizeColumns
+      operationId: project_GetExtraDetails
       parameters:
       - description: The Id or Name of project
         in: path
@@ -6351,7 +6327,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/project_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/project_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - project
@@ -6726,7 +6702,7 @@ paths:
       - region
     get:
       description: 获取详情
-      operationId: region_FetchCustomizeColumns
+      operationId: region_GetExtraDetails
       parameters:
       - description: The Id or Name of region
         in: path
@@ -6736,7 +6712,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/region_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/region_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - region
@@ -7028,7 +7004,7 @@ paths:
       - role_policy
     get:
       description: 获取详情
-      operationId: role_policy_FetchCustomizeColumns
+      operationId: role_policy_GetExtraDetails
       parameters:
       - description: The Id or Name of role_policy
         in: path
@@ -7038,7 +7014,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/role_policy_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/role_policy_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - role_policy
@@ -7363,7 +7339,7 @@ paths:
       - role
     get:
       description: 获取详情
-      operationId: role_FetchCustomizeColumns
+      operationId: role_GetExtraDetails
       parameters:
       - description: The Id or Name of role
         in: path
@@ -7373,7 +7349,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/role_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/role_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - role
@@ -7772,7 +7748,7 @@ paths:
       - scope_resource
     get:
       description: 获取详情
-      operationId: scope_resource_FetchCustomizeColumns
+      operationId: scope_resource_GetExtraDetails
       parameters:
       - description: The Id or Name of scope_resource
         in: path
@@ -7782,7 +7758,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/scope_resource_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/scope_resource_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - scope_resource
@@ -8042,7 +8018,7 @@ paths:
       - service_certificate
     get:
       description: 获取详情
-      operationId: service_certificate_FetchCustomizeColumns
+      operationId: service_certificate_GetExtraDetails
       parameters:
       - description: The Id or Name of service_certificate
         in: path
@@ -8052,7 +8028,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/service_certificate_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/service_certificate_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - service_certificate
@@ -8390,7 +8366,7 @@ paths:
       - service
     get:
       description: 获取详情
-      operationId: service_FetchCustomizeColumns
+      operationId: service_GetExtraDetails
       parameters:
       - description: The Id or Name of service
         in: path
@@ -8400,7 +8376,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/service_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/service_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - service
@@ -8430,7 +8406,9 @@ paths:
       - service
   /services/{id}/config:
     get:
-      description: 获取指定信息Config
+      description: |-
+        output error: invalid type yunion.io/x/jsonutils.JSONObject
+        获取指定信息Config
       operationId: service_GetDetailsConfig
       parameters:
       - description: The Id or Name of service
@@ -8442,7 +8420,7 @@ paths:
       responses:
         "200":
           $ref: '#/responses/service_GetDetailsConfigOutput'
-      summary: 获取指定信息Config
+      summary: input or output error exists
       tags:
       - service
     post:
@@ -8861,7 +8839,7 @@ paths:
       - user
     get:
       description: 获取详情
-      operationId: user_FetchCustomizeColumns
+      operationId: user_GetExtraDetails
       parameters:
       - description: The Id or Name of user
         in: path
@@ -8871,7 +8849,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/user_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/user_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - user
@@ -9167,12 +9145,6 @@ responses:
         credential:
           $ref: '#/definitions/CredentialDetails'
       type: object
-  credential_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        credential:
-          $ref: '#/definitions/CredentialDetails'
-      type: object
   credential_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9181,6 +9153,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  credential_GetExtraDetailsOutput:
+    schema:
+      properties:
+        credential:
+          $ref: '#/definitions/CredentialDetails'
       type: object
   credential_GetPropertyDistinctFieldOutput: {}
   credential_GetPropertySplitableOutput: {}
@@ -9225,12 +9203,6 @@ responses:
         domain:
           $ref: '#/definitions/DomainDetails'
       type: object
-  domain_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        domain:
-          $ref: '#/definitions/DomainDetails'
-      type: object
   domain_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9239,6 +9211,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  domain_GetExtraDetailsOutput:
+    schema:
+      properties:
+        domain:
+          $ref: '#/definitions/DomainDetails'
       type: object
   domain_GetPropertyDistinctFieldOutput: {}
   domain_GetPropertySplitableOutput: {}
@@ -9284,12 +9262,6 @@ responses:
         endpoint:
           $ref: '#/definitions/EndpointDetails'
       type: object
-  endpoint_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        endpoint:
-          $ref: '#/definitions/EndpointDetails'
-      type: object
   endpoint_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9298,6 +9270,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  endpoint_GetExtraDetailsOutput:
+    schema:
+      properties:
+        endpoint:
+          $ref: '#/definitions/EndpointDetails'
       type: object
   endpoint_GetPropertyDistinctFieldOutput: {}
   endpoint_GetPropertySplitableOutput: {}
@@ -9342,12 +9320,6 @@ responses:
         group:
           $ref: '#/definitions/GroupDetails'
       type: object
-  group_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        group:
-          $ref: '#/definitions/GroupDetails'
-      type: object
   group_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9356,6 +9328,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  group_GetExtraDetailsOutput:
+    schema:
+      properties:
+        group:
+          $ref: '#/definitions/GroupDetails'
       type: object
   group_GetPropertyDistinctFieldOutput: {}
   group_GetPropertySplitableOutput: {}
@@ -9404,12 +9382,6 @@ responses:
         identity_provider:
           $ref: '#/definitions/IdentityProviderDetails'
       type: object
-  identity_provider_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        identity_provider:
-          $ref: '#/definitions/IdentityProviderDetails'
-      type: object
   identity_provider_GetDetailsConfigOutput: {}
   identity_provider_GetDetailsMetadataOutput:
     schema:
@@ -9438,17 +9410,14 @@ responses:
         identity_provider:
           $ref: '#/definitions/GetDetailsStatusOutput'
       type: object
-  identity_provider_GetPropertyDistinctFieldOutput: {}
-  identity_provider_GetPropertySplitableOutput: {}
-  identity_provider_GetPropertyStatisticsOutput:
+  identity_provider_GetExtraDetailsOutput:
     schema:
       properties:
         identity_provider:
-          additionalProperties:
-            $ref: '#/definitions/StatusStatistic'
-          type: object
-          x-go-name: Output
+          $ref: '#/definitions/IdentityProviderDetails'
       type: object
+  identity_provider_GetPropertyDistinctFieldOutput: {}
+  identity_provider_GetPropertySplitableOutput: {}
   identity_provider_ListItemFilterOutput:
     schema:
       properties:
@@ -9523,12 +9492,6 @@ responses:
         policy:
           $ref: '#/definitions/PolicyDetails'
       type: object
-  policy_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        policy:
-          $ref: '#/definitions/PolicyDetails'
-      type: object
   policy_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9537,6 +9500,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  policy_GetExtraDetailsOutput:
+    schema:
+      properties:
+        policy:
+          $ref: '#/definitions/PolicyDetails'
       type: object
   policy_GetPropertyDistinctFieldOutput: {}
   policy_GetPropertySplitableOutput: {}
@@ -9584,12 +9553,6 @@ responses:
         project:
           $ref: '#/definitions/ProjectDetails'
       type: object
-  project_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        project:
-          $ref: '#/definitions/ProjectDetails'
-      type: object
   project_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9598,6 +9561,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  project_GetExtraDetailsOutput:
+    schema:
+      properties:
+        project:
+          $ref: '#/definitions/ProjectDetails'
       type: object
   project_GetPropertyDistinctFieldOutput: {}
   project_GetPropertySplitableOutput: {}
@@ -9644,12 +9613,6 @@ responses:
         region:
           $ref: '#/definitions/RegionDetails'
       type: object
-  region_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        region:
-          $ref: '#/definitions/RegionDetails'
-      type: object
   region_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9658,6 +9621,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  region_GetExtraDetailsOutput:
+    schema:
+      properties:
+        region:
+          $ref: '#/definitions/RegionDetails'
       type: object
   region_GetPropertyDistinctFieldOutput: {}
   region_GetPropertySplitableOutput: {}
@@ -9702,12 +9671,6 @@ responses:
         role:
           $ref: '#/definitions/RoleDetails'
       type: object
-  role_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        role:
-          $ref: '#/definitions/RoleDetails'
-      type: object
   role_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9716,6 +9679,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  role_GetExtraDetailsOutput:
+    schema:
+      properties:
+        role:
+          $ref: '#/definitions/RoleDetails'
       type: object
   role_GetPropertyDistinctFieldOutput: {}
   role_GetPropertySplitableOutput: {}
@@ -9765,7 +9734,7 @@ responses:
         role_policy:
           $ref: '#/definitions/RolePolicyDetails'
       type: object
-  role_policy_FetchCustomizeColumnsOutput:
+  role_policy_GetExtraDetailsOutput:
     schema:
       properties:
         role_policy:
@@ -9813,7 +9782,7 @@ responses:
         scope_resource:
           $ref: '#/definitions/ModelBaseDetails'
       type: object
-  scope_resource_FetchCustomizeColumnsOutput:
+  scope_resource_GetExtraDetailsOutput:
     schema:
       properties:
         scope_resource:
@@ -9861,12 +9830,6 @@ responses:
         service:
           $ref: '#/definitions/ServiceDetails'
       type: object
-  service_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        service:
-          $ref: '#/definitions/ServiceDetails'
-      type: object
   service_GetDetailsConfigOutput: {}
   service_GetDetailsMetadataOutput:
     schema:
@@ -9876,6 +9839,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  service_GetExtraDetailsOutput:
+    schema:
+      properties:
+        service:
+          $ref: '#/definitions/ServiceDetails'
       type: object
   service_GetPropertyDistinctFieldOutput: {}
   service_GetPropertySplitableOutput: {}
@@ -9921,12 +9890,6 @@ responses:
         service_certificate:
           $ref: '#/definitions/StandaloneResourceDetails'
       type: object
-  service_certificate_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        service_certificate:
-          $ref: '#/definitions/StandaloneResourceDetails'
-      type: object
   service_certificate_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -9935,6 +9898,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  service_certificate_GetExtraDetailsOutput:
+    schema:
+      properties:
+        service_certificate:
+          $ref: '#/definitions/StandaloneResourceDetails'
       type: object
   service_certificate_GetPropertyDistinctFieldOutput: {}
   service_certificate_GetPropertySplitableOutput: {}
@@ -9991,12 +9960,6 @@ responses:
         user:
           $ref: '#/definitions/UserDetails'
       type: object
-  user_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        user:
-          $ref: '#/definitions/UserDetails'
-      type: object
   user_GetDetailsMetadataOutput:
     schema:
       properties:
@@ -10005,6 +9968,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  user_GetExtraDetailsOutput:
+    schema:
+      properties:
+        user:
+          $ref: '#/definitions/UserDetails'
       type: object
   user_GetPropertyDistinctFieldOutput: {}
   user_GetPropertySplitableOutput: {}

@@ -573,7 +573,7 @@ paths:
       - parameter
     get:
       description: 获取详情
-      operationId: parameter_FetchCustomizeColumns
+      operationId: parameter_GetExtraDetails
       parameters:
       - description: The Id or Name of parameter
         in: path
@@ -583,7 +583,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/parameter_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/parameter_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - parameter
@@ -884,7 +884,7 @@ paths:
       - scopedpolicy
     get:
       description: 获取详情
-      operationId: scopedpolicy_FetchCustomizeColumns
+      operationId: scopedpolicy_GetExtraDetails
       parameters:
       - description: The Id or Name of scopedpolicy
         in: path
@@ -894,7 +894,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/scopedpolicy_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/scopedpolicy_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - scopedpolicy
@@ -1321,7 +1321,7 @@ paths:
       - scopedpolicybinding
     get:
       description: 获取详情
-      operationId: scopedpolicybinding_FetchCustomizeColumns
+      operationId: scopedpolicybinding_GetExtraDetails
       parameters:
       - description: The Id or Name of scopedpolicybinding
         in: path
@@ -1331,7 +1331,7 @@ paths:
         x-go-name: Id
       responses:
         "200":
-          $ref: '#/responses/scopedpolicybinding_FetchCustomizeColumnsOutput'
+          $ref: '#/responses/scopedpolicybinding_GetExtraDetailsOutput'
       summary: 获取详情
       tags:
       - scopedpolicybinding
@@ -1398,7 +1398,7 @@ responses:
         parameter:
           $ref: '#/definitions/ResourceBaseDetails'
       type: object
-  parameter_FetchCustomizeColumnsOutput:
+  parameter_GetExtraDetailsOutput:
     schema:
       properties:
         parameter:
@@ -1446,12 +1446,6 @@ responses:
         scopedpolicy:
           $ref: '#/definitions/ScopedPolicyDetails'
       type: object
-  scopedpolicy_FetchCustomizeColumnsOutput:
-    schema:
-      properties:
-        scopedpolicy:
-          $ref: '#/definitions/ScopedPolicyDetails'
-      type: object
   scopedpolicy_GetDetailsChangeOwnerCandidateDomainsOutput:
     schema:
       properties:
@@ -1466,6 +1460,12 @@ responses:
             type: string
           type: object
           x-go-name: Output
+      type: object
+  scopedpolicy_GetExtraDetailsOutput:
+    schema:
+      properties:
+        scopedpolicy:
+          $ref: '#/definitions/ScopedPolicyDetails'
       type: object
   scopedpolicy_GetPropertyDistinctFieldOutput: {}
   scopedpolicy_GetPropertySplitableOutput: {}
@@ -1514,7 +1514,7 @@ responses:
         scopedpolicybinding:
           $ref: '#/definitions/ScopedPolicyBindingDetails'
       type: object
-  scopedpolicybinding_FetchCustomizeColumnsOutput:
+  scopedpolicybinding_GetExtraDetailsOutput:
     schema:
       properties:
         scopedpolicybinding:

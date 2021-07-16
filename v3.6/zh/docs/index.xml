@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 欢迎来到Cloudpods</title><link>https://www.cloudpods.org/v3.6/zh/docs/</link><description>Recent content in 欢迎来到Cloudpods on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.6/zh/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.6.18</title><link>https://www.cloudpods.org/v3.6/zh/docs/changelog/release-3.6/3-6-18/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/changelog/release-3.6/3-6-18/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 欢迎来到Cloudpods</title><link>https://www.cloudpods.org/v3.6/zh/docs/</link><description>Recent content in 欢迎来到Cloudpods on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.6/zh/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.6.18</title><link>https://www.cloudpods.org/v3.6/zh/docs/changelog/release-3.6/3-6-18/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/changelog/release-3.6/3-6-18/</guid><description>
 &lt;p>发布时间 2021-06-07 23:03:55&lt;/p>
 &lt;hr>
 &lt;h2 id="cloudpods">cloudpods&lt;/h2>
@@ -5843,7 +5843,7 @@
 &lt;p>Baremetal Agent 通过 ipmitool sol 接口提供串口控制界面&lt;/p>
 &lt;h3 id="删除操作系统">删除操作系统&lt;/h3>
 &lt;p>对正在运行操作系统的物理机重启进入 PXE 网络启动，进入 yunionos 小系统，调用 &lt;a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/partdestroy.sh">/lib/mos/partdestory.sh&lt;/a> 销毁磁盘分区和相应的 raid 命令销毁 raid 配置&lt;/p></description></item><item><title>Docs: KVM 宿主机</title><link>https://www.cloudpods.org/v3.6/zh/docs/howto/host/kvm/</link><pubDate>Fri, 19 Jul 2019 20:00:14 +0800</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/howto/host/kvm/</guid><description>
-&lt;p>云联壹云 原生提供基于 kvm 的私有云虚拟机管理功能，运行 kvm 虚拟机的机器叫做宿主机，这种宿主机也叫作 &amp;ldquo;计算节点&amp;rdquo;，上面会运行管理虚拟机、网络和存储的一系列服务，如何部署并上线宿主机请参考: &lt;a href="https://www.cloudpods.org/v3.6/zh/docs/setup/host/">安装部署/计算节点&lt;/a>。&lt;/p>
+&lt;p>Cloudpods 原生提供基于 kvm 的私有云虚拟机管理功能，运行 kvm 虚拟机的机器叫做宿主机，这种宿主机也叫作 &amp;ldquo;计算节点&amp;rdquo;，上面会运行管理虚拟机、网络和存储的一系列服务，如何部署并上线宿主机请参考: &lt;a href="https://www.cloudpods.org/v3.6/zh/docs/setup/host/">安装部署/计算节点&lt;/a>。&lt;/p>
 &lt;h2 id="宿主机操作">宿主机操作&lt;/h2>
 &lt;h3 id="查询">查询&lt;/h3>
 &lt;p>通过 &lt;code>host-list&lt;/code> 查询宿主机列表，&lt;code>host-show&lt;/code> 查询宿主机详情。&lt;/p>
@@ -5902,7 +5902,7 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard 
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
-本章内容是通过部署工具快速搭建 云联壹云 服务，如果想了解部署的细节或者部署高可用环境请参考: &lt;a href="../../setup/">安装部署&lt;/a> 。
+本章内容是通过部署工具快速搭建 Cloudpods 服务，如果想了解部署的细节或者部署高可用环境请参考: &lt;a href="../../setup/">安装部署&lt;/a> 。
 &lt;/div>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;h3 id="机器配置要求">机器配置要求&lt;/h3>
@@ -5950,7 +5950,7 @@ $ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
 &lt;span style="color:#8f5902;font-style:italic"># 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span>
 $ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="开始安装">开始安装&lt;/h2>
-&lt;p>部署的工具是 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 云联壹云 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p>
+&lt;p>部署的工具是 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 Cloudpods 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p>
 &lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
 &lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Debian 10&lt;/a>&lt;/li>
@@ -5986,7 +5986,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: root
 &lt;/span>&lt;span style="color:#4e9a06"> # mariadb 用户密码
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 云联壹云 服务的节点
+&lt;/span>&lt;span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 Cloudpods 服务的节点
 &lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
@@ -6000,13 +6000,13 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.168.26.216
 &lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的端口
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> # 云联壹云 版本
+&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 版本
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#39;v3.6.18&amp;#39;
-&lt;/span>&lt;span style="color:#4e9a06"> # 云联壹云 登录用户
+&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
-&lt;/span>&lt;span style="color:#4e9a06"> # 云联壹云 登录用户密码
+&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户密码
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_user_password: admin@123
-&lt;/span>&lt;span style="color:#4e9a06"> # 该节点作为 云联壹云 私有云计算节点
+&lt;/span>&lt;span style="color:#4e9a06"> # 该节点作为 Cloudpods 私有云计算节点
 &lt;/span>&lt;span style="color:#4e9a06"> as_host: true
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
@@ -6021,7 +6021,7 @@ Initialized successfully!
 Web page: https://10.168.26.216
 User: admin
 Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 云联壹云 的界面。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
 &lt;h3 id="创建第一台虚拟机">创建第一台虚拟机&lt;/h3>
 &lt;p>通过如下三步创建出第一台虚拟机：&lt;/p>
@@ -6035,16 +6035,16 @@ Password: admin@123
 &lt;h4 id="3-创建虚拟机">3. 创建虚拟机&lt;/h4>
 &lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>虚拟机&lt;/code>，选择 &lt;code>新建&lt;/code>。在此界面输入主机名，选择镜像和IP子网，创建虚拟机。&lt;/p>
 &lt;h3 id="导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源&lt;/h3>
-&lt;p>云联壹云自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。&lt;/p>
-&lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 云联壹云 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
+&lt;p>Cloudpods自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。&lt;/p>
+&lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 Cloudpods 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
 &lt;p>&lt;img src="../images/cloudaccount.png" alt="多云管理">&lt;/p>
 &lt;h2 id="faq">FAQ&lt;/h2>
 &lt;h3 id="1-在-all-in-one-中找不到虚拟机界面">1. 在 All in One 中找不到虚拟机界面？&lt;/h3>
-&lt;p>All in One 部署的节点会部署 云联壹云 host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 云联壹云 环境中没有启用宿主机。&lt;/p>
+&lt;p>All in One 部署的节点会部署 Cloudpods host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 Cloudpods 环境中没有启用宿主机。&lt;/p>
 &lt;p>请到 &lt;code>管理后台&lt;/code> 界面，点击 &lt;code>主机/基础资源/宿主机&lt;/code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>如果要使用 云联壹云 私有云虚拟机，需要宿主机使用 云联壹云 编译的内核，可使用以下命令查看宿主机是否使用 云联壹云 内核(包含 yn 关键字)。&lt;/p>
+&lt;p>如果要使用 Cloudpods 私有云虚拟机，需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
 $ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
 Linux office-controller 3.10.0-1062.4.3.el7.yn20191203.x86_64
@@ -6069,9 +6069,9 @@ $ reboot
 &lt;li>第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li>
 &lt;/ol>
 &lt;h3 id="4-其它问题">4. 其它问题？&lt;/h3>
-&lt;p>其它问题欢迎在 云联壹云 github issues 界面提交: &lt;a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: 云账号</title><link>https://www.cloudpods.org/v3.6/zh/docs/howto/multicloud/cloudaccount/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/howto/multicloud/cloudaccount/</guid><description>
+&lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: 云账号</title><link>https://www.cloudpods.org/v3.6/zh/docs/howto/multicloud/cloudaccount/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/howto/multicloud/cloudaccount/</guid><description>
 &lt;p>云管平台通过云账号与不同平台建立连接，并同步平台上的资源到云管平台上管理。一个账户对应的云资源归属域，不同域内资源隔离，可通过共享功能让其他域使用云账号资源。当系统未启用三级权限时，所有云资源都默认属于default域。&lt;/p>
-&lt;p>目前 云联壹云 平台支持纳管的平台如下：&lt;/p>
+&lt;p>目前 Cloudpods 平台支持纳管的平台如下：&lt;/p>
 &lt;ul>
 &lt;li>公有云：阿里云（公共云和金融云）、Azure、腾讯云、AWS、华为云、UCloud、谷歌云、天翼云等，后续还将陆续支持更多云平台以满足用户的需求。&lt;/li>
 &lt;li>私有云：VMware、ZStack、DStack、OpenStack、阿里飞天私有云等；&lt;/li>
@@ -6082,8 +6082,8 @@ $ reboot
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 &lt;ul>
-&lt;li>如需在 云联壹云 平台上管理公有云平台，至少要求云账号拥有所操作资源的管理权限。建议授予云账号平台所有功能的管理权限。&lt;/li>
-&lt;li>已添加的云账号不支持更改域，如用户需要将云账号上的资源同步到其他域，可以在 云联壹云 上删除云账号，再重新添加云账号到指定域。在 云联壹云 平台上删除云账号操作仅为取消纳管云账号资源，不会影响云账号上的资源。&lt;/li>
+&lt;li>如需在 Cloudpods 平台上管理公有云平台，至少要求云账号拥有所操作资源的管理权限。建议授予云账号平台所有功能的管理权限。&lt;/li>
+&lt;li>已添加的云账号不支持更改域，如用户需要将云账号上的资源同步到其他域，可以在 Cloudpods 上删除云账号，再重新添加云账号到指定域。在 Cloudpods 平台上删除云账号操作仅为取消纳管云账号资源，不会影响云账号上的资源。&lt;/li>
 &lt;/ul>
 &lt;/div>
 &lt;h3 id="新建阿里云账号">新建阿里云账号&lt;/h3>
@@ -6096,7 +6096,7 @@ $ reboot
 &lt;li>账号类型：目前支持对接公共云和金融云的阿里云账号。&lt;/li>
 &lt;li>密钥ID/密码：通过Access Key验证方式对接阿里云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考：&lt;a href="#%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">阿里云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到 云联壹云 平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在 云联壹云 平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到 Cloudpods 平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在 Cloudpods 平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>自动同步：设置是否自动同步阿里云平台上的信息，并设置自动同步的时间。&lt;/li>
 &lt;/ul>
@@ -6140,7 +6140,7 @@ $ reboot
 已创建的AccessKey，无法再查看AccessKeySecret。
 &lt;/div>
 &lt;h5 id="通过平台管理阿里云资源需要云账号拥有哪些权限">通过平台管理阿里云资源，需要云账号拥有哪些权限&lt;/h5>
-&lt;p>使用云联壹云管理阿里云资源，需要接入云账号的有足够的权限，下面列出管理云资源所用到的权限策略，如果由于接入账号未被授权导致的错误提示，请按照以下说明对接入账号进行授权：&lt;/p>
+&lt;p>使用Cloudpods管理阿里云资源，需要接入云账号的有足够的权限，下面列出管理云资源所用到的权限策略，如果由于接入账号未被授权导致的错误提示，请按照以下说明对接入账号进行授权：&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -6195,7 +6195,7 @@ $ reboot
 &lt;li>账号类型：目前支持对接全球区和中国区的AWS云账号。&lt;/li>
 &lt;li>密钥ID/密码：对接AWS平台的密钥ID和密码信息。具体请参考&lt;a href="#aws%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">AWS相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到云联壹云平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在云联壹云平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。
 &lt;div class="alert alert-primary" role="alert">
@@ -6262,7 +6262,7 @@ $ reboot
 &lt;li>账号类型：目前支持对接全球区、中国区、美国政务区、德国区的Azure云账号。&lt;/li>
 &lt;li>租户（Tenant）ID/客户端ID/客户端密码请参考&lt;a href="#azure%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">Azure相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到云联壹云平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在云联壹云平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>自动同步：设置是否自动同步Azure平台上的信息，并设置自动同步的时间间隔。&lt;/li>
 &lt;/ul>
@@ -6385,7 +6385,7 @@ $ reboot
 &lt;li>账号类型：目前支持对接全球区和中国区的华为云账号。&lt;/li>
 &lt;li>密钥ID/密码：对接华为云平台的密钥ID和密码信息。具体请参考&lt;a href="#%E5%8D%8E%E4%B8%BA%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">华为云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到云联壹云平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在云联壹云平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。
 &lt;div class="alert alert-primary" role="alert">
@@ -6450,7 +6450,7 @@ $ reboot
 &lt;li>名称：腾讯云平台的名称。&lt;/li>
 &lt;li>APP ID/密钥ID/密码：腾讯云账号的APP ID与账号ID有唯一对应关系。对接腾讯云平台的APP ID/密钥ID/密码。具体请参考&lt;a href="#%E8%85%BE%E8%AE%AF%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">腾讯云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到云联壹云平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在云联壹云平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。
 &lt;div class="alert alert-primary" role="alert">
@@ -6500,7 +6500,7 @@ $ reboot
 &lt;li>名称：UCloud平台的名称。&lt;/li>
 &lt;li>公钥/私钥：获取方式具体请参考&lt;a href="#ucloud%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">UCloud相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到云联壹云平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在云联壹云平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>自动同步：设置是否自动同步UCloud平台上的信息，并设置自动同步的时间间隔。&lt;/li>
 &lt;/ul>
@@ -6543,8 +6543,8 @@ $ reboot
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;ul>
-&lt;li>请确保云联壹云平台与谷歌云网络互通。&lt;/li>
-&lt;li>如云联壹云平台与谷歌云网络不通，可通过配置代理访问谷歌云。&lt;/li>
+&lt;li>请确保Cloudpods平台与谷歌云网络互通。&lt;/li>
+&lt;li>如Cloudpods平台与谷歌云网络不通，可通过配置代理访问谷歌云。&lt;/li>
 &lt;/ul>
 &lt;/div>
 &lt;ol>
@@ -6555,7 +6555,7 @@ $ reboot
 &lt;li>名称：谷歌云的云账号名称。&lt;/li>
 &lt;li>project_id、private_key_id、private_key、client_email等参数具体可参考&lt;a href="#google%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">Google相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到云联壹云平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在云联壹云平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>自动同步：设置是否自动同步Google平台上的信息，并设置自动同步的时间间隔。&lt;/li>
 &lt;/ul>
@@ -7049,7 +7049,7 @@ VMware云账号暂不支持更新账号。
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用云账号。&lt;/li>
 &lt;/ol>
 &lt;h2 id="删除">删除&lt;/h2>
-&lt;p>该功能用于删除云账号。删除之前需要先禁用云账号。在云联壹云平台上删除云账号不会影响到云账号上的资源。&lt;/p>
+&lt;p>该功能用于删除云账号。删除之前需要先禁用云账号。在Cloudpods平台上删除云账号不会影响到云账号上的资源。&lt;/p>
 &lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>在云账号页面，单击&amp;quot;禁用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
@@ -7199,7 +7199,7 @@ VMware云账号暂不支持更新账号。
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 &lt;ul>
-&lt;li>如云账号的资源在云联壹云平台上已更改项目，切换本地项目将不会影响已更改项目的资源。&lt;/li>
+&lt;li>如云账号的资源在Cloudpods平台上已更改项目，切换本地项目将不会影响已更改项目的资源。&lt;/li>
 &lt;li>切换本地项目后，计费也将同步到新项目。&lt;/li>
 &lt;li>域的可选范围与云帐号的共享范围有关；云账号私有时，只能选择云账号所属域；云账号共享云订阅时，只能选择云订阅所属域，云账号多域共享时，可以选择云帐号所属域和共享域。&lt;/li>
 &lt;/ul>
@@ -7241,7 +7241,7 @@ VMware云账号暂不支持更新账号。
 &lt;/ul>
 &lt;/div>
 &lt;h3 id="新建云用户">新建云用户&lt;/h3>
-&lt;p>该功能用于新建云用户，即在对应公有云平台上新建用户，并支持将该用户关联云联壹云平台的本地用户。关联本地用户后，本地用户可以在用户信息处的云上用户查看关联的云用户信息，并支持便捷的使用云用户登录公有云平台。&lt;/p>
+&lt;p>该功能用于新建云用户，即在对应公有云平台上新建用户，并支持将该用户关联Cloudpods平台的本地用户。关联本地用户后，本地用户可以在用户信息处的云上用户查看关联的云用户信息，并支持便捷的使用云用户登录公有云平台。&lt;/p>
 &lt;ol>
 &lt;li>在云账号页面，单击公有云平台云账号名称项，进入云账号详情页面。&lt;/li>
 &lt;li>单击“云用户”页签，进入云用户页面。&lt;/li>
@@ -7434,7 +7434,7 @@ VMware云账号暂不支持更新账号。
 &lt;p>身份提供商（Identity Provider，简称IdP）用于提供身份验证，外部用户通过已知的身份提供商身份验证后，将使用角色登录公有云平台。外部用户将在角色的有限权限范围内进行资源访问。因外部身份用户登录腾讯云所用的是角色，而角色使用的是临时密钥，您可避免因长期使用密钥（例如云 API 密钥），导致难以轮换密钥以及被截取后泄露导致的安全问题。&lt;/p>
 &lt;h3 id="使用流程">使用流程&lt;/h3>
 &lt;ol>
-&lt;li>在云联壹云平台上创建云账号时，开启免密登录功能，此时将会把系统的SAML信息上传到公有云平台，使系统作为公有云平台的身份提供商。&lt;/li>
+&lt;li>在Cloudpods平台上创建云账号时，开启免密登录功能，此时将会把系统的SAML信息上传到公有云平台，使系统作为公有云平台的身份提供商。&lt;/li>
 &lt;li>在云用户组页面，创建对应平台云用户组，并选择对应权限。&lt;/li>
 &lt;li>在云账号详情-免密登录用户页面，新建免密登录用户，关联本地用户并指定用户所属的云用户组。该操作用于授予系统内用户免密登录公有云的权限。&lt;/li>
 &lt;li>后续关联云上SAML用户的本地用户，可在 &lt;strong>&lt;em>&amp;ldquo;用户信息-云上用户-免密登录用户&amp;rdquo;&lt;/em>&lt;/strong> 中单击 &lt;strong>&lt;em>&amp;ldquo;免密登录&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将会以指定的权限免密登录公有云平台。&lt;/li>

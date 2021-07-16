@@ -1,5 +1,5 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
-&lt;p>云联壹云 目前仅支持在 CentOS 7 上运行，待部署组件/服务如下:&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
+&lt;p>Cloudpods目前支持在 CentOS 7 和 Debian 10 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -106,7 +106,7 @@
 &lt;p>单独拿两个节点部署 keepalived 和 haproxy 作为后端 kubernetes 控制平面的负载均衡器，拓扑结构如下:&lt;/p>
 &lt;p>&lt;img src="../images/k8s.png" alt="">&lt;/p>
 &lt;p>两个节点上面分别部署 keepalived 和 haproxy 组成负载均衡集群，haproxy 的 backend 为后端的 kubernetes control plane node，vip(虚ip) 在这两个节点之间漂移形成高可用。&lt;/p>
-&lt;p>另外 云联壹云 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="../../setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
+&lt;p>另外 Cloudpods 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="../../setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 haproxy 提供 vip，在2个 haproxy 实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。&lt;/p>
 &lt;h3 id="部署配置-keepalived">部署配置 keepalived&lt;/h3>
@@ -268,7 +268,7 @@ tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="
 tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:1080 0.0.0.0:* LISTEN 10033/haproxy
 &lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h1>
 &lt;p>参考 &lt;a href="../../setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
-&lt;p>云联壹云 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
+&lt;p>Cloudpods 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
 &lt;h3 id="部署配置-mariadb-主主复制">部署配置 Mariadb 主主复制&lt;/h3>
@@ -519,7 +519,7 @@ inet6 fe80::222:cfff:fe40:1e29/64 scope link
 valid_lft forever preferred_lft forever
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org/zh/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/controlplane/</guid><description>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>云联壹云 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
+&lt;p>Cloudpods 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
 &lt;li>操作系统: CentOS 7.6&lt;/li>
 &lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li>
@@ -577,7 +577,7 @@ $ systemctl restart mariadb
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-docker">安装配置 docker&lt;/h3>
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
-&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
 $ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
 $ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
@@ -607,7 +607,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/dae
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-云联壹云-依赖内核">安装 云联壹云 依赖内核&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-cloudpods-依赖内核">安装 Cloudpods 依赖内核&lt;/h3>
 &lt;p>这里需要安装我们编译的内核，这个内核是基于上游 CentOS 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装内核&lt;/span>
 $ yum install -y &lt;span style="color:#4e9a06">\
@@ -621,7 +621,7 @@ $ reboot
 $ uname -r
 3.10.0-1062.4.3.el7.yn20191203.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-kubelet">安装配置 kubelet&lt;/h3>
-&lt;p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
+&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
 $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
@@ -677,7 +677,7 @@ $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&
 &lt;span style="color:#8f5902;font-style:italic"># 安装必要的服务，并启动和设置为开机自启&lt;/span>
 $ yum install -y yunion-executor &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h3>
-&lt;p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 云联壹云 控制节点相关的服务到 kubernetes 集群。&lt;/p>
+&lt;p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 Cloudpods 控制节点相关的服务到 kubernetes 集群。&lt;/p>
 &lt;p>拉取必要的 docker 镜像&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm config images pull
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 ocadm 部署 kubernetes 集群&lt;/p>
@@ -692,7 +692,7 @@ $ &lt;span style="color:#000">MYSQL_HOST&lt;/span>&lt;span style="color:#ce5c00;
 &lt;span style="color:#8f5902;font-style:italic"># 如果是高可用部署，记得在设置 EXTRA_OPT=&amp;#39; --control-plane-endpoint 10.168.222.18:6443&amp;#39;&lt;/span>
 $ &lt;span style="color:#000">EXTRA_OPT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
 $ &lt;span style="color:#8f5902;font-style:italic">#EXTRA_OPT=&amp;#39; --control-plane-endpoint 10.168.222.18:6443&amp;#39;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 云联壹云 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 Cloudpods 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成&lt;/span>
 $ ocadm init --mysql-host &lt;span style="color:#000">$MYSQL_HOST&lt;/span> &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --mysql-user root --mysql-password &lt;span style="color:#000">$MYSQL_PASSWD&lt;/span> &lt;span style="color:#000">$EXTRA_OPT&lt;/span>
 ...
@@ -723,15 +723,15 @@ kube-system kube-scheduler-lzx-ocadm-test2 1/1 Running &lt;span style="color:#00
 kube-system traefik-ingress-controller-qwkfb 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h1m
 local-path-storage local-path-provisioner-5978cff7b7-7h8df 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h1m
 onecloud onecloud-operator-6d4bddb8c4-tkjkh 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h37m
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-云联壹云-集群">创建 云联壹云 集群&lt;/h3>
-&lt;p>当 kubernetes 集群部署完成后，就可以通过 &lt;code>ocadm cluster create&lt;/code> 创建 云联壹云 集群，该集群由 onecloud namespace 里面 &lt;strong>onecloud-operator&lt;/strong> deployment 自动部署和维护。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-cloudpods-集群">创建 Cloudpods 集群&lt;/h3>
+&lt;p>当 kubernetes 集群部署完成后，就可以通过 &lt;code>ocadm cluster create&lt;/code> 创建 Cloudpods 集群，该集群由 onecloud namespace 里面 &lt;strong>onecloud-operator&lt;/strong> deployment 自动部署和维护。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建集群&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 如果要部署企业版的组件可以在 cluster create 的时候加上 --use-ee 参数&lt;/span>
 $ ocadm cluster create --wait
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>执行完 &lt;code>ocadm cluster create --wait&lt;/code> 命令后，&lt;strong>onecloud-operator&lt;/strong> 会自动创建各个服务组件对应的 pod，等待一段该命令执行完毕， 就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p>
 &lt;h3 id="创建登录用户">创建登录用户&lt;/h3>
 &lt;p>当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 &lt;code>ocadm cluster rcadmin&lt;/code> 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取连接 云联壹云 集群的环境变量&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取连接 Cloudpods 集群的环境变量&lt;/span>
 $ ocadm cluster rcadmin
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_AUTH_URL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https://10.168.222.218:30357/v3
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_USERNAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>sysadmin
@@ -770,7 +770,7 @@ $ curl -k https://10.168.222.218
 &lt;p>如果安装过程中失败，或者想清理环境，可执行以下命令删除 kubernetes 集群。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm reset --force
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="后续">后续&lt;/h2>
-&lt;p>如果没有意外，现在应该已经部署好了 云联壹云 on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。&lt;/p>
+&lt;p>如果没有意外，现在应该已经部署好了 Cloudpods on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。&lt;/p>
 &lt;h3 id="添加计算节点">添加计算节点&lt;/h3>
 &lt;p>当控制节点搭建完成后，可以参考 &lt;a href="../../setup/host/">计算节点&lt;/a> 一节的内容，添加计算节点，组建一套私有云集群。&lt;/p>
 &lt;h3 id="控制节点作为计算节点">控制节点作为计算节点&lt;/h3>
@@ -805,7 +805,7 @@ default-host-7b5cr 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">2
 default-host-ctx5s 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.5 controller02
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="升级组件版本">升级组件版本&lt;/h3>
 &lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org/zh/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/components/</guid><description>
-&lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，云联壹云 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
+&lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，Cloudpods 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
 &lt;h3 id="环境准备">环境准备&lt;/h3>
 &lt;p>参考 &lt;a href="../../setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
 &lt;h3 id="获取加入集群-token">获取加入集群 token&lt;/h3>
@@ -889,7 +889,7 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">kernel&lt;/td>
-&lt;td style="text-align:center">云联壹云 提供的内核&lt;/td>
+&lt;td style="text-align:center">Cloudpods 提供的内核&lt;/td>
 &lt;td style="text-align:center">rpm&lt;/td>
 &lt;td style="text-align:center">-&lt;/td>
 &lt;/tr>
@@ -956,7 +956,7 @@ $ uname -r
 &lt;h4 id="安装配置-docker">安装配置 docker&lt;/h4>
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
-&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
 $ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
 $ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
@@ -987,7 +987,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/dae
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="安装配置-kubelet">安装配置 kubelet&lt;/h4>
-&lt;p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
+&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
 $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
@@ -1135,14 +1135,14 @@ $ climc endpoint-list --details &lt;span style="color:#000;font-weight:bold">|&l
 $ climc webconsole-server testvm01
 https://console.yunion.cn/web-console?access_token&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>FI-VXQSAonhzfSnxVTKCCbwHinp7swlRkmi-4p6s-4OfZpg6TG9YhWuwbHEUA1D7XoKu_w%3D%3D&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">api_server&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https%3A%2F%2F10.168.222.216%3A8899&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">password&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>65xB2kaE&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">protocol&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>vnc
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org/zh/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/baremetal/</guid><description>
-&lt;p>启用 baremetal-agent 之前需要部署 云联壹云 集群，详见 &lt;a href="../../setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
+&lt;p>启用 baremetal-agent 之前需要部署 Cloudpods 集群，详见 &lt;a href="../../setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
 &lt;p>待集群准备完毕后需要指定集群中的一个 node 来部署 baremetal-agent 服务。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 目前只能指定一个 node 来部署运行 baremetal-agent 服务，因为 baremetal-agent 服务是有状态的，不能多副本夸节点运行。
 &lt;/div>
 &lt;h2 id="启用-baremetal-agent">启用 baremetal-agent&lt;/h2>
-&lt;p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 云联壹云 host 服务的 dhcp relay 功能。&lt;/p>
+&lt;p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 Cloudpods host 服务的 dhcp relay 功能。&lt;/p>
 &lt;h3 id="如何配置-host-服务-启用-dhcp-relay">如何配置 host 服务 启用 dhcp relay&lt;/h3>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
@@ -1183,17 +1183,14 @@ $ climc agent-list
 $ ocadm cluster update --use-ee --wait
 &lt;span style="color:#8f5902;font-style:italic"># 切换到开源版的 web 前端&lt;/span>
 $ ocadm cluster update --use-ce --wait
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>ocadm cluster update --use-ee/--use-ce&lt;/code> 命令会更新替换当前的 default-web deployment，执行该命令后等到新的 pod 启动后，重新刷新前端页面，即可进入(开源版/企业版)前端。&lt;/p>
-&lt;h2 id="常见问题">常见问题&lt;/h2>
-&lt;h3 id="访问前端出现错误">访问前端出现错误&lt;/h3>
-&lt;p>&lt;strong>问题原因&lt;/strong>: 开源与企业版本的前端分别依赖不同的 default-web configmap，直接切换过去会导致 default-web configmap 没有更新，会造成企业版本使用开源版本 configmap 的问题。&lt;/p>
-&lt;p>&lt;strong>解决办法&lt;/strong>: 在控制节点上删除 web 服务的 nginx configmap 配置文件，并重启 web 服务即可。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>ocadm cluster update --use-ee/--use-ce&lt;/code> 命令会更新替换当前的 default-web deployment&lt;/p>
+&lt;p>待所有pod启动后，由于开源版和企业版的前端分别依赖不同的 default-web configmap，直接切换过去会导致 default-web configmap 没有更新，web前端无法访问，因为需要删除web服务的nginx configmap，并重启 web 服务。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除 default-web 的 configmap 文件&lt;/span>
 $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org/zh/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/upgrade/</guid><description>
-&lt;p>本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。&lt;/p>
+&lt;p>本文介绍从 v3.6.x 升级到 v3.7.x 的步骤以及注意事项。&lt;/p>
 &lt;p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：&lt;/p>
 &lt;ol>
 &lt;li>v3.2.x =&amp;gt; v3.3.x&lt;/li>
@@ -1202,10 +1199,10 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;/ol>
 &lt;p>直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://opensource.yunion.cn/v3.2/docs/setup/upgrade">v3.1.x 升级到 v3.2.x&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://opensource.yunion.cn/v3.3/docs/setup/upgrade">v3.2.x 升级到 v3.3.x&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://opensource.yunion.cn/v3.4/docs/setup/upgrade">v3.3.x 升级到 v3.4.x&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://opensource.yunion.cn/v3.6/zh/docs/setup/upgrade">v3.4.x 升级到 v3.6.x&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/v3.2/docs/setup/upgrade">v3.1.x 升级到 v3.2.x&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/v3.3/docs/setup/upgrade">v3.2.x 升级到 v3.3.x&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/v3.4/docs/setup/upgrade">v3.3.x 升级到 v3.4.x&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/v3.6/zh/docs/setup/upgrade">v3.4.x 升级到 v3.6.x&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;p>使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p>
@@ -1227,7 +1224,7 @@ $ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="co
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git checkout release/3.7
 $ git pull
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-云联壹云-服务">更新 云联壹云 服务&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-cloudpods-服务">更新 Cloudpods 服务&lt;/h2>
 &lt;p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p>
 &lt;ol>
 &lt;li>本机能够 ssh 远程登录 PRIMARY_MASTER_HOST&lt;/li>
@@ -1235,11 +1232,11 @@ $ git pull
 &lt;/ol>
 &lt;p>如果没有设置免密码登录，请使用 &lt;em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em> 命令把公钥下发到自己环境对应的节点。&lt;/p>
 &lt;p>升级的版本号可以到 &lt;a href="../../changelog/release-3.7/">CHANGELOG release/3.7 页面&lt;/a> 查询。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务到 v3.7.0 版本&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务到 v3.7.1 版本&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 需要本机能够使用 ssh 密钥登录上去&lt;/span>
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.7.0
+$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.7.1
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以使用 `./ocboot.py upgrade --help` 查看其它可选参数&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如:&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># --user 可以指定其它 ssh 用户&lt;/span>
@@ -1250,7 +1247,7 @@ $ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.7.0
 $ kubectl get pods -n onecloud --watch
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</guid><description>
 &lt;h2 id="简介">简介&lt;/h2>
-&lt;p>从 v3.6.10 版本开始，可以将”云联壹云“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 和 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 。&lt;/p>
+&lt;p>从 v3.6.10 版本开始，可以将”Cloudpods“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 和 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 。&lt;/p>
 &lt;p>因为服务是容器化运行在 Kubernetes 之上的，为了在 ARM 架构的机器上运行容器，我们使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 和交叉编译的技术编译打包了同时支持 x86_64 和 arm64 的统一容器镜像。这样的可以让 Kubernetes 屏蔽 CPU 架构的差异性，我们制作的支持多架构的容器镜像可以在不同架构的机器上运行服务，实现 X86 和 ARM 机器混合部署的效果。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>部署方式和原来的 X86 部署并没有太大差别，唯一的区别是我们 X86 上使用的 Linux 发行版是 CentOS 7 ，但在 ARM 架构的机器上需要安装 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 或者 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 发行版。其它部署方式是一致的，使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 部署工具来统一部署，这个工具里面包含了在 Debian 和 UOS 上部署的 ansible playbook 。&lt;/p>
@@ -1261,7 +1258,7 @@ $ kubectl get pods -n onecloud --watch
 &lt;li>ARM 机器开启 ssh 服务，保证运行 ocboot 的节点能够免密登录待部署的 ARM 机器&lt;/li>
 &lt;/ul>
 &lt;h3 id="单节点-all-in-one-部署">单节点 All in One 部署&lt;/h3>
-&lt;p>单节点 All in One 部署是指把整个”云联壹云“全部部署到一个节点，ARM 的部署和 X86 的部署没有任何区别，准备好环境后，直接参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 的部署流程即可。&lt;/p>
+&lt;p>单节点 All in One 部署是指把整个”Cloudpods“全部部署到一个节点，ARM 的部署和 X86 的部署没有任何区别，准备好环境后，直接参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 的部署流程即可。&lt;/p>
 &lt;h3 id="多节点混合部署">多节点混合部署&lt;/h3>
 &lt;p>多节点部署请先参考 &lt;a href="../../quickstart/nodes">多节点安装&lt;/a> 了解多节点安装准备工作和配置。接下来以一台 X86 和一台 ARM 机器演示混合部署的流程。&lt;/p>
 &lt;table>
@@ -1301,7 +1298,7 @@ user: root
 db_user: root
 db_password: your-sql-password
 &lt;span style="color:#8f5902;font-style:italic"># primary_master_node 表示将 10.127.40.252 作为第一个部署的 master 节点&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 上面会运行云联壹云必要的控制服务&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 上面会运行Cloudpods必要的控制服务&lt;/span>
 primary_master_node:
 onecloud_version: v3.7.0
 hostname: 10.127.40.252
@@ -1352,4 +1349,29 @@ Password: admin@123
 &lt;p>镜像和对应的网路准备完成后，就可以到虚拟机创建界面根据需要选择不同 CPU 架构创建虚拟机。创建界面截图如下：&lt;/p>
 &lt;p>&lt;img src="../images/vm-hybrid-create.png" alt="虚拟机创建页面">&lt;/p>
 &lt;p>分别创建 aarch64 和 x86_64 架构的虚拟机后，可以在虚拟机的列表页面看到每台虚拟机的 CPU 架构，截图如下:&lt;/p>
-&lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item><item><title>Docs: 更换前端证书</title><link>https://www.cloudpods.org/zh/docs/setup/config-ssl-certs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/config-ssl-certs/</guid><description>
+&lt;p>默认部署完成后，访问前端界面，浏览器会提示不安全的 SSL 连接，原因是前端默认使用的是自签发的证书。本文介绍如何使用自定义证书替换掉前端默认的证书。&lt;/p>
+&lt;h2 id="操作步骤">操作步骤&lt;/h2>
+&lt;p>假设已经准备好的证书文件为：&lt;code>cert.pem&lt;/code> 和 &lt;code>cert.key&lt;/code>，域名为 &lt;code>foo.bar.com&lt;/code> 。&lt;/p>
+&lt;h3 id="1-将证书导入-kubernetes-集群">1. 将证书导入 kubernetes 集群&lt;/h3>
+&lt;p>kubernetes 使用 secret 这种资源保存证书内容，然后前端服务使用 ingress 引用对应的证书，提供 HTTPS 连接。为了使用自定证书，需要先把证书保存到集群。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建证书&lt;/span>
+$ kubectl create secret tls yunion-io-web-secret --key cert.key --cert cert.pem -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-编辑-ingress-规则">2. 编辑 ingress 规则&lt;/h3>
+&lt;p>编辑 &lt;code>default-web&lt;/code> ingress 规则，引用刚才创建的 yunion-io-web-secret 证书。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit ingress -n onecloud default-web
+...
+tls:
+&lt;span style="color:#8f5902;font-style:italic"># 修改这个 secretName 为 yunion-io-web-secret&lt;/span>
+- secretName: yunion-io-web-secret
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-重启-ingress-controller">3. 重启 ingress controller&lt;/h3>
+&lt;p>设置完 default-web ingress 规则后，可以重启下 ingress controller 服务，让证书生效。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n kube-system
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-修改服务-api_server-入口配置">4. 修改服务 api_server 入口配置&lt;/h3>
+&lt;p>因为使用域名 &lt;code>foo.bar.com&lt;/code> 访问，需要修改云平台的默认 api_server 配置，这个配置会影响前端 VNC 连接的地址。将旧的 https://&lt;ip> 访问地址改为 &lt;code>http://foo.bar.com&lt;/code>，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc service-config-edit common
+default:
+api_server: https://foo.bar.com
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后就可以通过 &lt;code>https://foo.bar.com&lt;/code> 访问前端了。&lt;/p></description></item></channel></rss>

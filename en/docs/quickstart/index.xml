@@ -1,6 +1,6 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – Quick Start</title><link>https://www.cloudpods.org/en/docs/quickstart/</link><description>Recent content in Quick Start on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/en/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: All in One Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/allinone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/allinone/</guid><description>
-&lt;h2 id="environmental-preparation">Environmental Preparation&lt;/h2>
-&lt;h3 id="configuration-requirements">Configuration Requirements&lt;/h3>
+&lt;h2 id="preparation">Preparation&lt;/h2>
+&lt;h3 id="requirements">Requirements&lt;/h3>
 &lt;ul>
 &lt;li>OS: Depending on the CPU architecture, the supported distributions are different
 &lt;ul>
@@ -8,9 +8,9 @@
 &lt;li>ARM64: &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> or &lt;a href="https://www.chinauos.com/">China UOS&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>Minimum Configuration Requirements: CPU 4 cores, Memory 8G, Storage 100G&lt;/li>
+&lt;li>Minimum Configuration Requirements: CPU 4 cores, Memory 8GiB, Storage 100GiB&lt;/li>
 &lt;/ul>
-&lt;p>The following is the environment of the machine to be deployed:&lt;/p>
+&lt;p>As an example, the following is the environment of the Linux box to be deployed:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -33,9 +33,9 @@
 &lt;p>10.168.26.216 is the IP of this test environment, please modify accordingly according to your own environment.&lt;/p>
 &lt;/blockquote>
 &lt;/div>
-&lt;h3 id="local-environment-requirements">Local environment requirements&lt;/h3>
-&lt;p>The local environment is the environment where the user performs the actual operation and deployment. The local environment for this installation is executing on a MAC OS laptop, which can also be operated on the machine to be deployed.&lt;/p>
-&lt;h4 id="configure-ssh-unencrypted-login">Configure SSH unencrypted login&lt;/h4>
+&lt;h3 id="local-environment">Local environment&lt;/h3>
+&lt;p>The local environment is the environment where the user performs the actual operation. The local environment for this installation is executing on a MAC OS laptop. The installation can also be executed on the Linux box to be deployed.&lt;/p>
+&lt;h4 id="prepare-passwordless-ssh-login">Prepare passwordless SSH login&lt;/h4>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Generate the local ssh keypair&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># (SKIP this stekp if you already have ~/.ssh/id_rsa.pub locally)&lt;/span>
 $ ssh-keygen
@@ -45,31 +45,33 @@ $ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
 &lt;span style="color:#8f5902;font-style:italic"># should be able to get the hostname of the deployed machine&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># without entering the login password&lt;/span>
 $ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="start-installation">Start Installation&lt;/h2>
-&lt;p>The installation tool is &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , then according to the configuration of the machine to be deployed, use ansbile playbook to install and configure the Yunion OneCloud platform. The following operations are performed on the local environment and steps are as follows:&lt;/p>
-&lt;h3 id="download-ocboot">Download ocboot&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="install-ansible-and-git">Install ansible and git&lt;/h4>
+&lt;p>We first install ansible and git. The commends depends on the OS of the box.&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Debian 10&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Others&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
 $ yum install -y epel-release ansible
-&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
 $ apt install -y ansible
-&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
 $ pip install ansible
-&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
-&lt;h3 id="write-deployment-configuration">Write deployment configuration&lt;/h3>
+&lt;h2 id="install-cloudpods">Install Cloudpods&lt;/h2>
+&lt;p>The installation tool is &lt;a href="https://github.com/yunionio/ocboot,">https://github.com/yunionio/ocboot,&lt;/a> then according to the configuration of the machine to be deployed, use ansbile playbook to install and configure the Cloudpods. The following commands are performed on the local environment and steps are as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
+$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="quick-installation">Quick installation&lt;/h3>
+&lt;p>Simplely execute run.py with the IP address of the Linux box to start the AllInOne installation.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">./run.py 10.168.26.216
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will automatically generate a configuration yaml config-allinone-current.yaml in the working directory. You may check the default values of the installation parameters in this YAML.&lt;/p>
+&lt;h3 id="customized-installation">Customized installation&lt;/h3>
+&lt;p>You may also use a customized installation YAML to start the installation. An example configuration file is shown as following.&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Write config-allinone.yml configuration file&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
 &lt;/span>&lt;span style="color:#4e9a06"># mariadb_node indicates the node where the mariadb service needs to be deployed
@@ -96,17 +98,16 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.168.26.216
 &lt;/span>&lt;span style="color:#4e9a06"> # Port of Kubernetes controlplane
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> # Yunion OneCloud version
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#39;v3.7.0&amp;#39;
-&lt;/span>&lt;span style="color:#4e9a06"> # Yunion OneCloud login username
+&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods version
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#39;v3.7.2&amp;#39;
+&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods login username
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
-&lt;/span>&lt;span style="color:#4e9a06"> # Yunion OneCloud login user&amp;#39;s password
+&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods login user&amp;#39;s password
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_user_password: admin@123
-&lt;/span>&lt;span style="color:#4e9a06"> # This machine serves as a Yunion OneCloud private cloud computing node
+&lt;/span>&lt;span style="color:#4e9a06"> # This machine serves as a Cloudpods private cloud computing node
 &lt;/span>&lt;span style="color:#4e9a06"> as_host: true
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="start-deployment">Start Deployment&lt;/h3>
-&lt;p>Once the config-allinone.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code>. /run.py . /config-allinone.yml&lt;/code> to deploy the cluster.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the config-allinone.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code>. /run.py . /config-allinone.yml&lt;/code> to deploy the cluster.&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Start deployment&lt;/span>
 $ ./run.py ./config-allinone.yml
 ....
@@ -118,8 +119,10 @@ Initialized successfully!
 Web page: https://10.168.26.216
 User: admin
 Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then use your browser to visit https://10.168.26.216, enter &lt;code>admin&lt;/code> for username and &lt;code>admin@123&lt;/code> for password and you will see the Web UI.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="done">Done&lt;/h2>
+&lt;p>Then use your browser to visit https://10.168.26.216, enter &lt;code>admin&lt;/code> for username and &lt;code>admin@123&lt;/code> for password and you will see the Web UI.&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="Login UI">&lt;/p>
+&lt;h2 id="start-using-cloudpods">Start using Cloudpods&lt;/h2>
 &lt;h3 id="create-the-first-virtual-machine">Create the first virtual machine&lt;/h3>
 &lt;p>The first virtual machine is created in three steps as follows.&lt;/p>
 &lt;h4 id="1-import-images">1. Import Images&lt;/h4>
@@ -138,17 +141,17 @@ Password: admin@123
 &lt;h4 id="3-create-virtual-machine">3. Create Virtual Machine&lt;/h4>
 &lt;p>In the &lt;code>Compute&lt;/code> menu, select &lt;code>Servers&lt;/code> and choose &lt;code>Create&lt;/code>. In this UI, enter the hostname, select the mirror and IP subnet, and create the virtual machine.&lt;/p>
 &lt;h3 id="import-public-cloud-or-other-private-cloud-platform-resources">Import public cloud or other private cloud platform resources&lt;/h3>
-&lt;p>Yunion OneCloud itself is a complete private cloud, and can also unify and manage resources from other cloud platforms.&lt;/p>
-&lt;p>In the &lt;code>Multicloud&lt;/code> menu, select &lt;code>Accounts&lt;/code> and create a new one, fill in the authentication information of the corresponding cloud platform according to your needs, and after configuring the cloud account, the Yunion OneCloud service will synchronize the resources of the corresponding cloud platform, and you can view them in the Web UI after the synchronization is completed.&lt;/p>
+&lt;p>Cloudpods itself is a complete suite of private cloud, and can also unify and manage resources from other cloud platforms.&lt;/p>
+&lt;p>In the &lt;code>Multicloud&lt;/code> menu, select &lt;code>Accounts&lt;/code> and create a new one, fill in the authentication information of the corresponding cloud platform according to your needs, and after configuring the cloud account, the Cloudpods service will synchronize the resources of the corresponding cloud platform, and you can view them in the Web UI after the synchronization is completed.&lt;/p>
 &lt;p>&lt;img src="../images/cloudaccount.png" alt="Multicloud Management">&lt;/p>
 &lt;h2 id="faq">FAQ&lt;/h2>
 &lt;h3 id="1-cant-find-the-virtual-machine-menu-in-web-ui">1. Can&amp;rsquo;t find the virtual machine menu in Web UI?&lt;/h3>
-&lt;p>Machine deployed using the All in One way is treated as Yunion OneCloud private cloud computing node by default, which has the ability to create and manage virtual machines.&lt;/p>
+&lt;p>Machine deployed using the All in One way is treated as Cloudpods private cloud computing node by default, which has the ability to create and manage virtual machines.&lt;/p>
 &lt;p>If there is no virtual machine creation button it should be that the private cloud computing node is not enabled.&lt;/p>
 &lt;p>Please go to the Web UI, click &lt;code>Compute/Physical Resources/Hosts&lt;/code> to view the list of hosts, enable the corresponding hosts, refresh the interface and the virtual machine creation button will appear.&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Attention&lt;/h4>
-&lt;p>If you want to use Yunion OneCloud private cloud, you need ensure the computing machine use the kernel compiled by us. You can use the following command to check whether the host uses the kernel including the &lt;code>yn&lt;/code> keyword.&lt;/p>
+&lt;p>If you want to use Cloudpods private cloud, you need ensure the computing machine use the kernel compiled by us. You can use the following command to check whether the host uses the kernel including the &lt;code>yn&lt;/code> keyword.&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Check if yn keyword kernel is used&lt;/span>
 $ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
 Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
@@ -160,7 +163,7 @@ $ reboot
 &lt;/div>
 &lt;p>&lt;img src="../images/host.png" alt="Host">&lt;/p>
 &lt;h3 id="2-change-the-hostname-of-the-node-some-services-fail-to-start">2. Change the hostname of the node, some services fail to start&lt;/h3>
-&lt;p>Yunion OneCloud uses Kubernetes management node, depends on hostname, please change it back.&lt;/p>
+&lt;p>CLoudpods uses Kubernetes management node, depends on hostname, please change it back.&lt;/p>
 &lt;h3 id="3-how-to-reinstall">3. How to reinstall&lt;/h3>
 &lt;ol>
 &lt;li>
@@ -178,7 +181,7 @@ $ reboot
 &lt;li>The modification in step 3 will affect the performance of onecloud-operator, so you can restore the parameters in step 3 when all services are started.&lt;/li>
 &lt;/ol>
 &lt;h3 id="4-other-questions">4. Other questions？&lt;/h3>
-&lt;p>Other questions are welcome to submit Yunion OneCloud github issues: &lt;a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues&lt;/a> , we will reply as soon as possible.&lt;/p></description></item><item><title>Docs: Multi-node Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/nodes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/nodes/</guid><description>
+&lt;p>Other questions are welcome to submit Cloudpods github issues: &lt;a href="https://github.com/yunionio/onecloud/issues">https://github.com/yunionio/onecloud/issues&lt;/a> , we will reply as soon as possible.&lt;/p></description></item><item><title>Docs: Multi-node Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/nodes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/nodes/</guid><description>
 &lt;p>Like the &lt;a href="../allinone">All in One Installation&lt;/a>, the multi-node installation uses installation tool &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> to deploy the nodes according to the configuration by executing the ansible playbook.&lt;/p>
 &lt;h2 id="environmental-preparation">Environmental Preparation&lt;/h2>
 &lt;p>Please refer to the &lt;a href="../allinone/#configuration-requirements">All in One Installation/Configuration Requirements&lt;/a> for environment preparation and requirements for different architecture CPU and OS.&lt;/p>
@@ -243,7 +246,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
 &lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.7.0
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.7.1
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156

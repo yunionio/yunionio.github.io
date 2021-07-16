@@ -1,0 +1,150 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 计算</title><link>https://www.cloudpods.org/zh/docs/howto/compute/</link><description>Recent content in 计算 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/howto/compute/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 虚拟机</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/</link><pubDate>Fri, 19 Jul 2019 10:26:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/</guid><description>
+&lt;p>云平台的虚拟机有时也又叫做云服务器、云主机等，包括我们提供的 kvm 虚拟机、vmware、openstack 和各个公有云的虚拟机。&lt;/p>
+&lt;p>现在支持的主机和平台的对应关系如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">类型&lt;/th>
+&lt;th style="text-align:center">平台&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">kvm&lt;/td>
+&lt;td style="text-align:center">cloudpods 私有云虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">esxi&lt;/td>
+&lt;td style="text-align:center">vmware 虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">openstack&lt;/td>
+&lt;td style="text-align:center">openstack 私有云虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">zstack&lt;/td>
+&lt;td style="text-align:center">zstack 私有云虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">aliyun&lt;/td>
+&lt;td style="text-align:center">阿里云虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">qcloud&lt;/td>
+&lt;td style="text-align:center">腾讯云虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">aws&lt;/td>
+&lt;td style="text-align:center">AWS 虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">azure&lt;/td>
+&lt;td style="text-align:center">Azure 虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">huawei&lt;/td>
+&lt;td style="text-align:center">华为云虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">ucloud&lt;/td>
+&lt;td style="text-align:center">UCloud 虚拟机&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: 镜像</title><link>https://www.cloudpods.org/zh/docs/howto/compute/image/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/image/</guid><description>
+&lt;ul>
+&lt;li>
+&lt;p>镜像(image): 是用于新建云服务器(虚拟机)、裸金属(物理机)使用的模板文件，常用类型为 qcow2, vmdk, raw, vhd, iso。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>镜像服务(glance): 云平台的镜像服务叫做 glance，用于存储转换用户上传或外部导入的镜像，提供下载功能。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>缓存镜像(cached-image): 创建公/私有云虚拟机时，可以直接使用各个云平台已有的镜像，这些镜像不会存储在 glance，云平台只是保存元信息，创建机器时会直接使用。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>image 和 cached-image 两种资源的区别如下：&lt;/p>
+&lt;ul>
+&lt;li>image: glance 管理的镜像，由用户上传或者外部导入;&lt;/li>
+&lt;li>cached-image:
+&lt;ul>
+&lt;li>包括公有云和其他私有云的镜像，不由 glance 管理，一般在创建 Cloudpods 之外的公/私有云主机的时候用到;&lt;/li>
+&lt;li>不提供创建接口，只能查询，刷新和删除;&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 宿主机</title><link>https://www.cloudpods.org/zh/docs/howto/compute/host/</link><pubDate>Wed, 17 Jul 2019 11:35:12 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/host/</guid><description>
+&lt;p>宿主机(host): 指运行虚拟机的机器，云平台的抽象的宿主机根据 hypervisor 字段判断不同平台的宿主机。现在支持的类型如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">类型&lt;/th>
+&lt;th style="text-align:center">平台&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">hypervisor&lt;/td>
+&lt;td style="text-align:center">Cloudpods 私有云宿主机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">baremetal&lt;/td>
+&lt;td style="text-align:center">Cloudpods 私有云物理机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">esxi&lt;/td>
+&lt;td style="text-align:center">vmware 宿主机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">openstack&lt;/td>
+&lt;td style="text-align:center">openstack 私有云宿主机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">zstack&lt;/td>
+&lt;td style="text-align:center">zstack 私有云宿主机&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: 物理机</title><link>https://www.cloudpods.org/zh/docs/howto/compute/baremetal/</link><pubDate>Wed, 10 Jul 2019 10:16:53 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/baremetal/</guid><description>
+&lt;h1 id="术语解释">术语解释&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;p>Baremetal: 指尚未安装操作系统的服务器， 也叫作物理机&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/%E9%A2%84%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83">PXE (Preboot eXecution Environment)&lt;/a>: 使用网络接口启动计算机的机制。这种机制不依赖本地数据存储设备（如硬盘）或本地已安装的操作系统，使用 DHCP 协议查找引导服务器并获取 IP，再通过 TFTP 协议下载初始引导程序和附加文件启动&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E8%AE%BE%E7%BD%AE%E5%8D%8F%E8%AE%AE">DHCP (Dynamic Host Configuration Protocol)&lt;/a>: 动态主机设置协议是一个局域网的网络协议，使用UDP协议工作，为机器分配 IP&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/%E5%B0%8F%E5%9E%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">TFTP (Trivial File Transfer Protocol)&lt;/a>: 小型文件传输协议，使用UDP协议传输文件&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>DHCP Relay: 在不同子网和物理网段之间处理和转发dhcp信息的功能&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/IPMI">IPMI (Intelligent Platform Management Interface)&lt;/a>：管理服务器硬件的标准，特性是独立于操作系统外自行运行，即使在缺少操作系统或系统管理软件、或受监控的系统关机但有接电源的情况下仍能远程管理系统，也能在操作系统引导后运行&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller">BMC (Baseboard management controller)&lt;/a>: 基板管理控制器，支持行业标准的 IPMI 规范&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/Secure_Shell">SSH (Secure Shell)&lt;/a>: 用于远程登录控制服务器&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/RAID">RAID (Redundant Array of Independent Disks)&lt;/a>: 磁盘阵列，把多个硬盘组合成为一个逻辑扇区，操作系统只会把它当作一个硬盘&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Region Service: 云平台控制服务，提供 baremetal 相关 API&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Baremetal Agent: 云平台管理 baremetal 的服务&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Glance Service: 云平台镜像服务，提供物理机装机的 Image 镜像&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>裸金属服务器: baremetal 物理机安装操作系统后，在云平台创建的 server 的记录&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>宿主机: 可以运行云平台虚拟机的节点&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

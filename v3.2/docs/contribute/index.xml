@@ -1,57 +1,179 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 开发相关</title><link>https://www.cloudpods.org/v3.2/docs/contribute/</link><description>Recent content in 开发相关 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.2/docs/contribute/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 开发贡献</title><link>https://www.cloudpods.org/v3.2/docs/contribute/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/contrib/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 开发相关</title><link>https://www.cloudpods.org/v3.2/docs/contribute/</link><description>Recent content in 开发相关 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.2/docs/contribute/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 搭建开发环境</title><link>https://www.cloudpods.org/v3.2/docs/contribute/dev-env/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/dev-env/</guid><description>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>服务是以容器的方式运行在 Kubernetes(K8S) 集群里面的，所以开发调试需要部署一个 Kubernetes 集群&lt;/li>
+&lt;li>后端服务都是用 Golang 编写，所以需要在开发环境安装 Golang&lt;/li>
+&lt;li>为了把开发的服务发布到 Kubernetes 集群，需要在本地把相关服务构建成 docker 镜像&lt;/li>
+&lt;li>开发环境最好都是在 Linux 上进行，安装使用 docker 和编译源码都很方便&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>接下来介绍如何搭建开发环境。&lt;/p>
+&lt;h2 id="部署-cloudpods-服务">部署 cloudpods 服务&lt;/h2>
+&lt;p>在开始开发之前，请先参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 或者 &lt;a href="../../quickstart/minikube">MiniKube 安装&lt;/a> 部署 cloudpods 服务。我们的服务全部使用容器的方式运行在 Kubernetes 集群里面，所以需要先搭建好我们的服务，把这个环境作为自己的开发环境。&lt;/p>
+&lt;p>这里建议使用一个单独的 CentOS 7 虚拟机，配置(至少 4C8G + 100G 系统盘)，安装部署我们的服务。&lt;/p>
 &lt;h2 id="安装-go">安装 Go&lt;/h2>
-&lt;p>Golang 版本要求 1.12 以上&lt;/p>
-&lt;p>安装go环境参考: &lt;a href="https://golang.org/doc/install">Install doc&lt;/a>&lt;/p>
-&lt;h2 id="安装-ceph-依赖">安装 ceph 依赖&lt;/h2>
-&lt;p>On rpm based systems (dnf, yum, etc):&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">sudo rpm --import https://download.ceph.com/keys/release.asc
-sudo yum install -y https://download.ceph.com/rpm-luminous/el7/noarch/ceph-release-1-1.el7.noarch.rpm
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install -y libcephfs-devel librbd-devel librados-devel
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>On debian systems (apt):&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">wget -q -O- &lt;span style="color:#4e9a06">&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo apt-key add -
-&lt;span style="color:#204a87">echo&lt;/span> deb https://download.ceph.com/debian-luminous/ &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>lsb_release -sc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> main &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo tee /etc/apt/sources.list.d/ceph.list
-apt-get update &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> apt-get install -y libcephfs-dev librbd-dev librados-dev
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编译-云联壹云-组件">编译 云联壹云 组件&lt;/h2>
+&lt;p>Golang 版本要求 1.15 以上&lt;/p>
+&lt;p>安装 Golang 环境请参考： &lt;a href="https://golang.org/doc/install">Install Golang&lt;/a>&lt;/p>
+&lt;h2 id="安装配置-docker">安装配置 Docker&lt;/h2>
+&lt;p>因为要把服务打包成容器镜像，所以需要先安装 docker，这里的 docker 版本需要是 docker-ce 19.03 以上的版本。&lt;/p>
+&lt;p>下面是不同操作系统和 Linux 发行版的安装方式，这里还是建议开发环境是 Linux 。&lt;/p>
+&lt;h3 id="安装-docker">安装 Docker&lt;/h3>
+&lt;ul class="nav nav-tabs" id="docker_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#docker_install-0" role="tab" aria-controls="docker_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;div class="tab-content" id="docker_install">&lt;div id="docker_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="docker_install-0">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 1. 安装必要的一些系统工具&lt;/span>
+sudo yum install -y yum-utils
+&lt;span style="color:#8f5902;font-style:italic"># 2. 添加软件源信息&lt;/span>
+sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;span style="color:#8f5902;font-style:italic"># 3. 更新并安装 Docker CE&lt;/span>
+sudo yum -y install docker-ce
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;h3 id="配置-docker">配置 Docker&lt;/h3>
+&lt;p>后续的代码编译和打包使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 的功能，需要做在让 docker daemon 开启 experimental 特性。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在 docker daemon 的配置里面打开 experimental 特性&lt;/span>
+$ cat /etc/docker/daemon.json
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;experimental&amp;#34;&lt;/span>: &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 重启 docker 服务&lt;/span>
+$ systemctl restart docker
+&lt;span style="color:#8f5902;font-style:italic"># 创建 buildx context&lt;/span>
+$ docker buildx create --use --name build --node build --driver-opt &lt;span style="color:#000">network&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>host
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编译-cloudpods-组件">编译 cloudpods 组件&lt;/h2>
 &lt;h3 id="fork-仓库">Fork 仓库&lt;/h3>
-&lt;p>访问 &lt;a href="https://github.com/yunionio/onecloud">https://github.com/yunionio/onecloud&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
+&lt;p>访问 &lt;a href="https://github.com/yunionio/cloudpods">https://github.com/yunionio/cloudpods&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
 &lt;h3 id="clone-源码">Clone 源码&lt;/h3>
 &lt;p>git clone 前确保 GOPATH 等环境变量已经设置好，clone 你自己 fork 的仓库&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ git clone https://github.com/&amp;lt;your_name&amp;gt;/onecloud &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
-$ git remote add upstream https://github.com/yunionio/onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="编译">编译&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 编译所有组件&lt;/span>
-$ make
-&lt;span style="color:#8f5902;font-style:italic"># cmd 目录下面存放着所有的组件:&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ git clone https://github.com/&amp;lt;your_name&amp;gt;/cloudpods &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
+$ git remote add upstream https://github.com/yunionio/cloudpods
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="二进制编译">二进制编译&lt;/h3>
+&lt;p>编译是直接调用 go 编译器在本地编译出二进制，对应的 Makefile 规则为 &lt;code>make cmd/%&lt;/code> ，&lt;code>%&lt;/code> 对应的是 &lt;code>cmd&lt;/code> 目录里面的组件名称。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># cmd 目录下面存放着所有的组件:&lt;/span>
 $ ls cmd
 ...
 ansibleserver climc glance keystone qcloudcli ucloudcli
 awscli cloudir host lbagent region webconsole
-&lt;span style="color:#8f5902;font-style:italic"># 可以编译cmd下制定的组件，比如：编译 region 和 host 组件&lt;/span>
-$ make cmd/region cmd/host
-&lt;span style="color:#8f5902;font-style:italic"># 查看编译好的二进制文件&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 可以编译cmd下指定的组件，比如：编译 climc 和 region 组件&lt;/span>
+$ make cmd/climc cmd/region
+&lt;span style="color:#8f5902;font-style:italic"># 编译好的二进制会直接在 _output/bin 目录下面，查看编译好的二进制文件&lt;/span>
 $ ls _output/bin
-region host
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="本地开发调试">本地开发调试&lt;/h2>
-&lt;p>3.0 版本后我们的服务都已经容器化运行在 k8s 集群中，快速开发调试并不方便。
-通过Telepresence 提供远程k8s上下文，可以在本地开发调试。&lt;/p>
+climc region
+&lt;span style="color:#8f5902;font-style:italic"># 编译所有组件&lt;/span>
+$ make
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="docker-镜像编译上传">Docker 镜像编译上传&lt;/h3>
+&lt;p>通常我们的开发流程是写完代码，把相应服务打包生成 docker 镜像，然后发布到自己搭建的 Kubernetes 集群里面测试。
+下面说明如何生成 docker 镜像。&lt;/p>
+&lt;p>生成好的 docker 镜像需要上传的镜像仓库，这里以 &lt;a href="https://cn.aliyun.com/product/acr">Aliyun 的容器镜像服务&lt;/a> 为例，比如我在 aliyun 创建了一个公开的命令空间，仓库地址为: &lt;code>registry.cn-beijing.aliyuncs.com/zexi&lt;/code> 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在本地登录镜像仓库，这里以你自己的镜像仓库为准&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 需要先用自己的 aliyun 帐号登录下，后面容器镜像的上传就不需要密码了&lt;/span>
+$ docker login registry.cn-beijing.aliyuncs.com/zexi
+......
+Login Succeeded
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>准备好镜像仓库后，就可以开始打包上传镜像了，这些步骤是通过 Makefile 的 image 规则来执行的。&lt;/p>
+&lt;p>这里有以下环境变量用来控制制作镜像的内容：&lt;/p>
+&lt;ul>
+&lt;li>REGISTRY: 对应镜像上传的仓库&lt;/li>
+&lt;li>VERSION: 用于生成镜像的 tag&lt;/li>
+&lt;li>ARCH: 对应 docker 镜像的 arch，可设置成 &amp;lsquo;arm64&amp;rsquo; 或者 &amp;lsquo;all&amp;rsquo;
+&lt;ul>
+&lt;li>arm64: 编译打包制作 arm64 的 docker 镜像&lt;/li>
+&lt;li>all: 编译打包制作 amd64 和 arm64 的镜像&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>DEBUG: 如果设置为 true 会显示打包步骤&lt;/li>
+&lt;/ul>
+&lt;p>根据 REGISTRY 和 VERSION 这两个环境变量，会生成各个组件的镜像地址，格式是:
+&lt;code>$(REGISTRY)/$(component):$VERSION&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将 region 服务编译并制作成 docker 镜像&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 然后上传到 registry.cn-beijing.aliyuncs.com/zexi/region:dev&lt;/span>
+$ &lt;span style="color:#000">VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>dev &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/zexi make image region
+&lt;span style="color:#8f5902;font-style:italic"># 编译多个组件，并上传，以下命令会上传以下的组件&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># - registry.cn-beijing.aliyuncs.com/zexi/ansibleserver:dev&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># - registry.cn-beijing.aliyuncs.com/zexi/apigateway:dev&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># - registry.cn-beijing.aliyuncs.com/zexi/region:dev&lt;/span>
+$ &lt;span style="color:#000">VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>dev &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/zexi make image &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> ansibleserver apigateway region
+&lt;span style="color:#8f5902;font-style:italic"># 编译 arm64 的镜像，如果指定了 ARCH=arm64 ，则会在对应镜像的末尾加上 &amp;#39;-arm64&amp;#39; 的后缀&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># - registry.cn-beijing.aliyuncs.com/yunionio/scheduler:dev-arm64&lt;/span>
+$ &lt;span style="color:#000">VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>dev &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/zexi &lt;span style="color:#000">ARCH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>arm64 make image scheduler
+&lt;span style="color:#8f5902;font-style:italic"># 编译 amd64 + arm64 的镜像，指定 ARCH=all，这里不会添加后缀，会在镜像名里面包含两个架构的版本&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># - registry.cn-beijing.aliyuncs.com/yunionio/cloudid:dev&lt;/span>
+$ &lt;span style="color:#000">VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>dev &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/zexi &lt;span style="color:#000">ARCH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>all make image cloudid
+&lt;span style="color:#8f5902;font-style:italic"># 同时编译多个多架构的组件，并上传&lt;/span>
+$ &lt;span style="color:#000">VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>dev &lt;span style="color:#000">ARCH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>all &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/zexi make image &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> ansibleserver apigateway baremetal-agent climc cloudevent &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> cloudnet devtool esxi-agent glance host host-deployer keystone &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> logger notify region s3gateway scheduler webconsole yunionconf &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vpcagent monitor region-dns cloudid
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="开发调试">开发调试&lt;/h2>
+&lt;p>开发调试的通常步骤是，写好代码后，使用之前说的 &lt;a href="#docker-%E9%95%9C%E5%83%8F%E7%BC%96%E8%AF%91%E4%B8%8A%E4%BC%A0">make image&lt;/a> 规则打包上传对应服务的 docker 镜像，然后将镜像发布到自己的 Kubernetes 集群进行测试。&lt;/p>
+&lt;h3 id="将镜像发布到-kubernetes-集群">将镜像发布到 Kubernetes 集群&lt;/h3>
+&lt;p>后端的服务都运行在 Kubernetes 的 onecloud namespace 里面，可以通过以下命令查看对应的 Kubernetes 资源。我们的服务使用以下的 Kubernetes 资源进行服务的管理。&lt;/p>
+&lt;ul>
+&lt;li>deployment: 管理大部分的服务，这种服务会在 Kubernetes 的任意一个 master 节点启动，比如: region, apigateway 服务等&lt;/li>
+&lt;li>daemonset: 管理需要在每个 Kubernetes 节点都启动的服务，比如: host 服务(私有云计算节点服务)&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>另外需要简单了解下 Kubernetes pod 这种资源，pod 是实际运行容器的集合，是 Kubernetes 里面运行容器化服务的最小单元，一个 pod 里面可以运行多个容器，每个容器都有自己对应的镜像。&lt;/p>
+&lt;p>其它 Kubernetes 资源介绍可参考官方的 &lt;a href="https://kubernetes.io/zh/docs/concepts/workloads/">工作负载介绍&lt;/a>。&lt;/p>
+&lt;/div>
+&lt;p>下面是使用 kubectl(Kubernetes 命令行工具) 查看各个服务对应资源的命令：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 onecloud 命令空间下面的 deployment&lt;/span>
+$ kubectl -n onecloud get deployment
+&lt;span style="color:#8f5902;font-style:italic"># 查看 onecloud 命令空间下面的 daemonset&lt;/span>
+$ kubectl -n onecloud get daemonset
+&lt;span style="color:#8f5902;font-style:italic"># 查看 onecloud 命名空间下面的 pods&lt;/span>
+$ kubectl -n onecloud get pod
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>对 Kubernetes 资源有了大概了解后，接下来的步骤就是把刚才打包的服务镜像发布到集群里面对应的服务，这里以 region 这个服务为例。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 先在本地编译打包 region 镜像&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 会在 aliyun 生成镜像: registry.cn-beijing.aliyuncs.com/zexi/region:dev-test&lt;/span>
+$ &lt;span style="color:#000">VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>dev-test &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/zexi make image region
+&lt;span style="color:#8f5902;font-style:italic"># 找到 region 服务对应的 kubernetes 资源名称&lt;/span>
+$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep region
+default-region 1/1 &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 90d
+&lt;span style="color:#8f5902;font-style:italic"># 更新 default-region deployment 资源里面 image 属性&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 然后对应的 default-region 的 pod 就会自动拉取镜像重启&lt;/span>
+$ kubectl -n onecloud edit deployment default-region
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>kubectl -n onecloud edit deployment default-region&lt;/code> 命令后，进入编辑资源 YAML 属性的步骤，只需要将里面的 &lt;code>image&lt;/code> 属性修改成 aliyun 对应镜像地址，截图如下：&lt;/p>
+&lt;p>&lt;img src="../images/kubectl-edit-image.png" alt="">&lt;/p>
+&lt;p>修改完后保存退出，就会拉取刚才指定的镜像创建新的 region pod，删除旧的。可以再次查看 region pod 的当前状态。&lt;/p>
+&lt;p>&lt;img src="../images/kubectl-get-region-pod.png" alt="">&lt;/p>
+&lt;h3 id="查看服务输出日志">查看服务输出日志&lt;/h3>
+&lt;p>可以使用 &lt;code>kubectl log&lt;/code> 命令查看对应 pod 的输出日志，这里以刚才发布的 region pod 为例。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 先找到 region 服务对应的 pod&lt;/span>
+$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep region
+default-region-6bd8c54d68-sq4gq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 101m
+&lt;span style="color:#8f5902;font-style:italic"># 查看日志&lt;/span>
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq
+&lt;span style="color:#8f5902;font-style:italic"># 把日志重定向到文件 /tmp/region.log&lt;/span>
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq &amp;gt; /tmp/region.log
+&lt;span style="color:#8f5902;font-style:italic"># 流式查看日志，类似于 &amp;#39;tail -f&amp;#39;&lt;/span>
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f
+&lt;span style="color:#8f5902;font-style:italic"># 查看 5 分钟前的日志&lt;/span>
+$ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f --since 5m
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-climc">安装配置 climc&lt;/h3>
+&lt;p>climc 是访问后端的命令行工具，可以通过该工具向后端各个服务发送API请求，日常开发中会使用改命令行工具进行功能验证和调试，安装和使用方法参考下面的连接。&lt;/p>
+&lt;p>climc 的本地安装参考: &lt;a href="../../howto/climc/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装&lt;/a>&lt;/p>
+&lt;p>climc 的本地配置参考: &lt;a href="../../howto/climc/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE">非控制节点认证配置&lt;/a>&lt;/p>
+&lt;p>climc 的使用简介参考: &lt;a href="../../howto/climc/#%E4%BD%BF%E7%94%A8">climc 使用&lt;/a>&lt;/p>
+&lt;h2 id="快速开发调试">快速开发调试&lt;/h2>
+&lt;p>我们的服务都已经容器化运行在 Kubernetes 集群中，使用上面说的 &lt;strong>&amp;ldquo;制作docker镜像-&amp;gt;发布到集群&amp;rdquo;&lt;/strong> 的开发流程有些长，对于快速开发调试并不方便。&lt;/p>
+&lt;p>通过 &lt;a href="https://www.telepresence.io">Telepresence&lt;/a> 提供远程 Kubernetes 连接信息上下文，可以在本地开发调试。下面介绍使用 Telepresence 进行本地快速开发。&lt;/p>
 &lt;h3 id="安装配置-kubectl">安装配置 kubectl&lt;/h3>
 &lt;p>需要在本地安装 &lt;a href="https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/">kubectl&lt;/a>。&lt;/p>
-&lt;p>需要在本地配置好集群信息，以通过 kubectl 访问；将云联壹云控制节点上的&lt;code>$KUBECONFIG&lt;/code>文件拷贝到本地&lt;code>~/.kube/config&lt;/code>;
+&lt;p>需要在本地配置好集群信息，以通过 kubectl 访问；将 cloudpods 控制节点上的&lt;code>$KUBECONFIG&lt;/code>文件拷贝到本地&lt;code>~/.kube/config&lt;/code>;
 如果本地已经有此文件，参考 &lt;a href="https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">配置多集群访问&lt;/a> 进行合并。&lt;/p>
-&lt;h3 id="安装配置-climc">安装配置 climc&lt;/h3>
-&lt;p>climc 的本地安装参考 &lt;a href="../../howto/climc/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装&lt;/a>&lt;/p>
-&lt;p>climc 的本地配置参考 &lt;a href="../../howto/climc/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE">非控制节点认证配置&lt;/a>&lt;/p>
 &lt;h3 id="安装-telepresence">安装 telepresence&lt;/h3>
-&lt;p>确保有一个已部署的云联壹云 k8s集群，参考&lt;a href="https://www.cloudpods.org/v3.2/docs/setup/">安装部署&lt;/a>。
-这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href="https://www.telepresence.io/reference/install">Installing Telepresence&lt;/a>。&lt;/p>
+&lt;p>这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href="https://www.telepresence.io/reference/install">Installing Telepresence&lt;/a>。&lt;/p>
 &lt;blockquote>
-&lt;p>不建议k8s集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p>
+&lt;p>不建议K8S集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p>
 &lt;/blockquote>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装依赖&lt;/span>
 $ yum install -y python3 sshfs conntrack iptables torsocks sshuttle sudo yum-utils
-&lt;span style="color:#8f5902;font-style:italic"># 安装 kubectl 用于连接 k8s 集群&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 安装 kubectl 用于连接 K8S 集群&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
 &lt;/span>&lt;span style="color:#4e9a06">[kubernetes]
 &lt;/span>&lt;span style="color:#4e9a06">name=Kubernetes
@@ -63,26 +185,26 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 $ yum install -y kubectl-1.15.8-0
 &lt;span style="color:#8f5902;font-style:italic"># 需要自行配置kubctl config&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 测试kubctl可以访问之前部署的k8s集群&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 测试kubctl可以访问之前部署的K8S集群&lt;/span>
 $ kubctl version
 &lt;span style="color:#8f5902;font-style:italic"># 源码安装 telepresence 到 /usr/local/bin/telepresence&lt;/span>
 $ git clone https://github.com/telepresenceio/telepresence
 $ &lt;span style="color:#204a87">cd&lt;/span> telepresence
 $ sudo env &lt;span style="color:#000">PREFIX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/usr/local ./install.sh
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用">使用&lt;/h3>
-&lt;p>利用 telepresence 本地连通远端 k8s 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 k8s 其它服务的环境。&lt;/p>
-&lt;p>&lt;strong>macOS中或Linux中本地编译运行 region 服务&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 云联壹云 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
+&lt;p>利用 telepresence 本地连通远端 K8S 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 K8S 其它服务的环境。&lt;/p>
+&lt;p>&lt;strong>macOS 或 linux 中本地编译运行 region 服务&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
 &lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
 $ make cmd/region
-&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 k8s 里面的 default-region deployment&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span>
 $ telepresence --swap-deployment default-region --namespace onecloud
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
 接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ sudo chmod &lt;span style="color:#0000cf;font-weight:bold">777&lt;/span> /etc
 &lt;span style="color:#8f5902;font-style:italic"># 将 $TELEPRESENCE_ROOT/etc/yunion 链接到本地的 /etc&lt;/span>
@@ -102,17 +224,17 @@ T: Cleaning up Pod
 $ rm /etc/yunion
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Linux系统中本地编译运行 region 服务&lt;/strong>&lt;/p>
 &lt;p>这种方式相比上一种方式，更加干净；但是相对复杂&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 云联壹云 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
 &lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
 $ make cmd/region
-&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 k8s 里面的 default-region deployment&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 该命令在 k8s 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span>
 $ telepresence --swap-deployment default-region --namespace onecloud
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 k8s pod 的文件系统。
+$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
 接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置 max_user_namespaces&lt;/span>
 $ cat /proc/sys/user/max_user_namespaces
@@ -121,11 +243,11 @@ $ cat /proc/sys/user/max_user_namespaces
 $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">640&lt;/span> &amp;gt; /proc/sys/user/max_user_namespaces
 &lt;span style="color:#8f5902;font-style:italic"># 启动一个新的 namespace , 但不共享 mount namespace，这样接下来的 mount bind 操作就不会影响到宿主机&lt;/span>
 $ unshare --map-root-user --mount
-&lt;span style="color:#8f5902;font-style:italic"># bind k8s /var/run/secrets&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># bind K8S /var/run/secrets&lt;/span>
 $ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/var/run /var/run
 $ ls /var/run/
 secrets
-&lt;span style="color:#8f5902;font-style:italic"># bind 云联壹云 config&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># bind cloudpods config&lt;/span>
 $ mkdir /etc/yunion
 $ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/etc/yunion /etc/yunion
 $ ls /etc/yunion/
@@ -136,7 +258,55 @@ $ ./_output/bin/region --config /etc/yunion/region.conf
 $ climc network-list
 &lt;span style="color:#8f5902;font-style:italic"># 就会发现相关的请求已经被转发到本地开发机启动 region 服务了&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>更多用法，以及 telepresence 的原理请参考&lt;a href="https://www.telepresence.io/discussion/overview">官方文档&lt;/a>。&lt;/p>
-&lt;h2 id="开发流程">开发流程&lt;/h2>
+&lt;h2 id="faq">FAQ&lt;/h2>
+&lt;h3 id="1-开发环境是-windows-或者-macos怎么开发">1. 开发环境是 windows 或者 macOS，怎么开发？&lt;/h3>
+&lt;p>因为我们的服务最后会运行在基于 CentOS 7 搭建的 K8S 集群里面，所以日常的开发和打包中一般都是在 CentOS 7 里面做的。&lt;/p>
+&lt;p>如果开发环境是 windows ，可以在 windows 里面写代码，然后创建一个 CentOS 7 的虚拟机，在虚拟机里面把开发环境搭建好，写完代码利用 &lt;code>rsync&lt;/code> 等同步工具，把修改的代码增量拷贝到虚拟机中，然后进行打包发布等流程。&lt;/p>
+&lt;p>对于 Mac 上的 macOS 也是类似的，可以使用和 windows 开发一样的流程。但 macOS 里开发和 Linux 里面开发差异没有很大，在 macOS 里面安装好对应的命令行工具和 docker 后，就可以直接使用 &lt;code>make image&lt;/code> 相关的规则打包生成 docker 镜像了。&lt;/p>
+&lt;h3 id="2-本地调试启动-region-服务报以下错误">2. 本地调试启动 region 服务，报以下错误&lt;/h3>
+&lt;p>&lt;img src="../images/region_error.png" alt="">&lt;/p>
+&lt;p>使用&lt;code>climc service-config-edit region2&lt;/code>编辑 region 服务的配置，修改参数：&lt;/p>
+&lt;blockquote>
+&lt;pre>&lt;code>fetch_etcd_service_info_and_use_etcd_lock: false
+enable_host_health_check: false
+&lt;/code>&lt;/pre>
+&lt;/blockquote>
+&lt;h3 id="3-使用-telepresence-时上次未正常退出再次使用一直报错">3. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3>
+&lt;p>尝试手动清理:&lt;/p>
+&lt;ol>
+&lt;li>使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；&lt;/li>
+&lt;li>使用&lt;code>kubectl edit deployment default-region -n onecloud&lt;/code>，将 spec 下的 replicas 从0改为1.&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 可以编译cmd下制定的组件，比如：编译 region 和 host 组件&lt;/span>
+$ make cmd/region cmd/host
+&lt;span style="color:#8f5902;font-style:italic"># 查看编译好的二进制文件&lt;/span>
+$ ls _output/bin
+region host
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-本地直接运行-make-cmdhost-会出现-ceph-依赖的报错">4. 本地直接运行 &lt;code>make cmd/host&lt;/code> 会出现 ceph 依赖的报错&lt;/h3>
+&lt;p>host 组件是私有云里面管理虚拟机的一个关键组件，依赖了 cephfs, rbd 和 rados 相关的库，如果是本地直接编译，则需要安装对应的依赖，操作如下：&lt;/p>
+&lt;ul class="nav nav-tabs" id="host_dep_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#host_dep_install-0" role="tab" aria-controls="host_dep_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#host_dep_install-1" role="tab" aria-controls="host_dep_install-1">Ubuntu 20.04&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="host_dep_install">&lt;div id="host_dep_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="host_dep_install-0">
+&lt;p>&lt;p>On rpm based systems (dnf, yum, etc):&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo rpm --import https://download.ceph.com/keys/release.asc
+sudo yum install -y https://download.ceph.com/rpm-luminous/el7/noarch/ceph-release-1-1.el7.noarch.rpm
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install -y libcephfs-devel librbd-devel librados-devel
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="host_dep_install-1" class="tab-pane" role="tabpanel" aria-labelledby="host_dep_install-1">
+&lt;p>&lt;p>On debian systems (apt):&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">wget -q -O- &lt;span style="color:#4e9a06">&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo apt-key add -
+&lt;span style="color:#204a87">echo&lt;/span> deb https://download.ceph.com/debian-luminous/ &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>lsb_release -sc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> main &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo tee /etc/apt/sources.list.d/ceph.list
+apt-get update &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> apt-get install -y libcephfs-dev librbd-dev librados-dev
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div></description></item><item><title>Docs: 提交贡献代码</title><link>https://www.cloudpods.org/v3.2/docs/contribute/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/contrib/</guid><description>
+&lt;h2 id="fork-仓库">Fork 仓库&lt;/h2>
+&lt;p>访问 &lt;a href="https://github.com/yunionio/cloudpods">https://github.com/yunionio/cloudpods&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
+&lt;h2 id="clone-源码">Clone 源码&lt;/h2>
+&lt;p>clone 自己 fork 的仓库，并设置 upstream 为源仓库。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git clone https://github.com/&amp;lt;your_name&amp;gt;/cloudpods
+$ &lt;span style="color:#204a87">cd&lt;/span> cloudpods
+$ git remote add upstream https://github.com/yunionio/cloudpods
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="提交代码流程">提交代码流程&lt;/h2>
 &lt;ul>
 &lt;li>从 master checkout 出 feature 或者 bugfix 分支&lt;/li>
 &lt;/ul>
@@ -173,28 +343,17 @@ $ git push origin feature/implement-x &lt;span style="color:#8f5902;font-style:i
 &lt;span style="color:#8f5902;font-style:italic"># 设置github的用户名&lt;/span>
 $ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">GITHUB_USER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;your_username&amp;gt;
 &lt;span style="color:#8f5902;font-style:italic"># 使用脚本自动 cherry-pick PR 到 release 分支&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 比如现在有一个提交的PR的编号为8，要把它合并到 release/2.8.0&lt;/span>
-$ ./scripts/cherry_pick_pull.sh upstream/release/2.8.0 &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 比如现在有一个提交的PR的编号为18，要把它合并到 release/3.4&lt;/span>
+$ ./scripts/cherry_pick_pull.sh upstream/release/3.4 &lt;span style="color:#0000cf;font-weight:bold">18&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># cherry pick 可能会出现冲突，冲突时开另外一个 terminal，解决好冲突，再输入 &amp;#39;y&amp;#39; 进行提交&lt;/span>
 $ git add xxx &lt;span style="color:#8f5902;font-style:italic"># 解决完冲突后&lt;/span>
 $ git am --continue
 &lt;span style="color:#8f5902;font-style:italic"># 回到执行 cherry-pick 脚本的 terminal 输入 &amp;#39;y&amp;#39; 即可&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>去 upstream 的 &lt;a href="https://github.com/yunionio/onecloud/pulls">PR 页面&lt;/a>, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：&lt;code>Automated cherry pick of #8&lt;/code>，然后重复 PR review 流程合并到 release&lt;/p>
-&lt;h2 id="faq">FAQ&lt;/h2>
-&lt;h3 id="1-本地调试启动-region-服务报以下错误">1. 本地调试启动 region 服务，报以下错误&lt;/h3>
-&lt;p>&lt;img src="../images/region_error.png" alt="">&lt;/p>
-&lt;p>使用&lt;code>climc service-config-edit region2&lt;/code>编辑 region 服务的配置，修改参数：&lt;/p>
-&lt;blockquote>
-&lt;pre>&lt;code>fetch_etcd_service_info_and_use_etcd_lock: false
-enable_host_health_check: false
-&lt;/code>&lt;/pre>
-&lt;/blockquote>
-&lt;h3 id="2-使用-telepresence-时上次未正常退出再次使用一直报错">2. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3>
-&lt;p>尝试手动清理:&lt;/p>
-&lt;ol>
-&lt;li>使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；&lt;/li>
-&lt;li>使用&lt;code>kubectl edit deployment default-region -n onecloud&lt;/code>，将 spec 下的 replicas 从0改为1.&lt;/li>
-&lt;/ol></description></item><item><title>Docs: Git 提交内容规范</title><link>https://www.cloudpods.org/v3.2/docs/contribute/git-convention/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/git-convention/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>去 upstream 的 &lt;a href="https://github.com/yunionio/cloudpods/pulls">PR 页面&lt;/a>, 就能看到自动生成的 cherry-pick PR，上面操作的PR的标题前缀就应该为：&lt;code>Automated cherry pick of #18&lt;/code>，然后重复 PR review 流程合并到 release&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+提交 git 代码后需要书写 commit 内容，规范请参考: &lt;a href="../git-convention">Git 提交内容规范&lt;/a>。
+&lt;/div></description></item><item><title>Docs: Git 提交内容规范</title><link>https://www.cloudpods.org/v3.2/docs/contribute/git-convention/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/git-convention/</guid><description>
 &lt;p>为了方便代码提交记录的查看，以及以后的统计，我们制定了以下使用 Git 书写提交内容的规范，提交代码的时候请大家遵循以下的格式。&lt;/p>
 &lt;h2 id="git-提交记录书写规范">Git 提交记录书写规范&lt;/h2>
 &lt;p>格式如下:&lt;/p>
@@ -283,7 +442,7 @@ $ git cz
 &lt;/li>
 &lt;/ul></description></item><item><title>Docs: 服务组件介绍</title><link>https://www.cloudpods.org/v3.2/docs/contribute/services/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/services/</guid><description>
 &lt;h2 id="架构简介">架构简介&lt;/h2>
-&lt;p>云联壹云 服务组件较多，接下来分别介绍每个组件的功能:&lt;/p>
+&lt;p>Cloudpods 服务组件较多，接下来分别介绍每个组件的功能:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -382,7 +541,7 @@ $ git cz
 &lt;ul>
 &lt;li>资源层实现对KVM虚拟机，裸机，VMWare虚拟机等计算资源的管理和控制功能。云管平台目前主要支持对KVM虚拟机，裸机，VMWare虚拟机，常用私有云openstack, zstack 以及公有云阿里云，Azure，腾讯云，AWS等公有云资源的管理。&lt;/li>
 &lt;/ul></description></item><item><title>Docs: 后端服务框架</title><link>https://www.cloudpods.org/v3.2/docs/contribute/framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/framework/</guid><description>
-&lt;p>介绍云平台后端服务所用的框架和相关库的使用方法，建议先阅读 &lt;a href="https://www.cloudpods.org/v3.2/docs/contribute/services/">&amp;ldquo;开发相关/服务组件介绍&amp;rdquo;&lt;/a> 了解各个服务大概的功能。&lt;/p>
+&lt;p>介绍云平台后端服务所用的框架和相关库的使用方法，建议先阅读 &lt;a href="../../contribute/services/">&amp;ldquo;开发相关/服务组件介绍&amp;rdquo;&lt;/a> 了解各个服务大概的功能。&lt;/p>
 &lt;h2 id="后端服务框架">后端服务框架&lt;/h2>
 &lt;p>keystone, region, glance 等后端服务，都是用的同一套后端服务框架，这个框架是我们自己定义实现的，核心模块如下:&lt;/p>
 &lt;p>&lt;img src="../images/service_framework.png" alt="">&lt;/p>
@@ -400,20 +559,20 @@ $ git cz
 &lt;p>Task: 后台处理异步耗时任务的模块，会通过更新 Model 的状态来更新任务的执行结果。&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="云联壹云-代码结构">云联壹云 代码结构&lt;/h2>
+&lt;h2 id="cloudpods-代码结构">Cloudpods 代码结构&lt;/h2>
 &lt;ul>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/build">build&lt;/a>: 打包rpm脚本&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/cmd">cmd&lt;/a>: 可执行binary入口程序&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg">pkg&lt;/a>: 库
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/build">build&lt;/a>: 打包rpm脚本&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/cmd">cmd&lt;/a>: 可执行binary入口程序&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg">pkg&lt;/a>: 库
 &lt;ul>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/appsrv">appsrv&lt;/a>: 通用http服务框架&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon">cloudcommon&lt;/a>: 云平台服务框架，基于appsrv扩展
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/appsrv">appsrv&lt;/a>: 通用http服务框架&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon">cloudcommon&lt;/a>: 云平台服务框架，基于appsrv扩展
 &lt;ul>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/options">cloudcommon/options&lt;/a>: 通用options&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/app">cloudcommon/app&lt;/a>: 通用服务初始化代码&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db">cloudcommon/db&lt;/a>: Model dispatcher和Models的基础实现&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db/lockman">cloudcommon/db/lockman&lt;/a>: 锁实现&lt;/li>
-&lt;li>&lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db/taskman">cloudcommon/db/taskman&lt;/a>: 异步任务框架&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon/options">cloudcommon/options&lt;/a>: 通用options&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon/app">cloudcommon/app&lt;/a>: 通用服务初始化代码&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon/db">cloudcommon/db&lt;/a>: Model dispatcher和Models的基础实现&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon/db/lockman">cloudcommon/db/lockman&lt;/a>: 锁实现&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon/db/taskman">cloudcommon/db/taskman&lt;/a>: 异步任务框架&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
@@ -559,9 +718,9 @@ $ git cz
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>具体 restful 请求的绑定函数在: &lt;a href="https://github.com/yunionio/onecloud/blob/master/pkg/appsrv/dispatcher/dispatcher.go#L33">pkg/appsrv/dispatcher/dispatcher.go&lt;/a> 文件中的 &lt;strong>AddModelDispatcher&lt;/strong> 函数。&lt;/p>
+&lt;p>具体 restful 请求的绑定函数在: &lt;a href="https://github.com/yunionio/cloudpods/blob/master/pkg/appsrv/dispatcher/dispatcher.go#L33">pkg/appsrv/dispatcher/dispatcher.go&lt;/a> 文件中的 &lt;strong>AddModelDispatcher&lt;/strong> 函数。&lt;/p>
 &lt;h2 id="数据库-orm-模型">数据库 ORM 模型&lt;/h2>
-&lt;p>代码位于 &lt;a href="https://github.com/yunionio/onecloud/tree/master/pkg/cloudcommon/db">cloudcommon/db&lt;/a>&lt;/p>
+&lt;p>代码位于 &lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/cloudcommon/db">cloudcommon/db&lt;/a>&lt;/p>
 &lt;ul>
 &lt;li>接口
 &lt;ul>
@@ -593,10 +752,10 @@ $ git cz
 &lt;/li>
 &lt;/ul>
 &lt;h3 id="举例">举例&lt;/h3>
-&lt;p>用虚拟机的 model 来举例，代码在: &lt;a href="https://github.com/yunionio/onecloud/blob/master/pkg/compute/models/guests.go">pkg/compute/models/guests.go&lt;/a>。&lt;/p>
+&lt;p>用虚拟机的 model 来举例，代码在: &lt;a href="https://github.com/yunionio/cloudpods/blob/master/pkg/compute/models/guests.go">pkg/compute/models/guests.go&lt;/a>。&lt;/p>
 &lt;p>GuestManager 对应数据库里面的 guests_tbl，该对象嵌套 db.SVirtualResourceBaseManager 表示是虚拟资源的 Manager，这样会默认实现 db.IModelManager 接口，然后根据业务需要重写一些方法会比较方便。&lt;/p>
 &lt;p>SGuest 对应 guests_tbl 数据库里面的每一行数据，由 GuestManager 管理，嵌套 db.SVirtualResourceBase 结构，默认就会有虚拟资源所需要的表结构，然后再定义一些虚拟机独有的属性比如 VcpuCount 表示 cpu 核数，VmemSize 表示内存大小。 在代码抽象后表示虚拟机实例，该对象会绑定对虚拟机具体的业务操作实现函数。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;yunion.io/x/onecloud/pkg/cloudcommon/db&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;yunion.io/x/cloudpods/pkg/cloudcommon/db&amp;#34;&lt;/span>
 &lt;span style="color:#ce5c00;font-weight:bold">......&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">SGuestManager&lt;/span> &lt;span style="color:#204a87;font-weight:bold">struct&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
 &lt;span style="color:#000">db&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SVirtualResourceBaseManager&lt;/span>
@@ -654,7 +813,7 @@ $ git cz
 &lt;li>LockRawObject/RelaseRawObject: 通用的锁&lt;/li>
 &lt;/ul>
 &lt;h3 id="举例-1">举例&lt;/h3>
-&lt;p>&lt;a href="https://github.com/yunionio/onecloud/blob/master/pkg/cloudcommon/db/db_dispatcher.go#L900">pkg/cloudcommon/db/db_dispatcher.go&lt;/a> 里面的 DoCreate 函数会创建对应 Model 的对象并插入数据到数据库，这个时候就需要加锁。&lt;/p>
+&lt;p>&lt;a href="https://github.com/yunionio/cloudpods/blob/master/pkg/cloudcommon/db/db_dispatcher.go#L900">pkg/cloudcommon/db/db_dispatcher.go&lt;/a> 里面的 DoCreate 函数会创建对应 Model 的对象并插入数据到数据库，这个时候就需要加锁。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">DoCreate&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">manager&lt;/span> &lt;span style="color:#000">IModelManager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ctx&lt;/span> &lt;span style="color:#000">context&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Context&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span> &lt;span style="color:#000">mcclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TokenCredential&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">query&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">data&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ownerId&lt;/span> &lt;span style="color:#000">mcclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">IIdentityProvider&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">IModel&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
 &lt;span style="color:#000">lockman&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">LockClass&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">manager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">GetLockClassKey&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">manager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ownerId&lt;/span>&lt;span style="color:#000;font-weight:bold">))&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">defer&lt;/span> &lt;span style="color:#000">lockman&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ReleaseClass&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">manager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">GetLockClassKey&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">manager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ownerId&lt;/span>&lt;span style="color:#000;font-weight:bold">))&lt;/span>
@@ -667,7 +826,7 @@ $ git cz
 &lt;span style="color:#000">workerman&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Run&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#a40000">…&lt;/span>&lt;span style="color:#000;font-weight:bold">},&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="task-机制">Task 机制&lt;/h2>
 &lt;p>云平台的异步耗时任务会放在 Task 机制里面去执行，比如创建虚拟机操作，用户提交了请求，region 控制器校验参数合格后，会记录数据到数据库，然后马上返回客户端对应的虚拟机记录，与此同时，会开始执行创建虚拟机的 task，这个 task 会立即在后台执行，会通过更新虚拟机 SGuest model 的状态和记录操作日志来表示执行的成功或失败。&lt;/p>
-&lt;p>task 也是记录在数据库 tasks_tbl 里面的记录，对应的定义在: &lt;a href="https://github.com/yunionio/onecloud/blob/master/pkg/cloudcommon/db/taskman/tasks.go">pkg/cloudcommon/db/taskman/tasks.go&lt;/a> 里面，数据结构如下:&lt;/p>
+&lt;p>task 也是记录在数据库 tasks_tbl 里面的记录，对应的定义在: &lt;a href="https://github.com/yunionio/cloudpods/blob/master/pkg/cloudcommon/db/taskman/tasks.go">pkg/cloudcommon/db/taskman/tasks.go&lt;/a> 里面，数据结构如下:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">STaskManager&lt;/span> &lt;span style="color:#204a87;font-weight:bold">struct&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
 &lt;span style="color:#000">db&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SResourceBaseManager&lt;/span>
 &lt;span style="color:#000;font-weight:bold">}&lt;/span>
@@ -713,7 +872,7 @@ $ git cz
 &lt;h3 id="举例-2">举例&lt;/h3>
 &lt;p>以虚拟机关机这个操作来举例:&lt;/p>
 &lt;ul>
-&lt;li>客户端发起 POST /servers/&amp;lt;server_id&amp;gt;/stop 请求后，通过服务框架会执行 &lt;code>func (self *SGuest) PerformStop&lt;/code> 函数，代码片段如下(位于: &lt;a href="https://github.com/yunionio/onecloud/blob/2003c44264f1a244f32fd0584e7ce0d23df78705/pkg/compute/models/guest_actions.go#L2357">pkg/compute/models/guest_actions.go&lt;/a>):&lt;/li>
+&lt;li>客户端发起 POST /servers/&amp;lt;server_id&amp;gt;/stop 请求后，通过服务框架会执行 &lt;code>func (self *SGuest) PerformStop&lt;/code> 函数，代码片段如下(位于: &lt;a href="https://github.com/yunionio/cloudpods/blob/2003c44264f1a244f32fd0584e7ce0d23df78705/pkg/compute/models/guest_actions.go#L2357">pkg/compute/models/guest_actions.go&lt;/a>):&lt;/li>
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SGuest&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">PerformStop&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span> &lt;span style="color:#000">context&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Context&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span> &lt;span style="color:#000">mcclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TokenCredential&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">query&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
 &lt;span style="color:#000">data&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
@@ -734,7 +893,7 @@ $ git cz
 &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetDriver&lt;/span>&lt;span style="color:#000;font-weight:bold">().&lt;/span>&lt;span style="color:#000">StartGuestStopTask&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">params&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">parentTaskId&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
 &lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic">// pkg/compute/guestdrivers/virtualization.go
-&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;yunion.io/x/onecloud/pkg/cloudcommon/db/taskman&amp;#34;&lt;/span>
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;yunion.io/x/cloudpods/pkg/cloudcommon/db/taskman&amp;#34;&lt;/span>
 &lt;span style="color:#ce5c00;font-weight:bold">......&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SVirtualizedGuestDriver&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">StartGuestStopTask&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">guest&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">models&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SGuest&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ctx&lt;/span> &lt;span style="color:#000">context&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Context&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span> &lt;span style="color:#000">mcclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TokenCredential&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">params&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONDict&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">parentTaskId&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
 &lt;span style="color:#000">task&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">taskman&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TaskManager&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewTask&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;GuestStopTask&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">guest&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">params&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">parentTaskId&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
@@ -747,7 +906,7 @@ $ git cz
 &lt;span style="color:#ce5c00;font-weight:bold">......&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>
-&lt;p>&lt;strong>taskman.TaskManager.NewTask(ctx, &amp;ldquo;GuestStopTask&amp;rdquo;, &amp;hellip;)&lt;/strong> 这里面的 GuestStopTask 对应 &lt;a href="https://github.com/yunionio/onecloud/blob/master/pkg/compute/tasks/guest_stop_task.go">pkg/compute/tasks/guest_stop_task.go&lt;/a> 里面的 GuestStopTask，是通过 taskman 里面维护的一个 map 查找的。&lt;/p>
+&lt;p>&lt;strong>taskman.TaskManager.NewTask(ctx, &amp;ldquo;GuestStopTask&amp;rdquo;, &amp;hellip;)&lt;/strong> 这里面的 GuestStopTask 对应 &lt;a href="https://github.com/yunionio/cloudpods/blob/master/pkg/compute/tasks/guest_stop_task.go">pkg/compute/tasks/guest_stop_task.go&lt;/a> 里面的 GuestStopTask，是通过 taskman 里面维护的一个 map 查找的。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>&lt;strong>task.ScheduleRun(nil)&lt;/strong> 会开始执行对应的 Task，默认会从 task 的默认 Stage OnInit 函数开始执行，所以通过 task 机制就会执行到 GuestStopTask.OnInit 函数。OnInit 函数最终会调用对应虚拟机的 driver 执行 RequestStopOnHost 函数并更新设置自己的 Stage 为 OnMasterStopTaskComplete。&lt;/p>
@@ -808,7 +967,7 @@ $ git cz
 &lt;ul>
 &lt;li>在keystone注册一个服务启用用的账户&lt;/li>
 &lt;li>在keystone注册service和endpoint&lt;/li>
-&lt;li>参考 onecloud/pkg/logger实现服务代码&lt;/li>
+&lt;li>参考 cloudpods/pkg/logger实现服务代码&lt;/li>
 &lt;li>为服务准备一个配置文件，包含以下基础信息&lt;/li>
 &lt;/ul>
 &lt;p>假设服务名为 svc，用户和密码为 svcuser, svcuserpassword，服务监听地址为: http://localhost:8866, region 为 LocalTest，对应操作如下:&lt;/p>
@@ -827,4 +986,114 @@ $ climc project-add-user system svcuser admin
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">admin_user&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">svcuser&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">admin_password&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">svcuserpassword&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">admin_tenant_name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">system&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Operator 相关</title><link>https://www.cloudpods.org/v3.2/docs/contribute/operator-intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.2/docs/contribute/operator-intro/</guid><description>
+&lt;p>&lt;a href="https://github.com/yunionio/cloudpods-operator">cloudpods-operator&lt;/a> 是单独编写的一个组件，作为一个长期运行的服务运行在 Kubernetes 集群内部，作用是自动搭建和维护 Cloudpods 所有服务。详细的介绍可以参考 &lt;a href="https://github.com/yunionio/cloudpods-operator/blob/master/docs/intro.md">cloudpods-operator 工作原理&lt;/a>。&lt;/p>
+&lt;h2 id="简介">简介&lt;/h2>
+&lt;p>operator 在 K8S 里面创建一个叫做 OnecloudCluster 的资源，该资源里面定义了各个服务组件要使用的 docker 镜像仓库和版本，通过修改 OnecloudCluster 这个资源，可以实现对各个服务多方面的镜像版本控制。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 OnecloudCluster 资源&lt;/span>
+$ kubectl get onecloudclusters.onecloud.yunion.io -n onecloud
+NAME KEYSTONE
+default registry.cn-beijing.aliyuncs.com/yunionio/keystone:archdev-v36
+&lt;span style="color:#8f5902;font-style:italic"># 查看 default OnecloudCluster 资源的 YAML 详情&lt;/span>
+$ kubectl get onecloudclusters.onecloud.yunion.io -n onecloud default -o yaml
+&lt;span style="color:#8f5902;font-style:italic"># 进入 edit 编辑界面&lt;/span>
+$ kubectl edit onecloudclusters -n onecloud default
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="镜像控制">镜像控制&lt;/h2>
+&lt;p>OnecloudCluster 资源的镜像版本控制的关键属性简介如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>属性&lt;/th>
+&lt;th>作用&lt;/th>
+&lt;th>默认值&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>.spec.imageRepository&lt;/td>
+&lt;td>控制所有服务的镜像仓库地址&lt;/td>
+&lt;td>registry.cn-beijing.aliyuncs.com/yunionio&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>.spec.version&lt;/td>
+&lt;td>控制所有服务镜像的 tag&lt;/td>
+&lt;td>由部署时指定，比如 &amp;lsquo;v3.6.9&amp;rsquo;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>.spec.$(组件名).repository&lt;/td>
+&lt;td>控制该组件镜像的仓库地址&lt;/td>
+&lt;td>默认没有设置，可以通过设置该值单独控制组件的镜像仓库&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>.spec.$(组件名).tag&lt;/td>
+&lt;td>控制该组件镜像的 tag&lt;/td>
+&lt;td>默认没有设置，可以通过设置该值单独控制组件的 tag&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="统一修改版本">统一修改版本&lt;/h3>
+&lt;p>通过修改 default onecloudcluster &lt;code>spec.imageRepository&lt;/code> 和 &lt;code>spec.version&lt;/code> 属性，就会把所有服务的镜像统一更改，以下是使用场景举例:&lt;/p>
+&lt;ol>
+&lt;li>把所有的服务镜像通一修改到 archdev-v36，修改 &lt;code>spec.version&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 这里的 oc 是 onecloudcluster 的简写，也可以识别&lt;/span>
+$ kubectl edit oc -n onecloud default
+...
+tolerations:
+- effect: NoSchedule
+key: node-role.kubernetes.io/master
+- effect: NoSchedule
+key: node-role.kubernetes.io/controlplane
+&lt;span style="color:#8f5902;font-style:italic"># 修改这里的 version ，然后所有服务对应 pod 里面的 image tag 都会变成 archdev-v36&lt;/span>
+version: archdev-v36
+vpcAgent:
+disable: &lt;span style="color:#204a87">false&lt;/span>
+image: registry.cn-beijing.aliyuncs.com/yunionio/vpcagent:archdev-v36
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>修改所有服务镜像仓库到 registry.cn-beijing.aliyuncs.com/zexi 拉取镜像，修改 &lt;code>spec.imageRepository&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit oc -n onecloud default
+spec:
+...
+tolerations:
+- effect: NoSchedule
+key: node-role.kubernetes.io/master
+- effect: NoSchedule
+key: node-role.kubernetes.io/controlplane
+&lt;span style="color:#8f5902;font-style:italic"># 这里修改 imageRepository 的值，所有的服务对应的 pod 里面的 image 都会从 `registry.cn-beijing.aliyuncs.com/zexi` 这个仓库拉取&lt;/span>
+imageRepository: registry.cn-beijing.aliyuncs.com/zexi
+influxdb:
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>&lt;code>spec.imageRepository&lt;/code> 和 &lt;code>spec.version&lt;/code> 可以同时组合使用，这样就可以统一配置各个服务的镜像地址。&lt;/li>
+&lt;/ol>
+&lt;p>修改完这些属性后，可以查看 pods 的状态，会发现所有的 pods 都在重新拉取镜像启动。&lt;/p>
+&lt;h3 id="单独修改组件版本">单独修改组件版本&lt;/h3>
+&lt;p>通过修改各个组件里面的 &lt;code>spec.$(component).repository&lt;/code> 和 &lt;code>spec.$(component).tag&lt;/code> 属性，就会把这个服务对应的 deployment 或者 daemonset 的 image 修改。&lt;/p>
+&lt;p>这两个属性设置 image 的优先级要高于外层的 &lt;code>spec.imageRepository&lt;/code> 和 &lt;code>spec.version&lt;/code>。也就是说通过修改组件的 &lt;code>repository&lt;/code> 和 &lt;code>tag&lt;/code> 属性，可以做到其它组件镜像不变的情况下，修改单个组件的 image ，这种机制在开发的时候有用。&lt;/p>
+&lt;p>下面以 region 为例：&lt;/p>
+&lt;ol>
+&lt;li>指定 &lt;code>spec.regionServer.repository&lt;/code> 为 &lt;code>192.168.0.1:5000/yunionio&lt;/code> 和 &lt;code>spec.regionServer.tag&lt;/code> 为 &lt;code>lzx-dev&lt;/code>，将会把 default-region deployment 里面的 image 改为: &lt;code>192.168.0.1:5000/yunionio/region:lzx-dev&lt;/code>。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit oc -n onecloud default
+spec:
+...
+regionServer:
+disable: &lt;span style="color:#204a87">false&lt;/span>
+dnsDomain: cloud.onecloud.io
+&lt;span style="color:#8f5902;font-style:italic"># 这里设置 repository&lt;/span>
+repository: 192.168.0.1:5000/yunionio
+&lt;span style="color:#8f5902;font-style:italic"># 这里设置 tag&lt;/span>
+tag: lzx-dev
+dnsServer: 10.127.40.252
+image: registry.cn-beijing.aliyuncs.com/yunionio/region:archdev-v36
+imagePullPolicy: IfNotPresent
+replicas: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 现在查看 default-region 这个 deployment&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 会发现里面的 image 已经被 operator 按照 $(spec.regionServer.repository)/region:$(spec.regionServer.tag) 的格式修改了&lt;/span>
+$ kubectl get deployment -n onecloud default-region -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep image:
+image: 192.168.0.1:5000/yunionio/region:lzx-dev
+image: 192.168.0.1:5000/yunionio/region:lzx-dev
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

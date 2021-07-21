@@ -1,5 +1,5 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云联壹云 – 安装部署</title><link>https://www.cloudpods.org/v3.3/docs/setup/</link><description>Recent content in 安装部署 on 云联壹云</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.3/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/v3.3/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/intro/</guid><description>
-&lt;p>云联壹云 目前仅支持在 CentOS 7 上运行，待部署组件/服务如下:&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org/v3.3/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.3/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/v3.3/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/intro/</guid><description>
+&lt;p>OneCloud 目前仅支持在 Centos 7 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -106,7 +106,7 @@
 &lt;p>单独拿两个节点部署 keepalived 和 haproxy 作为后端 kubernetes 控制平面的负载均衡器，拓扑结构如下:&lt;/p>
 &lt;p>&lt;img src="../images/k8s.png" alt="">&lt;/p>
 &lt;p>两个节点上面分别部署 keepalived 和 haproxy 组成负载均衡集群，haproxy 的 backend 为后端的 kubernetes control plane node，vip(虚ip) 在这两个节点之间漂移形成高可用。&lt;/p>
-&lt;p>另外 云联壹云 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
+&lt;p>另外 OneCloud 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 haproxy 提供 vip，在2个 haproxy 实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。&lt;/p>
 &lt;h3 id="部署配置-keepalived">部署配置 keepalived&lt;/h3>
@@ -268,7 +268,7 @@ tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="
 tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:1080 0.0.0.0:* LISTEN 10033/haproxy
 &lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h1>
 &lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/v3.3/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/db-ha/</guid><description>
-&lt;p>云联壹云 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
+&lt;p>OneCloud 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
 &lt;h3 id="部署配置-mariadb-主主复制">部署配置 Mariadb 主主复制&lt;/h3>
@@ -519,9 +519,9 @@ inet6 fe80::222:cfff:fe40:1e29/64 scope link
 valid_lft forever preferred_lft forever
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org/v3.3/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/controlplane/</guid><description>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>云联壹云 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
+&lt;p>OneCloud 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
-&lt;li>操作系统: CentOS 7.6&lt;/li>
+&lt;li>操作系统: Centos 7.6&lt;/li>
 &lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li>
 &lt;li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li>
 &lt;li>docker: ce-19.03.9&lt;/li>
@@ -577,8 +577,8 @@ $ systemctl restart mariadb
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-docker">安装配置 docker&lt;/h3>
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
-&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.4/yunion.repo
+&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion onecloud rpm 源&lt;/span>
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.3/yunion.repo
 $ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
@@ -607,8 +607,8 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/dae
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-云联壹云-依赖内核">安装 云联壹云 依赖内核&lt;/h3>
-&lt;p>这里需要安装我们编译的内核，这个内核是基于上游 CentOS 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-onecloud-依赖内核">安装 onecloud 依赖内核&lt;/h3>
+&lt;p>这里需要安装我们编译的内核，这个内核是基于上游 Centos 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装内核&lt;/span>
 $ yum install -y &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
@@ -621,7 +621,7 @@ $ reboot
 $ uname -r
 3.10.0-1062.4.3.el7.yn20191203.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-kubelet">安装配置 kubelet&lt;/h3>
-&lt;p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
+&lt;p>从 yunion onecloud rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
 $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
@@ -640,7 +640,6 @@ $ systemctl disable firewalld
 &lt;span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager&lt;/span>
 $ systemctl stop NetworkManager
 $ systemctl disable NetworkManager
-$ ps -ef&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep dhcp &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $2}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>xargs &lt;span style="color:#204a87">kill&lt;/span> -9
 &lt;span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求&lt;/span>
 $ modprobe br_netfilter
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; /etc/sysctl.conf
@@ -677,7 +676,7 @@ $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&
 &lt;span style="color:#8f5902;font-style:italic"># 安装必要的服务，并启动和设置为开机自启&lt;/span>
 $ yum install -y yunion-executor-server &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h3>
-&lt;p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 云联壹云 控制节点相关的服务到 kubernetes 集群。&lt;/p>
+&lt;p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 OneCloud 控制节点相关的服务到 kubernetes 集群。&lt;/p>
 &lt;p>拉取必要的 docker 镜像&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm config images pull
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 ocadm 部署 kubernetes 集群&lt;/p>
@@ -692,11 +691,11 @@ $ &lt;span style="color:#000">MYSQL_HOST&lt;/span>&lt;span style="color:#ce5c00;
 &lt;span style="color:#8f5902;font-style:italic"># 如果是高可用部署，记得在设置 EXTRA_OPT=&amp;#39; --control-plane-endpoint 10.168.222.18:6443&amp;#39;&lt;/span>
 $ &lt;span style="color:#000">EXTRA_OPT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
 $ &lt;span style="color:#8f5902;font-style:italic">#EXTRA_OPT=&amp;#39; --control-plane-endpoint 10.168.222.18:6443&amp;#39;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 云联壹云 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 开始部署 kubernetes 以及 onecloud 必要的控制服务，稍等 3 分钟左右，kubernetes 集群会部署完成&lt;/span>
 $ ocadm init --mysql-host &lt;span style="color:#000">$MYSQL_HOST&lt;/span> &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --mysql-user root --mysql-password &lt;span style="color:#000">$MYSQL_PASSWD&lt;/span> &lt;span style="color:#000">$EXTRA_OPT&lt;/span>
 ...
-Your Kubernetes and control-plane has initialized successfully!
+Your Kubernetes and Onecloud control-plane has initialized successfully!
 ...
 &lt;/code>&lt;/pre>&lt;/div>
 &lt;div class="alert alert-primary" role="alert">
@@ -723,15 +722,15 @@ kube-system kube-scheduler-lzx-ocadm-test2 1/1 Running &lt;span style="color:#00
 kube-system traefik-ingress-controller-qwkfb 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h1m
 local-path-storage local-path-provisioner-5978cff7b7-7h8df 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h1m
 onecloud onecloud-operator-6d4bddb8c4-tkjkh 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h37m
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-云联壹云-集群">创建 云联壹云 集群&lt;/h3>
-&lt;p>当 kubernetes 集群部署完成后，就可以通过 &lt;code>ocadm cluster create&lt;/code> 创建 云联壹云 集群，该集群由 onecloud namespace 里面 &lt;strong>onecloud-operator&lt;/strong> deployment 自动部署和维护。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-onecloud-集群">创建 onecloud 集群&lt;/h3>
+&lt;p>当 kubernetes 集群部署完成后，就可以通过 &lt;code>ocadm cluster create&lt;/code> 创建 onecloud 集群，该集群由 onecloud namespace 里面 &lt;strong>onecloud-operator&lt;/strong> deployment 自动部署和维护。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建集群&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 如果要部署企业版的组件可以在 cluster create 的时候加上 --use-ee 参数&lt;/span>
 $ ocadm cluster create --wait
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>执行完 &lt;code>ocadm cluster create --wait&lt;/code> 命令后，&lt;strong>onecloud-operator&lt;/strong> 会自动创建各个服务组件对应的 pod，等待一段该命令执行完毕， 就可以通过访问 &amp;lsquo;https://本机IP:443&amp;rsquo; 登入前端界面。&lt;/p>
 &lt;h3 id="创建登录用户">创建登录用户&lt;/h3>
 &lt;p>当控制节点部署完成后，需要创建一个用于前端登录的用户。云平台的管理员认证信息由 &lt;code>ocadm cluster rcadmin&lt;/code> 命令可以得到 , 这些认证信息在使用 climc 控制云平台资源时会用到。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取连接 云联壹云 集群的环境变量&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取连接 onecloud 集群的环境变量&lt;/span>
 $ ocadm cluster rcadmin
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_AUTH_URL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https://10.168.222.218:30357/v3
 &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_USERNAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>sysadmin
@@ -770,25 +769,19 @@ $ curl -k https://10.168.222.218
 &lt;p>如果安装过程中失败，或者想清理环境，可执行以下命令删除 kubernetes 集群。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm reset --force
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="后续">后续&lt;/h2>
-&lt;p>如果没有意外，现在应该已经部署好了 云联壹云 on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。&lt;/p>
+&lt;p>如果没有意外，现在应该已经部署好了 onecloud on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。&lt;/p>
 &lt;h3 id="添加计算节点">添加计算节点&lt;/h3>
 &lt;p>当控制节点搭建完成后，可以参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/host/">计算节点&lt;/a> 一节的内容，添加计算节点，组建一套私有云集群。&lt;/p>
 &lt;h3 id="控制节点作为计算节点">控制节点作为计算节点&lt;/h3>
 &lt;p>默认情况下 &lt;code>ocadm init&lt;/code> 创建的节点是控制节点，不会运行 onecloud 计算节点的服务。如果需要把控制节点也作为计算节点，需要执行以下步骤:&lt;/p>
-&lt;ul>
-&lt;li>安装计算节点需要的依赖，参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">&amp;ldquo;计算节点/安装依赖&amp;rdquo;&lt;/a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装rpm包&lt;/span>
-$ yum --disablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;*&amp;#39;&lt;/span> --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;yunion*&amp;#39;&lt;/span> install -y &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor-server &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kmod-openvswitch &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools
-$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>在控制节点启用该节点作为计算节点，命令如下:&lt;/li>
-&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>安装计算节点需要的依赖，参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">&amp;ldquo;计算节点/安装依赖&amp;rdquo;&lt;/a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在控制节点启用该节点作为计算节点，命令如下:&lt;/p>
+&lt;/li>
+&lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 用 kubectl get nodes 拿到当前的节点名称&lt;/span>
 $ kubectl get nodes
 NAME STATUS ROLES AGE
@@ -805,13 +798,13 @@ default-host-7b5cr 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">2
 default-host-ctx5s 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.5 controller02
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="升级回滚组件版本">升级/回滚组件版本&lt;/h3>
 &lt;p>&lt;code>ocadm init&lt;/code> 的时候使用 &lt;code>--onecloud-version&lt;/code> 选项设置了组件的版本，可以使用 &lt;code>ocadm cluster update&lt;/code> 命令升级组件到指定的版本，保持更新。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看现在 云联壹云 cluster 的版本&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看现在 onecloud cluster 的版本&lt;/span>
 $ kubectl get oc -n onecloud default -o &lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
 v3.0.0-20200112.0
 &lt;span style="color:#8f5902;font-style:italic"># 升级到 v3.0.0-20200113.0&lt;/span>
 $ ocadm cluster update --version v3.0.0-20200113.0 --wait
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org/v3.3/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/components/</guid><description>
-&lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，云联壹云 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
+&lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，onecloud 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
 &lt;h3 id="环境准备">环境准备&lt;/h3>
 &lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
 &lt;h3 id="获取加入集群-token">获取加入集群 token&lt;/h3>
@@ -895,7 +888,7 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">kernel&lt;/td>
-&lt;td style="text-align:center">云联壹云 提供的内核&lt;/td>
+&lt;td style="text-align:center">onecloud 提供的内核&lt;/td>
 &lt;td style="text-align:center">rpm&lt;/td>
 &lt;td style="text-align:center">-&lt;/td>
 &lt;/tr>
@@ -904,7 +897,7 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 &lt;h2 id="环境">环境&lt;/h2>
 &lt;ul>
 &lt;li>
-&lt;p>操作系统: CentOS 7.x&lt;/p>
+&lt;p>操作系统: Centos 7.x&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>硬件要求:&lt;/p>
@@ -932,7 +925,7 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span>&lt;span style="color:#4e9a06">[yunion]
 &lt;/span>&lt;span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
-&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.4
+&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.3
 &lt;/span>&lt;span style="color:#4e9a06">sslverify=0
 &lt;/span>&lt;span style="color:#4e9a06">failovermethod=priority
 &lt;/span>&lt;span style="color:#4e9a06">enabled=1
@@ -943,7 +936,7 @@ $ systemctl disable firewalld
 $ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/SELINUX=enforcing/SELINUX=disabled/g&amp;#39;&lt;/span> /etc/selinux/config
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>安装 rpm 包&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum --disablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;*&amp;#39;&lt;/span> --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;yunion*&amp;#39;&lt;/span> install -y &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp fetchclient fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor-server &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
@@ -959,81 +952,7 @@ $ uname -r
 3.10.0-1062.4.3.el7.yn20191203.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-docker-和-kubelet">安装 docker 和 kubelet&lt;/h3>
 &lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
-&lt;h4 id="安装配置-docker">安装配置 docker&lt;/h4>
-&lt;p>安装 docker&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
-&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion 云联壹云 rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.4/yunion.repo
-$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
-&lt;/span>&lt;span style="color:#4e9a06">{
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;bridge&amp;#34;: &amp;#34;none&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;iptables&amp;#34;: false,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;exec-opts&amp;#34;:
-&lt;/span>&lt;span style="color:#4e9a06"> [
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;native.cgroupdriver=systemd&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> ],
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;data-root&amp;#34;: &amp;#34;/opt/docker&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;live-restore&amp;#34;: true,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;log-driver&amp;#34;: &amp;#34;json-file&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;log-opts&amp;#34;:
-&lt;/span>&lt;span style="color:#4e9a06"> {
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;max-size&amp;#34;: &amp;#34;100m&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> },
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;registry-mirrors&amp;#34;:
-&lt;/span>&lt;span style="color:#4e9a06"> [
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;https://lje6zxpk.mirror.aliyuncs.com&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;https://lms7sxqp.mirror.aliyuncs.com&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;https://registry.docker-cn.com&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> ]
-&lt;/span>&lt;span style="color:#4e9a06">}
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="安装配置-kubelet">安装配置 kubelet&lt;/h4>
-&lt;p>从 云联壹云 rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
-$ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
-$ &lt;span style="color:#204a87">source&lt;/span> /etc/profile
-$ systemctl &lt;span style="color:#204a87">enable&lt;/span> kubelet
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装完 kubernetes 相关的二进制后，还需要对系统做一些配置并启用 ipvs 作为 kube-proxy 内部的 service 负载均衡&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用 swap&lt;/span>
-$ swapoff -a
-&lt;span style="color:#8f5902;font-style:italic"># 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 关闭 selinux&lt;/span>
-$ setenforce &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/SELINUX=enforcing/SELINUX=disabled/&amp;#39;&lt;/span> /etc/selinux/config
-&lt;span style="color:#8f5902;font-style:italic"># 禁用 firewalld&lt;/span>
-$ systemctl stop firewalld
-$ systemctl disable firewalld
-&lt;span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager&lt;/span>
-$ systemctl stop NetworkManager
-$ systemctl disable NetworkManager
-$ ps -ef&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep dhcp &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $2}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>xargs &lt;span style="color:#204a87">kill&lt;/span> -9
-&lt;span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求&lt;/span>
-$ modprobe br_netfilter
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; /etc/sysctl.conf
-&lt;/span>&lt;span style="color:#4e9a06">net.bridge.bridge-nf-call-iptables=1
-&lt;/span>&lt;span style="color:#4e9a06">net.bridge.bridge-nf-call-ip6tables=1
-&lt;/span>&lt;span style="color:#4e9a06">net.ipv4.ip_forward=1
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ sysctl -p
-&lt;span style="color:#8f5902;font-style:italic"># 配置并开启 ipvs&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysconfig/modules/ipvs.modules
-&lt;/span>&lt;span style="color:#4e9a06">#!/bin/bash
-&lt;/span>&lt;span style="color:#4e9a06">ipvs_modules=&amp;#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">for kernel_module in \${ipvs_modules}; do
-&lt;/span>&lt;span style="color:#4e9a06"> /sbin/modinfo -F filename \${kernel_module} &amp;gt; /dev/null 2&amp;gt;&amp;amp;1
-&lt;/span>&lt;span style="color:#4e9a06"> if [ $? -eq 0 ]; then
-&lt;/span>&lt;span style="color:#4e9a06"> /sbin/modprobe \${kernel_module}
-&lt;/span>&lt;span style="color:#4e9a06"> fi
-&lt;/span>&lt;span style="color:#4e9a06">done
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ chmod &lt;span style="color:#0000cf;font-weight:bold">755&lt;/span> /etc/sysconfig/modules/ipvs.modules &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> bash /etc/sysconfig/modules/ipvs.modules &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> lsmod &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep ip_vs
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="控制节点操作">控制节点操作&lt;/h2>
+&lt;h2 id="控制节点操作">控制节点操作&lt;/h2>
 &lt;p>以下操作在控制节点进行。&lt;/p>
 &lt;h3 id="创建计算节点所在的网段">创建计算节点所在的网段&lt;/h3>
 &lt;p>我的环境&lt;strong>计算节点&lt;/strong>的 ip 为 10.168.222.140，就创建一个对应的 &lt;strong>计算节点(host)网段&lt;/strong>。&lt;/p>
@@ -1141,19 +1060,11 @@ $ climc endpoint-list --details &lt;span style="color:#000;font-weight:bold">|&l
 $ climc webconsole-server testvm01
 https://console.yunion.cn/web-console?access_token&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>FI-VXQSAonhzfSnxVTKCCbwHinp7swlRkmi-4p6s-4OfZpg6TG9YhWuwbHEUA1D7XoKu_w%3D%3D&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">api_server&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https%3A%2F%2F10.168.222.216%3A8899&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">password&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>65xB2kaE&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">protocol&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>vnc
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org/v3.3/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/baremetal/</guid><description>
-&lt;p>启用 baremetal-agent 之前需要部署 云联壹云 集群，详见 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
-&lt;p>待集群准备完毕后需要指定集群中的一个 node 来部署 baremetal-agent 服务。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-目前只能指定一个 node 来部署运行 baremetal-agent 服务，因为 baremetal-agent 服务是有状态的，不能多副本夸节点运行。
-&lt;/div>
+&lt;p>启用 baremetal-agent 之前需要部署 onecloud 集群，详见 &lt;a href="https://www.cloudpods.org/v3.3/docs/setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a>&lt;/p>
+&lt;p>待集群准备完毕后指定 node 来部署 baremetal-agent 服务&lt;/p>
 &lt;h2 id="启用-baremetal-agent">启用 baremetal-agent&lt;/h2>
-&lt;p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 云联壹云 host 服务的 dhcp relay 功能。&lt;/p>
+&lt;p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 onecloud host 服务的 dhcp relay 功能。&lt;/p>
 &lt;h3 id="如何配置-host-服务-启用-dhcp-relay">如何配置 host 服务 启用 dhcp relay&lt;/h3>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-如果在交换机上配置了 dhcp relay，则不需要在这里配置计算节点的 dhcp_relay 了，可以跳过这一步。
-&lt;/div>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 登录到已经部署好计算节点的服务器上修改 /etc/yunion/host.conf，添加 dhcp_relay 配置项：&lt;/span>
 dhcp_relay:
 - 10.168.222.198 &lt;span style="color:#8f5902;font-style:italic"># baremetal agent dhcp服务监听地址&lt;/span>
@@ -1178,7 +1089,7 @@ $ climc agent-list
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> f3c2c671-c41d-4f30-8d04-e022b49bb9b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal-10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.168.222.150:8879 &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal &lt;span style="color:#000;font-weight:bold">|&lt;/span> remotes/origin/master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>5e415506120011509&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6230b485-2e54-480e-8284-33360b8202a8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/howto/baremetal">&amp;ldquo;操作管理/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="https://www.cloudpods.org/v3.3/docs/howto/baremetal">&amp;ldquo;操作管理/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理&lt;/p>
 &lt;h2 id="禁用-baremetal-agent">禁用 baremetal-agent&lt;/h2>
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
@@ -1199,43 +1110,40 @@ $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org/v3.3/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.3/docs/setup/upgrade/</guid><description>
-&lt;p>本文介绍从 v3.3.x 升级到 v3.4.x 的步骤以及注意事项。&lt;/p>
-&lt;p>版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.4.x 需要以下的步骤：&lt;/p>
+&lt;p>本文介绍从 v3.2.x 升级到 v3.3.x 的步骤以及注意事项。&lt;/p>
+&lt;p>版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.2.x 需要以下的步骤：&lt;/p>
 &lt;ol>
 &lt;li>v3.0.x =&amp;gt; v3.1.x&lt;/li>
 &lt;li>v3.1.x =&amp;gt; v3.2.x&lt;/li>
-&lt;li>v3.2.x =&amp;gt; v3.3.x&lt;/li>
-&lt;li>v3.3.x =&amp;gt; v3.4.x&lt;/li>
 &lt;/ol>
 &lt;p>直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://opensource.yunion.cn/v3.2/docs/setup/upgrade">v3.1.x 升级到 v3.2.x&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://opensource.yunion.cn/v3.3/docs/setup/upgrade">v3.2.x 升级到 v3.3.x&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;ol>
 &lt;li>更新 rpm 源，升级 ocadm&lt;/li>
-&lt;li>使用 ocadm 升级 云联壹云 服务&lt;/li>
+&lt;li>使用 ocadm 升级 OneCloud 服务&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看当前版本">查看当前版本&lt;/h2>
 &lt;p>可以使用 kubectl 查看当前集群的版本&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.3.3&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.2.3&lt;/span>
 $ kubectl -n onecloud get onecloudclusters default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
-v3.3.3
+v3.2.3
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-rpm-repo">更新 rpm repo&lt;/h2>
-&lt;p>ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 云联壹云 服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改 baseurl，把 3.3 改成 3.4&lt;/span>
-$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s|baseurl.*|baseurl=https://iso.yunion.cn/3.4|g&amp;#39;&lt;/span> /etc/yum.repos.d/yunion.repo
+&lt;p>ocadm 和 climc 这些命令行工具是以 yum rpm 包的方式安装，所以升级之前需要先更新这两个工具，然后再使用 ocadm 升级 OneCloud 服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改 baseurl，把 3.2 改成 3.3&lt;/span>
+$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s|baseurl.*|baseurl=https://iso.yunion.cn/3.3|g&amp;#39;&lt;/span> /etc/yum.repos.d/yunion.repo
 &lt;span style="color:#8f5902;font-style:italic"># 更新 yunion-ocadm, yunion-climc&lt;/span>
 $ yum clean all
 $ yum install -y yunion-ocadm yunion-climc
 &lt;span style="color:#8f5902;font-style:italic"># 查看 ocadm 版本&lt;/span>
 $ ocadm version -o short
-tags/v3.4.3&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>99f04e620101609&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-云联壹云-服务">更新 云联壹云 服务&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocadm 更新 operator 以及相关服务到 v3.4.3 版本&lt;/span>
+tags/v3.3.0&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>bece1be20080211&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-onecloud-服务">更新 OneCloud 服务&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocadm 更新 onecloud operator 以及相关服务到 v3.3.0 版本&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span>
-$ ocadm cluster update --operator-version v3.4.3 --version v3.4.3 --wait
+$ ocadm cluster update --operator-version v3.3.0 --version v3.3.0 --wait
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以在升级的过程中使用 kubectl 查看对应 pods 的升级情况&lt;/span>
 $ kubectl get pods -n onecloud --watch
 &lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

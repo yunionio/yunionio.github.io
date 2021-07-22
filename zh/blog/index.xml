@@ -1,4 +1,180 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: 问题分析：为什么keystone的本地用户认证接口压测性能很差？</title><link>https://www.cloudpods.org/zh/blog/2021/07/01/cloudpods-lb-application-intro/</link><pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/07/01/cloudpods-lb-application-intro/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: QEMU+OCFS2: 使用OCFS2作为虚拟机磁盘文件的SAN存储文件系统</title><link>https://www.cloudpods.org/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</link><pubDate>Fri, 02 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 小助手&lt;/p>
+&lt;p>本文介绍OCFS2共享集群文件系统，如何配置以及如何在线扩容。&lt;/p>
+&lt;h2 id="什么是ocfs2文件系统">什么是OCFS2文件系统？&lt;/h2>
+&lt;p>OCFS2是 Oracle Cluster File System Version 2 的缩写，是Oracle公司内部开发的共享磁盘文件系统，于2011年开源，使用GNU GPL协议。&lt;/p>
+&lt;p>什么是共享磁盘文件系统呢？我们下面通过解释三个概念的对比来说明：&lt;/p>
+&lt;ul>
+&lt;li>磁盘文件系统&lt;/li>
+&lt;/ul>
+&lt;p>这是最常见的文件系统，构建在&lt;strong>本地&lt;/strong>的磁盘（块存储，Block Storage）之上。通过磁盘文件系统，磁盘上的内容以文件目录的形式进行组织，方便了用户有效使用磁盘上的存储空间。磁盘文件系统的例子有：ext4, xfs等。&lt;/p>
+&lt;ul>
+&lt;li>共享文件系统&lt;/li>
+&lt;/ul>
+&lt;p>共享文件系统通过远端服务器上运行的服务程序访问挂载在远端服务器上的文件系统。例子为：NFS（Network File System），Samba（CIFS）。&lt;/p>
+&lt;ul>
+&lt;li>共享磁盘文件系统&lt;/li>
+&lt;/ul>
+&lt;p>共享磁盘文件系统又叫集群文件系统（Cluster File System），是专门构建在网络共享的磁盘上的文件系统。网络共享磁盘通过SAN（Storage Area Network）被多台主机共同访问，和磁盘文件系统相比，共享磁盘文件系统除了要解决磁盘空间的有效管理问题之外，还要解决文件系统被多台主机同时访问的并发修改问题。因此分布式锁机制是共享磁盘文件系统共有的机制。&lt;/p>
+&lt;p>从使用场景来看，三种文件系统的差别很明显：磁盘文件系统直接访问本地磁盘，共享文件系统需要通过共享文件服务访问挂载在服务器上的文件系统，而共享磁盘文件系统则直接访问共享磁盘。&lt;/p>
+&lt;p>因此，在网络共享的场景下，通过共享磁盘文件系统访问SAN存储，可以直接访问共享存储设备。访问路径短，效率高，并且能解决多主机并发访问共享存储的问题。&lt;/p>
+&lt;h2 id="qemu通过ocfs2使用共享san存储">QEMU通过OCFS2使用共享SAN存储&lt;/h2>
+&lt;p>QEMU使用共享SAN存储有多种方案。常见方案是在需要新建虚拟机磁盘时，使用SAN存储的管理API，分配出卷（LUN）之后，直接将卷挂载给QEMU虚拟机使用。这种方案的优点是QEMU虚拟机直接访问LUN，损耗低，性能好。而缺点是需要使用存储设备特定的API，和设备绑定，不够通用。&lt;/p>
+&lt;p>本文介绍通过OCFS2共享磁盘文件系统，将一个大容量的SAN存储卷作为存储QEMU虚拟机虚拟磁盘文件的存储，达到QEMU使用共享储存的目的。&lt;/p>
+&lt;h2 id="ocfs2文件系统的配置">OCFS2文件系统的配置&lt;/h2>
+&lt;h3 id="准备环境">准备环境&lt;/h3>
+&lt;p>这一步安装和配置软件&lt;/p>
+&lt;h4 id="下载和安装ocfs2-tools的rpm包安装也依赖net-tools">下载和安装ocfs2-tools的rpm包安装（也依赖net-tools）&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
+$ rpm --import http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7
+$ yum install yum-plugin-downloadonly -y
+$ mkdir /tmp/ocfs2 &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> /tmp/ocfs2/
+$ yum install --downloadonly --downloaddir&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/tmp/ocfs2/ ocfs2-tools net-tools -y
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>具体操作步骤见官方文档：https://docs.oracle.com/cd/E52668_01/E54669/E54669.pdf, Chapter 23 Oracle Cluster File System Version 2&lt;/p>
+&lt;h4 id="安装cloudpods内核自带编译了ocfs2文件系统的内核模块">安装Cloudpods内核，自带编译了ocfs2文件系统的内核模块&lt;/h4>
+&lt;p>由于OCFS2使用场景较少，在常见发行版的内核中都不会启用OCFS2的内核模块。我们提供了预先编译好的启用了OCFS2的内核安装包：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils
+&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
+$ yum install -y kernel-3.10.0-1062.4.3.el7.yn20191203
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>同时，部署时写配置文件到/etc/modules-load.d/ocfs2.conf，确保内核的ocfs2模块自动加载&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Load ocfs2.ko at boot&lt;/span>
+ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装内核后需要重启生效，重启后检查新的内核已经生效&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ uname -r
+3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="ocfs2配置文件">OCFS2配置文件&lt;/h4>
+&lt;p>OCFS2配置简单，只需要在每个要挂载OCFS2的节点上都配置相同的配置文件，申明成员节点即可。&lt;/p>
+&lt;p>以下为示例配置文件:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /etc/ocfs2/cluster.conf
+cluster:
+&lt;span style="color:#000">node_count&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 集群节点数目
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2 &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 集群名字
+node:
+&lt;span style="color:#000">ip_port&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7777&lt;/span>
+&lt;span style="color:#000">ip_address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 192.168.7.10
+&lt;span style="color:#000">number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 节点编号
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> client01 &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 节点名字
+&lt;span style="color:#000">cluster&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2
+node:
+&lt;span style="color:#000">ip_port&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7777&lt;/span>
+&lt;span style="color:#000">ip_address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 192.168.7.11
+&lt;span style="color:#000">number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> client02
+&lt;span style="color:#000">cluster&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2
+node:
+&lt;span style="color:#000">ip_port&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7777&lt;/span>
+&lt;span style="color:#000">ip_address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 192.168.7.12
+&lt;span style="color:#000">number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span>
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> client03
+&lt;span style="color:#000">cluster&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="初始化ocfs2的配置">初始化ocfs2的配置&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ o2cb.init configure 第一项选yes，集群名称填上面配置文件里的，默认是ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="确保o2cb-ocfs2服务启动并设置为开机自启">确保o2cb ocfs2服务启动并设置为开机自启&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl &lt;span style="color:#204a87">enable&lt;/span> o2cb ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，OCFS2的软件和配置完成，下一步将格式化磁盘，挂载OCFS2文件系统&lt;/p>
+&lt;h3 id="挂载ocfs2文件系统">挂载OCFS2文件系统&lt;/h3>
+&lt;p>这一步使用OCFS2格式化网络共享磁盘，并且挂载到各台宿主机上&lt;/p>
+&lt;p>在此之前可能要配置SAN存储的多路径multipath(由于行文原因，细节在此省略)，在此之后使用parted分区，格式化成ocfs2（只在一台机器分区格式化，其他机器partprobe就能看到格式化后的分区）并挂载到多台机器&lt;/p>
+&lt;p>以下命令在第一个节点执行：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看多路径multipath磁盘情况&lt;/span>
+$ multipath -l
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用mkfs.ocfs2格式化分区&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ parted /dev/dm-0
+$ mkfs.ocfs2 /dev/dm-1
+$ mount /dev/dm-1 /data
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>持久化磁盘挂载到/etc/fstab&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># /etc/fstab&lt;/span>
+/dev/dm-1 /opt/cloud/workspace/disks ocfs2 _netdev,defaults &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在其他节点，则只需要执行partprobe探测分区变化，并且挂载分区。也应该修改/etc/fstab，持久化分区的挂载。&lt;/p>
+&lt;h2 id="cloudpods使用ocfs2文件系统">Cloudpods使用OCFS2文件系统&lt;/h2>
+&lt;p>在Cloudpods中，通过OCFS2挂载的共享文件系统可以作为GPFS类型的共享存储类型进行管理。通过以下步骤将OCFS2的共享存储注册到Cloudpods，并且用来存储虚拟机用的虚拟磁盘文件。&lt;/p>
+&lt;h3 id="注册ocfs2块存储">注册OCFS2块存储&lt;/h3>
+&lt;p>在【存储-块存储】界面，新建一个GPFS类型的共享存储。&lt;/p>
+&lt;p>&lt;img src="ocfs2-create.png" alt="" width="800" />&lt;/p>
+&lt;p>存储记录创建成功后，选择该存储的“管理宿主机”菜单按钮，在关联存储的宿主机列表，选择“关联宿主机”，将挂载该存储的宿主机节点都注册关联，让Cloudpods平台知道这个共享存储挂载到哪些宿主机的哪个目录下。&lt;/p>
+&lt;h3 id="使用ocfs2创建主机虚拟磁盘">使用OCFS2创建主机虚拟磁盘&lt;/h3>
+&lt;p>以上配置完成后，在新建虚拟机时，就可以选择新建的OCFS2存储作为虚拟磁盘的存储。&lt;/p>
+&lt;h2 id="ocfs2文件系统的扩容">OCFS2文件系统的扩容&lt;/h2>
+&lt;p>首先需要将OCFS2只挂载在第一个节点，将其他节点都卸载。以下操作都只在第一个节点上执行。&lt;/p>
+&lt;p>首先，需要在SAN存储扩容该物理卷，这一步在SAN设备上操作，在此不详叙述。&lt;/p>
+&lt;p>其次，针对multipath设备，需要rescan该设备下的每个磁盘，让操作系统感知到设备的扩容。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先执行 multipath -l 查看multipath设备底层的磁盘设备&lt;/span>
+$ multipath -ll
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ignoring extra data starting with &lt;span style="color:#4e9a06">&amp;#39;}&amp;#39;&lt;/span> on line &lt;span style="color:#0000cf;font-weight:bold">16&lt;/span> of /etc/multipath.conf
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdi: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdb: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdc: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdd: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sde: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdf: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdg: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdh: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdq: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdj: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdm: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdn: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdo: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdp: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdk: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdl: alua not supported
+36488eef100d71ed122ace06c00000001 dm-0 HUAWEI ,XSG1
+&lt;span style="color:#000">size&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>15T &lt;span style="color:#000">features&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;1 queue_if_no_path&amp;#39;&lt;/span> &lt;span style="color:#000">hwhandler&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;0&amp;#39;&lt;/span> &lt;span style="color:#000">wp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>rw
+&lt;span style="color:#4e9a06">`&lt;/span>-+- &lt;span style="color:#000">policy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;service-time 0&amp;#39;&lt;/span> &lt;span style="color:#000">prio&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>-1 &lt;span style="color:#000">status&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>active
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:7:1 sdi 8:128 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:0:1 sdb 8:16 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:1:1 sdc 8:32 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:2:1 sdd 8:48 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:3:1 sde 8:64 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:4:1 sdf 8:80 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:5:1 sdg 8:96 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:6:1 sdh 8:112 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:7:1 sdq 65:0 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:3:1 sdj 8:144 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:6:1 sdm 8:192 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:0:1 sdn 8:208 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:2:1 sdo 8:224 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:5:1 sdp 8:240 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:1:1 sdk 8:160 active ready running
+&lt;span style="color:#4e9a06">`&lt;/span>- 2:0:4:1 sdl 8:176 active ready running
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>对每个设备执行：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &amp;gt; /sys/class/block/sdi/device/rescan
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>再执行下面的命令，让操作系统感知到multipath设备的容量变化：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ multipathd -k
+&lt;span style="color:#8f5902;font-style:italic"># multipathd&amp;gt; resize map 36488eef100d71ed122ace06c00000001&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># ok&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># multipathd&amp;gt; exit&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过上面步骤，操作系统已经感知到设备的容量变化，这时候需要使用parted扩大分区表，方法是使用parted删除分区再重建分区&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ parted /dev/dm-0
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> unit s
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> p
+Model: Linux device-mapper &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>multipath&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>dm&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Disk /dev/dm-0: 32212254720s
+Sector size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>logical/physical&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: 512B/512B
+Partition Table: gpt
+Disk Flags:
+Number Start End Size File system Name Flags
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2048s 10737416191s 10737414144s disks
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> rm &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> mkpart
+Partition name? &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>?
+File system type? &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>ext2&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>?
+Start? &lt;span style="color:#0000cf;font-weight:bold">2048&lt;/span>
+End? 100%
+device-mapper: create ioctl on 36488eef100d71ed122ace06c00000001p1 part1-mpath-36488eef100d71ed122ace06c00000001 failed: Device or resource busy
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> p
+Model: Linux device-mapper &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>multipath&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>dm&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Disk /dev/dm-0: 32212254720s
+Sector size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>logical/physical&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: 512B/512B
+Partition Table: gpt
+Disk Flags:
+Number Start End Size File system Name Flags
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2048s 32212252671s 32212250624s
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> quit
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>扩容分区表之后，再使用 tunefs.ocfs2 扩容文件系统&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 扩容文件系统&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># tunefs.ocfs2 -S /dev/dm-1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过以上步骤后，文件系统扩容完毕。最后，在其余节点执行partprobe感知设备的容量变化，再重新挂载分区就可以了。&lt;/p></description></item><item><title>Blog: 问题分析：为什么keystone的本地用户认证接口压测性能很差？</title><link>https://www.cloudpods.org/zh/blog/2021/07/01/cloudpods-lb-application-intro/</link><pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/07/01/cloudpods-lb-application-intro/</guid><description>
 &lt;p>&lt;strong>作者:&lt;/strong> 邱剑&lt;/p>
 &lt;p>有用户反馈keystone认证本地用户的接口性能很差，因此做了调研。&lt;/p>
 &lt;p>首先使用ab（apache benchmark）模拟用户认证，调用命令行如下：&lt;/p>

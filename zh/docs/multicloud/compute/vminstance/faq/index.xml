@@ -1,0 +1,57 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+常见问题</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/vminstance/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 02 Sep 2021 22:25:05 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/multicloud/compute/vminstance/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 创建页面无任何资源</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/vminstance/faq/no_region/</link><pubDate>Wed, 01 Sep 2021 16:57:43 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/vminstance/faq/no_region/</guid><description>
+&lt;h2 id="现象">现象&lt;/h2>
+&lt;ol>
+&lt;li>如下图所示, 创建页面无任何可选资源
+&lt;img src="../../images/no_region.png" alt="">&lt;/li>
+&lt;/ol>
+&lt;h2 id="可能的原因">可能的原因&lt;/h2>
+&lt;ul>
+&lt;li>前端缓存
+&lt;ol>
+&lt;li>可通过刷新整个页面解决&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>当前所选的域底下没有 &lt;strong>可用&lt;/strong> 的云账号
+&lt;ol>
+&lt;li>&lt;a href="../../../../cloudaccounts/tutorial/create">创建云账号&lt;/a> 到所选域&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>云账号健康状态异常
+&lt;ol>
+&lt;li>查看 &lt;a href="../../../../cloudaccounts/faq/health_check">健康检查&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>没有可用套餐
+&lt;ol>
+&lt;li>同步套餐异常(一般是由于外网不通引起的)&lt;/li>
+&lt;li>请查看控制节点到 &lt;code>https://yunionmeta.oss-cn-beijing.aliyuncs.com&lt;/code> 是否可以正常通信&lt;/li>
+&lt;li>再次同步云账号&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>没有可用的IP子网
+&lt;ol>
+&lt;li>页面默认显示的是有ip子网的平台和区域&lt;/li>
+&lt;li>若页面中没有想要的平台或区域，请确保要选定的平台及区域有正常的ip子网&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 创建虚拟机失败</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/vminstance/faq/create_failed/</link><pubDate>Fri, 11 Jun 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/vminstance/faq/create_failed/</guid><description>
+&lt;h2 id="查看虚拟机日志">查看虚拟机日志&lt;/h2>
+&lt;ul>
+&lt;li>如图点击结果为失败的日志
+&lt;img src="../../images/vm_log.png" alt="">&lt;/li>
+&lt;/ul>
+&lt;h2 id="常见错误整理">常见错误整理&lt;/h2>
+&lt;ul class="nav nav-tabs" id="tabset-zhdocsmulticloudcomputevminstancefaqcreate_failed-1" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#tabset-zhdocsmulticloudcomputevminstancefaqcreate_failed-1-0" role="tab" aria-controls="tabset-zhdocsmulticloudcomputevminstancefaqcreate_failed-1-0" aria-selected="true">阿里云&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;div class="tab-content" id="tabset-zhdocsmulticloudcomputevminstancefaqcreate_failed-1">&lt;div id="tabset-zhdocsmulticloudcomputevminstancefaqcreate_failed-1-0" class="tab-pane show active" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcomputevminstancefaqcreate_failed-1-0">
+&lt;p>&lt;ul>
+&lt;li>Failed to create specification ecs.t5-c1m1.large.processCommonRequest: SDK.ServerError\nErrorCode: InvalidParameter.NotMatch\nRecommend: &lt;a href="https://error-center.aliyun.com/status/search?Keyword=InvalidParameter.NotMatch&amp;amp;source=PopGw">https://error-center.aliyun.com/status/search?Keyword=InvalidParameter.NotMatch&amp;amp;source=PopGw&lt;/a>\nRequestId: BAD90CC0-D76D-589D-9701-1516A6FC3C13\nMessage: the provided &amp;lsquo;Image -&amp;gt; os_type: CentOS&amp;rsquo; and &amp;lsquo;Rule -&amp;gt; os_type: exclude[Ubuntu Debian Aliyun CentOS]&amp;rsquo; are not matched.
+&lt;ul>
+&lt;li>此返回结果一般是由于选择的套餐和镜像冲突导致的&lt;/li>
+&lt;li>可以选择非UEFI的镜像避免此错误的发生&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/issues/11481">Github Issue&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/div>&lt;/div></description></item></channel></rss>

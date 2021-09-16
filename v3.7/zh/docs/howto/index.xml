@@ -1,0 +1,22 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 操作管理</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/</link><description>Recent content in 操作管理 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org//v3.7/zh/docs/howto/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 命令行工具</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/climc/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/climc/</guid><description/></item><item><title>Docs: 计算</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/compute/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/compute/</guid><description/></item><item><title>Docs: 数据库</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/db/</link><pubDate>Tue, 23 Jun 2020 20:58:54 +0800</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/db/</guid><description/></item><item><title>Docs: 网络</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/network/</link><pubDate>Fri, 25 Jun 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/network/</guid><description>
+&lt;h2 id="概念">概念&lt;/h2>
+&lt;p>早先，Cloudpods的私有云平台支持经典网络。云平台的经典网络与数据中心的基础设施网络之间是同级关系，因此，使用经典网络的一个优势是虚机与基础设施其它部分的互连互通相对简便。另外，使用经典网络时，在实施前需要做好网段规划，一方面避免与已有地址段重叠，一方面留足余量用于扩容。在具体的实施阶段，可能需要在物理的交换机、路由器上为经典网络配置网关等参数。&lt;/p>
+&lt;p>从3.1版本开始，Cloudpods开始支持VPC网络。VPC也叫“虚拟专用网络”，在同一套网络基础设施上可以虚拟出多个VPC网络。VPC之间、VPC与基础设施网络之间是相互隔离的，可以有各自的地址分配空间，配置各自的网关、路由等。由于这种相互隔离的特点，VPC的使用非常敏捷，增删非常容易。如果仅是一个个隔离的网络孤岛，VPC的用途是受限的，我们可以通过部署EIP网关，让VPC可以与外界互通。&lt;/p>
+&lt;p>上面提到了经典网络与其它VPC是相互隔离的，Cloudpods平台在实际处理时把经典网络也当作一个特殊的VPC看待。在系统初始化时，平台会创建一个标识符为&lt;code>default&lt;/code>的VPC表示经典网络。&lt;/p>
+&lt;p>此外，还有如下与VPC相关的网络概念&lt;/p>
+&lt;ul>
+&lt;li>二层网络（Wire），有时也叫广播域。作为一个逻辑概念，Wire一般对应基础设施中划分的网络区域。例如，宿主机可能有多块网卡分别接入管理网、业务网、存储网络，此时就可以为这三个二层网络在平台中分别创建Wire。&lt;/li>
+&lt;li>子网（Network）。子网用来描述网段信息，如起始、终止地址，子网网关，子网中的DNS服务器等。&lt;/li>
+&lt;/ul>
+&lt;p>从模型设计上，VPC与二层网络是一对多的关系。具体来说，经典网络VPC可以对应多个二层网络，例如，经典网络中可以有管理网、业务网等二层网络的划分。对于普通VPC来说，通常只对应一个二层网络，因此在使用VPC时通常不将二层网络考虑在内。&lt;/p>
+&lt;p>二层网络与子网的关系。二层网络是子网的属性，一个二层网络中可以有多个子网。&lt;/p>
+&lt;pre>&lt;code> 1:n 1:n
+VPC -------&amp;gt; Wire -------&amp;gt; Network
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 多云管理</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/multicloud/</link><pubDate>Fri, 19 Jul 2019 20:54:24 +0800</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/multicloud/</guid><description>
+&lt;p>TODO&lt;/p></description></item><item><title>Docs: 容器集群</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/container/</link><pubDate>Fri, 19 Jul 2019 20:56:33 +0800</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/container/</guid><description>
+&lt;p>容器集群是基于云平台虚拟机搭建部署 kubernetes 集群，目前支持在以下平台部署：&lt;/p>
+&lt;ul>
+&lt;li>Cloudpods私有云&lt;/li>
+&lt;li>阿里云&lt;/li>
+&lt;li>AWS&lt;/li>
+&lt;/ul></description></item></channel></rss>

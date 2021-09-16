@@ -1,0 +1,720 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+API与SDK</title><link>https://www.cloudpods.org/zh/docs/apisdk/</link><description>Recent content in API与SDK on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 11 Jul 2019 20:39:39 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/apisdk/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: API调用方法</title><link>https://www.cloudpods.org/zh/docs/apisdk/01_api/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/apisdk/01_api/</guid><description>
+&lt;p>本章节介绍Cloudpods API的调用方法。&lt;/p>
+&lt;p>&lt;a href="../swagger">详细的API内容请参考API&lt;/a>。&lt;/p>
+&lt;h2 id="请求方法">请求方法&lt;/h2>
+&lt;p>不同类型的API使用不同的请求方法，如下所示&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>API类型&lt;/th>
+&lt;th>请求方法&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>查询资源&lt;/td>
+&lt;td>GET&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>更新资源&lt;/td>
+&lt;td>PUT&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>创建资源&lt;/td>
+&lt;td>POST&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>删除资源&lt;/td>
+&lt;td>DELETE&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="公共请求头">公共请求头&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>头域&lt;/th>
+&lt;th>是否必须&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>X-Auth-Token&lt;/td>
+&lt;td>必须&lt;/td>
+&lt;td>使用keystone v3认证机制&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Content-Type&lt;/td>
+&lt;td>必须&lt;/td>
+&lt;td>应该总是application/json&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="公共响应头">公共响应头&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>头域&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Content-Type&lt;/td>
+&lt;td>总是application/json; charset=UTF-8&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>X-Request-Id&lt;/td>
+&lt;td>对应请求的requestId&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="api调用方法">API调用方法&lt;/h2>
+&lt;p>API调用分为两个步骤：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>调用Keystone的认证接口，获得token（如果已经获得token，并且在token有效期内，则可以跳过该步骤）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>调用接口，此时需要第1步获得的服务访问地址以及token，将token作为请求header的X-Auth-Token参数中保存。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="keystone认证">keystone认证&lt;/h2>
+&lt;h3 id="认证信息">认证信息&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>方法&lt;/th>
+&lt;th>API&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>POST&lt;/td>
+&lt;td>/v3/auth/tokens&lt;/td>
+&lt;td>获取认证信息&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="请求示例">请求示例&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;gt; POST /v3/auth/tokens HTTP/1.1
+&amp;gt; Host: 192.168.0.246:5000
+&amp;gt; Content-Type: application/json
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;auth&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;context&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;ip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;identity&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;access_key_secret&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cas_ticket&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;methods&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;password&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;user&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;password&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;token&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;scope&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="返回示例">返回示例&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt; HTTP/1.1 &lt;span style="color:#0000cf;font-weight:bold">201&lt;/span> Created
+&amp;lt; Date: Thu, &lt;span style="color:#0000cf;font-weight:bold">12&lt;/span> Jul &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span> 10:04:10 GMT
+&amp;lt; Server: Apache/2.4.6 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>CentOS&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> PHP/5.6.24 mod_wsgi/3.4 Python/2.7.5
+&amp;lt; X-Subject-Token: gAAAAABbRyeaDF-FJj_roQXFXA2KLILvQbAxUcQ4TjT65UGL9C2v3jfDqfhWix9UURZ0TkIN0q_8GF5EjNxTTIEdh2k5vtqgCImYKtf_WKA03C8vlb1tl6gNukyxmH7yNiFZQFvXLHTo8ZPyL1vvI9m_bnW5NxTpCI9JVyTDe3BG_BG9gW8Lrsg
+&amp;lt; Vary: X-Auth-Token
+&amp;lt; x-openstack-request-id: req-3ed7d320-956e-4ee7-a424-d3d3b12a4bf7
+&amp;lt; Content-Length: &lt;span style="color:#0000cf;font-weight:bold">3514&lt;/span>
+&amp;lt; Content-Type: application/json
+&amp;lt;
+* Connection &lt;span style="color:#8f5902;font-style:italic">#0 to host 10.168.222.209 left intact&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;token&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;access_key&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;AccessKey&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;expire&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;secret&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;catalog&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;endpoints&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;75f4e36100184a5a8a3e36cb0f12aa87&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;interface&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;url&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;context&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;ip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;expires_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:32:39Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_domain&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;issued_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:32:39Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;methods&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;policies&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;System&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;projects&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;role_assignments&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;group&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;policies&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;scope&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;user&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;roles&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;user&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;Displayname&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Email&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Mobile&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;PasswordExpiresAt&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:32:39Z&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="api网关">API网关&lt;/h2>
+&lt;p>目前只应用于前端。&lt;/p>
+&lt;h2 id="举例说明">举例说明&lt;/h2>
+&lt;p>以虚拟机API为例介绍具体的使用方法&lt;/p>
+&lt;h3 id="server-list">虚拟机列表&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>方法&lt;/th>
+&lt;th>API&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/servers&lt;/td>
+&lt;td>获取虚拟机列表&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="请求示例-1">请求示例&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;gt; GET /servers?details&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">with_meta&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">limit&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> HTTP/1.1
+&amp;gt; Host: 192.168.222.171:8888
+&amp;gt; Content-Type: application/json
+&amp;gt; X-Auth-Token: gAAAAABbQHesYGnonUgZo2vqHIb4RFAE5ptZVOpKA0DcH5dyVB_5-rBAAsjGZszFXJNr46q52iXh7K26G1tYAGh9PtDHUv9j3E7bb4dt9Q6NBXRhGodJ7L25D-yvVL0Qx3dpXqGvqcSAhEe-wBKqN8pmyMyXKvQLfhwW7LsXc0dC8SIp6uUBKiFIxXzdlh1APAmqTTjR9Bog8DKDtXbFPHhKN2o4NNaItdo4h5ZJ3qFzo7Uy19osyQg
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="返回示例-1">返回示例&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt; HTTP/1.1 &lt;span style="color:#0000cf;font-weight:bold">200&lt;/span> OK
+&amp;lt; X-Request-Id: 7bc5a
+&amp;lt; Content-Length: &lt;span style="color:#0000cf;font-weight:bold">1330&lt;/span>
+&amp;lt; Server: TornadoServer/3.2.2
+&amp;lt; Date: Sat, &lt;span style="color:#0000cf;font-weight:bold">07&lt;/span> Jul &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span> 08:32:21 GMT
+&amp;lt; Content-Type: application/json&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">charset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UTF-8
+&amp;lt;
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;limit&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;offset&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;servers&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;account&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;account_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;admin_secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;admin_security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;attach_time&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;auto_delete_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;auto_renew&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;backup_host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;backup_host_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;backup_host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;billing_cycle&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;billing_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;postpaid&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;bios&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;boot_order&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;brand&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;can_delete&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;can_recycle&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;can_update&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;cdrom&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cdrom_support&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;cloud_env&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;public&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cloudregion&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cloudregion_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;delete_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disable_delete&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;disk&amp;#34;&lt;/span>: 30720,
+&lt;span style="color:#4e9a06">&amp;#34;disk_count&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;disks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disks_info&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;aio_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;bps&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;cache_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disk_format&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disk_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;driver&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;fs&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;image_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;index&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;iops&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;medium_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;size&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;storage_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;eip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;eip_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;environment&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;expired_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;flavor_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_service_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_sn&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;hypervisor&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;kvm&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;instance_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;10.165.2.1,172.16.8.1&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;is_gpu&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;is_prepaid_recycle&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;is_system&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;isolated_devices&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;dev_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;model&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;reserved_cpu&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;reserved_memory&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;reserved_storage&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vendor_device_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;keypair&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;keypair_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;machine&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;metadata&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;property1&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;property2&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;networks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;nics&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;ip_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;ip6_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_exit&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;mac&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;network_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;team_with&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;os_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;os_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;pending_deleted&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;pending_deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_src&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;provider&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;ZStack/59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;scaling_group_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;scaling_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;secgroup&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;secgroups&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;shutdown_behavior&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;stop&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;src_ip_check&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;src_mac_check&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;tenant&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;tenant_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;update_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vcpu_count&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;vdi&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vga&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;virtual_ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vmem_size&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;vpc&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;zone&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;zone1&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;zone_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;zone_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;total&amp;#34;&lt;/span>: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="server-show">虚拟机详情&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>方法&lt;/th>
+&lt;th>API&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/servers/&amp;lt;id&amp;gt;&lt;/td>
+&lt;td>获取虚拟机详情&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="请求示例-2">请求示例&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;gt; GET /servers/d983993b-2356-48ed-860b-550b8490c45d HTTP/1.1
+&amp;gt; Host: 192.168.222.171:8888
+&amp;gt; Content-Type: application/json
+&amp;gt; X-Auth-Token: gAAAAABbQHesYGnonUgZo2vqHIb4RFAE5ptZVOpKA0DcH5dyVB_5-rBAAsjGZszFXJNr46q52iXh7K26G1tYAGh9PtDHUv9j3E7bb4dt9Q6NBXRhGodJ7L25D-yvVL0Qx3dpXqGvqcSAhEe-wBKqN8pmyMyXKvQLfhwW7LsXc0dC8SIp6uUBKiFIxXzdlh1APAmqTTjR9Bog8DKDtXbFPHhKN2o4NNaItdo4h5ZJ3qFzo7Uy19osyQg
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="返回示例-2">返回示例&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt; HTTP/1.1 &lt;span style="color:#0000cf;font-weight:bold">200&lt;/span> OK
+&amp;lt; X-Request-Id: 7bc5a
+&amp;lt; Content-Length: &lt;span style="color:#0000cf;font-weight:bold">2085&lt;/span>
+&amp;lt; Server: TornadoServer/3.2.2
+&amp;lt; Date: Sat, &lt;span style="color:#0000cf;font-weight:bold">07&lt;/span> Jul &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span> 08:32:21 GMT
+&amp;lt; Content-Type: application/json&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">charset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UTF-8
+&amp;lt;
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;server&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;account&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;account_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;admin_secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;admin_security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;attach_time&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;auto_delete_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;auto_renew&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;backup_host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;backup_host_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;backup_host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;billing_cycle&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;billing_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;postpaid&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;bios&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;boot_order&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;brand&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;can_delete&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;can_recycle&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;can_update&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;cdrom&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cdrom_support&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;cloud_env&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;public&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cloudregion&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;cloudregion_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;delete_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disable_delete&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;disk&amp;#34;&lt;/span>: 30720,
+&lt;span style="color:#4e9a06">&amp;#34;disk_count&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;disks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disks_info&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;aio_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;bps&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;cache_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disk_format&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;disk_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;driver&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;fs&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;image_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;index&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;iops&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;medium_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;size&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;storage_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;eip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;eip_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;environment&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;expired_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;flavor_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_service_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_sn&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;hypervisor&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;kvm&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;instance_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;10.165.2.1,172.16.8.1&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;is_gpu&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;is_prepaid_recycle&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;is_system&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;isolated_devices&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;dev_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;model&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;reserved_cpu&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;reserved_memory&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;reserved_storage&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vendor_device_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;keypair&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;keypair_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;machine&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;manager_project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;metadata&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;property1&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;property2&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;networks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;nics&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;ip_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;ip6_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;is_exit&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;mac&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;network_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;team_with&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;os_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;os_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;pending_deleted&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;pending_deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_src&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;provider&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;ZStack/59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;region_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;scaling_group_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;scaling_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;secgroup&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;secgroups&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;shutdown_behavior&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;stop&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;src_ip_check&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;src_mac_check&amp;#34;&lt;/span>: true,
+&lt;span style="color:#4e9a06">&amp;#34;status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;tenant&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;tenant_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;update_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vcpu_count&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;vdi&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vga&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;virtual_ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vmem_size&amp;#34;&lt;/span>: 0,
+&lt;span style="color:#4e9a06">&amp;#34;vpc&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;zone&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;zone1&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;zone_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;zone_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 使用SDK</title><link>https://www.cloudpods.org/zh/docs/apisdk/02_sdk/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/apisdk/02_sdk/</guid><description>
+&lt;p>本章节介绍Cloudpods SDK的调用方法。目前提供了golang，Java，Python3和Nodejs等四种语言的SDK：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/mcclient">Golang SDK&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/yunionio/mcclient_java">Java SDK&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/yunionio/mcclient_python">Python3 SDK&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/yunionio/mcclient_nodejs">NodeJS SDK&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

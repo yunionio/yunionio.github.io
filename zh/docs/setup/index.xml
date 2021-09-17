@@ -527,7 +527,7 @@ valid_lft forever preferred_lft forever
 &lt;li>操作系统: CentOS 7.6&lt;/li>
 &lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li>
 &lt;li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li>
-&lt;li>docker: ce-19.03.9&lt;/li>
+&lt;li>docker: ce-20.10.5&lt;/li>
 &lt;li>kubernetes: v1.15.8&lt;/li>
 &lt;/ul>
 &lt;p>需要能访问如下网址，如果企业有外网隔离规则，则需要打开相应白名单：&lt;/p>
@@ -587,8 +587,8 @@ $ systemctl restart mariadb
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
 &lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
-$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.7/yunion.repo
+$ yum install -y docker-ce docker-ce-cli containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
@@ -620,15 +620,15 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/dae
 &lt;p>这里需要安装我们编译的内核，这个内核是基于上游 CentOS 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装内核&lt;/span>
 $ yum install -y &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-headers-3.10.0-1062.4.3.el7.yn20191203
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1160.6.1.el7.yn20201125 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-devel-3.10.0-1160.6.1.el7.yn20201125 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-headers-3.10.0-1160.6.1.el7.yn20201125
 &lt;span style="color:#8f5902;font-style:italic"># 重启系统进入内核&lt;/span>
 $ reboot
 &lt;span style="color:#8f5902;font-style:italic"># 重启完成后，查看当前节点内核信息&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 确保为 3.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 确保为 3.10.0-1160.6.1.el7.yn20201125.x86_64&lt;/span>
 $ uname -r
-3.10.0-1062.4.3.el7.yn20191203.x86_64
+3.10.0-1160.6.1.el7.yn20201125.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-kubelet">安装配置 kubelet&lt;/h3>
 &lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\

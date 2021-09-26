@@ -805,6 +805,25 @@ $ climc server-network-list --server bms --details
 +--------------------------------------+-------+--------------------------------------+---------+-------------------+---------------+
 &lt;span style="color:#8f5902;font-style:italic"># 然后更新裸金属 bms 的 IP 地址，改为 pxe-net 子网里面的 10.168.26.70 地址&lt;/span>
 $ climc server-change-ipaddr bms 52:54:00:12:34:56 pxe-net:10.168.26.70
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 更换网卡</title><link>https://www.cloudpods.org/zh/docs/onpremise/baremetal/tutorial/change_netif/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/baremetal/tutorial/change_netif/</guid><description>
+&lt;p>云平台会记录物理机的网卡信息，如果实际环境中替换了物理机的网卡，需要手动保持平台里面物理机的网卡信息和实际环境中的一致。&lt;/p>
+&lt;h2 id="删掉物理机网卡">删掉物理机网卡&lt;/h2>
+&lt;p>假设需要移除物理机 bm1 上 mac 为 52:54:00:12:34:56 的网卡，对应操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-remove-netif bm1 52:54:00:12:34:56
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="添加新的网卡">添加新的网卡&lt;/h2>
+&lt;p>手动给物理机添加网卡后，同步平台里面的信息有两种方式，一种是让物理机重新 PXE 启动一次，平台对应的硬件信息就会更新，这种方式适用于物理机上没有安装操作系统或者删除了操作系统的情况。&lt;/p>
+&lt;p>另外一种是使用命令 &lt;code>host-add-netif&lt;/code> 给物理机添加网卡：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 给物理机 bm2 添加 admin 类型的网卡，二层网络为 bcast0 ，MAC 地址为 52:54:00:12:34:56，手动配置 IP 地址为 10.10.10.10&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 网卡顺序为第一张(0)&lt;/span>
+$ climc host-add-netif --ip-addr 10.10.10.10 --type admin bm2 bcast0 52:54:00:12:34:56 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看物理机的网卡：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-network-list --details --host bm2
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Baremetal_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network &lt;span style="color:#000;font-weight:bold">|&lt;/span> IP_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mac_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Nic_Type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> pxe-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.10.10.10 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 52:54:00:12:34:56 &lt;span style="color:#000;font-weight:bold">|&lt;/span> admin &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.2.3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 30:4e:05:26:22:43 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机与宿主机互相转换</title><link>https://www.cloudpods.org/zh/docs/onpremise/baremetal/tutorial/convert/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/baremetal/tutorial/convert/</guid><description>
 &lt;h2 id="web界面操作">Web界面操作&lt;/h2>
 &lt;h3 id="转换为宿主机">转换为宿主机&lt;/h3>

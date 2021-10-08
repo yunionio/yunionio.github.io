@@ -1386,7 +1386,29 @@ Server migration prefer host id or name
 &lt;ol>
 &lt;li>在反亲和组列表中勾选一个或多个反亲和组，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 虚拟机性能测试</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</link><pubDate>Fri, 19 Jul 2019 17:38:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</guid><description>
+&lt;/ol></description></item><item><title>Docs: USB相关</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/usb/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/usb/</guid><description>
+&lt;p>Cloudpods KVM虚拟机并未正式支持USB透传，但是可以通过虚拟机的extra参数，将USB透传的qemu命令参数传递给qemu，从而也能从某种程度上实现将宿主机挂载的指定USB设备透传给在该宿主机上运行的虚拟机的目的，目前，只能通过climc命令行工具来更新虚拟机的extra参数。&lt;/p>
+&lt;p>第一步，在宿主机上运行 lsusb -t 命令找到USB设备在宿主机的设备ID。&lt;/p>
+&lt;p>如果是USB 2.0的设备，执行 lsusb -t 有如下输出：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">/: Bus 03.Port 1: Dev 1, &lt;span style="color:#000">Class&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>root_hub, &lt;span style="color:#000">Driver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>xhci_hcd/14p, 480M
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>__ Port 10: Dev 8, If 0, &lt;span style="color:#000">Class&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Human Interface Device, &lt;span style="color:#000">Driver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>usbhid, 12M
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>则透传USB的qemu参数为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-device usb-host,hostbus&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3,hostport&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果是USB 3.0的设备，执行 lsusb -t 有如下输出:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">/: Bus &lt;span style="color:#0000cf;font-weight:bold">03&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>__ Port 2: some stuff
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>__ Port 1: some stuff
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>则透传USB的qemu参数为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-device usb-host,hostbus&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3,hostport&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>2.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>第二步，执行climc命令，更新目标虚拟机的extra参数&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-add-extra-options &amp;lt;sid&amp;gt; &lt;span style="color:#4e9a06">&amp;#39;device&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;usb-host,hostbus=3,hostport=2.1&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令执行后，将会给qemu虚拟机的命令行参数增加如下额外参数：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-device usb-host,hostbus&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3,hostport&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>2.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>第三步：重启虚拟机&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-restart &amp;lt;sid&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果希望虚拟机不再透传该USB设备，则执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-remove-extra-options &amp;lt;sid&amp;gt; &lt;span style="color:#4e9a06">&amp;#39;device&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后，再restart该虚拟机。&lt;/p></description></item><item><title>Docs: 虚拟机性能测试</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</link><pubDate>Fri, 19 Jul 2019 17:38:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</guid><description>
 &lt;h2 id="测试环境">测试环境&lt;/h2>
 &lt;p>操作系统: CentOS 7
 云平台版本: &amp;gt;= v3.7.7

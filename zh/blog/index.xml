@@ -1,5 +1,314 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: 用Calico网络策略设置主机node防火墙规则</title><link>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</link><pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</guid><description>
+Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Cloudpods 对接 rook 搭建的 Ceph 集群</title><link>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
+&lt;h2 id="背景介绍">背景介绍&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.ceph.com/">Ceph&lt;/a> 是开源的分布式存储系统，主要功能包含 RBD 块存储以及 CephFS 分布式文件系统存储。&lt;/li>
+&lt;li>&lt;a href="https://rook.io/docs/rook/v1.7">Rook&lt;/a> 是一个分布式存储编排系统，目的是在 Kubernetes 上提供存储解决方案，本身不提供存储，而是在 Kubernetes 和存储系统之间提供适配层，简化存储系统的部署和维护工作。其支持的 Ceph 存储为 Stable 生产可用的状态。&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org">Cloudpods&lt;/a> 是我们开源的多云管理平台，里面包含一个完整的私有云实现。&lt;/li>
+&lt;/ul>
+&lt;p>本文主要介绍使用 Rook 在 Kubernetes 集群里面部署 Ceph 集群，然后把 Ceph 集群暴露出来对接 Cloudpods 的私有云虚拟机。&lt;/p>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;ul>
+&lt;li>Cloudpods：v3.6 以上的版本&lt;/li>
+&lt;li>Kubernetes：v1.15.9 版本(Cloudpods 默认的集群)&lt;/li>
+&lt;li>Rook: v1.7 版本&lt;/li>
+&lt;li>操作系统：CentOS 7&lt;/li>
+&lt;li>内核版本：3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;ul>
+&lt;li>如果使用 CephFS 建议的内核版本是 4.17 以上的版本，可以升级我们官方提供的 5.4 版本内核&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>3 台机器作为存储节点，有单独的裸盘给 Ceph 使用&lt;/li>
+&lt;/ul>
+&lt;p>其中 Ceph 相关的环境准备工作和限制可以参考 Rook 提供的文档：&lt;a href="https://rook.io/docs/rook/v1.7/pre-reqs.html">https://rook.io/docs/rook/v1.7/pre-reqs.html&lt;/a> 。&lt;/p>
+&lt;h2 id="使用-rook-部署-ceph">使用 Rook 部署 Ceph&lt;/h2>
+&lt;p>接下来介绍使用 Rook 在已有的 Kubernetes 集群上部署 Ceph 集群，首先我们需要把准备好的 3 个存储节点加入到 Kubernetes 集群。&lt;/p>
+&lt;h3 id="存储节点加入-kubernetes-集群">存储节点加入 Kubernetes 集群&lt;/h3>
+&lt;p>准备的3个存储节点为 storage-node-{0,1,2}，每个存储节点的磁盘信息为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lsblk
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda 8:0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+├─sda1 8:1 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 1M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part
+├─sda2 8:2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 512M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /boot
+└─sda3 8:3 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /
+sdb 8:16 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+sdc 8:32 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3.7T &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+sdd 8:48 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3.7T &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后可以参考文档&lt;a href="https://www.cloudpods.org/zh/docs/setup/components/">添加K8s节点&lt;/a>把节点都添加到已有的 Kubernetes 集群中。&lt;/p>
+&lt;p>添加完成后，使用 &lt;code>kubectl get nodes&lt;/code> 可以看到对应的节点：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get nodes
+kubectl get nodes
+NAME STATUS ROLES AGE VERSION
+cloudbox Ready master 34d v1.15.9-beta.0
+storage-node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0
+storage-node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
+storage-node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后给对应的节点打上 role=storage-node 的标签：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 打标签&lt;/span>
+$ kubectl label node storage-node-0 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+$ kubectl label node storage-node-1 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+$ kubectl label node storage-node-2 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+&lt;span style="color:#8f5902;font-style:italic"># 查看&lt;/span>
+$ kubectl get nodes -L role
+NAME STATUS ROLES AGE VERSION ROLE
+cloudbox Ready master 34d v1.15.9-beta.0
+storage-node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0 storage-node
+storage-node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+storage-node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-rook-组件">部署 Rook 组件&lt;/h3>
+&lt;p>下载 Rook 相关代码：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># clone rook 源码&lt;/span>
+$ git clone --single-branch --branch release-1.7 https://github.com/rook/rook.git
+$ &lt;span style="color:#204a87">cd&lt;/span> rook
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署 rook operator 服务：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># apply rook 相关 CRD&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> cluster/examples/kubernetes/ceph/pre-k8s-1.16/
+$ kubectl apply -f crds.yaml
+&lt;span style="color:#8f5902;font-style:italic"># apply rook operator 服务&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ..
+$ kubectl apply -f common.yaml -f operator.yaml
+&lt;span style="color:#8f5902;font-style:italic"># 查看 operator 服务的状态，等待 rook-ceph-operator pod 变为 Running&lt;/span>
+$ kubectl -n rook-ceph get pods
+NAME READY STATUS RESTARTS AGE
+rook-ceph-operator-68964f4b87-pc87m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 7m38s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-ceph-集群">创建 ceph 集群&lt;/h3>
+&lt;p>首先根据自己的环境，修改 rook 提供的 &lt;code>cluster.yaml&lt;/code> 里面的内容：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cp cluster.yaml cluster-env.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面是修改后的 cluster.yaml 和 cluster-env.yaml 的 diff 内容：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ diff -u cluster.yaml cluster-env.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>请根据自己的节点环境配置，参考 diff 修改，需要注意的地方如下：&lt;/p>
+&lt;ul>
+&lt;li>spec.image: 改为 registry.cn-beijing.aliyuncs.com/yunionio/ceph:v14.2.22 ，这里需要用 v14 版本的镜像，对应的 ceph 版本为 nautilus，更高的版本可能会出现 cloudpods 不兼容的情况&lt;/li>
+&lt;li>spec.network.provider: 改为 host ，表示 ceph 相关容器使用 hostNetwork ，这样才能给 Kubernetes 集群之外的服务使用&lt;/li>
+&lt;li>spec.placement: 修改了里面的 Kubernetes 调度策略，表示把 ceph pod 调度到 role=storage-node 的节点上&lt;/li>
+&lt;li>spec.storage: 表示存储的配置
+&lt;ul>
+&lt;li>useAllNodes: 我们指定了role=storage-node 的节点运行 ceph，该值必须设置为false&lt;/li>
+&lt;li>nodes: 分别设置各个节点的存储路径，可以是磁盘或者目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- cluster.yaml 2021-10-09 10:49:53.731596210 +0800
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ cluster-env.yaml 2021-10-09 17:50:01.859112585 +0800
+&lt;/span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -21,7 +21,7 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
+# If you want to be more precise, you can always use a timestamp tag such quay.io/ceph/ceph:v16.2.6-20210918
+# This tag might not contain a new Ceph version, just security fixes from the underlying operating system, which will reduce vulnerabilities
+&lt;span style="color:#a40000">- image: quay.io/ceph/ceph:v16.2.6
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ image: registry.cn-beijing.aliyuncs.com/yunionio/ceph:v14.2.22
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # Whether to allow unsupported versions of Ceph. Currently `nautilus`, `octopus`, and `pacific` are supported.
+# Future versions such as `pacific` would require this to be set to `true`.
+# Do not set to true in production.
+&lt;span style="color:#800080;font-weight:bold">@@ -81,7 +81,7 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> rulesNamespace: rook-ceph
+network:
+# enable host networking
+&lt;span style="color:#a40000">- #provider: host
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ provider: host
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # enable the Multus network provider
+#provider: multus
+#selectors:
+&lt;span style="color:#800080;font-weight:bold">@@ -135,22 +135,22 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
+# The example under &amp;#39;all&amp;#39; would have all services scheduled on kubernetes nodes labeled with &amp;#39;role=storage-node&amp;#39; and
+# tolerate taints with a key of &amp;#39;storage-node&amp;#39;.
+&lt;span style="color:#a40000">-# placement:
+&lt;/span>&lt;span style="color:#a40000">-# all:
+&lt;/span>&lt;span style="color:#a40000">-# nodeAffinity:
+&lt;/span>&lt;span style="color:#a40000">-# requiredDuringSchedulingIgnoredDuringExecution:
+&lt;/span>&lt;span style="color:#a40000">-# nodeSelectorTerms:
+&lt;/span>&lt;span style="color:#a40000">-# - matchExpressions:
+&lt;/span>&lt;span style="color:#a40000">-# - key: role
+&lt;/span>&lt;span style="color:#a40000">-# operator: In
+&lt;/span>&lt;span style="color:#a40000">-# values:
+&lt;/span>&lt;span style="color:#a40000">-# - storage-node
+&lt;/span>&lt;span style="color:#a40000">-# podAffinity:
+&lt;/span>&lt;span style="color:#a40000">-# podAntiAffinity:
+&lt;/span>&lt;span style="color:#a40000">-# topologySpreadConstraints:
+&lt;/span>&lt;span style="color:#a40000">-# tolerations:
+&lt;/span>&lt;span style="color:#a40000">-# - key: storage-node
+&lt;/span>&lt;span style="color:#a40000">-# operator: Exists
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ placement:
+&lt;/span>&lt;span style="color:#00a000">+ all:
+&lt;/span>&lt;span style="color:#00a000">+ nodeAffinity:
+&lt;/span>&lt;span style="color:#00a000">+ requiredDuringSchedulingIgnoredDuringExecution:
+&lt;/span>&lt;span style="color:#00a000">+ nodeSelectorTerms:
+&lt;/span>&lt;span style="color:#00a000">+ - matchExpressions:
+&lt;/span>&lt;span style="color:#00a000">+ - key: role
+&lt;/span>&lt;span style="color:#00a000">+ operator: In
+&lt;/span>&lt;span style="color:#00a000">+ values:
+&lt;/span>&lt;span style="color:#00a000">+ - storage-node
+&lt;/span>&lt;span style="color:#00a000">+ podAffinity:
+&lt;/span>&lt;span style="color:#00a000">+ podAntiAffinity:
+&lt;/span>&lt;span style="color:#00a000">+ topologySpreadConstraints:
+&lt;/span>&lt;span style="color:#00a000">+ tolerations:
+&lt;/span>&lt;span style="color:#00a000">+ - key: storage-node
+&lt;/span>&lt;span style="color:#00a000">+ operator: Exists
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # The above placement information can also be specified for mon, osd, and mgr components
+# mon:
+# Monitor deployments may contain an anti-affinity rule for avoiding monitor
+&lt;span style="color:#800080;font-weight:bold">@@ -207,8 +207,8 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # osd: rook-ceph-osd-priority-class
+# mgr: rook-ceph-mgr-priority-class
+storage: # cluster level storage configuration and selection
+&lt;span style="color:#a40000">- useAllNodes: true
+&lt;/span>&lt;span style="color:#a40000">- useAllDevices: true
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ useAllNodes: false
+&lt;/span>&lt;span style="color:#00a000">+ useAllDevices: false
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> #deviceFilter:
+config:
+# crushRoot: &amp;#34;custom-root&amp;#34; # specify a non-default root label for the CRUSH map
+&lt;span style="color:#800080;font-weight:bold">@@ -219,17 +219,22 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # encryptedDevice: &amp;#34;true&amp;#34; # the default value for this option is &amp;#34;false&amp;#34;
+# Individual nodes and their config can be specified as well, but &amp;#39;useAllNodes&amp;#39; above must be set to false. Then, only the named
+# nodes below will be used as storage resources. Each node&amp;#39;s &amp;#39;name&amp;#39; field should match their &amp;#39;kubernetes.io/hostname&amp;#39; label.
+&lt;span style="color:#a40000">- # nodes:
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;172.17.4.201&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # devices: # specific devices to use for storage can be specified for each node
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;nvme01&amp;#34; # multiple osds can be created on high performance devices
+&lt;/span>&lt;span style="color:#a40000">- # config:
+&lt;/span>&lt;span style="color:#a40000">- # osdsPerDevice: &amp;#34;5&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;/dev/disk/by-id/ata-ST4000DM004-XXXX&amp;#34; # devices can be specified using full udev paths
+&lt;/span>&lt;span style="color:#a40000">- # config: # configuration can be specified at the node level which overrides the cluster level config
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;172.17.4.301&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # deviceFilter: &amp;#34;^sd.&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ nodes:
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;storage-node-0&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ devices: # specific devices to use for storage can be specified for each node
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;storage-node-1&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ devices:
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;storage-node-2&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ devices:
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # when onlyApplyOSDPlacement is false, will merge both placement.All() and placement.osd
+onlyApplyOSDPlacement: false
+# The section for configuring management of daemon disruptions during upgrade or fencing.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>编辑好 &lt;code>cluster-env.yaml&lt;/code> 后，使用下面的命令创建 ceph 集群：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl apply -f cluster-env.yaml
+cephcluster.ceph.rook.io/rook-ceph created
+&lt;span style="color:#8f5902;font-style:italic"># 查看 rook-ceph namespace 里面的 pod 健康状况&lt;/span>
+$ kubectl -n rook-ceph get pods
+NAME READY STATUS RESTARTS AGE
+rook-ceph-crashcollector-dl380p-55f6cc56c9-b8ghc 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m3s
+rook-ceph-crashcollector-r710-7d8659858-mrqgq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-crashcollector-r720xd-1-5b686487c5-hvzdb 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m10s
+rook-ceph-csi-detect-version-ffdsf 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 26m
+rook-ceph-mgr-a-759465b6c7-cslkp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m13s
+rook-ceph-mon-a-657c4c6769-ljtr9 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 18m
+rook-ceph-mon-b-7db98b99d4-99pft 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 18m
+rook-ceph-mon-c-7f84fc475d-5v599 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10m
+rook-ceph-operator-68964f4b87-pc87m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 68m
+rook-ceph-osd-0-7cc5cb94cb-dxznm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m32s
+rook-ceph-osd-1-f4d47ddf9-7vgh7 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m35s
+rook-ceph-osd-2-5d7667b8d8-d5tnp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-osd-3-c9c56cd77-8sbzj 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m32s
+rook-ceph-osd-4-88565589c-rnpmg 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m35s
+rook-ceph-osd-5-7d7c554b6c-pvsfx 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m35s
+rook-ceph-osd-6-6c7596c844-jg9qt 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-osd-7-55f9987ddf-pjthz 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m32s
+rook-ceph-osd-8-6949b69dd6-685wp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-osd-prepare-dl380p-c6nc8 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m3s
+rook-ceph-osd-prepare-r710-zkmjz 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m3s
+rook-ceph-osd-prepare-r720xd-1-fswnf 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m2s
+&lt;span style="color:#8f5902;font-style:italic"># 查看 ceph 集群的健康状况&lt;/span>
+$ kubectl -n rook-ceph get cephcluster
+NAME DATADIRHOSTPATH MONCOUNT AGE PHASE MESSAGE HEALTH
+rook-ceph /var/lib/rook &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> 29m Ready Cluster created successfully HEALTH_OK
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>ceph 集群部署完后，我们需要部署 &lt;code>toolbox.yaml&lt;/code> pod 获取集群连接信息：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl apply -f toolbox.yaml
+deployment.apps/rook-ceph-tools created
+$ kubectl -n rook-ceph get pods &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep tools
+rook-ceph-tools-885579f55-qpnhh 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m44s
+&lt;span style="color:#8f5902;font-style:italic"># 进入 toolbox pod&lt;/span>
+$ kubectl -n rook-ceph &lt;span style="color:#204a87">exec&lt;/span> -it &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl -n rook-ceph get pod -l &lt;span style="color:#4e9a06">&amp;#34;app=rook-ceph-tools&amp;#34;&lt;/span> -o &lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.items[0].metadata.name}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -- bash
+&lt;span style="color:#8f5902;font-style:italic"># 查看 mon_host 为: 172.16.254.126:6789,172.16.254.124:6789,172.16.254.127:6789&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ cat /etc/ceph/ceph.conf
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>global&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">mon_host&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 172.16.254.126:6789,172.16.254.124:6789,172.16.254.127:6789
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>client.admin&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">keyring&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> /etc/ceph/keyring
+&lt;span style="color:#8f5902;font-style:italic"># 查看 keyring 为: AQBHTWFhFQzrORAALLIngo/OOTDdnUf4vNPRoA==&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ cat /etc/ceph/keyring
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>client.admin&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">key&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> AQBHTWFhFQzrORAALLIngo/OOTDdnUf4vNPRoA&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看集群健康状态&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph status
+cluster:
+id: 233cf123-7a1a-4a7b-b6db-1cee79ec752b
+health: HEALTH_OK
+services:
+mon: &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> daemons, quorum a,b,c &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>age 38m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+mgr: a&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>active, since 33m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+osd: &lt;span style="color:#0000cf;font-weight:bold">9&lt;/span> osds: &lt;span style="color:#0000cf;font-weight:bold">9&lt;/span> up &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>since 33m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, &lt;span style="color:#0000cf;font-weight:bold">9&lt;/span> in &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>since 34m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span> remapped pgs
+data:
+pools: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> pools, &lt;span style="color:#0000cf;font-weight:bold">256&lt;/span> pgs
+objects: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> objects, &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> B
+usage: &lt;span style="color:#0000cf;font-weight:bold">57&lt;/span> MiB used, &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> TiB / &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> TiB avail
+pgs: &lt;span style="color:#0000cf;font-weight:bold">226&lt;/span> active+clean
+&lt;span style="color:#0000cf;font-weight:bold">30&lt;/span> active+clean+remapped
+&lt;span style="color:#8f5902;font-style:italic"># 查看 osd 状态，可以发现对应节点的设备都添加了进来&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd status
+ID HOST USED AVAIL WR OPS WR DATA RD OPS RD DATA STATE
+&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> storage-node-0 6172k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> storage-node-1 7836k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> storage-node-2 5596k 931G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> storage-node-0 6044k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> storage-node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span> storage-node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">6&lt;/span> storage-node-2 6236k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> storage-node-0 7772k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> storage-node-2 7836k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#8f5902;font-style:italic"># 创建一个 cloudpods-test 的 pool 用于后面的虚拟机测试&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd pool create cloudpods-test &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span>
+pool &lt;span style="color:#4e9a06">&amp;#39;cloudpods-test&amp;#39;&lt;/span> created
+&lt;span style="color:#8f5902;font-style:italic"># 初始化这个pool 为 RBD&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ rbd pool init cloudpods-test
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd lspools
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> cloudpods-test
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="cloudpods-虚拟机使用-rook-部署的-ceph">Cloudpods 虚拟机使用 Rook 部署的 Ceph&lt;/h2>
+&lt;p>通过之前的步骤，已经使用 Rook 在 Kubernetes 集群里面部署了 Ceph 集群，接下来将 Ceph 集群的连接信息导入到 Cloudpods 私有云平台，就可以给虚拟机使用了。&lt;/p>
+&lt;p>从之前的步骤得到 ceph 的连接信息如下：&lt;/p>
+&lt;ul>
+&lt;li>mon_host: 172.16.254.126:6789,172.16.254.124:6789,172.16.254.127:6789&lt;/li>
+&lt;li>keyring: AQBHTWFhFQzrORAALLIngo/OOTDdnUf4vNPRoA==&lt;/li>
+&lt;li>rbd pool: cloudpods-test&lt;/li>
+&lt;/ul>
+&lt;p>然后登录 cloudpods 前端创建 ceph rbd 存储并且关联宿主机，操作如下：&lt;/p>
+&lt;ol>
+&lt;li>创建名为 rook-ceph 的块存储，填入上面的信息：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./create-ceph-storage.png" alt="">&lt;/p>
+&lt;ol start="2">
+&lt;li>默认创建好的 rook-ceph 块存储为离线状态，需要关联平台的私有云宿主机，宿主机会探测 ceph 集群的连通性，并且获取对应的 pool 容量信息：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./attach-storage-host.png" alt="">&lt;/p>
+&lt;ol start="3">
+&lt;li>rook-ceph 块存储关联好宿主机后，状态就会变为“在线”，并且获取到了 20T 的容量：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./rook-ceph-status.png" alt="">&lt;/p>
+&lt;ol start="4">
+&lt;li>创建虚拟机使用 &lt;code>rook-ceph&lt;/code> 存储，这里主要是在虚拟机创建页面添加磁盘，选择存储类型为 &lt;strong>Ceph RBD&lt;/strong>：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./vm-with-ceph.png" alt="">&lt;/p>
+&lt;ol start="5">
+&lt;li>等待虚拟机创建完成，通过 vnc 或者 ssh 登录虚拟机：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./vm-running.png" alt="">&lt;/p>
+&lt;p>可以发现虚拟机里面挂载了 /dev/sda(系统盘) 和 /dev/sdb(数据盘)，底层都为 ceph 的 RBD 块设备，因为 ceph 底层块设备用的机械盘，用 dd 简单测试速度在 99 MB/s ，符合预期。&lt;/p>
+&lt;h2 id="其它操作">其它操作&lt;/h2>
+&lt;ul>
+&lt;li>删除 Rook 部署的 Ceph 集群请参考：&lt;a href="https://rook.io/docs/rook/v1.7/ceph-teardown.html">Cleaning up a Cluster&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Blog: 用Calico网络策略设置主机node防火墙规则</title><link>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</link><pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</guid><description>
 &lt;p>&lt;strong>作者:&lt;/strong> 小助手&lt;/p>
 &lt;p>Cloudpods的服务运行在一个Kubernetes集群之上，该Kubernets集群的网络方案采用了&lt;a href="https://docs.projectcalico.org/">Calico&lt;/a>。因此运行Cloudpods服务的节点的iptables规则被Calico接管。这就导致我们在Cloudpods服务节点上配置的防火墙规则会被Calico配置的iptables规则覆盖，导致防火墙规则不生效。本文介绍如何使用Calico的HostEndpoint和GlobalNetworkPolicy来设置主机节点的防火墙规则。&lt;/p>
 &lt;h2 id="1准备calicoctl工具">1、准备calicoctl工具&lt;/h2>

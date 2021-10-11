@@ -526,6 +526,11 @@ valid_lft forever preferred_lft forever
 &lt;ul>
 &lt;li>操作系统: CentOS 7.6&lt;/li>
 &lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li>
+&lt;li>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li>
 &lt;li>docker: ce-20.10.5&lt;/li>
 &lt;li>kubernetes: v1.15.8&lt;/li>
@@ -587,7 +592,7 @@ $ systemctl restart mariadb
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
 &lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.7/yunion.repo
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.8/yunion.repo
 $ yum install -y docker-ce docker-ce-cli containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
@@ -791,7 +796,7 @@ $ curl -k https://10.168.222.218
 $ yum --disablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;*&amp;#39;&lt;/span> --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;yunion*&amp;#39;&lt;/span> install -y &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor ceph-common &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kmod-openvswitch &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools
 $ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
@@ -923,6 +928,12 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 &lt;/ul>
 &lt;/li>
 &lt;li>
+&lt;p>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点&lt;/p>
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
 &lt;p>备注:&lt;/p>
 &lt;ul>
 &lt;li>如果是以测试为目的，可以拿一台虚拟机部署计算节点的服务，但可能无法使用 KVM 加速和 GPU 透传&lt;/li>
@@ -935,7 +946,7 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span>&lt;span style="color:#4e9a06">[yunion]
 &lt;/span>&lt;span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
-&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.6
+&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.8
 &lt;/span>&lt;span style="color:#4e9a06">sslverify=0
 &lt;/span>&lt;span style="color:#4e9a06">failovermethod=priority
 &lt;/span>&lt;span style="color:#4e9a06">enabled=1
@@ -953,7 +964,7 @@ $ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/SELINUX=enforcing/SELINUX=dis
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kmod-openvswitch &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools ceph-common
 $ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
 &lt;span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核&lt;/span>
 $ reboot
@@ -966,8 +977,8 @@ $ uname -r
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
 &lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
-$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.8/yunion.repo
+$ yum install -y docker-ce docker-ce-cli containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json

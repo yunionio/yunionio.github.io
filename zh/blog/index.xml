@@ -1,13 +1,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Cloudpods 对接 rook 搭建的 Ceph 集群</title><link>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</guid><description>
+Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Cloudpods + Rook + Ceph: 实现云原生的超融合私有云</title><link>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</guid><description>
 &lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
 &lt;h2 id="背景介绍">背景介绍&lt;/h2>
 &lt;ul>
-&lt;li>&lt;a href="https://docs.ceph.com/">Ceph&lt;/a> 是开源的分布式存储系统，主要功能包含 RBD 块存储以及 CephFS 分布式文件系统存储。&lt;/li>
-&lt;li>&lt;a href="https://rook.io/docs/rook/v1.7">Rook&lt;/a> 是一个分布式存储编排系统，目的是在 Kubernetes 上提供存储解决方案，本身不提供存储，而是在 Kubernetes 和存储系统之间提供适配层，简化存储系统的部署和维护工作。其支持的 Ceph 存储为 Stable 生产可用的状态。&lt;/li>
-&lt;li>&lt;a href="https://www.cloudpods.org">Cloudpods&lt;/a> 是我们开源的多云管理平台，里面包含一个完整的私有云实现。&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org">Cloudpods&lt;/a>: 是我们开源的多云管理平台，运行在 Kubernetes 之上，里面包含一个完整的私有云实现。&lt;/li>
+&lt;li>&lt;a href="https://rook.io/docs/rook/v1.7">Rook&lt;/a>: 是一个分布式存储编排系统，目的是在 Kubernetes 上提供存储解决方案，本身不提供存储，而是在 Kubernetes 和存储系统之间提供适配层，简化存储系统的部署和维护工作。其支持的 Ceph 存储为 Stable 生产可用的状态。&lt;/li>
+&lt;li>&lt;a href="https://docs.ceph.com/">Ceph&lt;/a>: 是开源的分布式存储系统，主要功能包含 RBD 块存储以及 CephFS 分布式文件系统存储。&lt;/li>
 &lt;/ul>
-&lt;p>本文主要介绍使用 Rook 在 Kubernetes 集群里面部署 Ceph 集群，然后把 Ceph 集群暴露出来对接 Cloudpods 的私有云虚拟机。&lt;/p>
+&lt;p>Cloudpods 服务以容器化的方式运行在 Kubernetes 集群之上，按照 &lt;a href="https://www.cloudpods.org/zh/docs/quickstart/nodes/">部署文档/多节点安装&lt;/a> 文档部署完 Cloudpods 之后，环境就有了一个完整的 Kubernetes 集群。
+但 Cloudpods 内置私有云虚拟机使用的是本地存储，本文主要介绍使用 Rook 在 Cloudpods Kubernetes 集群里面部署 Ceph 集群，然后把 Ceph 集群暴露出来对接 Cloudpods 的私有云虚拟机，实现一个云原生的超融合私有云。&lt;/p>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;ul>
 &lt;li>Cloudpods：v3.6 以上的版本&lt;/li>

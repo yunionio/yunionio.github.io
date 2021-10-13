@@ -306,7 +306,7 @@ $ sudo /usr/sbin/update-grub
 &lt;p>(若Ubuntu未关闭自动更新)关闭自动更新需要修改/etc/apt/apt.conf.d/10periodic文件，将文件中的&amp;quot;Update-Package-Lists&amp;quot;参数设置为0。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ sudo vi /etc/apt/apt.conf.d/10periodic
 &lt;span style="color:#8f5902;font-style:italic"># 配置修改&lt;/span>
-APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>至此，虚拟机优化完成。&lt;/p>
@@ -446,19 +446,26 @@ APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;1&am
 &lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
 &lt;li>至此虚拟机优化完成。&lt;/li>
 &lt;/ol>
-&lt;h3 id="linux系统安装配置cloud-init">Linux系统安装配置Cloud-init&lt;/h3>
+&lt;h3 id="linux系统安装配置cloud-init可选">Linux系统安装配置Cloud-init（可选）&lt;/h3>
 &lt;p>Cloud-init用于为Linux操作系统的虚拟机做系统初始化配置。详细介绍内容请参考&lt;a href="https://cloudinit.readthedocs.io/en/latest/?spm=a2c4g.11186623.2.16.2aec3fcaVGJZo7">cloud-init官网&lt;/a>。&lt;/p>
 &lt;h4 id="安装cloud-init">安装cloud-init&lt;/h4>
-&lt;p>在Linux操作系统中执行以下命令安装cloud-init。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ apt-get/yum install cloud-init
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>离线安装方式请参考&lt;a href="https://cloud.tencent.com/document/product/213/12587">腾讯云文档中心-Linux系统安装cloud-init&lt;/a>或&lt;a href="https://help.aliyun.com/document_detail/57803.html?spm=5176.10695662.1996646101.searchclickresult.9b2c5db8X8v4Tq&amp;amp;aly_as=gOLD2vtr">阿里云文档中心-安装cloud-init&lt;/a>等。&lt;/p>
+&lt;p>在Linux操作系统中使用软件源上的cloud-init包安装cloud-init，命令如下：&lt;/p>
+&lt;ul class="nav nav-tabs" id="cloudinit" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#cloudinit-0" role="tab" aria-controls="cloudinit-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#cloudinit-1" role="tab" aria-controls="cloudinit-1">Ubuntu/Debian 10&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="cloudinit">&lt;div id="cloudinit-0" class="tab-pane show active" role="tabpanel" aria-labelledby="cloudinit-0">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install cloud-init
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="cloudinit-1" class="tab-pane" role="tabpanel" aria-labelledby="cloudinit-1">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ apt install cloud-init
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>Linux操作系统安装Cloud-init更多请参考&lt;a href="https://cloud.tencent.com/document/product/213/12587">腾讯云文档中心-Linux系统安装cloud-init&lt;/a>或&lt;a href="https://help.aliyun.com/document_detail/57803.html?spm=5176.10695662.1996646101.searchclickresult.9b2c5db8X8v4Tq&amp;amp;aly_as=gOLD2vtr">阿里云文档中心-安装cloud-init&lt;/a>等。&lt;/p>
 &lt;h4 id="配置cloud-init">配置cloud-init&lt;/h4>
 &lt;p>修改/etc/cloud/cloud.cfg文件，将disabled_root设置为0，ssh_pwauth设置为1。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vi /etc/cloud/cloud.cfg
 &lt;span style="color:#8f5902;font-style:italic"># 修改配置文件，修改完成后保存。&lt;/span>
 disable_root: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 ssh_pwauth: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="windows系统安装配置cloudbase-init">Windows系统安装配置Cloudbase-init&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="windows系统安装配置cloudbase-init可选">Windows系统安装配置Cloudbase-init（可选）&lt;/h3>
 &lt;p>请参考&lt;a href="https://cloud.tencent.com/document/product/213/30000">腾讯云文档中心-Windows操作系统安装Cloudbase-Init&lt;/a>。&lt;/p></description></item><item><title>Docs: 主机镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/hostimage/</link><pubDate>Fri, 19 Jul 2019 17:29:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/hostimage/</guid><description>
 &lt;p>主机镜像是同时将模板虚拟机上的所有硬盘保存为镜像，基于主机镜像创建的虚拟机拥有除模板虚拟机用户数据之外的全部数据。&lt;/p>
 &lt;p>通过虚拟机保存镜像功能，可将虚拟机整体保存为主机镜像，后续用户可以在新建虚拟机时基于主机镜像创建虚拟机等。&lt;/p>

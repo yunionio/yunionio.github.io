@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-Cloudpods</title><link>https://www.cloudpods.org/zh/</link><description>Recent content on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Cloudpods + Rook + Ceph: 实现云原生的超融合私有云</title><link>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</guid><description>
+Cloudpods</title><link>https://www.cloudpods.org/zh/</link><description>Recent content on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Cloudpods + Rook + Ceph: 轻松实现云原生的超融合私有云</title><link>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</guid><description>
 &lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
 &lt;h2 id="背景介绍">背景介绍&lt;/h2>
 &lt;ul>
@@ -7,11 +7,16 @@ Cloudpods</title><link>https://www.cloudpods.org/zh/</link><description>Recent c
 &lt;li>&lt;a href="https://rook.io/docs/rook/v1.7">Rook&lt;/a>: 是一个分布式存储编排系统，目的是在 Kubernetes 上提供存储解决方案，本身不提供存储，而是在 Kubernetes 和存储系统之间提供适配层，简化存储系统的部署和维护工作。其支持的 Ceph 存储为 Stable 生产可用的状态。&lt;/li>
 &lt;li>&lt;a href="https://docs.ceph.com/">Ceph&lt;/a>: 是开源的分布式存储系统，主要功能包含 RBD 块存储以及 CephFS 分布式文件系统存储。&lt;/li>
 &lt;/ul>
-&lt;p>Cloudpods 服务以容器化的方式运行在 Kubernetes 集群之上，按照 &lt;a href="https://www.cloudpods.org/zh/docs/quickstart/nodes/">部署文档/多节点安装&lt;/a> 文档部署完 Cloudpods 之后，环境就有了一个完整的 Kubernetes 集群。
-但 Cloudpods 内置私有云虚拟机使用的是本地存储，本文主要介绍使用 Rook 在 Cloudpods Kubernetes 集群里面部署 Ceph 集群，然后把 Ceph 集群暴露出来对接 Cloudpods 的私有云虚拟机，实现一个云原生的超融合私有云。&lt;/p>
+&lt;p>Cloudpods 服务以容器化的方式运行在 Kubernetes 集群之上，按照 &lt;a href="https://www.cloudpods.org/zh/docs/quickstart/nodes/">部署文档/多节点安装&lt;/a> 文档部署完 Cloudpods 之后，环境就有了一个完整的 Kubernetes 集群。&lt;/p>
+&lt;p>但 Cloudpods 内置私有云虚拟机使用的是本地存储，本文主要介绍使用 Rook 在 Cloudpods Kubernetes 集群里面的计算节点上部署 Ceph 集群，然后把 Rook 管理的 Ceph 集群暴露出来对接 Cloudpods 的私有云虚拟机。&lt;/p>
+&lt;p>Cloudpods 内置私有云提供虚拟化功能， Rook 管理的 Ceph 提供分布式存储，并且这些服务都是容器化，基于 Kubernetes 运行的。Cloudpods 运行虚拟机的节点也叫计算节点，计算节点也是 Kubernetes 的 Node，只要计算节点上有独立的裸盘，就可以使用 Rook 把 Ceph 部署到计算节点上，把这些技术结合起来可以轻松实现一个云原生的超融合私有云。&lt;/p>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;ul>
-&lt;li>Cloudpods：v3.6 以上的版本&lt;/li>
+&lt;li>Cloudpods：v3.6 以上的多节点部署版本
+&lt;ul>
+&lt;li>3 台计算节点，有单独的裸盘给 Ceph 使用(同时作为存储节点使用)&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>Kubernetes：v1.15.9 版本(Cloudpods 默认的集群)&lt;/li>
 &lt;li>Rook: v1.7 版本&lt;/li>
 &lt;li>操作系统：CentOS 7&lt;/li>
@@ -20,13 +25,12 @@ Cloudpods</title><link>https://www.cloudpods.org/zh/</link><description>Recent c
 &lt;li>如果使用 CephFS 建议的内核版本是 4.17 以上的版本，可以升级我们官方提供的 5.4 版本内核&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>3 台机器作为存储节点，有单独的裸盘给 Ceph 使用&lt;/li>
 &lt;/ul>
 &lt;p>其中 Ceph 相关的环境准备工作和限制可以参考 Rook 提供的文档：&lt;a href="https://rook.io/docs/rook/v1.7/pre-reqs.html">https://rook.io/docs/rook/v1.7/pre-reqs.html&lt;/a> 。&lt;/p>
 &lt;h2 id="使用-rook-部署-ceph">使用 Rook 部署 Ceph&lt;/h2>
-&lt;p>接下来介绍使用 Rook 在已有的 Kubernetes 集群上部署 Ceph 集群，首先我们需要把准备好的 3 个存储节点加入到 Kubernetes 集群。&lt;/p>
-&lt;h3 id="存储节点加入-kubernetes-集群">存储节点加入 Kubernetes 集群&lt;/h3>
-&lt;p>准备的3个存储节点为 storage-node-{0,1,2}，每个存储节点的磁盘信息为：&lt;/p>
+&lt;p>接下来介绍使用 Rook 在已有的 Cloudpods Kubernetes 集群上部署 Ceph 集群，这里有个前提是已经按照 &lt;a href="https://www.cloudpods.org/zh/docs/quickstart/nodes/">部署文档/多节点安装&lt;/a> 文档，部署了一个多节点的 Cloudpods 集群。&lt;/p>
+&lt;h3 id="节点信息">节点信息&lt;/h3>
+&lt;p>假设已有的 3 个节点为 node-{0,1,2}，每个节点的磁盘信息如下，sd{b,c,d} 都是没有分区的裸盘，留给 Ceph 使用：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lsblk
 NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
 sda 8:0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
@@ -36,27 +40,34 @@ sda 8:0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;s
 sdb 8:16 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
 sdc 8:32 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3.7T &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
 sdd 8:48 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3.7T &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后可以参考文档&lt;a href="https://www.cloudpods.org/zh/docs/setup/components/">添加K8s节点&lt;/a>把节点都添加到已有的 Kubernetes 集群中。&lt;/p>
-&lt;p>添加完成后，使用 &lt;code>kubectl get nodes&lt;/code> 可以看到对应的节点：&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>kubectl get nodes&lt;/code> 可以看到已经在 Kubernetes 集群中的节点：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get nodes
-kubectl get nodes
 NAME STATUS ROLES AGE VERSION
 cloudbox Ready master 34d v1.15.9-beta.0
-storage-node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0
-storage-node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
-storage-node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
+node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0
+node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
+node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>然后给对应的节点打上 role=storage-node 的标签：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 打标签&lt;/span>
-$ kubectl label node storage-node-0 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
-$ kubectl label node storage-node-1 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
-$ kubectl label node storage-node-2 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
-&lt;span style="color:#8f5902;font-style:italic"># 查看&lt;/span>
+$ kubectl label node node-0 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+$ kubectl label node node-1 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+$ kubectl label node node-2 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+&lt;span style="color:#8f5902;font-style:italic"># 查看标签对应的节点&lt;/span>
 $ kubectl get nodes -L role
 NAME STATUS ROLES AGE VERSION ROLE
 cloudbox Ready master 34d v1.15.9-beta.0
-storage-node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0 storage-node
-storage-node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
-storage-node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0 storage-node
+node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外执行 &lt;code>climc host-list&lt;/code> 命令(climc 是云平台的命令行工具)，也可以看到这 3 个节点作为 Cloudpods 的计算节点加入到了云平台:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-list
++--------------------------------------+----------+-------------------+----------------+--------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+------------+--------------+------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_mac &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Ipmi_Ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Manager_URI &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> mem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> cpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> node_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> sn &lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+-------------------+----------------+--------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+------------+--------------+------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 0d8023ad-ebf9-4a3c-8294-fd170f4ce5c6 &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 38:ea:a7:8d:94:78 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.127 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://172.16.254.127:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">128695&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">32&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6CU3505M2G &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> c02470b3-9666-46f7-852e-9bda8074a72e &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ec:f4:bb:d7:c4:e0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.124 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://172.16.254.124:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">96432&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">48&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 62CNF52 &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 5811c2d9-2b45-47e4-8c08-a5d479d03009 &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> d4:ae:52:7e:90:9c &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.126 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://172.16.254.126:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">128723&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 8Q1PB3X &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+-------------------+----------------+--------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+------------+--------------+------------+
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-rook-组件">部署 Rook 组件&lt;/h3>
 &lt;p>下载 Rook 相关代码：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># clone rook 源码&lt;/span>
@@ -176,17 +187,17 @@ config:
 &lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;172.17.4.301&amp;#34;
 &lt;/span>&lt;span style="color:#a40000">- # deviceFilter: &amp;#34;^sd.&amp;#34;
 &lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ nodes:
-&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;storage-node-0&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;node-0&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ devices: # specific devices to use for storage can be specified for each node
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
-&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;storage-node-1&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;node-1&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ devices:
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
-&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;storage-node-2&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;node-2&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ devices:
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
 &lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
@@ -260,15 +271,15 @@ pgs: &lt;span style="color:#0000cf;font-weight:bold">226&lt;/span> active+clean
 &lt;span style="color:#8f5902;font-style:italic"># 查看 osd 状态，可以发现对应节点的设备都添加了进来&lt;/span>
 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd status
 ID HOST USED AVAIL WR OPS WR DATA RD OPS RD DATA STATE
-&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> storage-node-0 6172k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> storage-node-1 7836k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> storage-node-2 5596k 931G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> storage-node-0 6044k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> storage-node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span> storage-node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">6&lt;/span> storage-node-2 6236k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> storage-node-0 7772k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
-&lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> storage-node-2 7836k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> node-0 6172k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> node-1 7836k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> node-2 5596k 931G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> node-0 6044k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span> node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">6&lt;/span> node-2 6236k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> node-0 7772k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> node-2 7836k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
 &lt;span style="color:#8f5902;font-style:italic"># 创建一个 cloudpods-test 的 pool 用于后面的虚拟机测试&lt;/span>
 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd pool create cloudpods-test &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span>
 pool &lt;span style="color:#4e9a06">&amp;#39;cloudpods-test&amp;#39;&lt;/span> created
@@ -306,7 +317,16 @@ pool &lt;span style="color:#4e9a06">&amp;#39;cloudpods-test&amp;#39;&lt;/span> c
 &lt;/ol>
 &lt;p>&lt;img src="./vm-running.png" alt="">&lt;/p>
 &lt;p>可以发现虚拟机里面挂载了 /dev/sda(系统盘) 和 /dev/sdb(数据盘)，底层都为 ceph 的 RBD 块设备，因为 ceph 底层块设备用的机械盘，用 dd 简单测试速度在 99 MB/s ，符合预期。&lt;/p>
-&lt;h2 id="其它操作">其它操作&lt;/h2>
+&lt;ol start="6">
+&lt;li>然后使用平台的 climc 命令查看虚拟机所在的宿主机，发现虚拟机 ceph-test-vm 运行在 node-1 计算节点上，同时改节点也是 Ceph 集群的存储节点，实现了超融合的架构：&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-list --details --search ceph-test-vm
++--------------------------------------+--------------+--------+---------------+--------+---------+------------+-----------+------------+---------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> IPs &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> vcpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> vmem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span> os_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------+--------+---------------+--------+---------+------------+-----------+------------+---------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ffd8ec7c-1e2d-4427-89e0-81b6ce184185 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ceph-test-vm &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.252&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">235520&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2048&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> kvm &lt;span style="color:#000;font-weight:bold">|&lt;/span> Linux &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------+--------+---------------+--------+---------+------------+-----------+------------+---------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它操作">其它操作&lt;/h2>
 &lt;ul>
 &lt;li>删除 Rook 部署的 Ceph 集群请参考：&lt;a href="https://rook.io/docs/rook/v1.7/ceph-teardown.html">Cleaning up a Cluster&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Blog: 用Calico网络策略设置主机node防火墙规则</title><link>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</link><pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</guid><description>

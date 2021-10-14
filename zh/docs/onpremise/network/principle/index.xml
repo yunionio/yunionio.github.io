@@ -15,11 +15,11 @@
 &lt;h3 id="vlan支持">VLAN支持&lt;/h3>
 &lt;p>Cloudpods经典网络支持VLAN（802.1Q）。同一个经典网络下的二层网络的IP子网可以归属于不同的VLAN，这时需要设置IP子网的VLAN ID。IP子网的VLAN ID默认为1。&lt;/p>
 &lt;p>当一个IP子网的VLAN ID不为1时，则虚拟机接入该IP子网的网络接口将自动加入该VLAN。其底层实现原理为，在把虚拟机的虚拟网络接口加入OVS网桥时，设置该接口的VLAN tag为指定tag。为了允许一台宿主机上的虚拟机能够加入不同的VLAN，需要将宿主机的物理网口设置为Trunk模式，以允许同一条物理链路上不同VLAN tag的报文能够同时通过。&lt;/p>
-&lt;img src="./vm_vlan_access.png" width="500">
+&lt;img src="../vm_vlan_access.png" width="500">
 &lt;h4 id="host-vlan">Host VLAN&lt;/h4>
 &lt;p>为了允许虚拟机接入VLAN，宿主机对应的网络接口必须以TRUNK模式接入交换机。这时，如果宿主机也需要通过该网络接口通信，则需要根据情况进行设置。1）如果宿主机该网络接口的VLAN ID为默认VLAN（VLAN=1）时，则宿主机不需要做特殊配置。2）如果宿主机该网络接口的VLAN ID不为1，则有两种解决方案：&lt;/p>
 &lt;p>（1）为该网络接口设置一个VLAN tag为宿主机VLAN的别名网口(Alias Interface)，将宿主机的IP地址配置在该别名网口上，宿主机将使用该别名网口通信。&lt;/p>
-&lt;img src="./host_alias_vlan_nic.png" width="500">
+&lt;img src="../host_alias_vlan_nic.png" width="500">
 &lt;p>以物理机的网口为em1，VLAN ID为100，em1的虚拟机网桥br0为例，以下为配置脚本：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ip link add link em1 name em1.100 &lt;span style="color:#204a87">type&lt;/span> vlan id &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> ip addr flush dev br0 &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> ip addr add 10.192.4.20/22 dev em1.100 &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> ip link &lt;span style="color:#204a87">set&lt;/span> dev em1.100 up
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>（2）在交换机设置该trunk接口的默认VLAN ID为宿主机的VLAN ID。&lt;/p>
@@ -29,7 +29,7 @@
 2）该虚拟机需要关闭“源IP和MAC地址检查”（在主机菜单：网络与安全-设置源/目标检查）。
 3）宿主机对应网口为trunk模式。
 4）交换机在对应网口放行对应的VLAN tag。&lt;/p>
-&lt;img src="./brtrunk.png" width="500">
+&lt;img src="../brtrunk.png" width="500">
 &lt;h2 id="vpc网络">VPC网络&lt;/h2>
 &lt;p>在host服务启动后，会在宿主机内创建用于vpc通信的网桥（默认名称为brvpc），所有对接VPC网络的虚拟机的虚拟网卡都要加入这个网桥。&lt;/p></description></item><item><title>Docs: 裸金属网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/principle/baremetal/</link><pubDate>Tue, 03 Aug 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/principle/baremetal/</guid><description>
 &lt;p>目前，裸金属服务器只能使用经典网络。&lt;/p>

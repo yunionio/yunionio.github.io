@@ -392,12 +392,6 @@ APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;0&am
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">pnputil -i -a *.inf
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ol>
-&lt;h4 id="设置系统时间">设置系统时间&lt;/h4>
-&lt;p>Windows虚拟机上的时间默认会与北京时间差8个小时，需要对系统进行配置，将其显示为北京时间。&lt;/p>
-&lt;ol>
-&lt;li>在运行栏中输入regedit，打开注册表。&lt;/li>
-&lt;li>在HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation下，鼠标右键新建DWORD(32-bit)，命名为RealTimeIsUniversal，值设置为1。&lt;/li>
-&lt;/ol>
 &lt;h4 id="禁用快速启动">禁用快速启动&lt;/h4>
 &lt;p>（可选）若是Windows 10操作系统的虚拟机需要禁用快速启动。请参考&lt;a href="https://jingyan.baidu.com/article/ca00d56c7a40e6e99febcf4f.html">禁用方法&lt;/a>。&lt;/p>
 &lt;h4 id="系统激活">系统激活&lt;/h4>
@@ -420,6 +414,15 @@ APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;0&am
 &lt;span style="color:#204a87;font-weight:bold">&amp;lt;/settings&amp;gt;&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">&amp;lt;settings&lt;/span> &lt;span style="color:#c4a000">pass=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;oobeSystem&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;gt;&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">&amp;lt;component&lt;/span> &lt;span style="color:#c4a000">name=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Microsoft-Windows-Shell-Setup&amp;#34;&lt;/span> &lt;span style="color:#c4a000">processorArchitecture=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;amd64&amp;#34;&lt;/span> &lt;span style="color:#c4a000">publicKeyToken=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;31bf3856ad364e35&amp;#34;&lt;/span> &lt;span style="color:#c4a000">language=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;neutral&amp;#34;&lt;/span> &lt;span style="color:#c4a000">versionScope=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;nonSxS&amp;#34;&lt;/span> &lt;span style="color:#c4a000">xmlns:wcm=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;http://schemas.microsoft.com/WMIConfig/2002/State&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;AutoLogon&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;Password&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;Value&amp;gt;&lt;/span>123@yunion&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/Value&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;PlainText&amp;gt;&lt;/span>true&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/PlainText&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/Password&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;Username&amp;gt;&lt;/span>Administrator&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/Username&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;Enabled&amp;gt;&lt;/span>true&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/Enabled&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;LogonCount&amp;gt;&lt;/span>5&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/LogonCount&amp;gt;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/AutoLogon&amp;gt;&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">&amp;lt;UserAccounts&amp;gt;&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">&amp;lt;AdministratorPassword&amp;gt;&lt;/span>
 &lt;span style="color:#204a87;font-weight:bold">&amp;lt;Value&amp;gt;&lt;/span>123@yunion&lt;span style="color:#204a87;font-weight:bold">&amp;lt;/Value&amp;gt;&lt;/span>
@@ -462,6 +465,7 @@ APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;0&am
 &lt;/ol>
 &lt;pre>&lt;code>remove-appxpackage -allusers -package '&amp;lt;packagefullname&amp;gt;'
 &lt;/code>&lt;/pre>&lt;p>如此反复尝试执行sysprep，如果失败则执行以上1)和2)步骤删除package，直到sysprep执行成功。&lt;/p>
+&lt;p>如果卸载软件后还无法执行sysprep，则请尝试修改unattend.xml，将 &amp;ldquo;PersistAllDeviceInstalls&amp;rdquo; 改为 &amp;ldquo;false&amp;rdquo;。&lt;/p>
 &lt;ol start="3">
 &lt;li>至此虚拟机优化完成。&lt;/li>
 &lt;/ol>

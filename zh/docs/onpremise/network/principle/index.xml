@@ -17,7 +17,7 @@
 &lt;p>当一个IP子网的VLAN ID不为1时，则虚拟机接入该IP子网的网络接口将自动加入该VLAN。其底层实现原理为，在把虚拟机的虚拟网络接口加入OVS网桥时，设置该接口的VLAN tag为指定tag。为了允许一台宿主机上的虚拟机能够加入不同的VLAN，需要将宿主机的物理网口设置为Trunk模式，以允许同一条物理链路上不同VLAN tag的报文能够同时通过。&lt;/p>
 &lt;img src="../vm_vlan_access.png" width="500">
 &lt;h4 id="host-vlan">Host VLAN&lt;/h4>
-&lt;p>为了允许虚拟机接入VLAN，宿主机对应的网络接口必须以TRUNK模式接入交换机。这时，如果宿主机也需要通过该网络接口通信，则需要根据情况进行设置。1）如果宿主机该网络接口的VLAN ID为默认VLAN（VLAN=1）时，则宿主机不需要做特殊配置。2）如果宿主机该网络接口的VLAN ID不为1，则有两种解决方案：&lt;/p>
+&lt;p>为了允许虚拟机接入不同的VLAN，宿主机对应的网络接口必须以TRUNK模式接入交换机。这时，如果宿主机也需要通过该网络接口通信，则需要根据情况进行设置。1）如果宿主机该网络接口的VLAN ID为默认VLAN（VLAN=1）时，则宿主机不需要做特殊配置。2）如果宿主机该网络接口的VLAN ID不为1，则有两种解决方案：&lt;/p>
 &lt;p>（1）为该网络接口设置一个VLAN tag为宿主机VLAN的别名网口(Alias Interface)，将宿主机的IP地址配置在该别名网口上，宿主机将使用该别名网口通信。&lt;/p>
 &lt;img src="../host_alias_vlan_nic.png" width="500">
 &lt;p>以物理机的网口为em1，VLAN ID为100，em1的虚拟机网桥br0为例，以下为配置脚本：&lt;/p>
@@ -49,4 +49,52 @@
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="裸金属网络配置对调度的影响">裸金属网络配置对调度的影响&lt;/h3>
 &lt;p>当用户申请一台裸金属服务器，并给定裸金属服务器对接的IP子网信息时，调度器会过滤出物理网口对接了该IP子网对应的二层网络的裸金属，作为候选。&lt;/p>
 &lt;p>如果用户申请的裸金属服务器的网卡要做bonding，则调度器会选择同时具有两个网卡，并且两个网卡都对接了指定IP子网对应的二层网络。
-如果不存在这样的物理机，则会报调度失败的错误。&lt;/p></description></item></channel></rss>
+如果不存在这样的物理机，则会报调度失败的错误。&lt;/p></description></item><item><title>Docs: 域名设置</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/principle/dns/</link><pubDate>Tue, 03 Aug 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/principle/dns/</guid><description>
+&lt;p>Cloudpods 虚拟机的域名涉及如下几个服务：&lt;/p>
+&lt;ul>
+&lt;li>region负责生成虚拟机的域名信息&lt;/li>
+&lt;li>host负责通过dhcp将域名信息注入到虚拟机内&lt;/li>
+&lt;li>region_dns负责虚拟机之间的域名解析，实现基于主机名和主机IP的解析。&lt;/li>
+&lt;/ul>
+&lt;p>每台虚拟机都需要配置其域名解析服务器和域名解析地址前缀，这两个信息是由region生成，并且同步到host，最后通过dhcp下发到虚拟机内部。&lt;/p>
+&lt;p>region服务提供如下两个配置项指定虚拟机的dns服务器地址和搜索域名后缀&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>配置选项&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>dns_server&lt;/td>
+&lt;td>全局的dns服务器地址，默认为该集群内region_dns所在节点的IP&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>dns_domain&lt;/td>
+&lt;td>全局的dns搜索后缀，默认值为 cloud.onecloud.io&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>同时，每个IP子网都有两个属性，用于override全局的region配置选项，提供个性化的域名服务器和后缀&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>属性&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;th>默认值&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>guest_dns&lt;/td>
+&lt;td>该IP子网的虚拟机的域名解析服务器地址&lt;/td>
+&lt;td>region的dns_server选项&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>guest_domain&lt;/td>
+&lt;td>该IP子网的虚拟机的域名后缀&lt;/td>
+&lt;td>region的dns_domain选项&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item></channel></rss>

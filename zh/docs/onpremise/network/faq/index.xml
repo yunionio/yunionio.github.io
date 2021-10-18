@@ -1,0 +1,50 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+常见问题</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/network/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 如何在平台添加宿主机网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/addnetwork/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/faq/addnetwork/</guid><description>
+&lt;p>当用户部署环境时使用了千兆网络，后续扩展环境部署了万兆网络绑定等，下面介绍如何将该万兆网络加入到平台。&lt;/p>
+&lt;h2 id="新建万兆的二层网络">新建万兆的二层网络&lt;/h2>
+&lt;ol>
+&lt;li>在网络-二层网络页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建新建对话框。&lt;/li>
+&lt;li>设置以下信息：
+&lt;ul>
+&lt;li>指定域：选择二层网络的所属域。&lt;/li>
+&lt;li>专有网络：选择本地区域以及本地VDC。&lt;/li>
+&lt;li>可用区：选择二层网络属于的可用区。&lt;/li>
+&lt;li>名称：设置二层网络的名称，例如wire10g。&lt;/li>
+&lt;li>带宽：设置二层网络支持的网络带宽，包括百兆（100M）、千兆（1G）、双千兆（2x1G）、万兆（10G）、双万兆（2x10G）、25G、40G、100G。二层网络带宽主要为了统计网络利用率，来确定虚拟机的网络负载情况。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改宿主机配置">修改宿主机配置&lt;/h2>
+&lt;p>默认宿主机以网卡对应二层网络，所以需要在宿主机上配置网卡与二层网络的对应关系。&lt;/p>
+&lt;pre>&lt;code># 在宿主机上操作
+$ vi /etc/yunion/host.conf
+# 在networks下添加
+networks
+- eth0/br0/192.168.1.1
+- bond1/br1/wire10g
+&lt;/code>&lt;/pre>&lt;p>配置完成后，需要重启host服务。&lt;/p>
+&lt;pre>&lt;code># 找到该宿主机对应的host服务
+$ kubectl get pods -n onecloud -o wide |grep host
+# 如pod名称为default-host-zgrkg
+$ kubectl delete pods -n onecloud default-host-zgrkg
+&lt;/code>&lt;/pre>&lt;h2 id="创建ip子网">创建IP子网&lt;/h2>
+&lt;p>在上面创建的二层网络wire10g下创建IP子网，后续创建虚拟机使用这些IP子网，则将自动接入万兆网络。&lt;/p></description></item><item><title>Docs: 如何更改宿主机网卡接入的二层网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/replacewire/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/faq/replacewire/</guid><description>
+&lt;p>在对Cloudpods网络概念不太清晰的情况下，新接入宿主机时，经常发生无法判断是否需要新增二层网络，导致宿主机接入错误的二层网络的情况。&lt;/p>
+&lt;p>本文介绍在宿主机接入二层网络配置错误的情况下，如果通过命令修正，更改宿主机接入的二层网络。&lt;/p>
+&lt;p>首先需要确认宿主机上没有虚拟机。&lt;/p>
+&lt;p>查看宿主机的接入参数，执行如下命令：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-wire-list --host &amp;lt;host_id&amp;gt; --details
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>一般输出参数如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第一步把宿主机对接二层网络的记录删除">第一步：把宿主机对接二层网络的记录删除&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-remove-netif localhost &lt;span style="color:#4e9a06">&amp;#39;0c:c4:7a:0e:fa:f5&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第二步把对应的ip子网删除">第二步：把对应的IP子网删除&lt;/h2>
+&lt;p>此时，宿主机接入的IP子网也配置在了错误的二层网络之上。目前，不支持更改IP子网的二层网络。因此，需要先把对应的IP子网删除，再在新的二层网络上重建该IP子网。&lt;/p>
+&lt;p>删除旧的宿主机IP子网&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-delete adm4
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在新的二层网络重新建宿主机IP子网&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-create --gateway 10.2.53.254 --server-type baremetal &amp;lt;name_of_new_wire&amp;gt; adm4 10.2.53.55 10.2.53.55 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第三步重建宿主机的对接网络记录">第三步：重建宿主机的对接网络记录&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-add-netif --ip-addr 192.168.3.201 --bridge br0 --interface bond0 --type admin localhost 73710abe-a0cf-48de-8fcd0-0b7b0492f4ef &lt;span style="color:#4e9a06">&amp;#39;0c:c4:7a:0e:fa:f4&amp;#39;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

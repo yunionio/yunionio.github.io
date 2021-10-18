@@ -1,4 +1,5 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
 &lt;p>Cloudpods目前支持在 CentOS 7 和 Debian 10 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -525,8 +526,13 @@ valid_lft forever preferred_lft forever
 &lt;ul>
 &lt;li>操作系统: CentOS 7.6&lt;/li>
 &lt;li>最低配置要求: CPU 4核, 内存 8G, 存储 150G&lt;/li>
+&lt;li>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li>
-&lt;li>docker: ce-19.03.9&lt;/li>
+&lt;li>docker: ce-20.10.5&lt;/li>
 &lt;li>kubernetes: v1.15.8&lt;/li>
 &lt;/ul>
 &lt;p>需要能访问如下网址，如果企业有外网隔离规则，则需要打开相应白名单：&lt;/p>
@@ -586,8 +592,8 @@ $ systemctl restart mariadb
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
 &lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
-$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.8/yunion.repo
+$ yum install -y docker-ce docker-ce-cli containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
@@ -616,18 +622,18 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/dae
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-cloudpods-依赖内核">安装 Cloudpods 依赖内核&lt;/h3>
-&lt;p>这里需要安装我们编译的内核，这个内核是基于上游 CentOS 3.10.0-1062 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p>
+&lt;p>这里需要安装我们编译的内核，这个内核是基于上游 CentOS 3.10.0-1160 编译的，默认添加了 nbd 模块，nbd 模块用于镜像相关的操作。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装内核&lt;/span>
 $ yum install -y &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-headers-3.10.0-1062.4.3.el7.yn20191203
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1160.6.1.el7.yn20201125 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-devel-3.10.0-1160.6.1.el7.yn20201125 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-headers-3.10.0-1160.6.1.el7.yn20201125
 &lt;span style="color:#8f5902;font-style:italic"># 重启系统进入内核&lt;/span>
 $ reboot
 &lt;span style="color:#8f5902;font-style:italic"># 重启完成后，查看当前节点内核信息&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 确保为 3.10.0-1062.4.3.el7.yn20191203.x86_64&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 确保为 3.10.0-1160.6.1.el7.yn20201125.x86_64&lt;/span>
 $ uname -r
-3.10.0-1062.4.3.el7.yn20191203.x86_64
+3.10.0-1160.6.1.el7.yn20201125.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-kubelet">安装配置 kubelet&lt;/h3>
 &lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
@@ -790,7 +796,7 @@ $ curl -k https://10.168.222.218
 $ yum install -y &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor ceph-common &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kmod-openvswitch &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools
 $ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
@@ -922,6 +928,12 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 &lt;/ul>
 &lt;/li>
 &lt;li>
+&lt;p>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点&lt;/p>
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
 &lt;p>备注:&lt;/p>
 &lt;ul>
 &lt;li>如果是以测试为目的，可以拿一台虚拟机部署计算节点的服务，但可能无法使用 KVM 加速和 GPU 透传&lt;/li>
@@ -934,7 +946,7 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
 &lt;/span>&lt;span style="color:#4e9a06">[yunion]
 &lt;/span>&lt;span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
-&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.6
+&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.8
 &lt;/span>&lt;span style="color:#4e9a06">sslverify=0
 &lt;/span>&lt;span style="color:#4e9a06">failovermethod=priority
 &lt;/span>&lt;span style="color:#4e9a06">enabled=1
@@ -947,12 +959,10 @@ $ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/SELINUX=enforcing/SELINUX=dis
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-devel-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-headers-3.10.0-1062.4.3.el7.yn20191203 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor yunion-ocadm &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-lt &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kmod-openvswitch &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools ceph-common
 $ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
 &lt;span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核&lt;/span>
 $ reboot
@@ -965,8 +975,8 @@ $ uname -r
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
 &lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
-$ yum install -y docker-ce-19.03.9 docker-ce-cli-19.03.9 containerd.io
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.8/yunion.repo
+$ yum install -y docker-ce docker-ce-cli containerd.io
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
@@ -1180,7 +1190,7 @@ $ climc agent-list
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> f3c2c671-c41d-4f30-8d04-e022b49bb9b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal-10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.168.222.150:8879 &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal &lt;span style="color:#000;font-weight:bold">|&lt;/span> remotes/origin/master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>5e415506120011509&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6230b485-2e54-480e-8284-33360b8202a8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="../../howto/baremetal">&amp;ldquo;操作管理/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="../../onpremise/compute/baremetal">&amp;ldquo;操作管理/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
 &lt;h2 id="禁用-baremetal-agent">禁用 baremetal-agent&lt;/h2>
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
@@ -1198,12 +1208,13 @@ $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org/zh/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/upgrade/</guid><description>
-&lt;p>本文介绍从 v3.6.x 升级到 v3.7.x 的步骤以及注意事项。&lt;/p>
-&lt;p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：&lt;/p>
+&lt;p>本文介绍从 v3.7.x 升级到 v3.8.x 的步骤以及注意事项。&lt;/p>
+&lt;p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.7.x 需要以下的步骤：&lt;/p>
 &lt;ol>
 &lt;li>v3.2.x =&amp;gt; v3.3.x&lt;/li>
 &lt;li>v3.3.x =&amp;gt; v3.4.x&lt;/li>
 &lt;li>v3.4.x =&amp;gt; v3.6.x&lt;/li>
+&lt;li>v3.6.x =&amp;gt; v3.7.x&lt;/li>
 &lt;/ol>
 &lt;p>直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:&lt;/p>
 &lt;ul>
@@ -1211,26 +1222,27 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;li>&lt;a href="https://www.cloudpods.org/v3.3/docs/setup/upgrade">v3.2.x 升级到 v3.3.x&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cloudpods.org/v3.4/docs/setup/upgrade">v3.3.x 升级到 v3.4.x&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cloudpods.org/v3.6/zh/docs/setup/upgrade">v3.4.x 升级到 v3.6.x&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/v3.7/zh/docs/setup/upgrade">v3.6.x 升级到 v3.7.x&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;p>使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p>
 &lt;ol>
-&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 release/3.7 分支&lt;/li>
+&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 release/3.8 分支&lt;/li>
 &lt;li>使用 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 进行大版本升级&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看当前版本">查看当前版本&lt;/h2>
 &lt;p>可以使用 kubectl 查看当前集群的版本&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.6.10&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.7.5&lt;/span>
 $ kubectl -n onecloud get onecloudclusters default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
-v3.6.10
+v3.7.5
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="拉取-ocboot-工具">拉取 ocboot 工具&lt;/h2>
 &lt;p>如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
 $ yum install -y ansible python-paramiko
 &lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.7 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+$ git clone -b release/3.8 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git checkout release/3.7
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git checkout release/3.8
 $ git pull
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-cloudpods-服务">更新 Cloudpods 服务&lt;/h2>
 &lt;p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p>
@@ -1239,12 +1251,12 @@ $ git pull
 &lt;li>PRIMARY_MASTER_HOST 能够 ssh 免密码登录集群中的其它节点&lt;/li>
 &lt;/ol>
 &lt;p>如果没有设置免密码登录，请使用 &lt;em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em> 命令把公钥下发到自己环境对应的节点。&lt;/p>
-&lt;p>升级的版本号可以到 &lt;a href="../../changelog/release-3.7/">CHANGELOG release/3.7 页面&lt;/a> 查询。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务到 v3.7.1 版本&lt;/span>
+&lt;p>升级的版本号可以到 &lt;a href="../../changelog/release-3.8/">CHANGELOG release/3.8 页面&lt;/a> 查询。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务到 v3.8.3 版本&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 需要本机能够使用 ssh 密钥登录上去&lt;/span>
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.7.6
+$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.8.3
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以使用 `./ocboot.py upgrade --help` 查看其它可选参数&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如:&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># --user 可以指定其它 ssh 用户&lt;/span>

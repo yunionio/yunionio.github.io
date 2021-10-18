@@ -1,76 +1,465 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: 监控 Agent</title><link>https://www.cloudpods.org/zh/blog/2021/08/05/monitoragent/</link><pubDate>Thu, 05 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/08/05/monitoragent/</guid><description>
-&lt;p>&lt;strong>作者:&lt;/strong> 郑雨&lt;/p>
-&lt;p>监控 Agent 是运行在虚拟机上的 daemon，采集监控数据，并把数据传回云联壹云的 InfluxDB。&lt;/p>
-&lt;p>由此，可以衍生出三个问题：如何安装 Agent，如何采集数据，以及如何传输监控数据。&lt;/p>
-&lt;h2 id="如何安装-agent">如何安装 Agent&lt;/h2>
-&lt;p>云联壹云使用 Ansible 将 Agent 安装到虚拟机上，为了能够做到这一点，我们需要保证
-云联壹云能够连接到虚拟机并且能够登录到虚拟机；这里我们先假设云联壹云能够过连接到
-虚拟机，故而来优先讨论解决登录问题。&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805163249.png" alt="host_install">&lt;/p>
-&lt;h3 id="如何登录虚拟机">如何登录虚拟机&lt;/h3>
-&lt;p>假设云联壹云已经能够连接到 VPC 内部的虚拟机，比如说通过 NAT网关或者虚拟机已经绑
-定了 EIP 等。&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805163416.png" alt="connect_direct">&lt;/p>
-&lt;h4 id="直接免密登录">直接免密登录&lt;/h4>
-&lt;p>如果虚拟机是通过云联壹云平台创建出来的，那么云联壹云是可以直接免密登录到虚拟机，
-它是通过在虚拟机上自动创建一个可以通过公钥登录的 cloudroot 用户而实现的，对应的
-私钥存储在云联壹云的本地数据库。&lt;/p>
-&lt;h4 id="用户协助配置免密登录">用户协助配置免密登录&lt;/h4>
-&lt;p>如果虚拟机并非通过云联壹云平台创建出来的，那么就需要用户协助配置免密登录了。&lt;/p>
-&lt;p>用户需要在前段相关界面输入虚拟机的用户名和密钥/密码，以使云联壹云能够暂时登录到
-目标虚拟机，然后借助 Ansible 在目标虚拟机上创建 cloudroot 用户并配置公钥登录。&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805164138.png" alt="set_root">&lt;/p>
-&lt;p>同理，其实也可以直接让用户在虚拟机上执行脚本，以达到创建 cloudroot 用户以及配置
-公钥登录的目的。&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805164239.png" alt="exec_script">&lt;/p>
-&lt;h3 id="如何连接虚拟机">如何连接虚拟机&lt;/h3>
-&lt;p>云联壹云不能直接连接到虚拟机，是一种最广泛的情况。比如公有云 VPC 内部且没有配置
-Nat 以及 EIP 的虚拟机。对于此种情况，我们使用 SSH 代理，具体来说是 Local Port
-Forwarding。&lt;/p>
-&lt;h4 id="ssh-local-port-forwarding">SSH Local Port Forwarding&lt;/h4>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805165213.png" alt="question1">&lt;/p>
-&lt;p>假设网络 A 和网络 B 是两个隔离的网络，如果想让 VMA 能够访问 VMB 上监听在 80 端口
-的 web 服务应该怎么办呢？&lt;/p>
-&lt;p>在 proxyA 上执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ssh –NfL 10.127.30.251:12345:172.31.25.194:80 cloudroot@140.179.54.109
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令会在 proxyA 和 proxyB 之间建立 SSH隧道，并在 proxyA 上创建一个 port forwarding，
-它将监听&lt;code>10.127.30.251:12345&lt;/code>，一旦有请求发来，就会通过 SSH 隧道转发到 proxyB，
-proxyB 会把请求转发到&lt;code>172.31.25.194:80&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805165029.png" alt="answer1">&lt;/p>
-&lt;p>然后 VMA 只要访问&lt;code>10.127.30.251:12345&lt;/code>就能够访问 VMB 上的 web 服务。&lt;/p>
-&lt;h2 id="如何收集数据">如何收集数据&lt;/h2>
-&lt;p>我们的监控数据存储在 InfluxDB 中，所以采集数据的 Agent 优先选择了 Telegraf，在其
-基础上修改了一些代码并定制了配置文件以满足云联壹云采集数据的要求。&lt;/p>
-&lt;p>配置主要描述了需要什么样的监控数据，数据的标签以及数据存储的地址。&lt;/p>
-&lt;h2 id="如何传输监控数据">如何传输监控数据&lt;/h2>
-&lt;p>最简单的，如果虚拟机可以直接连接到云联壹云中的 InfluxDB，那么数据就可以直接传输
-回来。&lt;/p>
-&lt;p>在安装 Agent 的过程中，云联壹云回去检测是否可以从虚拟机直接访问 InfluxDB，如何不
-可以，就要使用 SSH 代理，具体来说是 Remote Port Forwarding。&lt;/p>
-&lt;h3 id="ssh-remote-port-forwarding">SSH Remote Port Forwarding&lt;/h3>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805165957.png" alt="question2">&lt;/p>
-&lt;p>网络 A 和网络 B 是两个隔离的网络，proxyB 具有公网 IP，所以 proxyA 可以访问到 proxyB，
-如何让 VMB 访问 DB？&lt;/p>
-&lt;p>在 proxyA 上执行:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ssh –NfR 172.31.25.194:12345:10.127.40.251:30086 cloudroot@140.179.54.109
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令会在 proxyA 和 proxyB 之间建立 SSH 隧道，并在 proxyB 上创建一个 port
-forwarding，它将监听&lt;code>172.31.25.194:12345&lt;/code>，一旦有请求发来，就会通过 SSH 隧道转
-发到 proxyA，proxyA 会把请求转发到&lt;code>10.172.40.251:80&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805170059.png" alt="answer2">&lt;/p>
-&lt;p>通过上面的方式，网络B 内部的 VMB 只要访问&lt;code>172.31.25.194:12345&lt;/code>就可以访问到 DB。&lt;/p>
-&lt;p>总结来说，Local Port Forwarding 和 Remote Port Forwarding 的区别在于，Port
-Forwarding 建立的位置对于执行命令的一方来说是 Local 还是 Remote。&lt;/p>
-&lt;h3 id="传输数据">传输数据&lt;/h3>
-&lt;p>在 proxy 和 proxyVM 之间建立 SSH 隧道，并在 proxy 执行命令以在 proxyVM 上建立
-port fowarding，对 proxy 来说就是 remote port forwarding。&lt;/p>
-&lt;p>VPC 内部的虚拟机就可以通过访问 proxyVM 的 port，访问云联壹云的 DB 以把数据传输
-回来。&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805170450.png" alt="tarnsfer">&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>总结来说，对于大多数情况，云联壹云通过 SSH 代理连接到目标虚拟机，借助 Ansible 将
-监控 Agent 安装到目标虚拟机上，并做好 Agent 的配置，而监控数据数据也将通过 SSH
-代理传回到云联壹云中的 InfluxDB 中。&lt;/p>
-&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805170928.png" alt="summarize">&lt;/p></description></item><item><title>Blog: QEMU+OCFS2: 使用OCFS2作为虚拟机磁盘文件的SAN存储文件系统</title><link>https://www.cloudpods.org/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</link><pubDate>Fri, 02 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+Cloudpods 博客</title><link>https://www.cloudpods.org/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Cloudpods + Rook + Ceph: 轻松实现云原生的超融合私有云</title><link>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/10/09/rook-ceph-with-cloudpods/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
+&lt;h2 id="背景介绍">背景介绍&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.cloudpods.org">Cloudpods&lt;/a>: 是我们开源的多云管理平台，运行在 Kubernetes 之上，里面包含一个完整的私有云实现。&lt;/li>
+&lt;li>&lt;a href="https://rook.io/docs/rook/v1.7">Rook&lt;/a>: 是一个分布式存储编排系统，目的是在 Kubernetes 上提供存储解决方案，本身不提供存储，而是在 Kubernetes 和存储系统之间提供适配层，简化存储系统的部署和维护工作。其支持的 Ceph 存储为 Stable 生产可用的状态。&lt;/li>
+&lt;li>&lt;a href="https://docs.ceph.com/">Ceph&lt;/a>: 是开源的分布式存储系统，主要功能包含 RBD 块存储以及 CephFS 分布式文件系统存储。&lt;/li>
+&lt;/ul>
+&lt;p>Cloudpods 服务以容器化的方式运行在 Kubernetes 集群之上，按照 &lt;a href="https://www.cloudpods.org/zh/docs/quickstart/nodes/">部署文档/多节点安装&lt;/a> 文档部署完 Cloudpods 之后，环境就有了一个完整的 Kubernetes 集群。&lt;/p>
+&lt;p>但 Cloudpods 内置私有云虚拟机使用的是本地存储，本文主要介绍使用 Rook 在 Cloudpods Kubernetes 集群里面的计算节点上部署 Ceph 集群，然后把 Rook 管理的 Ceph 集群暴露出来对接 Cloudpods 的私有云虚拟机。&lt;/p>
+&lt;p>Cloudpods 内置私有云提供虚拟化功能， Rook 管理的 Ceph 提供分布式存储，并且这些服务都是容器化，基于 Kubernetes 运行的。Cloudpods 运行虚拟机的节点也叫计算节点，计算节点也是 Kubernetes 的 Node，只要计算节点上有独立的裸盘，就可以使用 Rook 把 Ceph 部署到计算节点上，把这些技术结合起来可以轻松实现一个云原生的超融合私有云。&lt;/p>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;ul>
+&lt;li>Cloudpods：v3.6 以上的多节点部署版本
+&lt;ul>
+&lt;li>3 台计算节点，有单独的裸盘给 Ceph 使用(同时作为存储节点使用)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Kubernetes：v1.15.9 版本(Cloudpods 默认的集群)&lt;/li>
+&lt;li>Rook: v1.7 版本&lt;/li>
+&lt;li>操作系统：CentOS 7&lt;/li>
+&lt;li>内核版本：3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;ul>
+&lt;li>如果使用 CephFS 建议的内核版本是 4.17 以上的版本，可以升级我们官方提供的 5.4 版本内核&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>其中 Ceph 相关的环境准备工作和限制可以参考 Rook 提供的文档：&lt;a href="https://rook.io/docs/rook/v1.7/pre-reqs.html">https://rook.io/docs/rook/v1.7/pre-reqs.html&lt;/a> 。&lt;/p>
+&lt;h2 id="使用-rook-部署-ceph">使用 Rook 部署 Ceph&lt;/h2>
+&lt;p>接下来介绍使用 Rook 在已有的 Cloudpods Kubernetes 集群上部署 Ceph 集群，这里有个前提是已经按照 &lt;a href="https://www.cloudpods.org/zh/docs/quickstart/nodes/">部署文档/多节点安装&lt;/a> 文档，部署了一个多节点的 Cloudpods 集群。&lt;/p>
+&lt;h3 id="节点信息">节点信息&lt;/h3>
+&lt;p>假设已有的 3 个节点为 node-{0,1,2}，每个节点的磁盘信息如下，sd{b,c,d} 都是没有分区的裸盘，留给 Ceph 使用：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lsblk
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda 8:0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+├─sda1 8:1 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 1M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part
+├─sda2 8:2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 512M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /boot
+└─sda3 8:3 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /
+sdb 8:16 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 931.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+sdc 8:32 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3.7T &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+sdd 8:48 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3.7T &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>kubectl get nodes&lt;/code> 可以看到已经在 Kubernetes 集群中的节点：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get nodes
+NAME STATUS ROLES AGE VERSION
+cloudbox Ready master 34d v1.15.9-beta.0
+node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0
+node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
+node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后给对应的节点打上 role=storage-node 的标签：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 打标签&lt;/span>
+$ kubectl label node node-0 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+$ kubectl label node node-1 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+$ kubectl label node node-2 &lt;span style="color:#000">role&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>storage-node
+&lt;span style="color:#8f5902;font-style:italic"># 查看标签对应的节点&lt;/span>
+$ kubectl get nodes -L role
+NAME STATUS ROLES AGE VERSION ROLE
+cloudbox Ready master 34d v1.15.9-beta.0
+node-0 Ready &amp;lt;none&amp;gt; 12d v1.15.9-beta.0 storage-node
+node-1 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+node-2 Ready &amp;lt;none&amp;gt; 11d v1.15.9-beta.0 storage-node
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外执行 &lt;code>climc host-list&lt;/code> 命令(climc 是云平台的命令行工具)，也可以看到这 3 个节点作为 Cloudpods 的计算节点加入到了云平台:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-list
++--------------------------------------+----------+-------------------+----------------+--------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+------------+--------------+------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_mac &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Ipmi_Ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Manager_URI &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> mem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> cpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> node_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> sn &lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+-------------------+----------------+--------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+------------+--------------+------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 0d8023ad-ebf9-4a3c-8294-fd170f4ce5c6 &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 38:ea:a7:8d:94:78 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.127 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://172.16.254.127:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">128695&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">32&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6CU3505M2G &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> c02470b3-9666-46f7-852e-9bda8074a72e &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ec:f4:bb:d7:c4:e0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.124 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://172.16.254.124:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">96432&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">48&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 62CNF52 &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 5811c2d9-2b45-47e4-8c08-a5d479d03009 &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> d4:ae:52:7e:90:9c &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.126 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://172.16.254.126:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">128723&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 8Q1PB3X &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+-------------------+----------------+--------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+------------+--------------+------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-rook-组件">部署 Rook 组件&lt;/h3>
+&lt;p>下载 Rook 相关代码：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># clone rook 源码&lt;/span>
+$ git clone --single-branch --branch release-1.7 https://github.com/rook/rook.git
+$ &lt;span style="color:#204a87">cd&lt;/span> rook
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署 rook operator 服务：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># apply rook 相关 CRD&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> cluster/examples/kubernetes/ceph/pre-k8s-1.16/
+$ kubectl apply -f crds.yaml
+&lt;span style="color:#8f5902;font-style:italic"># apply rook operator 服务&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ..
+$ kubectl apply -f common.yaml -f operator.yaml
+&lt;span style="color:#8f5902;font-style:italic"># 查看 operator 服务的状态，等待 rook-ceph-operator pod 变为 Running&lt;/span>
+$ kubectl -n rook-ceph get pods
+NAME READY STATUS RESTARTS AGE
+rook-ceph-operator-68964f4b87-pc87m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 7m38s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-ceph-集群">创建 ceph 集群&lt;/h3>
+&lt;p>首先根据自己的环境，修改 rook 提供的 &lt;code>cluster.yaml&lt;/code> 里面的内容：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cp cluster.yaml cluster-env.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面是修改后的 cluster.yaml 和 cluster-env.yaml 的 diff 内容：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ diff -u cluster.yaml cluster-env.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>请根据自己的节点环境配置，参考 diff 修改，需要注意的地方如下：&lt;/p>
+&lt;ul>
+&lt;li>spec.image: 改为 registry.cn-beijing.aliyuncs.com/yunionio/ceph:v14.2.22 ，这里需要用 v14 版本的镜像，对应的 ceph 版本为 nautilus，更高的版本可能会出现 cloudpods 不兼容的情况&lt;/li>
+&lt;li>spec.network.provider: 改为 host ，表示 ceph 相关容器使用 hostNetwork ，这样才能给 Kubernetes 集群之外的服务使用&lt;/li>
+&lt;li>spec.placement: 修改了里面的 Kubernetes 调度策略，表示把 ceph pod 调度到 role=storage-node 的节点上&lt;/li>
+&lt;li>spec.storage: 表示存储的配置
+&lt;ul>
+&lt;li>useAllNodes: 我们指定了role=storage-node 的节点运行 ceph，该值必须设置为false&lt;/li>
+&lt;li>nodes: 分别设置各个节点的存储路径，可以是磁盘或者目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- cluster.yaml 2021-10-09 10:49:53.731596210 +0800
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ cluster-env.yaml 2021-10-09 17:50:01.859112585 +0800
+&lt;/span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -21,7 +21,7 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
+# If you want to be more precise, you can always use a timestamp tag such quay.io/ceph/ceph:v16.2.6-20210918
+# This tag might not contain a new Ceph version, just security fixes from the underlying operating system, which will reduce vulnerabilities
+&lt;span style="color:#a40000">- image: quay.io/ceph/ceph:v16.2.6
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ image: registry.cn-beijing.aliyuncs.com/yunionio/ceph:v14.2.22
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # Whether to allow unsupported versions of Ceph. Currently `nautilus`, `octopus`, and `pacific` are supported.
+# Future versions such as `pacific` would require this to be set to `true`.
+# Do not set to true in production.
+&lt;span style="color:#800080;font-weight:bold">@@ -81,7 +81,7 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> rulesNamespace: rook-ceph
+network:
+# enable host networking
+&lt;span style="color:#a40000">- #provider: host
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ provider: host
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # enable the Multus network provider
+#provider: multus
+#selectors:
+&lt;span style="color:#800080;font-weight:bold">@@ -135,22 +135,22 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
+# The example under &amp;#39;all&amp;#39; would have all services scheduled on kubernetes nodes labeled with &amp;#39;role=storage-node&amp;#39; and
+# tolerate taints with a key of &amp;#39;storage-node&amp;#39;.
+&lt;span style="color:#a40000">-# placement:
+&lt;/span>&lt;span style="color:#a40000">-# all:
+&lt;/span>&lt;span style="color:#a40000">-# nodeAffinity:
+&lt;/span>&lt;span style="color:#a40000">-# requiredDuringSchedulingIgnoredDuringExecution:
+&lt;/span>&lt;span style="color:#a40000">-# nodeSelectorTerms:
+&lt;/span>&lt;span style="color:#a40000">-# - matchExpressions:
+&lt;/span>&lt;span style="color:#a40000">-# - key: role
+&lt;/span>&lt;span style="color:#a40000">-# operator: In
+&lt;/span>&lt;span style="color:#a40000">-# values:
+&lt;/span>&lt;span style="color:#a40000">-# - storage-node
+&lt;/span>&lt;span style="color:#a40000">-# podAffinity:
+&lt;/span>&lt;span style="color:#a40000">-# podAntiAffinity:
+&lt;/span>&lt;span style="color:#a40000">-# topologySpreadConstraints:
+&lt;/span>&lt;span style="color:#a40000">-# tolerations:
+&lt;/span>&lt;span style="color:#a40000">-# - key: storage-node
+&lt;/span>&lt;span style="color:#a40000">-# operator: Exists
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ placement:
+&lt;/span>&lt;span style="color:#00a000">+ all:
+&lt;/span>&lt;span style="color:#00a000">+ nodeAffinity:
+&lt;/span>&lt;span style="color:#00a000">+ requiredDuringSchedulingIgnoredDuringExecution:
+&lt;/span>&lt;span style="color:#00a000">+ nodeSelectorTerms:
+&lt;/span>&lt;span style="color:#00a000">+ - matchExpressions:
+&lt;/span>&lt;span style="color:#00a000">+ - key: role
+&lt;/span>&lt;span style="color:#00a000">+ operator: In
+&lt;/span>&lt;span style="color:#00a000">+ values:
+&lt;/span>&lt;span style="color:#00a000">+ - storage-node
+&lt;/span>&lt;span style="color:#00a000">+ podAffinity:
+&lt;/span>&lt;span style="color:#00a000">+ podAntiAffinity:
+&lt;/span>&lt;span style="color:#00a000">+ topologySpreadConstraints:
+&lt;/span>&lt;span style="color:#00a000">+ tolerations:
+&lt;/span>&lt;span style="color:#00a000">+ - key: storage-node
+&lt;/span>&lt;span style="color:#00a000">+ operator: Exists
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # The above placement information can also be specified for mon, osd, and mgr components
+# mon:
+# Monitor deployments may contain an anti-affinity rule for avoiding monitor
+&lt;span style="color:#800080;font-weight:bold">@@ -207,8 +207,8 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # osd: rook-ceph-osd-priority-class
+# mgr: rook-ceph-mgr-priority-class
+storage: # cluster level storage configuration and selection
+&lt;span style="color:#a40000">- useAllNodes: true
+&lt;/span>&lt;span style="color:#a40000">- useAllDevices: true
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ useAllNodes: false
+&lt;/span>&lt;span style="color:#00a000">+ useAllDevices: false
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> #deviceFilter:
+config:
+# crushRoot: &amp;#34;custom-root&amp;#34; # specify a non-default root label for the CRUSH map
+&lt;span style="color:#800080;font-weight:bold">@@ -219,17 +219,22 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # encryptedDevice: &amp;#34;true&amp;#34; # the default value for this option is &amp;#34;false&amp;#34;
+# Individual nodes and their config can be specified as well, but &amp;#39;useAllNodes&amp;#39; above must be set to false. Then, only the named
+# nodes below will be used as storage resources. Each node&amp;#39;s &amp;#39;name&amp;#39; field should match their &amp;#39;kubernetes.io/hostname&amp;#39; label.
+&lt;span style="color:#a40000">- # nodes:
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;172.17.4.201&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # devices: # specific devices to use for storage can be specified for each node
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;nvme01&amp;#34; # multiple osds can be created on high performance devices
+&lt;/span>&lt;span style="color:#a40000">- # config:
+&lt;/span>&lt;span style="color:#a40000">- # osdsPerDevice: &amp;#34;5&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;/dev/disk/by-id/ata-ST4000DM004-XXXX&amp;#34; # devices can be specified using full udev paths
+&lt;/span>&lt;span style="color:#a40000">- # config: # configuration can be specified at the node level which overrides the cluster level config
+&lt;/span>&lt;span style="color:#a40000">- # - name: &amp;#34;172.17.4.301&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">- # deviceFilter: &amp;#34;^sd.&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ nodes:
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;node-0&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ devices: # specific devices to use for storage can be specified for each node
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;node-1&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ devices:
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;node-2&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ devices:
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdb&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdc&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">+ - name: &amp;#34;sdd&amp;#34;
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # when onlyApplyOSDPlacement is false, will merge both placement.All() and placement.osd
+onlyApplyOSDPlacement: false
+# The section for configuring management of daemon disruptions during upgrade or fencing.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>编辑好 &lt;code>cluster-env.yaml&lt;/code> 后，使用下面的命令创建 ceph 集群：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl apply -f cluster-env.yaml
+cephcluster.ceph.rook.io/rook-ceph created
+&lt;span style="color:#8f5902;font-style:italic"># 查看 rook-ceph namespace 里面的 pod 健康状况&lt;/span>
+$ kubectl -n rook-ceph get pods
+NAME READY STATUS RESTARTS AGE
+rook-ceph-crashcollector-dl380p-55f6cc56c9-b8ghc 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m3s
+rook-ceph-crashcollector-r710-7d8659858-mrqgq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-crashcollector-r720xd-1-5b686487c5-hvzdb 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m10s
+rook-ceph-csi-detect-version-ffdsf 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 26m
+rook-ceph-mgr-a-759465b6c7-cslkp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m13s
+rook-ceph-mon-a-657c4c6769-ljtr9 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 18m
+rook-ceph-mon-b-7db98b99d4-99pft 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 18m
+rook-ceph-mon-c-7f84fc475d-5v599 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10m
+rook-ceph-operator-68964f4b87-pc87m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 68m
+rook-ceph-osd-0-7cc5cb94cb-dxznm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m32s
+rook-ceph-osd-1-f4d47ddf9-7vgh7 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m35s
+rook-ceph-osd-2-5d7667b8d8-d5tnp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-osd-3-c9c56cd77-8sbzj 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m32s
+rook-ceph-osd-4-88565589c-rnpmg 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m35s
+rook-ceph-osd-5-7d7c554b6c-pvsfx 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m35s
+rook-ceph-osd-6-6c7596c844-jg9qt 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-osd-7-55f9987ddf-pjthz 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m32s
+rook-ceph-osd-8-6949b69dd6-685wp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2m20s
+rook-ceph-osd-prepare-dl380p-c6nc8 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m3s
+rook-ceph-osd-prepare-r710-zkmjz 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m3s
+rook-ceph-osd-prepare-r720xd-1-fswnf 0/1 Completed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m2s
+&lt;span style="color:#8f5902;font-style:italic"># 查看 ceph 集群的健康状况&lt;/span>
+$ kubectl -n rook-ceph get cephcluster
+NAME DATADIRHOSTPATH MONCOUNT AGE PHASE MESSAGE HEALTH
+rook-ceph /var/lib/rook &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> 29m Ready Cluster created successfully HEALTH_OK
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>ceph 集群部署完后，我们需要部署 &lt;code>toolbox.yaml&lt;/code> pod 获取集群连接信息：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl apply -f toolbox.yaml
+deployment.apps/rook-ceph-tools created
+$ kubectl -n rook-ceph get pods &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep tools
+rook-ceph-tools-885579f55-qpnhh 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m44s
+&lt;span style="color:#8f5902;font-style:italic"># 进入 toolbox pod&lt;/span>
+$ kubectl -n rook-ceph &lt;span style="color:#204a87">exec&lt;/span> -it &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl -n rook-ceph get pod -l &lt;span style="color:#4e9a06">&amp;#34;app=rook-ceph-tools&amp;#34;&lt;/span> -o &lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.items[0].metadata.name}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -- bash
+&lt;span style="color:#8f5902;font-style:italic"># 查看 mon_host 为: 172.16.254.126:6789,172.16.254.124:6789,172.16.254.127:6789&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ cat /etc/ceph/ceph.conf
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>global&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">mon_host&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 172.16.254.126:6789,172.16.254.124:6789,172.16.254.127:6789
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>client.admin&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">keyring&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> /etc/ceph/keyring
+&lt;span style="color:#8f5902;font-style:italic"># 查看 keyring 为: AQBHTWFhFQzrORAALLIngo/OOTDdnUf4vNPRoA==&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ cat /etc/ceph/keyring
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>client.admin&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">key&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> AQBHTWFhFQzrORAALLIngo/OOTDdnUf4vNPRoA&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看集群健康状态&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph status
+cluster:
+id: 233cf123-7a1a-4a7b-b6db-1cee79ec752b
+health: HEALTH_OK
+services:
+mon: &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> daemons, quorum a,b,c &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>age 38m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+mgr: a&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>active, since 33m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+osd: &lt;span style="color:#0000cf;font-weight:bold">9&lt;/span> osds: &lt;span style="color:#0000cf;font-weight:bold">9&lt;/span> up &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>since 33m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, &lt;span style="color:#0000cf;font-weight:bold">9&lt;/span> in &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>since 34m&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span> remapped pgs
+data:
+pools: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> pools, &lt;span style="color:#0000cf;font-weight:bold">256&lt;/span> pgs
+objects: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> objects, &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> B
+usage: &lt;span style="color:#0000cf;font-weight:bold">57&lt;/span> MiB used, &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> TiB / &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> TiB avail
+pgs: &lt;span style="color:#0000cf;font-weight:bold">226&lt;/span> active+clean
+&lt;span style="color:#0000cf;font-weight:bold">30&lt;/span> active+clean+remapped
+&lt;span style="color:#8f5902;font-style:italic"># 查看 osd 状态，可以发现对应节点的设备都添加了进来&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd status
+ID HOST USED AVAIL WR OPS WR DATA RD OPS RD DATA STATE
+&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> node-0 6172k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> node-1 7836k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> node-2 5596k 931G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> node-0 6044k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span> node-1 5980k 279G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">6&lt;/span> node-2 6236k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> node-0 7772k 3725G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> node-2 7836k 3726G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> exists,up
+&lt;span style="color:#8f5902;font-style:italic"># 创建一个 cloudpods-test 的 pool 用于后面的虚拟机测试&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd pool create cloudpods-test &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span>
+pool &lt;span style="color:#4e9a06">&amp;#39;cloudpods-test&amp;#39;&lt;/span> created
+&lt;span style="color:#8f5902;font-style:italic"># 初始化这个pool 为 RBD&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ rbd pool init cloudpods-test
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@rook-ceph-tools-885579f55-qpnhh /&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ceph osd lspools
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> cloudpods-test
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="cloudpods-虚拟机使用-rook-部署的-ceph">Cloudpods 虚拟机使用 Rook 部署的 Ceph&lt;/h2>
+&lt;p>通过之前的步骤，已经使用 Rook 在 Kubernetes 集群里面部署了 Ceph 集群，接下来将 Ceph 集群的连接信息导入到 Cloudpods 私有云平台，就可以给虚拟机使用了。&lt;/p>
+&lt;p>从之前的步骤得到 ceph 的连接信息如下：&lt;/p>
+&lt;ul>
+&lt;li>mon_host: 172.16.254.126:6789,172.16.254.124:6789,172.16.254.127:6789&lt;/li>
+&lt;li>keyring: AQBHTWFhFQzrORAALLIngo/OOTDdnUf4vNPRoA==&lt;/li>
+&lt;li>rbd pool: cloudpods-test&lt;/li>
+&lt;/ul>
+&lt;p>然后登录 cloudpods 前端创建 ceph rbd 存储并且关联宿主机，操作如下：&lt;/p>
+&lt;ol>
+&lt;li>创建名为 rook-ceph 的块存储，填入上面的信息：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./create-ceph-storage.png" alt="">&lt;/p>
+&lt;ol start="2">
+&lt;li>默认创建好的 rook-ceph 块存储为离线状态，需要关联平台的私有云宿主机，宿主机会探测 ceph 集群的连通性，并且获取对应的 pool 容量信息：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./attach-storage-host.png" alt="">&lt;/p>
+&lt;ol start="3">
+&lt;li>rook-ceph 块存储关联好宿主机后，状态就会变为“在线”，并且获取到了 20T 的容量：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./rook-ceph-status.png" alt="">&lt;/p>
+&lt;ol start="4">
+&lt;li>创建虚拟机使用 &lt;code>rook-ceph&lt;/code> 存储，这里主要是在虚拟机创建页面添加磁盘，选择存储类型为 &lt;strong>Ceph RBD&lt;/strong>：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./vm-with-ceph.png" alt="">&lt;/p>
+&lt;ol start="5">
+&lt;li>等待虚拟机创建完成，通过 vnc 或者 ssh 登录虚拟机：&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="./vm-running.png" alt="">&lt;/p>
+&lt;p>可以发现虚拟机里面挂载了 /dev/sda(系统盘) 和 /dev/sdb(数据盘)，底层都为 ceph 的 RBD 块设备，因为 ceph 底层块设备用的机械盘，用 dd 简单测试速度在 99 MB/s ，符合预期。&lt;/p>
+&lt;ol start="6">
+&lt;li>然后使用平台的 climc 命令查看虚拟机所在的宿主机，发现虚拟机 ceph-test-vm 运行在 node-1 计算节点上，同时改节点也是 Ceph 集群的存储节点，实现了超融合的架构：&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-list --details --search ceph-test-vm
++--------------------------------------+--------------+--------+---------------+--------+---------+------------+-----------+------------+---------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> IPs &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> vcpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> vmem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span> os_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------+--------+---------------+--------+---------+------------+-----------+------------+---------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ffd8ec7c-1e2d-4427-89e0-81b6ce184185 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ceph-test-vm &lt;span style="color:#000;font-weight:bold">|&lt;/span> node-1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.16.254.252&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">235520&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2048&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> kvm &lt;span style="color:#000;font-weight:bold">|&lt;/span> Linux &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------+--------+---------------+--------+---------+------------+-----------+------------+---------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它操作">其它操作&lt;/h2>
+&lt;ul>
+&lt;li>删除 Rook 部署的 Ceph 集群请参考：&lt;a href="https://rook.io/docs/rook/v1.7/ceph-teardown.html">Cleaning up a Cluster&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Blog: 用Calico网络策略设置主机node防火墙规则</title><link>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</link><pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 小助手&lt;/p>
+&lt;p>Cloudpods的服务运行在一个Kubernetes集群之上，该Kubernets集群的网络方案采用了&lt;a href="https://docs.projectcalico.org/">Calico&lt;/a>。因此运行Cloudpods服务的节点的iptables规则被Calico接管。这就导致我们在Cloudpods服务节点上配置的防火墙规则会被Calico配置的iptables规则覆盖，导致防火墙规则不生效。本文介绍如何使用Calico的HostEndpoint和GlobalNetworkPolicy来设置主机节点的防火墙规则。&lt;/p>
+&lt;h2 id="1准备calicoctl工具">1、准备calicoctl工具&lt;/h2>
+&lt;p>下载二进制&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">curl -O -L https://github.com/projectcalico/calicoctl/releases/download/v3.12.1/calicoctl
+chmod +x calicoctl
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置环境变量&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">DATASTORE_TYPE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>kubernetes
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">KUBECONFIG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/etc/kubernetes/admin.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="2配置hostendpoint规则">2、配置HostEndpoint规则&lt;/h2>
+&lt;p>对每一台主机的每个需要控制防火墙规则接口，定义对应的HostEndpoint规则&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">HostEndpoint&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;node_name&amp;gt;-&amp;lt;interface_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">labels&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">role&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">env&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">production&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">interfaceName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;interface_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">node&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;node_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">expectedIPs&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&amp;lt;interface_ip&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">HostEndpoint&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;node_name&amp;gt;-&amp;lt;interface_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">labels&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">role&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">env&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">production&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">interfaceName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;interface_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">node&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;node_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">expectedIPs&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&amp;lt;interface_ip&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>应用该规则：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">./calicoctl apply -f hep.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="3定义网络规则">3、定义网络规则&lt;/h2>
+&lt;p>定义好HostEndpoint之后，采用Calico的GlobalNetworkPolicy定义防火墙规则。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">GlobalNetworkPolicy&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">&amp;lt;whitelist_gnp_name&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">order&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">preDNAT&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">applyOnForward&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ingress&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">action&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Allow&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">protocol&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">TCP&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">source&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">nets&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#000">&amp;lt;src_net_block1&amp;gt;, &amp;lt;src_net_block2&amp;gt;]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">destination&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ports&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#000">&amp;lt;dst_port1&amp;gt;, &amp;lt;dst_port2&amp;gt;]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">selector&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;role==\&amp;#34;master\&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">GlobalNetworkPolicy&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">drop-other-ingress&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">order&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">20&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">preDNAT&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">applyOnForward&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ingress&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">action&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Deny&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">selector&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;role==\&amp;#34;master\&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>应用规则&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">./calicoctl apply -f gnp.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="4-failsafe机制">4. failSafe机制&lt;/h2>
+&lt;p>为防止用户错误配置导致node无法网络访问的风险，calico设计了failSafe机制，即在用户编写规则有误的情况下，部分端口也不会被封禁，导致节点功能失效。这里是FailSafe端口的信息：https://docs.projectcalico.org/reference/host-endpoints/failsafe&lt;/p>
+&lt;h2 id="5-配置举例">5. 配置举例&lt;/h2>
+&lt;p>举例：master节点的外网端口只允许80和443端口，其他都禁止：&lt;/p>
+&lt;h3 id="hostendpoint定义">HostEndpoint定义：&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">HostEndpoint&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master1-em4&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">labels&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">role&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">external&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">interfaceName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">em4&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">node&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">expectedIPs&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;120.133.60.219&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">HostEndpoint&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master2-em4&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">labels&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">role&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">external&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">interfaceName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">em4&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">node&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">expectedIPs&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;120.133.60.220&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">HostEndpoint&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master3-em4&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">labels&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">role&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">external&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">interfaceName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">em4&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">node&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">master3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">expectedIPs&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;120.133.60.221&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="globalnetworkpolicy定义">GlobalNetworkPolicy定义&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">GlobalNetworkPolicy&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">allow-http-https-traffic-only&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">order&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">preDNAT&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">applyOnForward&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ingress&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">action&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Allow&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">protocol&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">TCP&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">destination&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ports&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">80&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">443&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">selector&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;role==\&amp;#34;master\&amp;#34; &amp;amp;&amp;amp; type==\&amp;#34;external\&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#204a87;font-weight:bold">apiVersion&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">projectcalico.org/v3&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kind&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">GlobalNetworkPolicy&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">drop-other-ingress&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">order&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">20&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">preDNAT&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">applyOnForward&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ingress&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">action&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Deny&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Blog: QEMU+OCFS2: 使用OCFS2作为虚拟机磁盘文件的SAN存储文件系统</title><link>https://www.cloudpods.org/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</link><pubDate>Fri, 02 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</guid><description>
 &lt;p>&lt;strong>作者:&lt;/strong> 小助手&lt;/p>
 &lt;p>本文介绍OCFS2共享集群文件系统，如何配置以及如何在线扩容。&lt;/p>
 &lt;h2 id="什么是ocfs2文件系统">什么是OCFS2文件系统？&lt;/h2>

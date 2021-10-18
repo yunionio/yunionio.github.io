@@ -1,0 +1,17 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+常见问题</title><link>https://www.cloudpods.org/zh/docs/onpremise/host/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/host/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Host服务启动失败或有warning如何处理</title><link>https://www.cloudpods.org/zh/docs/onpremise/host/faq/host-service/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/host/faq/host-service/</guid><description>
+&lt;h2 id="禁用-dhcp-服务">禁用 dhcp 服务&lt;/h2>
+&lt;p>如果你看到了这样的提示：&lt;code>dhcp: dhcp client is enabled before host agent start, please disable it.&lt;/code>&lt;/p>
+&lt;p>说明你的机器之前启用过dhcp client.&lt;/p>
+&lt;p>如何禁用 dhcp client：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 一般 centos7 的 dhcp client 都是由 NetworkManager 启动的&lt;/span>
+$ systemctl disable NetworkManager --now
+&lt;span style="color:#8f5902;font-style:italic"># 我们会检查 /var/run/dhclient-&amp;lt;nic&amp;gt;.pid 下是否有dhclient的pid文件来决定是否要输出 warning&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 所以同时你需要清除 /var/run 下的 dhclient-&amp;lt;nic&amp;gt;.pid 文件, nic 需要替换成自己的网卡名，如 eth0&lt;/span>
+$ rm -f /var/run/dhclient-&amp;lt;nic&amp;gt;.pid
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="内核模块不匹配">内核模块不匹配&lt;/h2>
+&lt;p>使用我们的平台的 host 服务需要用我们的内核，如果你看到了这样的提示：&lt;/p>
+&lt;p>&lt;code>openvswitch: kernel module openvswitch paramters version not found, is kernel version correct ??&lt;/code>&lt;/p>
+&lt;p>或者 &lt;code>uname -r&lt;/code> 输出结果中字段不包含 yn. 正确的：&lt;code>3.10.0-514.26.2.el7.yn20180608.x86_64&lt;/code>&lt;/p>
+&lt;p>说明你的机器使用的不是我们的内核， 需要安装我们的内核然后重启。&lt;/p>
+&lt;p>如何安装我们的内核可以参考&lt;a href="https://www.cloudpods.org/zh/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装部署流程&lt;/a>&lt;/p></description></item></channel></rss>

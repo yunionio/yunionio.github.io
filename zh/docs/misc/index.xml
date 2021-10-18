@@ -1,0 +1,33 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+其他服务组件</title><link>https://www.cloudpods.org/zh/docs/misc/</link><description>Recent content in 其他服务组件 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 19 Jul 2019 20:58:54 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/misc/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 操作日志</title><link>https://www.cloudpods.org/zh/docs/misc/log-purge/</link><pubDate>Fri, 19 Jul 2019 20:59:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/misc/log-purge/</guid><description>
+&lt;h2 id="日志类型">日志类型&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>平台有一个日志服务，用来收集各个服务的操作日志，这类日志用于展示在web控制台的“操作日志”菜单，起到平台关键操作回溯审计的作用&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>与此同时，每个服务内部都有一个操作日志，用来收集记录每个服务各自的详细操作日志，用来做计费以及debug使用。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>平台还有一个云上日志服务（Cloudevents），用来同步保存从各个云账号同步下来的操作日志。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="日志数据的保存">日志数据的保存&lt;/h2>
+&lt;p>日志数据都保存在数据表中，这类表都采用了自动分表的机制，在每大概30天会自动切换表，把日志保存在新表中。&lt;/p>
+&lt;h2 id="日志表的清理">日志表的清理&lt;/h2>
+&lt;p>以上各类日志日积月累数据量都不小，需要定期清理。由于采用了分表保存的机制，可以将旧表drop来删除日志数据，释放空间。&lt;/p>
+&lt;p>但是，需要注意的是，只有在mysql开启了innodb_file_per_table=ON的选项后，drop表之后，会删除对应的数据库文件，从而释放出表空间。如果mysql未开启innodb_file_per_table选项，则mysql所有数据都保存在/var/lib/mysql/ibdata1这个文件中，即使删除了表，也不会立即释放表空间。&lt;/p>
+&lt;p>以下命令用来查看各个服务的日志表的情况：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc logs-splitable --service &amp;lt;service_name&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中，service可以是：&lt;/p>
+&lt;ul>
+&lt;li>compute&lt;/li>
+&lt;li>image&lt;/li>
+&lt;li>identity&lt;/li>
+&lt;li>log&lt;/li>
+&lt;li>cloudevent&lt;/li>
+&lt;/ul>
+&lt;p>以下命令清理各个服务的过期日志表（默认drop清理6个月之前的日志表）：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc logs-purge --service &amp;lt;service_name&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 配置服务</title><link>https://www.cloudpods.org/zh/docs/misc/yunionconf/</link><pubDate>Fri, 19 Jul 2019 20:59:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/misc/yunionconf/</guid><description>
+&lt;p>Cloudpods通过配置服务来管理服务相关或者用户个人相关的配置参数。&lt;/p></description></item></channel></rss>

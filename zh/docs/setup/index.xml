@@ -1265,6 +1265,23 @@ $ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.8.3
 &lt;span style="color:#8f5902;font-style:italic"># --as-bastion 可以让 PRIMARY_MASTER_HOST 作为堡垒机部署在内网的宿主机&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以在升级的过程中可以登录到 PRIMARY_MASTER_HOST， 使用 kubectl 查看对应 pods 的升级情况&lt;/span>
 $ kubectl get pods -n onecloud --watch
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="降级相关">降级相关&lt;/h2>
+&lt;p>如果升级后遇到功能不符合预期或者 bug 之类的问题，可以通过下面的命令降级回滚。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>一般小版本降级没有问题，比如从 v3.8.3 降级到 v3.8.2&lt;/li>
+&lt;li>跨版本降级可能会有问题，比如从 v3.8.3 降级到 v3.6.8&lt;/li>
+&lt;/ul>
+&lt;p>如果遇到问题请到 &lt;a href="https://github.com/yunionio/cloudpods/issues">GitHub 提 issue&lt;/a> 或者 &lt;a href="https://www.cloudpods.org/zh/docs/contact">联系我们&lt;/a> 获取帮助。
+&lt;/div>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 降级的原理是修改各个服务的 image version&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.8.3，然后想要降级到 v3.7.8&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.7.8&lt;/span>
+$ /opt/yunion/bin/ocadm cluster update --version v3.7.8 --wait
+&lt;span style="color:#8f5902;font-style:italic"># 降级会重新拉取新的镜像，可以再开一个窗口&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用下面的命令查看每个 pod 的更新情况&lt;/span>
+$ kubectl -n onecloud get pods -w
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</guid><description>
 &lt;h2 id="简介">简介&lt;/h2>
 &lt;p>从 v3.6.10 版本开始，可以将”Cloudpods“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 和 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 。&lt;/p>

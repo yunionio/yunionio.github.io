@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org//v3.4/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org//v3.4/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org//v3.4/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/intro/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org/v3.4/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.4/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/v3.4/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/intro/</guid><description>
 &lt;p>Cloudpods 目前仅支持在 CentOS 7 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -100,13 +100,13 @@
 &lt;ul>
 &lt;li>管理 kvm 虚拟机: 部署 host 服务&lt;/li>
 &lt;li>管理物理机: 部署 baremetal-agent 服务&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 部署 HA 环境</title><link>https://www.cloudpods.org//v3.4/docs/setup/controlplane-ha/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/controlplane-ha/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 部署 HA 环境</title><link>https://www.cloudpods.org/v3.4/docs/setup/controlplane-ha/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/controlplane-ha/</guid><description>
 &lt;p>在部署生产可用的 kubernetes 集群之前，需要先部署 LoadBalancer 环境，这里使用 &lt;strong>keepalived + haproxy&lt;/strong> 的方式实现负载均衡和高可用。&lt;/p>
 &lt;h2 id="环境说明">环境说明&lt;/h2>
 &lt;p>单独拿两个节点部署 keepalived 和 haproxy 作为后端 kubernetes 控制平面的负载均衡器，拓扑结构如下:&lt;/p>
 &lt;p>&lt;img src="../images/k8s.png" alt="">&lt;/p>
 &lt;p>两个节点上面分别部署 keepalived 和 haproxy 组成负载均衡集群，haproxy 的 backend 为后端的 kubernetes control plane node，vip(虚ip) 在这两个节点之间漂移形成高可用。&lt;/p>
-&lt;p>另外 Cloudpods 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
+&lt;p>另外 Cloudpods 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 haproxy 提供 vip，在2个 haproxy 实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。&lt;/p>
 &lt;h3 id="部署配置-keepalived">部署配置 keepalived&lt;/h3>
@@ -267,7 +267,7 @@ $ netstat -tulnp &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep 
 tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:6443 0.0.0.0:* LISTEN 10033/haproxy
 tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:1080 0.0.0.0:* LISTEN 10033/haproxy
 &lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h1>
-&lt;p>参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org//v3.4/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/db-ha/</guid><description>
+&lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/v3.4/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
@@ -517,7 +517,7 @@ inet 192.168.199.97/32 scope global eth0
 valid_lft forever preferred_lft forever
 inet6 fe80::222:cfff:fe40:1e29/64 scope link
 valid_lft forever preferred_lft forever
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org//v3.4/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/controlplane/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org/v3.4/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/controlplane/</guid><description>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;p>Cloudpods 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
@@ -665,7 +665,7 @@ $ chmod &lt;span style="color:#0000cf;font-weight:bold">755&lt;/span> /etc/sysco
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">提示&lt;/h4>
 &lt;blockquote>
-&lt;p>如果要部署高可用集群，请先搭建负载均衡集群，参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/controlplane-ha">部署 HA 环境&lt;/a>。&lt;/p>
+&lt;p>如果要部署高可用集群，请先搭建负载均衡集群，参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/controlplane-ha">部署 HA 环境&lt;/a>。&lt;/p>
 &lt;/blockquote>
 &lt;/div>
 &lt;h3 id="安装部署工具">安装部署工具&lt;/h3>
@@ -702,7 +702,7 @@ Your Kubernetes and control-plane has initialized successfully!
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">提示&lt;/h4>
 &lt;blockquote>
-&lt;p>kubernetes 高可用部署需要 3 个节点，主要是 etcd 需要至少 3 个节点组成高可用集群。如果是高可用部署，请在另外两个节点执行 &lt;code>ocadm join --control-plane &amp;lt;vip&amp;gt;:6443&lt;/code> 部署控制服务，join 的另外两个节点会自动和当前的控制节点组成高可用集群。参考: &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/components/#%E5%8A%A0%E5%85%A5-controlplane">加入控制节点&lt;/a>&lt;/p>
+&lt;p>kubernetes 高可用部署需要 3 个节点，主要是 etcd 需要至少 3 个节点组成高可用集群。如果是高可用部署，请在另外两个节点执行 &lt;code>ocadm join --control-plane &amp;lt;vip&amp;gt;:6443&lt;/code> 部署控制服务，join 的另外两个节点会自动和当前的控制节点组成高可用集群。参考: &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/components/#%E5%8A%A0%E5%85%A5-controlplane">加入控制节点&lt;/a>&lt;/p>
 &lt;/blockquote>
 &lt;/div>
 &lt;p>kubernetes 集群部署完成后，通过以下命令来确保相关的 pod (容器) 都已经启动, 变成 running 的状态。&lt;/p>
@@ -763,7 +763,7 @@ $ ip route get &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;s
 10.168.222.218
 &lt;span style="color:#8f5902;font-style:italic"># 测试连通性&lt;/span>
 $ curl -k https://10.168.222.218
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>用浏览器访问 &amp;lsquo;https://本机IP&amp;rsquo; 会跳转到 web 界面，使用 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/controlplane/#%E5%88%9B%E5%BB%BA%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7">创建登录用户&lt;/a> 里面指定的用户名和密码登录后，界面如下:&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>用浏览器访问 &amp;lsquo;https://本机IP&amp;rsquo; 会跳转到 web 界面，使用 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/controlplane/#%E5%88%9B%E5%BB%BA%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7">创建登录用户&lt;/a> 里面指定的用户名和密码登录后，界面如下:&lt;/p>
 &lt;p>&lt;img src="../images/web-login.png" alt="登录页">&lt;/p>
 &lt;p>&lt;img src="../images/web-dashboard.png" alt="首页">&lt;/p>
 &lt;h3 id="删除环境">删除环境&lt;/h3>
@@ -772,11 +772,11 @@ $ curl -k https://10.168.222.218
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="后续">后续&lt;/h2>
 &lt;p>如果没有意外，现在应该已经部署好了 Cloudpods on kubernetes 的集群，以下是一些后续的环节说明，可以根据自己的需要来进行额外的操作。&lt;/p>
 &lt;h3 id="添加计算节点">添加计算节点&lt;/h3>
-&lt;p>当控制节点搭建完成后，可以参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/host/">计算节点&lt;/a> 一节的内容，添加计算节点，组建一套私有云集群。&lt;/p>
+&lt;p>当控制节点搭建完成后，可以参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/host/">计算节点&lt;/a> 一节的内容，添加计算节点，组建一套私有云集群。&lt;/p>
 &lt;h3 id="控制节点作为计算节点">控制节点作为计算节点&lt;/h3>
 &lt;p>默认情况下 &lt;code>ocadm init&lt;/code> 创建的节点是控制节点，不会运行 onecloud 计算节点的服务。如果需要把控制节点也作为计算节点，需要执行以下步骤:&lt;/p>
 &lt;ul>
-&lt;li>安装计算节点需要的依赖，参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">&amp;ldquo;计算节点/安装依赖&amp;rdquo;&lt;/a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。&lt;/li>
+&lt;li>安装计算节点需要的依赖，参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">&amp;ldquo;计算节点/安装依赖&amp;rdquo;&lt;/a>，这里主要是要安装我们的内核和运行虚拟机的 qemu 等软件。&lt;/li>
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装rpm包&lt;/span>
 $ yum --disablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;*&amp;#39;&lt;/span> --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;yunion*&amp;#39;&lt;/span> install -y &lt;span style="color:#4e9a06">\
@@ -810,10 +810,10 @@ $ kubectl get oc -n onecloud default -o &lt;span style="color:#000">jsonpath&lt;
 v3.0.0-20200112.0
 &lt;span style="color:#8f5902;font-style:italic"># 升级到 v3.0.0-20200113.0&lt;/span>
 $ ocadm cluster update --version v3.0.0-20200113.0 --wait
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org//v3.4/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/components/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org/v3.4/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/components/</guid><description>
 &lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，Cloudpods 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
 &lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;p>参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
+&lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
 &lt;h3 id="获取加入集群-token">获取加入集群 token&lt;/h3>
 &lt;p>然后在控制节点使用 ocadm 拿到加入集群的 token，在待部署节点使用 ocadm 加入集群，操作如下:&lt;/p>
 &lt;p>在&lt;strong>控制节点&lt;/strong>获取加入节点的 token&lt;/p>
@@ -851,7 +851,7 @@ This node has joined the cluster:
 * Certificate signing request was sent to apiserver and a response was received.
 * The Kubelet was informed of the new secure connection details.
 Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span> on the control-plane to see this node join the cluster.
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org//v3.4/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/host/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/v3.4/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/host/</guid><description>
 &lt;p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -958,7 +958,7 @@ $ reboot
 $ uname -r
 3.10.0-1062.4.3.el7.yn20191203.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-docker-和-kubelet">安装 docker 和 kubelet&lt;/h3>
-&lt;p>参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
+&lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
 &lt;h4 id="安装配置-docker">安装配置 docker&lt;/h4>
 &lt;p>安装 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
@@ -1055,7 +1055,7 @@ $ climc network-create --gateway 10.168.222.1 --server-type baremetal bcast0 adm
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="计算节点host操作">计算节点(host)操作&lt;/h2>
 &lt;p>以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。&lt;/p>
 &lt;h3 id="配置-host-服务">配置 host 服务&lt;/h3>
-&lt;p>参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/components/#%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4-token">&amp;ldquo;添加节点/获取加入集群token&amp;rdquo;&lt;/a> 的流程获取join所需的信息&lt;/p>
+&lt;p>参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/components/#%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4-token">&amp;ldquo;添加节点/获取加入集群token&amp;rdquo;&lt;/a> 的流程获取join所需的信息&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocadm join 来创建一台计算节点&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 可选参数 --host-networks: 配置host服务的网络，比如: &amp;#39;eth0/br0/10.168.222.140&amp;#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 获取计算节点 IP&lt;/span>
@@ -1140,8 +1140,8 @@ $ climc endpoint-list --details &lt;span style="color:#000;font-weight:bold">|&l
 &lt;span style="color:#8f5902;font-style:italic"># 在通过 webconsole-server 命令获取 vnc web 界面的链接地址，然后用浏览器打开该地址&lt;/span>
 $ climc webconsole-server testvm01
 https://console.yunion.cn/web-console?access_token&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>FI-VXQSAonhzfSnxVTKCCbwHinp7swlRkmi-4p6s-4OfZpg6TG9YhWuwbHEUA1D7XoKu_w%3D%3D&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">api_server&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https%3A%2F%2F10.168.222.216%3A8899&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">password&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>65xB2kaE&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">protocol&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>vnc
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org//v3.4/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/baremetal/</guid><description>
-&lt;p>启用 baremetal-agent 之前需要部署 Cloudpods 集群，详见 &lt;a href="https://www.cloudpods.org//v3.4/docs/setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org/v3.4/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/baremetal/</guid><description>
+&lt;p>启用 baremetal-agent 之前需要部署 Cloudpods 集群，详见 &lt;a href="https://www.cloudpods.org/v3.4/docs/setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
 &lt;p>待集群准备完毕后需要指定集群中的一个 node 来部署 baremetal-agent 服务。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
@@ -1178,11 +1178,11 @@ $ climc agent-list
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> f3c2c671-c41d-4f30-8d04-e022b49bb9b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal-10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.168.222.150:8879 &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal &lt;span style="color:#000;font-weight:bold">|&lt;/span> remotes/origin/master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>5e415506120011509&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6230b485-2e54-480e-8284-33360b8202a8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="https://www.cloudpods.org//v3.4/docs/howto/baremetal">&amp;ldquo;操作管理/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="https://www.cloudpods.org/v3.4/docs/howto/baremetal">&amp;ldquo;操作管理/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
 &lt;h2 id="禁用-baremetal-agent">禁用 baremetal-agent&lt;/h2>
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版</title><link>https://www.cloudpods.org//v3.4/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/ce-ee-switch/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版</title><link>https://www.cloudpods.org/v3.4/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/ce-ee-switch/</guid><description>
 &lt;p>默认情况下部署好的版本是 &lt;strong>开源版本(CE: Community Edition)&lt;/strong>，可以使用 &lt;code>ocadm cluster update&lt;/code> 命令切换成 &lt;strong>企业版本(EE: Enterprise Edition)&lt;/strong>。&lt;/p>
 &lt;h2 id="切换操作">切换操作&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到企业版&lt;/span>
@@ -1198,7 +1198,7 @@ $ ocadm cluster update --use-ce --wait
 $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org//v3.4/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.4/docs/setup/upgrade/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org/v3.4/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.4/docs/setup/upgrade/</guid><description>
 &lt;p>本文介绍从 v3.3.x 升级到 v3.4.x 的步骤以及注意事项。&lt;/p>
 &lt;p>版本升级建议从相邻的版本升级，比如从 v3.0.x 升级到 v3.4.x 需要以下的步骤：&lt;/p>
 &lt;ol>

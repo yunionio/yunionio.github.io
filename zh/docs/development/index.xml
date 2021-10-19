@@ -191,6 +191,8 @@ $ kubctl version
 &lt;span style="color:#8f5902;font-style:italic"># 源码安装 telepresence 到 /usr/local/bin/telepresence&lt;/span>
 $ git clone https://github.com/telepresenceio/telepresence
 $ &lt;span style="color:#204a87">cd&lt;/span> telepresence
+$ git checkout 0.109
+$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/https:\/\/github.com\/datawire\/sshuttle.git/git@github.com:datawire\/sshuttle.git/g&amp;#39;&lt;/span> packaging/build-sshuttle.py
 $ sudo env &lt;span style="color:#000">PREFIX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/usr/local ./install.sh
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用">使用&lt;/h3>
 &lt;p>利用 telepresence 本地连通远端 K8S 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 K8S 其它服务的环境。&lt;/p>

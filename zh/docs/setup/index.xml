@@ -1,6 +1,6 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
 安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
-&lt;p>Cloudpods目前支持在 CentOS 7 和 Debian 10 上运行，待部署组件/服务如下:&lt;/p>
+&lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10 (arm64) 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -30,38 +30,62 @@
 &lt;td style="text-align:center">systemd&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">keystone&lt;/td>
-&lt;td style="text-align:center">认证服务&lt;/td>
+&lt;td style="text-align:center">ansibleserver&lt;/td>
+&lt;td style="text-align:center">ansible脚本管理和执行服务&lt;/td>
 &lt;td style="text-align:center">k8s deployment&lt;/td>
 &lt;td style="text-align:center">container&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">region&lt;/td>
-&lt;td style="text-align:center">api 控制器&lt;/td>
+&lt;td style="text-align:center">apigateway&lt;/td>
+&lt;td style="text-align:center">web前端的API网关&lt;/td>
 &lt;td style="text-align:center">k8s deployment&lt;/td>
 &lt;td style="text-align:center">container&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">scheduler&lt;/td>
-&lt;td style="text-align:center">调度服务&lt;/td>
+&lt;td style="text-align:center">baremetal-agent&lt;/td>
+&lt;td style="text-align:center">管理物理机&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">cloudevent&lt;/td>
+&lt;td style="text-align:center">云上日志和裸金属日志收集服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">cloudid&lt;/td>
+&lt;td style="text-align:center">公有云SAML SSO服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">cloudmon&lt;/td>
+&lt;td style="text-align:center">公有云监控指标采集服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">devtool&lt;/td>
+&lt;td style="text-align:center">运维工具服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">esxi-agent&lt;/td>
+&lt;td style="text-align:center">VMware ESXi管理服务代理&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">etcd&lt;/td>
+&lt;td style="text-align:center">基础服务，存储服务间推送消息，分布式锁等等信息&lt;/td>
 &lt;td style="text-align:center">k8s deployment&lt;/td>
 &lt;td style="text-align:center">container&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">glance&lt;/td>
 &lt;td style="text-align:center">镜像存储&lt;/td>
-&lt;td style="text-align:center">k8s deployment&lt;/td>
-&lt;td style="text-align:center">container&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">webconsole&lt;/td>
-&lt;td style="text-align:center">虚拟机访问界面&lt;/td>
-&lt;td style="text-align:center">k8s deployment&lt;/td>
-&lt;td style="text-align:center">container&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">influxdb&lt;/td>
-&lt;td style="text-align:center">监控数据库&lt;/td>
 &lt;td style="text-align:center">k8s deployment&lt;/td>
 &lt;td style="text-align:center">container&lt;/td>
 &lt;/tr>
@@ -73,13 +97,133 @@
 &lt;/tr>
 &lt;tr>
 &lt;td style="text-align:center">sdnagent&lt;/td>
-&lt;td style="text-align:center">管理虚拟机网络&lt;/td>
-&lt;td style="text-align:center">rpm&lt;/td>
-&lt;td style="text-align:center">systemd&lt;/td>
+&lt;td style="text-align:center">管理虚拟机流表规则，实现网络安全组和限速等功能&lt;/td>
+&lt;td style="text-align:center">k8s daemonset&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">baremetal-agent&lt;/td>
-&lt;td style="text-align:center">管理物理机&lt;/td>
+&lt;td style="text-align:center">ovn-controller&lt;/td>
+&lt;td style="text-align:center">实现ovn数据库到每台宿主机OVS的流表同步&lt;/td>
+&lt;td style="text-align:center">k8s daemonset&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">host-deployer&lt;/td>
+&lt;td style="text-align:center">虚拟机部署服务，负责挂载虚拟机镜像，进行识别和修改&lt;/td>
+&lt;td style="text-align:center">k8s daemonset&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">host-image&lt;/td>
+&lt;td style="text-align:center">虚拟机本地磁盘数据传输服务&lt;/td>
+&lt;td style="text-align:center">k8s daemonset&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">influxdb&lt;/td>
+&lt;td style="text-align:center">监控数据库&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">keystone&lt;/td>
+&lt;td style="text-align:center">认证服务, 提供用户认证，服务间的API认证&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">kubeserver&lt;/td>
+&lt;td style="text-align:center">容器管理服务，管理多个k8s容器集群，基于主机创建k8s集群&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">logger&lt;/td>
+&lt;td style="text-align:center">操作日志服务，存储所有服务的操作日志&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">monitor&lt;/td>
+&lt;td style="text-align:center">监控服务，提供监控API，提供报警服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">notify&lt;/td>
+&lt;td style="text-align:center">消息通知服务，负责短信，邮件，以及IM的消息发送&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">onecloud-service-operator&lt;/td>
+&lt;td style="text-align:center">编排服务控制器&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">ovn-north&lt;/td>
+&lt;td style="text-align:center">OVN虚拟网络的数据维护服务，OVN标准组件&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">region&lt;/td>
+&lt;td style="text-align:center">云控制器，控制服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">region-dns&lt;/td>
+&lt;td style="text-align:center">主机自定义域名服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">s3gateway&lt;/td>
+&lt;td style="text-align:center">对象存储统一网关，实现对所有对象存储的统一访问&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">scheduler&lt;/td>
+&lt;td style="text-align:center">虚拟机调度服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">telegraf&lt;/td>
+&lt;td style="text-align:center">监控代理，采集每个节点的监控数据，并存储到influxdb&lt;/td>
+&lt;td style="text-align:center">k8s daemonset&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">vpcagent&lt;/td>
+&lt;td style="text-align:center">VPC代理网关，实现云平台和OVN的信息同步&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">web&lt;/td>
+&lt;td style="text-align:center">前端服务，是一个nginx容器，内置web前端js代码&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">webconsole&lt;/td>
+&lt;td style="text-align:center">云主机和容器的web终端服务&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">yunionconf&lt;/td>
+&lt;td style="text-align:center">前端个性化配置信息的存储和管理&lt;/td>
+&lt;td style="text-align:center">k8s deployment&lt;/td>
+&lt;td style="text-align:center">container&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">onecloud-operator&lt;/td>
+&lt;td style="text-align:center">整个Cloudpods服务的K8s Operator，负责服务组件的部署管理&lt;/td>
 &lt;td style="text-align:center">k8s deployment&lt;/td>
 &lt;td style="text-align:center">container&lt;/td>
 &lt;/tr>

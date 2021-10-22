@@ -14,4 +14,83 @@ $ rm -f /var/run/dhclient-&amp;lt;nic&amp;gt;.pid
 &lt;p>&lt;code>openvswitch: kernel module openvswitch paramters version not found, is kernel version correct ??&lt;/code>&lt;/p>
 &lt;p>或者 &lt;code>uname -r&lt;/code> 输出结果中字段不包含 yn. 正确的：&lt;code>3.10.0-514.26.2.el7.yn20180608.x86_64&lt;/code>&lt;/p>
 &lt;p>说明你的机器使用的不是我们的内核， 需要安装我们的内核然后重启。&lt;/p>
-&lt;p>如何安装我们的内核可以参考&lt;a href="https://www.cloudpods.org/zh/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装部署流程&lt;/a>&lt;/p></description></item></channel></rss>
+&lt;p>如何安装我们的内核可以参考&lt;a href="https://www.cloudpods.org/zh/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装部署流程&lt;/a>&lt;/p></description></item><item><title>Docs: Host服务问题排障技巧</title><link>https://www.cloudpods.org/zh/docs/onpremise/host/faq/troubleshooting/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/host/faq/troubleshooting/</guid><description>
+&lt;p>Host服务可能因为各种原因启动失败，现象为Host服务重启之后，在云平台宿主机列表，宿主机的状态一直为离线。&lt;/p>
+&lt;p>本文介绍一般的排查问题的思路。&lt;/p>
+&lt;h2 id="host服务对应容器pod介绍">Host服务对应容器Pod介绍&lt;/h2>
+&lt;p>首先，我们需要了解Host服务对应的Pod。&lt;/p>
+&lt;p>Host服务由k8s的onecloud命名空间下的Daemonset default-host定义，在每个节点上都会运行一个名为 default-host-xxxxx 的容器，其中 xxxxx 为随机的字符串。&lt;/p>
+&lt;p>Default-host Pod中有三个容器：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>容器名称&lt;/th>
+&lt;th>功能&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>host&lt;/td>
+&lt;td>Host服务的主服务进程，实现和控制器的通信，控制qemu虚拟机进程，管理存储和网络&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ovn-controller&lt;/td>
+&lt;td>ovn在每个节点的控制进程，从ovn-northd维护的数据库同步节点配置信息，并下发到ovs&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>sdnagent&lt;/td>
+&lt;td>实现经典网络的安全组和流控，VPC网络辅助ovn-controller实现VPC网络功能&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="定位宿主机的host容器">定位宿主机的host容器&lt;/h2>
+&lt;p>通过如下命里找到在指定宿主机上运行的Host容器&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud get pods -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &amp;lt;ip_of_host&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>例如：&lt;/p>
+&lt;pre>&lt;code># kubectl -n onecloud get pods -o wide | grep office-03-host01
+default-host-xc2t5 3/3 Running 0 4h7m 192.168.222.3 office-03-host01 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+default-host-deployer-zv6tk 1/1 Running 0 5d15h 10.40.33.249 office-03-host01 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+default-host-image-cql69 1/1 Running 132 128d 192.168.222.3 office-03-host01 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+default-telegraf-q8fl9 2/2 Running 40 128d 192.168.222.3 office-03-host01 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>这几个Pod的功能解释如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Pod&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>default-host-xxxxx&lt;/td>
+&lt;td>DaemonSet default-host 的pod&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>default-host-deployer-xxxxx&lt;/td>
+&lt;td>DaemonSet default-host-deployer 的pod，实现虚拟机磁盘的初始化和识别&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>default-host-image-xxxxx&lt;/td>
+&lt;td>DaemonSet default-host-image 的pod，实现本地虚拟机磁盘的读取&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>default-telegraf-xxxxx&lt;/td>
+&lt;td>DaemonSet default-telegraf 的pod，实现宿主机的监控数据采集&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="重启host服务">重启Host服务&lt;/h2>
+&lt;p>有时候，重启就能解决问题，重启host服务只需要删除对应的pod，k8s会立即重建对应pod，实现host服务的重启.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud delete pods default-host-xxxxx
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="查看host服务的日志">查看Host服务的日志&lt;/h2>
+&lt;p>采用如下命令查看Host服务的日志。由于host pod中有三个容器，因此需要用 -c 参数指定容器（-c host）。如下命令查看从过去10分钟开始（&amp;ndash;since 10m）的host容器的日志，并且不退出（-f），持续输出日志到控制台。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud logs default-host-xxxxx -c host --since 10m -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Host服务在启动时会执行如下检查：&lt;/p>
+&lt;ul>
+&lt;li>设置和优化内核参数，例如io调度器参数&lt;/li>
+&lt;li>检查关键软件，例如qemu，内核nbd模块，openvswitch等&lt;/li>
+&lt;li>初始化并配置网络&lt;/li>
+&lt;li>初始化并配置存储&lt;/li>
+&lt;li>&amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;p>在每一步都可能出错，此时可以通过查看输出日志，定位原因。&lt;/p></description></item></channel></rss>

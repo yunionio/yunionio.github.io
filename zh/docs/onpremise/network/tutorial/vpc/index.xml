@@ -341,61 +341,7 @@ VPC网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutor
 &lt;li>在IP子网页面，单击IP子网名称项，进入IP子网详情页面。&lt;/li>
 &lt;li>在IP子网详情页面，单击“IP使用情况”页签，进入IP使用情况页面。&lt;/li>
 &lt;li>查看IP子网中用于各类用途的IP地址信息。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 部署EIP网关</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipgwhowto/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipgwhowto/</guid><description>
-&lt;p>当用户环境使用VPC网络时，由于VPC网络是一块网络隔离的地址空间，在VPC网络中的虚拟机如果需要与外部通信，需要绑定弹性公网IP（EIP）。EIP是经典网络可路由访问的一段IP地址。EIP网关负责将EIP和VPC的虚拟机IP进行IP地址转换（NAT），实现外部通过EIP访问VPC内的虚拟机IP。&lt;/p>
-&lt;p>系统部署后，默认不部署EIP网关。需要手工部署。本节介绍如何部署EIP网关。&lt;/p>
-&lt;h2 id="在计算节点部署eip网关">在计算节点部署EIP网关&lt;/h2>
-&lt;p>EIP网关需要依赖ovn-controller, sdnagent等软件包，都已经在计算节点部署好了，因此在计算节点部署EIP网关，只需要配置即可，比较方便。&lt;/p>
-&lt;h3 id="单节点eip网关">单节点EIP网关&lt;/h3>
-&lt;p>这是最简单的场景，只需要修改/etc/yunion/host.conf，将 sdn_enable_eip_man 设置为 true，重启该计算节点的 default-host pod，即可生效。&lt;/p>
-&lt;h3 id="主备高可用eip网关">主备高可用EIP网关&lt;/h3>
-&lt;p>在该场景，则需要使用ansible脚本实现自动化部署。&lt;/p>
-&lt;p>部署之前，需要为两台计算节点申请一个VIP。&lt;/p>
-&lt;p>Ansible脚本位于&lt;a href="https://github.com/yunionio/sdnagent">sdnagent代码仓库&lt;/a>的 build/sdnagent/root/usr/share/sdnagent/ansible/ 目录下。&lt;/p>
-&lt;p>将inventory文件复制一份，根据实际的环境，调整其中的变量值&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#000">sdnagent_rpm sdnagent.rpm在当前机器中的位置. keepalived将从目标机器配置的yum仓库中直接部署&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_region &amp;#34;oc_&amp;#34;前缀的变量用于向keystone认证，访问API服务。可以从default-climc pod&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_auth_url 通过&amp;#34;env | grep ^OS_&amp;#34;命令获得相应的值&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_project&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_user&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_password&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_router_id keepalived的virtual router id值。主备必须相同。若环境中有其他keepalived部署，必须不能冲突&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_priority keepalived实例的priority，数值大的为MASTER，小的为BACKUP&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_interface keepalived进行VRRP通信的网卡，这里为计算节点的管理网卡，一般为br0&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_vip keepalived实例间相互通告的vip，可用作访问eip的下一跳地址&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>inventory配置好以后，执行ansible playbook&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ansible-playbook -i a-inventory playbook.yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="在非计算节点部署eip网关">在非计算节点部署EIP网关&lt;/h2>
-&lt;p>EIP网关也可部署到单独的宿主机、虚拟机中，只要满足EIP的流量可以路由到EIP网关的三层网络通信需求即可。&lt;/p>
-&lt;p>需要使用ISO中的.rpm安装包预先安装、配置好网关所需组件。以下对这部分进行描述&lt;/p>
-&lt;p>以3.8为例，所需安装的包的名字和所在位置如下&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># https://iso.yunion.cn/3.8/rpms/packages/kernel&lt;/span>
-linux-firmware
-kernel-lt
-&lt;span style="color:#8f5902;font-style:italic"># https://iso.yunion.cn/3.8/rpms/packages/host&lt;/span>
-kmod-openvswitch
-unbound
-openvswitch
-openvswitch-ovn-common
-openvswitch-ovn-host
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装完内核之后，需要重启机器使之效&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启动openvswitch&lt;/span>
-systemctl &lt;span style="color:#204a87">enable&lt;/span> --now openvswitch
-&lt;span style="color:#8f5902;font-style:italic"># 配置ovn&lt;/span>
-&lt;span style="color:#000">ovn_encap_ip&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>xx &lt;span style="color:#8f5902;font-style:italic"># 隧道外层IP地址，EIP网关用它与其它计算节点通信&lt;/span>
-&lt;span style="color:#000">ovn_north_addr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>yy:32242 &lt;span style="color:#8f5902;font-style:italic"># ovn北向数据库的地址，yy一般选择某台宿主机ip地址；端口默认为32242，对应k8s default-ovn-north service中的端口号&lt;/span>
-ovs-vsctl &lt;span style="color:#204a87">set&lt;/span> Open_vSwitch . &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-bridge&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>brvpc &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-encap-type&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>geneve &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-encap-ip&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$ovn_encap_ip&lt;/span> &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-remote&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;tcp:&lt;/span>&lt;span style="color:#000">$ovn_north_addr&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 启动ovn-controller&lt;/span>
-systemctl &lt;span style="color:#204a87">enable&lt;/span> --now ovn-controller
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署结束后，应当可以看到至少一个名为brvpc的openvswitch网桥，ovs-vsctl show命令的输出中可以看到名为ovn-xx，类型为geneve的隧道port，remote-ip指向计算节点的ovn-encap-ip。&lt;/p>
-&lt;p>部署完成后，用上述ansible脚本进行部署。&lt;/p>
-&lt;p>样例inventory的hosts描述了两台主机用作主备高可用，如果无需高可用，可将其中的一个主机描述删除，仅部署一台。&lt;/p></description></item><item><title>Docs: EIP地址池</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/createeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/createeip/</guid><description>
+&lt;/ol></description></item><item><title>Docs: EIP地址池</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/createeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/createeip/</guid><description>
 &lt;p>当用户环境使用VPC网络时，由于VPC网络是一块网络隔离的地址空间，在VPC网络中的虚拟机如果需要与外部通信，需要绑定弹性公网IP，因此需要为VPC网络创建弹性公网IP地址池。Cloudpods平台支持将经典网络的弹性公网IP类型的IP子网作为弹性公网IP地址池。后续在指定的弹性公网IP地址池中分配弹性公网IP供VPC网络中的虚拟机使用。&lt;/p>
 &lt;h2 id="新建弹性公网ip类型的ip子网">新建弹性公网IP类型的IP子网&lt;/h2>
 &lt;ol>
@@ -436,7 +382,71 @@ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now ovn-controller
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 绑定/解绑EIP</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/bindeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/bindeip/</guid><description>
+&lt;/ol></description></item><item><title>Docs: 部署EIP网关</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipgwhowto/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipgwhowto/</guid><description>
+&lt;p>当用户环境使用VPC网络时，由于VPC网络是一块网络隔离的地址空间，在VPC网络中的虚拟机如果需要与外部通信，需要绑定弹性公网IP（EIP）。EIP是经典网络可路由访问的一段IP地址。EIP网关负责将EIP和VPC的虚拟机IP进行IP地址转换（NAT），实现外部通过EIP访问VPC内的虚拟机IP。&lt;/p>
+&lt;p>系统部署后，默认不部署EIP网关。需要手工部署。本节介绍如何部署EIP网关。&lt;/p>
+&lt;h2 id="eip网关网络要求">EIP网关网络要求&lt;/h2>
+&lt;p>EIP网关是VPC网络和外部网络（underlay网络）的交换节点，因此在需要在underlay网络进行正确配置，确保源和目的地址为EIP地址池的流量能够通过EIP网关，这样才能起到EIP网关的作用。&lt;/p>
+&lt;img src="../eipgwnet.png" width="700">
+&lt;p>EIP网关的网络要求如下：&lt;/p>
+&lt;p>1）EIP网关的IP或EIP在underlay网络中是EIP地址池IP的下一跳（Nexthop），也就是underlay网络中，目的地址为EIP地址池的流量都需要经过EIP网关&lt;/p>
+&lt;ol start="2">
+&lt;li>EIP网关能够通过underlay网络访问所有的宿主机的sdn_encap_ip（默认为宿主机的管理IP）&lt;/li>
+&lt;/ol>
+&lt;h2 id="在计算节点部署eip网关">在计算节点部署EIP网关&lt;/h2>
+&lt;p>EIP网关需要依赖ovn-controller, sdnagent等软件包，这些软件包都已经在计算节点部署好了，因此在计算节点部署EIP网关，在网络配置正确的前提下，可以比较容易实现EIP网关配置。&lt;/p>
+&lt;h3 id="单节点eip网关">单节点EIP网关&lt;/h3>
+&lt;p>这是最简单的场景，选择一台符合EIP网关网络要求的计算节点，修改该节点的 /etc/yunion/host.conf，将 sdn_enable_eip_man 设置为 true，重启该计算节点的 default-host pod，即可生效。&lt;/p>
+&lt;h3 id="主备高可用eip网关">主备高可用EIP网关&lt;/h3>
+&lt;p>在该场景，则需要使用ansible脚本实现自动化部署。&lt;/p>
+&lt;p>部署之前，需要为两台计算节点申请一个VIP。&lt;/p>
+&lt;p>Ansible脚本位于&lt;a href="https://github.com/yunionio/sdnagent">sdnagent代码仓库&lt;/a>的 build/sdnagent/root/usr/share/sdnagent/ansible/ 目录下。&lt;/p>
+&lt;p>将inventory文件复制一份，根据实际的环境，调整其中的变量值&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#000">sdnagent_rpm sdnagent.rpm在当前机器中的位置. keepalived将从目标机器配置的yum仓库中直接部署&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_region &amp;#34;oc_&amp;#34;前缀的变量用于向keystone认证，访问API服务。可以从default-climc pod&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_auth_url 通过&amp;#34;env | grep ^OS_&amp;#34;命令获得相应的值&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_project&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_user&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_password&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_router_id keepalived的virtual router id值。主备必须相同。若环境中有其他keepalived部署，必须不能冲突&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_priority keepalived实例的priority，数值大的为MASTER，小的为BACKUP&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_interface keepalived进行VRRP通信的网卡，这里为计算节点的管理网卡，一般为br0&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_vip keepalived实例间相互通告的vip，可用作访问eip的下一跳地址&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>inventory配置好以后，执行ansible playbook&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ansible-playbook -i a-inventory playbook.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="在非计算节点部署eip网关">在非计算节点部署EIP网关&lt;/h2>
+&lt;p>EIP网关也可部署到非计算节点的单独的宿主机或者虚拟机中，只要满足EIP的网络要求即可。&lt;/p>
+&lt;p>需要使用ISO中的.rpm安装包预先安装、配置好网关所需组件。以下对这部分进行描述。&lt;/p>
+&lt;p>以3.8为例，所需安装的包的名字和所在位置如下&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># https://iso.yunion.cn/3.8/rpms/packages/kernel&lt;/span>
+linux-firmware
+kernel-lt
+&lt;span style="color:#8f5902;font-style:italic"># https://iso.yunion.cn/3.8/rpms/packages/host&lt;/span>
+kmod-openvswitch
+unbound
+openvswitch
+openvswitch-ovn-common
+openvswitch-ovn-host
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装完内核之后，需要重启机器使之效&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启动openvswitch&lt;/span>
+systemctl &lt;span style="color:#204a87">enable&lt;/span> --now openvswitch
+&lt;span style="color:#8f5902;font-style:italic"># 配置ovn&lt;/span>
+&lt;span style="color:#000">ovn_encap_ip&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>xx &lt;span style="color:#8f5902;font-style:italic"># 隧道外层IP地址，EIP网关用它与其它计算节点通信&lt;/span>
+&lt;span style="color:#000">ovn_north_addr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>yy:32242 &lt;span style="color:#8f5902;font-style:italic"># ovn北向数据库的地址，yy一般选择某台宿主机ip地址；端口默认为32242，对应k8s default-ovn-north service中的端口号&lt;/span>
+ovs-vsctl &lt;span style="color:#204a87">set&lt;/span> Open_vSwitch . &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-bridge&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>brvpc &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-encap-type&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>geneve &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-encap-ip&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$ovn_encap_ip&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-remote&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;tcp:&lt;/span>&lt;span style="color:#000">$ovn_north_addr&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 启动ovn-controller&lt;/span>
+systemctl &lt;span style="color:#204a87">enable&lt;/span> --now ovn-controller
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署结束后，应当可以看到至少一个名为brvpc的openvswitch网桥，ovs-vsctl show命令的输出中可以看到名为ovn-xx，类型为geneve的隧道port，remote-ip指向计算节点的ovn-encap-ip。&lt;/p>
+&lt;p>以上ovs的配置，可以使用如下命令查看配置是否正确：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl list Open_vSwitch
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后，用上述部署两台计算节点的ansible脚本进行部署。&lt;/p>
+&lt;p>样例inventory的hosts描述了两台主机用作主备高可用，如果无需高可用，可将其中的一个主机描述删除，仅部署一台。&lt;/p></description></item><item><title>Docs: 绑定/解绑EIP</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/bindeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/bindeip/</guid><description>
 &lt;p>当VPC网络中的虚拟机需要绑定弹性公网IP实现与外部网络通信。&lt;/p>
 &lt;h2 id="绑定">绑定&lt;/h2>
 &lt;p>将弹性公网IP绑定到虚拟机上，使虚拟机可以和公网通信。弹性公网IP和虚拟机需要属于同一区域内同一项目才可以绑定。&lt;/p>

@@ -1555,4 +1555,37 @@ tls:
 default:
 api_server: https://foo.bar.com
 ...
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后就可以通过 &lt;code>https://foo.bar.com&lt;/code> 访问前端了。&lt;/p></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后就可以通过 &lt;code>https://foo.bar.com&lt;/code> 访问前端了。&lt;/p></description></item><item><title>Docs: nginx配置</title><link>https://www.cloudpods.org/zh/docs/setup/behindnginx/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/behindnginx/</guid><description>
+&lt;p>部署完成后，如果要通过nginx将Cloudpods的前端暴露到外网访问，nginx的推荐配置如下。注意需要专门为websocket的流量增加转发规则。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8f5902;font-style:italic"># vi: ft=nginx
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">server&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">server_name&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">{&lt;/span> &lt;span style="color:#4e9a06">public_domain_name&lt;/span> &lt;span style="color:#a40000">}}&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">access_log&lt;/span> &lt;span style="color:#4e9a06">/var/log/nginx/&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">{&lt;/span> &lt;span style="color:#4e9a06">public_domain_name&lt;/span> &lt;span style="color:#a40000">}}&lt;/span>&lt;span style="color:#4e9a06">.access.log&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">listen&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">443&lt;/span> &lt;span style="color:#4e9a06">http2&lt;/span> &lt;span style="color:#4e9a06">ssl&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#4e9a06">/etc/ssl/yunion.io/cert.pem&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#4e9a06">/etc/ssl/yunion.io/key.pem&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">client_max_body_size&lt;/span> &lt;span style="color:#4e9a06">10g&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">location&lt;/span> &lt;span style="color:#000;font-weight:bold">~&lt;/span> &lt;span style="color:#4e9a06">/.well-known&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">allow&lt;/span> &lt;span style="color:#4e9a06">all&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">location&lt;/span> &lt;span style="color:#4e9a06">/&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#4e9a06">https://&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">{&lt;/span> &lt;span style="color:#4e9a06">backend_address&lt;/span> &lt;span style="color:#a40000">}}&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_read_timeout&lt;/span> &lt;span style="color:#4e9a06">3600s&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_redirect&lt;/span> &lt;span style="color:#000">off&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">Host&lt;/span> &lt;span style="color:#000">$host&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">X-Real-IP&lt;/span> &lt;span style="color:#000">$remote_addr&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">X-Forwarded-For&lt;/span> &lt;span style="color:#000">$proxy_add_x_forwarded_for&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">location&lt;/span> &lt;span style="color:#000;font-weight:bold">~&lt;/span> &lt;span style="color:#4e9a06">^/(websockify|wsproxy|connect)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#4e9a06">https://&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">{&lt;/span> &lt;span style="color:#4e9a06">backend_address&lt;/span> &lt;span style="color:#a40000">}}&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_redirect&lt;/span> &lt;span style="color:#000">off&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">Host&lt;/span> &lt;span style="color:#000">$host&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">X-Real-IP&lt;/span> &lt;span style="color:#000">$remote_addr&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">X-Forwarded-For&lt;/span> &lt;span style="color:#000">$proxy_add_x_forwarded_for&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_http_version&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#4e9a06">.1&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">Upgrade&lt;/span> &lt;span style="color:#000">$http_upgrade&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_set_header&lt;/span> &lt;span style="color:#4e9a06">Connection&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;upgrade&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">proxy_read_timeout&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">86400&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

@@ -5,7 +5,40 @@
 &lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/tutorial/aksk/">获取云平台AccessKey&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/tutorial/aksk_grant/">AccessKey授权&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="控制台新建">控制台新建&lt;/h2>
+&lt;h2 id="注意事项">注意事项&lt;/h2>
+&lt;p>如果纳管的私有云平台认证地址是域名时，还需要在控制节点上配置域名解析，否则会因为无法解析域名导致无法同步对应平台的资源。&lt;/p>
+&lt;p>步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改coredns的configmap&lt;/span>
+$ kubectl edit cm -n kube-system coredns
+Corefile: &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+.:53 &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+errors
+health
+kubernetes cluster.local in-addr.arpa ip6.arpa &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+pods insecure
+upstream
+fallthrough in-addr.arpa ip6.arpa
+ttl &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+hosts &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+192.168.1.2 domain
+fallthrough
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+prometheus :9153
+forward . /etc/resolv.conf
+cache &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span>
+loop
+reload
+loadbalance
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 在“prometheus :9153”上方添加hosts相关信息，配置IP地址和域名。&lt;/span>
+hosts &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+192.168.1.2 domain
+fallthrough
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 配置完成后，重启coredns&lt;/span>
+$ kubectl rollout restart deployment -n kube-system coredns
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="控制台新建">控制台新建&lt;/h2>
 &lt;ul class="nav nav-tabs" id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-0" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-0" aria-selected="true">阿里云&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-1" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-1">Aws&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-2" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-2">Azure&lt;/a>&lt;/li>

@@ -57,17 +57,17 @@ KERNEL==&amp;quot;*&amp;quot;, SUBSYSTEM==&amp;quot;net&amp;quot;, ACTION==&amp;
 &lt;p>庆幸的是，目前一些新型交换机已经为此场景设计了专门的命令，用来解决这个问题。例如，H3C的交换机就增加配置聚合管理VLAN和聚合管理端口的专用命令，如下图所示。&lt;/p>
 &lt;img src="../link-aggregation-management.png">
 &lt;p>具体请参见：https://www.h3c.com/cn/d_201903/1157320_30005_0.htm#_Toc4502224&lt;/p></description></item><item><title>Docs: 物理机硬件规格要求</title><link>https://www.cloudpods.org/zh/docs/onpremise/baremetal/faq/hardware-requirements/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/baremetal/faq/hardware-requirements/</guid><description>
-&lt;h2 id="架构">架构&lt;/h2>
-&lt;p>x86 的服务器&lt;/p>
+&lt;h2 id="cpu-架构">CPU 架构&lt;/h2>
+&lt;p>x86&lt;/p>
 &lt;h2 id="bios-主板">BIOS 主板&lt;/h2>
 &lt;ul>
 &lt;li>支持 Legacy(传统模式) 的 PXE 引导网络启动&lt;/li>
-&lt;li>支持 BMC IPMI 带外控制&lt;/li>
+&lt;li>支持 BMC IPMI 带外控制 (开启IPMI-over-LAN)&lt;/li>
 &lt;li>如果设置了 PXE、硬盘启动的引导顺序，当 PXE 启动不成功的时候，会尝试磁盘启动&lt;/li>
 &lt;/ul>
 &lt;h2 id="硬盘">硬盘&lt;/h2>
 &lt;p>硬盘支持 HDD(机械硬盘)、SSD(固态硬盘) 和 NVME SSD。&lt;/p>
-&lt;p>硬盘做 RAID 的话，支持以下的 RAID 控制器：&lt;/p>
+&lt;p>支持以下 RAID 驱动：&lt;/p>
 &lt;ul>
 &lt;li>MegaRaid&lt;/li>
 &lt;li>HPSARaid&lt;/li>
@@ -75,9 +75,9 @@ KERNEL==&amp;quot;*&amp;quot;, SUBSYSTEM==&amp;quot;net&amp;quot;, ACTION==&amp;
 &lt;li>AdaptecRaid&lt;/li>
 &lt;li>MarvelRaid&lt;/li>
 &lt;/ul>
-&lt;p>NVME SSD 需要是内核中 &lt;strong>nvme&lt;/strong> 或者 &lt;strong>nvme_core&lt;/strong> 驱动的&lt;/p>
+&lt;p>NVME SSD 需要内核中 &lt;strong>nvme&lt;/strong> 或者 &lt;strong>nvme_core&lt;/strong> 驱动的&lt;/p>
 &lt;h2 id="网卡">网卡&lt;/h2>
-&lt;p>网卡需要是以下内核驱动能支持的：&lt;/p>
+&lt;p>支持以下内核网卡驱动：&lt;/p>
 &lt;ul>
 &lt;li>ixgbe&lt;/li>
 &lt;li>igb&lt;/li>

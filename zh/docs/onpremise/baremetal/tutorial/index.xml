@@ -1367,16 +1367,16 @@ climc server-stop &amp;lt;server_id&amp;gt;
 &lt;p>物理机设置要求如下：&lt;/p>
 &lt;ol>
 &lt;li>
-&lt;p>物理机的启动方式推荐采用legacy（BIOS）方式，UEFI方式不推荐。只有在必须采用UEFI时才选用UEFI。经测试，不支持Dell PowerEdge系列服务器的UEFI启动。&lt;/p>
+&lt;p>物理机的启动方式推荐采用legacy（BIOS）方式，UEFI方式不推荐。只有在必须采用UEFI时才选用UEFI。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>物理机的默认启动方式为网络PXE启动，硬盘启动为第二顺位的启动介质&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>需要允许物理机网卡的PXE启动（BIOS开启）&lt;/p>
+&lt;p>需要允许物理机网卡的PXE启动（BIOS开启IPMI-over-LAN）&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>需要允许网络访问物理机的BMC（BIOS开启）&lt;/p>
+&lt;p>需要允许网络访问物理机的BMC（BIOS开启网卡PXE）&lt;/p>
 &lt;/li>
 &lt;/ol>
 &lt;h3 id="12-测试网络设置">1.2 测试网络设置&lt;/h3>
@@ -1391,7 +1391,11 @@ climc server-stop &amp;lt;server_id&amp;gt;
 &lt;h3 id="14-交换机设置">1.4 交换机设置&lt;/h3>
 &lt;p>为了允许物理机能够网络PXE启动，需要设置交换机1的dhcp_relay为bareemetal_agent所在节点IP地址的UDP 67端口。&lt;/p>
 &lt;p>如果采用“预注册”方式注册物理机，则也需要设置交换机2的dhcp_relay为baremetal_agent所在节点IP地址的UDP 67端口。&lt;/p>
-&lt;h3 id="15-物理机硬件信息要求">1.5 物理机硬件信息要求&lt;/h3>
+&lt;p>在最简网络模式下，依旧是上文所说的服务和待管理物理机在同一个IP子网的网络配置下，如果不方便开启三层交换机的dhcp_relay，则可以借用Cloudpods的Host服务，开启其dhcp_relay功能，作为测试IP子网的dhcp relay服务器。具体开启方法为：修改该Host服务所在宿主机的配置文件 /etc/yunion/host.conf，增加 dhcp_relay 的配置项，内容为baremetal_agent部署节点IP的UDP 67端口。配置好后，记得重启该host服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">dhcp_relay&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#0000cf;font-weight:bold">192.168.222.101&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#0000cf;font-weight:bold">67&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="15-物理机硬件信息要求">1.5 物理机硬件信息要求&lt;/h3>
 &lt;p>需要提前准备好物理机的如下信息：&lt;/p>
 &lt;ol>
 &lt;li>如果采用PXE引导注册或预注册的物理服务器，需要第一个网络PXE启动的物理机 NIC的mac地址&lt;/li>

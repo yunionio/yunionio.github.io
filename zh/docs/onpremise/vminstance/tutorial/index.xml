@@ -1408,7 +1408,142 @@ Server migration prefer host id or name
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-restart &amp;lt;sid&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>如果希望虚拟机不再透传该USB设备，则执行&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-remove-extra-options &amp;lt;sid&amp;gt; &lt;span style="color:#4e9a06">&amp;#39;device&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后，再restart该虚拟机。&lt;/p></description></item><item><title>Docs: 性能测试</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</link><pubDate>Fri, 19 Jul 2019 17:38:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后，再restart该虚拟机。&lt;/p></description></item><item><title>Docs: 迁移磁盘存储</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/change-disk-storge/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/change-disk-storge/</guid><description>
+&lt;p>在 v3.8.4 版本后可以把虚拟机的磁盘迁移到另一个存储，应用场景如下：&lt;/p>
+&lt;ul>
+&lt;li>Ceph RBD 磁盘迁移到本地存储&lt;/li>
+&lt;li>本地磁盘迁移到 Ceph 存储&lt;/li>
+&lt;li>Ceph RBD 磁盘迁移到另一个 Ceph 存储&lt;/li>
+&lt;/ul>
+&lt;p>另外限制条件如下：&lt;/p>
+&lt;ul>
+&lt;li>虚拟机必须是关机状态，运行状态迁移磁盘存储功能还未实现&lt;/li>
+&lt;li>互相迁移的两个存储必须挂载到虚拟机所在的宿主机&lt;/li>
+&lt;/ul>
+&lt;p>假设环境中一台名叫 x86-node01-11-10-1-180-11 的宿主机分别挂载了一个 Ceph 存储和一个本地存储，用下面的命令可以查训到这台宿主机上挂载的存储：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-storage-list --host x86-node01-11-10-1-180-11 --details
++----------------------------------+----------------------------+-----------+---------------+----------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mount_point &lt;span style="color:#000;font-weight:bold">|&lt;/span> Capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span> Used_capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span> Waste_capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+----------------------------+-----------+---------------+----------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> wz_rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd:rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">241013618&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1556480&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> host_10.1.180.11_local_storage_0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> /opt/cloud/workspace/disks &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">681664&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">696320&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+----------------------------+-----------+---------------+----------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过上面的 &lt;code>climc host-storage-list&lt;/code> 命令找到 x86-node01-11-10-1-180-11 这台宿主机上面有 2 个存储，Ceph RBD 存储为 wz_rbd，本地存储为 host_10.1.180.11_local_storage_0 。&lt;/p>
+&lt;h2 id="ceph-rbd-磁盘迁移到本地存储">Ceph RBD 磁盘迁移到本地存储&lt;/h2>
+&lt;p>下面命令测试创建一台虚拟机到 wz_rbd Ceph 存储，然后把磁盘迁移到 host_10.1.180.11_local_storage_0 本地存储。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先创建一个名为 tvm-wz 虚拟机，磁盘使用 rbd，指定创建到宿主机&lt;/span>
+$ climc server-create --disk CentOS-7.6.1810-20190430.qcow2:rbd &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --net vm-test-net &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --mem-spec 1g &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --ncpu &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --allow-delete &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --auto-start &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host x86-node01-11-10-1-180-11 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> tvm-wz
+&lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机的磁盘信息&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 找到对应的磁盘名称为 vdisk-tvm-wz-1636100820075603665&lt;/span>
+$ climc server-disk-list --server tvm --details
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tvm-wz&lt;span style="color:#000;font-weight:bold">|&lt;/span> 65ca88b1-186f-440a-8930-b4914e62cb3d &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-tvm-wz-1636100820075603665 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#8f5902;font-style:italic"># 查看磁盘 vdisk-tvm-wz-1636100820075603665 所在的存储为 h3c_blockpool1&lt;/span>
+$ climc disk-show vdisk-tvm-wz-1636100820075603665 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep storage
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> wz_rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在已经创建好使用 wz_rbd Ceph 存储的虚拟机了，接下来把这个 tvm-wz 虚拟机的 vdisk-tvm-wz-1636100820075603665 磁盘迁移到本地存储，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将虚拟机关机才能进行磁盘迁移存储&lt;/span>
+$ climc server-stop tvm-wz
+&lt;span style="color:#8f5902;font-style:italic"># 执行下面的 server-change-disk-storage 命令把 tvm 虚拟机的 vdisk-tvm-1636100820075603665 磁盘迁移到本地存储&lt;/span>
+$ climc server-change-disk-storage tvm-wz vdisk-tvm-wz-1636100820075603665 host_10.1.180.11_local_storage_0
+&lt;span style="color:#8f5902;font-style:italic"># 然后查看虚拟机的状态，磁盘迁移存储虚拟机会处于 disk_change_storage 的状态&lt;/span>
+$ climc server-list --search tvm-wz --details
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 329bfce5-135f-4113-861e-bd44b8aaf9e0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> tvm-wz &lt;span style="color:#000;font-weight:bold">|&lt;/span> postpaid &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.2.18.252 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> disk_change_storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1024&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 等待虚拟机状态变为 ready 表示迁移完毕&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 然后再查看虚拟机的磁盘为 vdisk-tvm-wz-1636103786977105704&lt;/span>
+$ climc server-disk-list --server tvm-wz --details
++--------+--------------------------------------+----------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------+--------------------------------------+----------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tvm-wz &lt;span style="color:#000;font-weight:bold">|&lt;/span> 61e4f0e4-597a-4aa9-8cde-0369879b9236 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-tvm-wz-1636103786977105704 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------+--------------------------------------+----------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#8f5902;font-style:italic"># 查看新的磁盘 vdisk-tvm-wz-1636103786977105704 的存储，发现已经变为本地存储了&lt;/span>
+$ climc disk-show vdisk-tvm-wz-1636103786977105704 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep storage
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_10.1.180.11_local_storage_0 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 4484274b-8483-4166-8e3f-f3c37c4b4997 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="本地磁盘迁移到-ceph-rbd-存储">本地磁盘迁移到 Ceph RBD 存储&lt;/h2>
+&lt;p>还是利用之前创建好的 tvm-wz 虚拟机，现在虚拟机的磁盘为本地的 vdisk-tvm-wz-1636103786977105704 磁盘，执行下面的命令把该磁盘迁移到 wz_rbd Ceph 存储。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 迁移本地磁盘到 wz_rbd&lt;/span>
+$ climc server-change-disk-storage tvm-wz vdisk-tvm-wz-1636103786977105704 wz_rbd
+&lt;span style="color:#8f5902;font-style:italic"># 等待迁移完成后，再执行之前的命令查看先在虚拟机的磁盘，发现已经使用 wz_rbd 存储了&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 新的磁盘为 vdisk-tvm-wz-1636104909252150575&lt;/span>
+$ climc server-disk-list --server tvm-wz --details
++--------+----------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------+----------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tvm-wz &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-tvm-wz-1636104909252150575 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------+----------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+$ climc disk-show vdisk-tvm-wz-1636104909252150575 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep storage
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> wz_rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 061342a6-8f5a-4bc6-8757-8bb6c12bda83 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>测试迁移完成后，把虚拟机开机，能够正常启动，并且里面没有数据丢失，就没有问题。&lt;/p>
+&lt;h2 id="ceph-rbd-磁盘迁移到另一个-ceph-存储">Ceph RBD 磁盘迁移到另一个 Ceph 存储&lt;/h2>
+&lt;p>&lt;strong>注意&lt;/strong>：目前 Ceph 迁移到另一个 Ceph 存储要求两边的版本相同，依赖的 rbd 动态库一致才行，不然会失败。&lt;/p>
+&lt;p>假设环境中有另外一个叫做 wz_rbd 的 Ceph 存储，下面命令测试创建一台虚拟机到 h3c_blockpool1 Ceph 存储，然后把磁盘迁移到一个名为 wz_rbd 的 Ceph 存储。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先创建一个名为 tvm 虚拟机，磁盘使用 rbd，指定创建到宿主机&lt;/span>
+$ climc server-create --disk CentOS-7.6.1810-20190430.qcow2:rbd &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --net vm-test-net &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --mem-spec 1g &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --ncpu &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --allow-delete &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --auto-start &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host x86-node03-13-10-1-180-13 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> tvm
+&lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机的磁盘信息&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 找到对应的磁盘名称为 vdisk-tvm-1636100820075603665&lt;/span>
+$ climc server-disk-list --server tvm --details
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tvm &lt;span style="color:#000;font-weight:bold">|&lt;/span> 65ca88b1-186f-440a-8930-b4914e62cb3d &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-tvm-1636100820075603665 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#8f5902;font-style:italic"># 查看磁盘 vdisk-tvm-1636100820075603665 所在的存储为 h3c_blockpool1&lt;/span>
+$ climc disk-show vdisk-tvm-1636100820075603665 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep storage
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> h3c_blockpool1 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0bf0cf3c-8cc8-47bb-8d1e-ab97f103e267 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在已经创建好使用 h3c_blockpool1 Ceph 存储的虚拟机了，接下来把这个 tvm 虚拟机的 vdisk-tvm-1636100820075603665 磁盘迁移到另一个 Ceph 存储 wz_rbd，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先需要把 wz_rbd 存储挂载到虚拟机所在的宿主机 x86-node03-13-10-1-180-13&lt;/span>
+$ climc host-storage-attach x86-node03-13-10-1-180-13 wz_rbd
+&lt;span style="color:#8f5902;font-style:italic"># 查看宿主机上挂载的存储，会发现多一块存储 wz_rbd&lt;/span>
+$ climc host-storage-list --host x86-node03-13-10-1-180-13 --details
++----------------------------------+----------------------------+-----------+---------------+----------------+---------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mount_point &lt;span style="color:#000;font-weight:bold">|&lt;/span> Capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span> Used_capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span> Waste_capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span> Free_capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span> cmtbound &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+----------------------------+-----------+---------------+----------------+---------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> wz_rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd:rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">241018691&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1525760&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">239462208&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> h3c_blockpool1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd:.HDDdisk.rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">192653544&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">122880&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">192530656&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> host_10.1.180.13_local_storage_0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> /opt/cloud/workspace/disks &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">681664&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">61440&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">620224&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+----------------------------+-----------+---------------+----------------+---------------+----------+
+&lt;span style="color:#8f5902;font-style:italic"># 将虚拟机关机才能进行磁盘迁移存储&lt;/span>
+$ climc server-stop tvm
+&lt;span style="color:#8f5902;font-style:italic"># 执行下面的 server-change-disk-storage 命令把 tvm 虚拟机的 vdisk-tvm-1636100820075603665 磁盘迁移到 wz_rbd 存储&lt;/span>
+$ climc server-change-disk-storage tvm vdisk-tvm-1636100820075603665 wz_rbd
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其他注意事项">其他注意事项&lt;/h2>
+&lt;ul>
+&lt;li>更改存储的旧磁盘会删除到回收站，会占用实际的物理空间，如果确定这些旧的磁盘不使用了，可以在回收站里面清理。&lt;/li>
+&lt;/ul>
+&lt;h2 id="磁盘更改存储的原理">磁盘更改存储的原理&lt;/h2>
+&lt;p>目前磁盘更改存储底层使用了 &lt;code>qemu-img convert&lt;/code> 的命令来进行磁盘底层存储变更，在云平台执行了 &lt;code>climc server-change-disk-storage&lt;/code> 命令后，可以登录到虚拟机所在的宿主机，执行下面的命令，就可以看到这个 &lt;code>qemu-img convert&lt;/code> 的进程：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ps faux &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep qemu-img &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep convert
+root &lt;span style="color:#0000cf;font-weight:bold">3701532&lt;/span> 13.8 0.1 &lt;span style="color:#0000cf;font-weight:bold">1516864&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">102056&lt;/span> ? Ssl 17:35 0:00 &lt;span style="color:#4e9a06">\_&lt;/span> /usr/local/qemu-2.12.1/bin/qemu-img convert -f qcow2 -O raw /opt/cloud/workspace/disks/61e4f0e4-597a-4aa9-8cde-0369879b9236 rbd:rbd/d55671c1-ec1b-4c2c-87cb-aa4aa517744e:mon_host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>172.16.2.31&lt;span style="color:#4e9a06">\;&lt;/span>172.16.2.32&lt;span style="color:#4e9a06">\;&lt;/span>172.16.2.33:key&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>AQBBi1RhiSvXChAAnFzGrpAGM5N8dWb3rTdQwQ&lt;span style="color:#4e9a06">\=\=&lt;/span>:rados_osd_op_timeout&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>1200:client_mount_timeout&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>120:rados_mon_op_timeout&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 性能测试</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</link><pubDate>Fri, 19 Jul 2019 17:38:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/perf-test/</guid><description>
 &lt;h3 id="cpu和内存性能测试">CPU和内存性能测试&lt;/h3>
 &lt;h4 id="测试环境">测试环境&lt;/h4>
 &lt;p>操作系统: CentOS 7

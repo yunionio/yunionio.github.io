@@ -1546,7 +1546,55 @@ $ climc server-change-disk-storage tvm vdisk-tvm-1636100820075603665 wz_rbd
 &lt;li>然后调用 server-migrate 命令或者去前段进行迁移操作，把 vm 迁移到 host2&lt;/li>
 &lt;li>最后再调用 server-change-disk-storage 把 host2 上的 vm 磁盘迁移到 Ceph2&lt;/li>
 &lt;/ol>
-&lt;h2 id="其他注意事项">其他注意事项&lt;/h2>
+&lt;p>接下来是操作的命令行步骤：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 假设 NFS 服务器的地址为 172.16.254.124&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 共享的目录为 /opt/nfs_data&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 在平台创建对应的 nfs-store 存储&lt;/span>
+$ climc storage-create --storage-type nfs &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --capacity &lt;span style="color:#0000cf;font-weight:bold">1024000&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 容量根据实际情况填写&lt;/span>
+--nfs-host 172.16.254.124 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --nfs-shared-dir &lt;span style="color:#4e9a06">&amp;#39;/opt/nfs_data&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> nfs-store zone0
+&lt;span style="color:#8f5902;font-style:italic"># 然后把 nfs-store 挂载到 host1 和 host2 的 /opt/nfs_share 目录&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 需要登录 host1 和 host2 创建 /opt/nfs_share 目录&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@host1&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ mkdir -p /opt/nfs_share
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@host2&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ mkdir -p /opt/nfs_share
+&lt;span style="color:#8f5902;font-style:italic"># 在平台挂载 nfs-store 到 host1 和 host2 &lt;/span>
+$ climc host-storage-attach --mount-point /opt/nfs_share host1 nfs-store
+$ climc host-storage-attach --mount-point /opt/nfs_share host2 nfs-store
+&lt;span style="color:#8f5902;font-style:italic"># 把 host1 上的 vm 磁盘改为 nfs-store&lt;/span>
+$ climc server-disk-list --server vm --details
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vm&lt;span style="color:#000;font-weight:bold">|&lt;/span> 65ca88b1-186f-440a-8930-b4914e62cb3d &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-vm-wz-1636100820075603665 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#8f5902;font-style:italic"># 执行下面的 server-change-disk-storage 命令把 vm 虚拟机的磁盘迁移到 nfs-store&lt;/span>
+$ climc server-change-disk-storage vm vdisk-vm-wz-1636100820075603665 nfs-store
+&lt;span style="color:#8f5902;font-style:italic"># 等待虚拟机 vm 状态变为 ready 后&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 再把虚拟机迁移到 host2&lt;/span>
+$ climc server-migrate --prefer-host host2 vm
+&lt;span style="color:#8f5902;font-style:italic"># 然后再调用 server-change-disk-storage 把 vm 虚拟机磁盘迁移到 ceph2 存储&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 找到现在磁盘为 vdisk-vm-1636100820075603665，发现类型 Storage_type 为 nfs&lt;/span>
+$ climc server-disk-list --server vm --details
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vm&lt;span style="color:#000;font-weight:bold">|&lt;/span> 65ca88b1-186f-440a-8930-b4914e62cb3d &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-vm-1636100820075603665 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> nfs &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#8f5902;font-style:italic"># 查看宿主机 host2 上挂载的存储&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 发现有 nfs-store 和 ceph2&lt;/span>
+$ climc host-storage-list --host host2 --details
++----------------------------------+----------------------------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mount_point &lt;span style="color:#000;font-weight:bold">|&lt;/span> Capacity &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+----------------------------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ceph2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd:rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">241018691&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> nfs &lt;span style="color:#000;font-weight:bold">|&lt;/span> /opt/nfs_share &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1024000&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">122880&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> host_10.1.180.13_local_storage_0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> /opt/cloud/workspace/disks &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">681664&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+----------------------------+-----------++
+&lt;span style="color:#8f5902;font-style:italic"># 把虚拟机 vm 磁盘迁移到 ceph2&lt;/span>
+$ climc server-change-disk-storage vm vdisk-vm-1636100820075603665 ceph2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其他注意事项">其他注意事项&lt;/h2>
 &lt;ul>
 &lt;li>更改存储的旧磁盘会删除到回收站，会占用实际的物理空间，如果确定这些旧的磁盘不使用了，可以在回收站里面清理。&lt;/li>
 &lt;/ul>

@@ -1494,7 +1494,8 @@ $ climc disk-show vdisk-tvm-wz-1636104909252150575 &lt;span style="color:#000;fo
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> rbd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>测试迁移完成后，把虚拟机开机，能够正常启动，并且里面没有数据丢失，就没有问题。&lt;/p>
 &lt;h2 id="ceph-rbd-磁盘迁移到另一个-ceph-存储">Ceph RBD 磁盘迁移到另一个 Ceph 存储&lt;/h2>
-&lt;p>&lt;strong>注意&lt;/strong>：目前 Ceph 迁移到另一个 Ceph 存储要求两边的版本相同，依赖的 rbd 动态库一致才行，不然会失败。&lt;/p>
+&lt;h3 id="两个-ceph-集群接口兼容">两个 Ceph 集群接口兼容&lt;/h3>
+&lt;p>&lt;strong>注意&lt;/strong>：这种方法适用于源 Ceph 和目标 Ceph 集群兼容的情况，依赖的 rbd 动态库一致才行，不然会失败。&lt;/p>
 &lt;p>假设环境中有另外一个叫做 wz_rbd 的 Ceph 存储，下面命令测试创建一台虚拟机到 h3c_blockpool1 Ceph 存储，然后把磁盘迁移到一个名为 wz_rbd 的 Ceph 存储。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先创建一个名为 tvm 虚拟机，磁盘使用 rbd，指定创建到宿主机&lt;/span>
 $ climc server-create --disk CentOS-7.6.1810-20190430.qcow2:rbd &lt;span style="color:#4e9a06">\
@@ -1535,7 +1536,17 @@ $ climc host-storage-list --host x86-node03-13-10-1-180-13 --details
 $ climc server-stop tvm
 &lt;span style="color:#8f5902;font-style:italic"># 执行下面的 server-change-disk-storage 命令把 tvm 虚拟机的 vdisk-tvm-1636100820075603665 磁盘迁移到 wz_rbd 存储&lt;/span>
 $ climc server-change-disk-storage tvm vdisk-tvm-1636100820075603665 wz_rbd
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其他注意事项">其他注意事项&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="两个-ceph-集群不兼容">两个 Ceph 集群不兼容&lt;/h3>
+&lt;p>如果两个 Ceph 集群不兼容，比如一边用的开源 Ceph 集群，另外一边用的是商业 Ceph 集群，两套集群的动态库不一致就无法把两个 Ceph 存储挂载到平台的一台宿主机上。&lt;/p>
+&lt;p>遇到这种情况可以采取一个利用 NFS 存储作为中转的变通解决方案，假设 host1 计算节点挂载了 Ceph1，上面有台虚拟机 vm 使用了 Ceph1，要把 vm 迁移到 host2 的 Ceph2 集群里面，步骤如下：&lt;/p>
+&lt;ol>
+&lt;li>自己搭建一个 NFS 服务，在云平台前端创建 NFS 存储&lt;/li>
+&lt;li>然后在平台前端把这个 NFS 存储分别挂载到 host1 和 host2&lt;/li>
+&lt;li>把 host1 上的 vm 调用 server-change-disk-storage 把 Ceph1 里面的磁盘迁移到 NFS 存储&lt;/li>
+&lt;li>然后调用 server-migrate 命令或者去前段进行迁移操作，把 vm 迁移到 host2&lt;/li>
+&lt;li>最后再调用 server-change-disk-storage 把 host2 上的 vm 磁盘迁移到 Ceph2&lt;/li>
+&lt;/ol>
+&lt;h2 id="其他注意事项">其他注意事项&lt;/h2>
 &lt;ul>
 &lt;li>更改存储的旧磁盘会删除到回收站，会占用实际的物理空间，如果确定这些旧的磁盘不使用了，可以在回收站里面清理。&lt;/li>
 &lt;/ul>

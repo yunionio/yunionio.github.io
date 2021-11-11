@@ -1,0 +1,77 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+常见问题</title><link>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 05 Jul 2021 08:22:33 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 健康检查</title><link>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/health_check/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/health_check/</guid><description>
+&lt;h2 id="功能描述">功能描述&lt;/h2>
+&lt;ul>
+&lt;li>部分公有云有消费限制,例如阿里云余额低于100则不能进行资源创建操作&lt;/li>
+&lt;li>为了尽可能的保证资源创建成功，系统默认会根据云账号余额信息, 自动设置云账号健康状态&lt;/li>
+&lt;li>云账号健康异常不会影响资源的同步，仅会限制资源创建操作，请尽快充值或关闭健康检查功能&lt;/li>
+&lt;/ul>
+&lt;h2 id="特殊情况">特殊情况&lt;/h2>
+&lt;ul>
+&lt;li>由于部分企业可能与公有云签订协议，或者使用代金券，即使账号异常也依然可以创建资源，此项功能则极大限制了云平台的使用&lt;/li>
+&lt;li>用户可以根据需求自行开启关闭此功能&lt;/li>
+&lt;/ul>
+&lt;h2 id="功能开关">功能开关&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 此功能开关影响所有云账号&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 关闭云账号健康检查&lt;/span>
+$ climc service-config --config &lt;span style="color:#000">cloudaccount_health_status_check&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> region2
+&lt;span style="color:#8f5902;font-style:italic"># 开启云账号健康检查&lt;/span>
+$ climc service-config --config &lt;span style="color:#000">cloudaccount_health_status_check&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> region2
+&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+功能的开关不会立刻影响云账号状态，可以等待几分钟后云账号状态会更新
+或者到云账号列表选定云账号，点击连接状态，云账号健康状态会随即更新
+&lt;/div></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/openstack/</guid><description>
+&lt;h2 id="对接-openstack-后端使用ceph-存储的时候云账户管理经常同步不下相关的ceph-磁盘配置">对接 Openstack 后端使用ceph 存储的时候，云账户管理，经常同步不下相关的ceph 磁盘配置&lt;/h2>
+&lt;p>我们需要在创建磁盘的时候指定相关的ceph 类型。首先检查一下是否指定了volume_backend_name.&lt;/p>
+&lt;p>1、查看cinder配置文件的ceph 指定的name,没有就添加：&lt;/p>
+&lt;pre>&lt;code>[ceph]
+volume_driver = cinder.volume.drivers.rbd.RBDDriver
+rbd_pool = volumes
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot = false
+rbd_max_clone_depth = 5
+rbd_store_chunk_size = 4
+rados_connect_timeout = -1
+glance_api_version = 2
+rbd_user = cinder
+rbd_secret_uuid = f4f03912-7ec7-42e9-b9ea-8735217d8cc9
+volume_backend_name = ceph
+&lt;/code>&lt;/pre>&lt;p>2、添加ceph类型关联到volume_backend_name:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@cinder1 cinder&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cinder extra-specs-list&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@cinder1 cinder&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cinder type-create ceph&lt;/span>
++--------------------------------------+------+-------------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Description &lt;span style="color:#000;font-weight:bold">|&lt;/span> Is_Public &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+-------------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 00103a9a-bcf6-4c25-afb4-fd2a211cc706 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ceph &lt;span style="color:#000;font-weight:bold">|&lt;/span> - &lt;span style="color:#000;font-weight:bold">|&lt;/span> True &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+-------------+-----------+
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@cinder1 cinder&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cinder type-key ceph set volume_backend_name=ceph&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@cinder1 cinder&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cinder extra-specs-list&lt;/span>
++--------------------------------------+------+---------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> extra_specs &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+---------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 00103a9a-bcf6-4c25-afb4-fd2a211cc706 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ceph &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;volume_backend_name&amp;#39;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#39;ceph&amp;#39;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+---------------------------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>3、重新添加volume；指定类型为ceph即可。&lt;/p>
+&lt;p>4、cloudpods可以重新同步，可以看到磁盘已经同步下来。&lt;/p></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/faq/account/</guid><description>
+&lt;p>可以通过对应云平台的调用接口验证接口是否可以被正常调用，AccessKey信息是否正确。&lt;/p>
+&lt;ul class="nav nav-tabs" id="tabset-zhdocsmulticloudcloudaccountsfaqaccount-1" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#tabset-zhdocsmulticloudcloudaccountsfaqaccount-1-0" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountsfaqaccount-1-0" aria-selected="true">天翼云&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;div class="tab-content" id="tabset-zhdocsmulticloudcloudaccountsfaqaccount-1">&lt;div id="tabset-zhdocsmulticloudcloudaccountsfaqaccount-1-0" class="tab-pane show active" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountsfaqaccount-1-0">
+&lt;p>&lt;pre>&lt;code># 获取环境中命令行所在的容器名称:
+kubectl get pods -n onecloud |grep climc
+#default-climc-7bdbd9fc7c-fnmkw 1/1 Running 0 26h
+# 进入climc容器环境：
+kubectl exec -n onecloud -it default-climc-7bdbd9fc7c-fnmkw sh
+# 进入ctyuncli所在目录：
+cd /opt/yunion/bin
+# 导入环境变量CTYUN_ACCESS_KEY&amp;amp; CTYUN_SECRET需要分别填入aksk：
+export CTYUN_ACCESS_KEY='YOUR KEY'
+export CTYUN_SECRET='YOUR SECRET'
+export CTYUN_REGION=&amp;quot;cn-gzT&amp;quot;
+# 执行验证命令， 如果能正常列出可用区列表，说明与天翼云连接正常。
+# 如果报403错误，则可能是接入准备未就位。
+# 如果报 apigateway错误， 则可能是天翼云api接口调用错误或者发生变更。请联系云管平台开发人员定位
+./ctyuncli region-list
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div></description></item></channel></rss>

@@ -1,0 +1,404 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+运维手册</title><link>https://www.cloudpods.org/zh/docs/ops/</link><description>Recent content in 运维手册 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 10 Nov 2021 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/ops/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件介绍</title><link>https://www.cloudpods.org/zh/docs/ops/component/</link><pubDate>Wed, 10 Nov 2021 19:02:10 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/component/</guid><description>
+&lt;p>Cloudpods 平台部署在Kubernetes上，平台服务将支持容器化方式部署运行在Kubernetes集群。下面将介绍下平台的组件服务。&lt;/p>
+&lt;h3 id="onecloud-operator">onecloud-operator&lt;/h3>
+&lt;p>Onecloud-operator组件为集群控制器，实现集群服务的自动配置，部署和运行监控。&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： onecloud-operator&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： onecloud-operator-xxx&lt;/li>
+&lt;li>&lt;strong>配置&lt;/strong>：&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code># 配置operator
+$ kubectl edit oc -n onecloud
+# 查看operator的配置
+$ kubectl get oc -n onecloud -o yaml
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>自动部署平台服务，包括初始化配置、创建管理对应k8s资源。&lt;/li>
+&lt;li>升级回滚：更新/回滚任意服务的版本。&lt;/li>
+&lt;li>资源清理：当平台服务集群删除后，释放对应的资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="web">web&lt;/h3>
+&lt;p>前端服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-web&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-web-xxx&lt;/li>
+&lt;li>&lt;strong>configmap&lt;/strong>：default-web&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>放置前端代码&lt;/li>
+&lt;li>Nignx相关配置&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="apigateway">apigateway&lt;/h3>
+&lt;p>api网关组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-apigateway&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-apigateway-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>提供web前端API&lt;/li>
+&lt;li>认证和权限的认证入口&lt;/li>
+&lt;li>License控制等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="keystone">keystone&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-keystone&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-keystone-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>认证&lt;/li>
+&lt;li>资源归属project和domain&lt;/li>
+&lt;li>权限：角色（role），权限（policy）&lt;/li>
+&lt;li>服务目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="region">region&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-region&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-region-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>云控制器&lt;/li>
+&lt;li>计算、网络、存储、数据库等云资源等管理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="scheduler">scheduler&lt;/h3>
+&lt;p>资源调度组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-scheduler&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-scheduler-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：资源调度&lt;/li>
+&lt;/ul>
+&lt;h3 id="glance">glance&lt;/h3>
+&lt;p>镜像服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-glance&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-glance-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：镜像管理&lt;/li>
+&lt;/ul>
+&lt;h3 id="baremetal">baremetal&lt;/h3>
+&lt;p>物理机管理服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-baremetal&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-baremetal-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>提裸金属管理Agent&lt;/li>
+&lt;li>提供PXEboot&lt;/li>
+&lt;li>提供DHCP&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="host">host&lt;/h3>
+&lt;p>宿主机服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-host-xxx&lt;/li>
+&lt;li>&lt;strong>Daemonset&lt;/strong>：default-host&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：私有云宿主机上的Agent&lt;/li>
+&lt;li>&lt;strong>容器&lt;/strong>：host服务下有三个容器，host、ovn-controller、sdnagent
+&lt;ul>
+&lt;li>host：
+&lt;ul>
+&lt;li>虚拟机生命周期管理
+&lt;ul>
+&lt;li>通过qemu启用停止虚拟机&lt;/li>
+&lt;li>通过qemu monitor对虚拟机进行其他操作&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>存储管理和磁盘生命周期管理
+&lt;ul>
+&lt;li>本地盘和共享存储（ceph,nfs等）磁盘的CURD操作&lt;/li>
+&lt;li>存储信息探测&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>DHCP Server
+&lt;ul>
+&lt;li>作为DHCP Server为虚拟机分配IP&lt;/li>
+&lt;li>作为DHCP relay server转发物理机PXE启动时候的DHCP请求&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>GPU设备探测与初始化
+&lt;ul>
+&lt;li>初始化即为GPU设备绑定vfio驱动&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>宿主机初始化与信息探测&lt;/li>
+&lt;li>监控数据采集&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>ovn-controller：虚拟机vpc网络管理，连接southbound，将southbound中的flows转换成ovs流表规则。&lt;/li>
+&lt;li>sdnagent：虚拟机经典网络管理。
+&lt;ul>
+&lt;li>流表管理&lt;/li>
+&lt;li>虚拟机网卡QoS&lt;/li>
+&lt;li>防火墙&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="host-image">host-image&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-host-image-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：提供读取镜像内容api，配合fuse可远程挂载磁盘&lt;/li>
+&lt;/ul>
+&lt;h3 id="host-deployer">host-deployer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-host-deployer-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>： 虚拟机创建时部署相关操作
+&lt;ul>
+&lt;li>虚拟机镜像操作系统识别、系统初始化。&lt;/li>
+&lt;li>分区扩容、格式化文件系统等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="vpcagent">vpcagent&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-vpcagent&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-vpcagent-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：ovn的vpc配置管理&lt;/li>
+&lt;/ul>
+&lt;h3 id="esxiagent">esxiagent&lt;/h3>
+&lt;p>VMware管理Agent&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-esxiagent&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-esxiagent-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：VMware管理Agent代理&lt;/li>
+&lt;/ul>
+&lt;h3 id="cloudmon">cloudmon&lt;/h3>
+&lt;p>监控采集服务&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-cloudmon&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-cloudmon-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>ping检测：5分钟一次探测被占用的IP地址。&lt;/li>
+&lt;li>usage数据采集&lt;/li>
+&lt;li>VMware、OpenStack、公有云等平台监控数据采集&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="meter">meter&lt;/h3>
+&lt;p>计费计量服务&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-meter&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-meter-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：计费计量功能&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 组件pod常用运维命令</title><link>https://www.cloudpods.org/zh/docs/ops/commonops/</link><pubDate>Wed, 10 Nov 2021 18:54:59 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/commonops/</guid><description>
+&lt;h3 id="查看组件pod运行情况">查看组件pod运行情况&lt;/h3>
+&lt;p>系统组件都以 k8s pod的形式运行，通过以下命令查看平台的系统组件以及运行情况等。&lt;/p>
+&lt;pre>&lt;code># -n表示namespace的意思，目前我们的服务都部署在onecloud namespace下，查看所有组件的pod的运行情况
+$ kubectl get pods -n onecloud
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># -o wide查看pod的更多详细信息，比如运行在哪个节点上
+$ kubectl get pods -n onecloud -o wide
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 查看指定pod资源的详细信息，如查看region组件的pod的详细信息
+$ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 查看指定主机上运行的所有pod信息
+$ kubectl get pods -n onecloud -o wide --field-selector=spec.nodeName=&amp;lt;host-name&amp;gt;
+&lt;/code>&lt;/pre>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
+&lt;p>在Kubernetes集群上，组件pods大部分通过deployment管理的，当删除pod时将会自动重建新的pod，所以重启组件服务时可以直接删除对应组件的pod。&lt;/p>
+&lt;pre>&lt;code># 重启web服务，如删除web前端pod
+$ kubectl delete pods $web_pod_name -n onecloud
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 重启host服务，如删除所有host pod
+$ kubectl get pods -n onecloud -o wide | grep default-host | awk '{print 1}' | xargs kubectl delete pods -n onecloud
+# 重启所有服务，平台服务都以default开头
+$ kubectl get pods -n onecloud |grep default | awk '{print $1}' | xargs kubectl delete pods -n onecloud
+&lt;/code>&lt;/pre>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
+&lt;p>平台所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
+&lt;pre>&lt;code># 以region服务为例更新其configmaps配置信息
+$ kubectl edit configmaps default-region -n onecloud
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 修改完成后，删除对应服务的pod即可生效
+$ kubectl get pods -n onecloud |grep region
+$ kubectl delete $region_pod_name -n onecloud
+&lt;/code>&lt;/pre>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
+&lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
+&lt;pre>&lt;code># 首先需要找到region服务所在pod
+$ kubectl get pods -n onecloud |grep region
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 查看region服务容器的日志，其中-f表示follow，即持续输出日志，类似于journalctl的 -f；--since 5m 表示查看近5分钟的日志信息。按CTRL+C退出日志输出
+$ kubectl logs -n onecloud $region_pod_name -f --since 5m
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 查看region容器日志，将最近5分钟的所有日志到region.log
+$ kubectl logs -n onecloud $region_pod_name --since 5m &amp;gt; region.log
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 若有些服务有两个容器，如host服务有名称为host和host-image的容器，此时查看容器命令时需要加'-c' 指定查看哪个容器的日志
+$ kubectl logs -n onecloud $host_pod_name -c host-image -f
+&lt;/code>&lt;/pre>&lt;h3 id="查看平台版本信息">查看平台版本信息&lt;/h3>
+&lt;pre>&lt;code># 其中onecloudcluster 可以简写成oc；default为OneCloudCluster的名称；-o yaml即以yaml形式输出onecloudcluster类型资源的API对象。
+$ kubectl get onecloudcluster -n onecloud default -o yaml | grep version
+&lt;/code>&lt;/pre>&lt;h3 id="查看mysql账户密码信息">查看MySQL账户密码信息&lt;/h3>
+&lt;p>采用默认部署数据库的方式，在平台部署完成后需要通过以下命令获取连接MySql的用户名和密码。&lt;/p>
+&lt;pre>&lt;code># 查看MySQL的配置连接信息，其中oc为onecloudcluster；default为oc的名称；grep -A 4即属于匹配后4行数据。
+$ kubectl get oc -n onecloud default -o yaml | grep -A 4 mysql
+&lt;/code>&lt;/pre>&lt;h3 id="查看oc的的api对象信息">查看OC的的API对象信息&lt;/h3>
+&lt;pre>&lt;code># 查看OC的运行情况
+$ kubectl get onecloudcluster -n onecloud
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 以yaml文件的形式查看OC的API对象信息，该信息中包含集群的所有配置信息。
+$ kubeclt get oc -n onecloud -o yaml
+&lt;/code>&lt;/pre>&lt;h3 id="其它常用管理命令">其它常用管理命令&lt;/h3>
+&lt;p>kubectl更多命令请参考kubectl官方文档。
+&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">https://kubernetes.io/zh/docs/reference/kubectl/&lt;/a>&lt;/p></description></item><item><title>Docs: 排查Kubernetes pod异常</title><link>https://www.cloudpods.org/zh/docs/ops/poderror/</link><pubDate>Wed, 10 Nov 2021 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/poderror/</guid><description>
+&lt;h3 id="确认pod状态">确认Pod状态&lt;/h3>
+&lt;pre>&lt;code># 设置默认命名空间，后续执行相关命令时可以不带“-n onecloud”
+$ kubectl config set-context --current --namespace=onecloud
+# 查看 pod 状态
+$ kubectl get pod
+&lt;/code>&lt;/pre>&lt;h3 id="检查pod相关事件">检查pod相关事件&lt;/h3>
+&lt;p>当查看到 pod 状态不是 running 状态时，可以通过 describe 命令查看更多信
+息。&lt;/p>
+&lt;pre>&lt;code># 举例为查看 host 服务的 pod 的事件信息
+$ kubectl describe pod default-host-z8j5r
+&lt;/code>&lt;/pre>&lt;h3 id="查看日志">查看日志&lt;/h3>
+&lt;p>可以通过检查日志来查看应用程序是否正常运行。&lt;/p>
+&lt;pre>&lt;code># 查看 host 服务的日志信息
+$ kubectl logs default-host-z8j5r -c host -f
+&lt;/code>&lt;/pre>&lt;h3 id="pod常见错误及处理方法">Pod常见错误及处理方法&lt;/h3>
+&lt;h4 id="pod---crashloopbackoff状态">Pod - CrashLoopBackOff状态&lt;/h4>
+&lt;p>CrashLoopBackOff 状态说明容器曾经启动了，但又异常退出。此时可以先查看
+一下容器的日志。通过 kubectl logs 命令可以发现一些容器退出的原因:&lt;/p>
+&lt;ul>
+&lt;li>通过查看日志发现是脏数据导致的&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>[root@test ~]#kubectl get pod | grep region
+default-region-75bc7d474f-rjpkm 0/1
+CrashLoopBackOff 12 2d20h
+default-region-dns-88s7z 1/1 Running
+0 2d20h
+[root@test ~]# kubectl logs default-region-75bc7d474f￾rjpkm | less
+[I 200618 16:13:32
+appsrv.(*Application).ServeHTTP(appsrv.go:237)]
+hlgxXm4i2qF10tkBXu3rAVrCC-w= 200 b5e0b2 GET
+/networks?admin=true&amp;amp;delete=all&amp;amp;details=true&amp;amp;filter.0=updated_at.
+ge%28%272020-06-
+03+07%3A56%3A04%27%29&amp;amp;filter.1=manager_id.isnullorempty%28%29&amp;amp;fil
+ter.2=external_id.isnullorempty%28%29&amp;amp;limit=1024&amp;amp;offset=0&amp;amp;order=a
+sc&amp;amp;order_by.0=updated_at&amp;amp;pending_delete=all (10.105.232.12:55236)
+34.50ms
+[F 200618 16:13:32 models.(*SGuest).GetDriver(guests.go:557)]
+Unsupported hypervisor Aliyun
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>pod 中对应的配置文件中格式不对&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/configmaperror.png" alt="">&lt;/p>
+&lt;h4 id="pod---evicted状态">Pod - Evicted状态&lt;/h4>
+&lt;p>出现这种情况，多见于系统内存或硬盘资源不足。通过“kubectl describe命令”查看异常pod。&lt;/p>
+&lt;pre>&lt;code>[root@test-interface ~]# kubectl describe -n onecloud pod default-ovn-north-7689f47894-tqp2g
+Name: default-ovn-north-7689f47894-tqp2g
+Namespace: onecloud
+Priority: 0
+Node: test-interface/
+Start Time: Fri, 20 Mar 2020 18:38:27 +0800
+Labels: app=ovn-north
+app.kubernetes.io/component=ovn-north
+app.kubernetes.io/instance=onecloud-cluster-8p2p
+app.kubernetes.io/managed-by=onecloud-operator
+app.kubernetes.io/name=onecloud-cluster
+pod-template-hash=7689f47894
+Annotations: cni.projectcalico.org/podIP: 10.40.180.212/32
+onecloud.yunion.io/last-applied-configuration:
+{&amp;quot;volumes&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;certs&amp;quot;,&amp;quot;secret&amp;quot;:{&amp;quot;secretName&amp;quot;:&amp;quot;default-certs&amp;quot;,&amp;quot;items&amp;quot;:[{&amp;quot;key&amp;quot;:&amp;quot;ca.crt&amp;quot;,&amp;quot;path&amp;quot;:&amp;quot;ca.crt&amp;quot;},{&amp;quot;key&amp;quot;:&amp;quot;service.crt&amp;quot;,&amp;quot;path&amp;quot;:&amp;quot;...
+Status: Failed
+Reason: Evicted
+Message: The node was low on resource: ephemeral-storage. Container ovn-north was using 109956Ki, which exceeds its request of 0.
+&lt;/code>&lt;/pre>&lt;h4 id="pod---imagepullbackoff状态">Pod - ImagePullBackOff状态&lt;/h4>
+&lt;p>通常是镜像名称配置错误或者私有镜像的密钥配置错误导致。通过“kubectl describe命令”查看异常pod。&lt;/p>
+&lt;pre>&lt;code>Events:
+Type Reason Age From Message
+---- ------ ---- ---- -------
+Normal Scheduled 35s default-scheduler Successfully assigned onecloud/default-region-85ff9dcd5-mh8cl to yunion320
+Normal Pulling 34s kubelet, yunion320 Pulling image &amp;quot;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.1&amp;quot;
+Normal Pulled 33s kubelet, yunion320 Successfully pulled image &amp;quot;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.1&amp;quot;
+Normal Created 33s kubelet, yunion320 Created container init
+Normal Started 33s kubelet, yunion320 Started container init
+Normal Pulling 15s (x2 over 28s) kubelet, yunion320 Pulling image &amp;quot;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;quot;
+Warning Failed 15s (x2 over 28s) kubelet, yunion320 Failed to pull image &amp;quot;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;quot;: rpc error: code = Unknown desc = Error response from daemon: manifest for registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2 not found: manifest unknown: manifest unknown
+Warning Failed 15s (x2 over 28s) kubelet, yunion320 Error: ErrImagePull
+Normal BackOff 3s kubelet, yunion320 Back-off pulling image &amp;quot;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;quot;
+Warning Failed 3s kubelet, yunion320 Error: ImagePullBackOff
+&lt;/code>&lt;/pre>&lt;h4 id="pod---pending状态">Pod - Pending状态&lt;/h4>
+&lt;p>Pending状态，这个状态意味着，Pod的yaml文件已经提交给Kubernetes，API对象已经被创建并保存在Etcd 当中。但是，这个Pod里有些容器因为某种原因而不能被顺利创建。&lt;/p>
+&lt;ul>
+&lt;li>调度不成功（可以通过 kubectl describe pod 命令查看到当前 Pod 的事件，进而判断为什么没有调度）。&lt;/li>
+&lt;li>可能原因： 资源不足（集群内所有的 Node 都不满足该 Pod 请求的 CPU、内存、GPU 等资源）；&lt;/li>
+&lt;li>HostPort 已被占用（通常推荐使用 Service 对外开放服务端口）。&lt;/li>
+&lt;/ul>
+&lt;h4 id="pod---error状态">Pod - Error状态&lt;/h4>
+&lt;p>通常处于 Error 状态说明 Pod 启动过程中发生了错误。常见的原因包括：&lt;/p>
+&lt;ul>
+&lt;li>依赖的 ConfigMap、Secret 或者 PV 等不存在；&lt;/li>
+&lt;li>请求的资源超过了管理员设置的限制，比如超过了 LimitRange 等；&lt;/li>
+&lt;li>违反集群的安全策略，比如违反了 PodSecurityPolicy 等；&lt;/li>
+&lt;li>容器无权操作集群内的资源，比如开启 RBAC 后，需要为 ServiceAccount 配置角色绑定;&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Ocadm部署工具常用命令</title><link>https://www.cloudpods.org/zh/docs/ops/ocadm/</link><pubDate>Wed, 10 Nov 2021 15:43:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ocadm/</guid><description>
+&lt;p>部署管理工具ocadm类似于Kubernetes集群中的kubeadm工具，下面介绍ocadm的.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建集群 &lt;/span>
+$ ocadm cluster create
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看集群认证信息&lt;/span>
+$ ocadm cluster rcadmin
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将本地镜像源切换到阿里云镜像源&lt;/span>
+$ ocadm cluster update --image-repository registry.cn-beijing.aliyuncs.com/yunionio --wait
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将产品升级或回滚到指定版本，当系统镜像源为阿里云镜像源的情况下才可以使用下面的命令升级&lt;/span>
+$ ocadm cluster update --version &lt;span style="color:#000">$version&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的host服务&lt;/span>
+$ ocadm node disable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用节点的host服务&lt;/span>
+$ ocadm node enable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的controller服务&lt;/span>
+$ ocadm node disable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用节点的controller服务&lt;/span>
+$ ocadm node enable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用Baremetal服务&lt;/span>
+$ ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 如在node1主机上启用baremetal服务，并监听br0网卡。&lt;/span>
+$ ocadm baremetal &lt;span style="color:#204a87">enable&lt;/span> --node node1 --listen-interface br0
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在First Node节点获取加入节点的token信息&lt;/span>
+$ ocadm token create
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在First Node查看token信息&lt;/span>
+$ ocadm token list
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到开源版前端，ce(community edition)为开源版前端；&lt;/span>
+$ ocadm cluster update --use-ce --wait
+&lt;span style="color:#8f5902;font-style:italic"># 切换到商业版前端，ee(enterprise edition)为商业版前端 &lt;/span>
+$ ocadm cluster update --use-ee --wait
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用itsm组件&lt;/span>
+$ ocadm component &lt;span style="color:#204a87">enable&lt;/span> itsm
+&lt;span style="color:#8f5902;font-style:italic"># 禁用itsm组件&lt;/span>
+$ ocadm component disable itsm
+&lt;span style="color:#8f5902;font-style:italic"># 安装失败时清理环境，请谨慎使用该命令&lt;/span>
+$ ocadm reset --force
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Host服务问题排查</title><link>https://www.cloudpods.org/zh/docs/ops/hosterror/</link><pubDate>Thu, 11 Nov 2021 15:59:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/hosterror/</guid><description>
+&lt;h3 id="宿主机安装host服务完成后默认处于禁用状态需要启用后使用宿主机启用方法如下">宿主机安装Host服务完成后，默认处于禁用状态，需要启用后使用。宿主机启用方法如下：&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>在云管平台的宿主机列表中启用该宿主机；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在控制节点使用climc命令启用该宿主机；&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-enable id
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h3 id="host服务为什么会变成离线">Host服务为什么会变成离线？&lt;/h3>
+&lt;p>region的HostPingDetectionTask将超过3分钟未收到ping的host服务置为offline，并将宿主机上的虚拟机状态设置为unknown。&lt;/p>
+&lt;h3 id="宿主机的host服务启动失败且报错fail-to-get-network-infono-networks该怎么解决">宿主机的Host服务启动失败，且报错“Fail to get network info：no networks”，该怎么解决？&lt;/h3>
+&lt;p>该问题一般是没有为宿主机注册网络，需要在云管平台为宿主机创建一个IP子网或使用Climc命令在控制节点创建一个网络。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-create bcast0 host02 10.168.222.226 10.168.222.226 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> --gateway 10.168.222.1
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 将其他KVM平台虚拟机镜像迁移到平台</title><link>https://www.cloudpods.org/zh/docs/ops/migrate/</link><pubDate>Thu, 11 Nov 2021 15:58:12 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/migrate/</guid><description>
+&lt;ol>
+&lt;li>通过libvirt导出虚拟机的镜像（.qcow2文件）。&lt;/li>
+&lt;li>将镜像上传至一个http服务器中。&lt;/li>
+&lt;li>使用Cloudpods镜像服务器导入镜像。&lt;/li>
+&lt;li>通过镜像创建虚拟机。&lt;/li>
+&lt;li>若原来的虚拟机挂载了云硬盘，可按照以下方式迁移：
+&lt;ul>
+&lt;li>与上述操作类似，需要先将数据盘生成镜像，同理导入，Cloudpods使用该镜像创建数据
+云盘，再将云硬盘挂载到虚拟机即可。&lt;/li>
+&lt;li>先在Cloudpods中创建一个相同大小的云硬盘，找到对应的路径，将原云盘数据直接复
+制到新的路径下，最后再挂载到虚拟机上。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

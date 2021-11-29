@@ -1,0 +1,128 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+操作指南</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 25 Nov 2021 14:39:13 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建PrivateZone域名</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/createprivate/</link><pubDate>Thu, 25 Nov 2021 15:16:18 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/createprivate/</guid><description>
+&lt;p>PrivateZone域名是基于VPC网络的私有DNS服务，支持使用私有域名来解析VPC环境中的资源，私有域名在VPC外无法访问。&lt;/p>
+&lt;p>&lt;strong>使用流程&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>新建PrivateZone域名。&lt;/li>
+&lt;li>在域名详情-记录中添加记录。&lt;/li>
+&lt;li>通过关联VPC功能将PrivateZone域名同步到公有云。目前支持平台：阿里云、AWS。&lt;/li>
+&lt;/ul>
+&lt;h3 id="新建privatezone域名">新建PrivateZone域名&lt;/h3>
+&lt;p>该功能用于新建PrivateZone域名。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建域名对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>指定域：选择DNS解析所属的域。&lt;/li>
+&lt;li>解析域类型：选择PrivateZone域名。&lt;/li>
+&lt;li>域名：设置需要解析的域名。其中PublicZone类型目前仅支持二级域名。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入同步到公有云页面。&lt;/li>
+&lt;li>如需要将域名同步到公有云，则需要选择区域以及对应的VPC，配置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>如暂不需要将域名同步到公有云，则直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮即可。&lt;/li>
+&lt;/ol>
+&lt;h3 id="关联vpc">关联VPC&lt;/h3>
+&lt;p>该功能用于将PrivateZone类型的解析域名关联到VPC，关联VPC的同时还会将域名同步到对应公有云平台。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+腾讯云不支持PrivateZone类型的DNS，即不能关联腾讯云的VPC。
+&lt;/div>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联VPC&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联VPC对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>区域：设置区域，并通过区域过滤VPC。可通过城市、平台快速过滤筛选出合适区域。&lt;/li>
+&lt;li>VPC：选择要关联的VPC，关联后将会把DNS解析域名同步到VPC所在平台账号中。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 新建PublicZone域名</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/createpublic/</link><pubDate>Thu, 25 Nov 2021 14:39:13 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/createpublic/</guid><description>
+&lt;p>PublicZone域名即公共DNS解析服务，用户可以通过Internet之前访问域名。&lt;/p>
+&lt;p>&lt;strong>使用流程&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>新建PublicZone域名，请确保PublicZone类型的域名已经在Internet上进行注册。&lt;/li>
+&lt;li>在域名详情-记录中添加记录。&lt;/li>
+&lt;li>通过新建缓存同步到公有云，目前支持平台：阿里云、腾讯云、AWS。&lt;/li>
+&lt;/ul>
+&lt;h3 id="新建publiczone域名">新建PublicZone域名&lt;/h3>
+&lt;p>该功能用于新建PublicZone域名。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建域名对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>指定域：选择DNS解析所属的域。&lt;/li>
+&lt;li>解析域类型：选择PublicZone域名。&lt;/li>
+&lt;li>域名：设置需要解析的域名。其中PublicZone类型目前仅支持二级域名。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入同步到公有云页面。&lt;/li>
+&lt;li>如需要将域名同步到公有云，需要选择平台以及云订阅，配置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>如暂不需要将域名同步到公有云，则直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮即可。&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 新建域名命令
+climc dns-zone-create [--status STATUS] [--enabled] [--vpc-ids VPC_IDS] [--cloudaccount-id CLOUDACCOUNT_ID] [--options OPTIONS] [--de
+scription &amp;lt;DESCRIPTION&amp;gt;] &amp;lt;NAME&amp;gt; &amp;lt;zone_type&amp;gt;
+# 新建阿里云账号上的PublicZone域名
+climc dns-zone-create test.com PublicZone --cloudaccount-id aliyun
+&lt;/code>&lt;/pre>&lt;h3 id="同步到公有云">同步到公有云&lt;/h3>
+&lt;p>可通过新建缓存的功能将PublicZone类型的DNS解析同步到公有云。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“缓存列表”页签，进入缓存列表页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建缓存对话框。&lt;/li>
+&lt;li>选择平台和对应平台的云订阅。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将DNS解析域名同步到对应公有云平台的指定账号下。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 记录</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/recordset/</link><pubDate>Thu, 25 Nov 2021 16:07:53 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/recordset/</guid><description/></item><item><title>Docs: 同步状态</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/sync/</link><pubDate>Thu, 25 Nov 2021 14:39:13 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/sync/</guid><description>
+&lt;p>该功能用于同步域名的当前状态。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步DNS解析域名的状态。&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 同步域名状态
+$ climc dns-zone-syncstatus &amp;lt;DNS解析域名ID或名称&amp;gt;
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 推送解析列表</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/push/</link><pubDate>Thu, 25 Nov 2021 16:04:41 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/push/</guid><description>
+&lt;p>当由于其他原因未能将本地的DNS解析记录完全同步到公有云平台时，可通过本功能将状态可用域名下的解析记录列表推送到公有云平台。推送时以本地的解析列表为准，向公有云覆盖，若公有云上存在未同步到本地的解析记录，可能会被删除，请谨慎操作。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;推送解析列表&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 推送解析列表
+$ climc dns-zone-sync-recordsets &amp;lt;DNS解析域名ID或名称&amp;gt;
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 删除域名</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/delete/</link><pubDate>Thu, 25 Nov 2021 16:05:25 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/delete/</guid><description>
+&lt;p>该功能用于删除DNS解析域名，支持单个和批量操作。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析列表中选择一个或多个域名，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 删除DNS解析域名
+$ climc dns-zone-delete &amp;lt;DNS解析域名ID或名称&amp;gt;
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 查看DNS解析详情</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/show/</link><pubDate>Thu, 25 Nov 2021 18:47:34 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/show/</guid><description>
+&lt;p>该功能用于查看DNS解析的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>查看以下信息：包括云上ID、ID、名称、状态、域、解析域类型、记录数、关联VPC、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: VPC管理</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/vpc/</link><pubDate>Thu, 25 Nov 2021 16:32:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/vpc/</guid><description/></item><item><title>Docs: 缓存</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/cache/</link><pubDate>Thu, 25 Nov 2021 18:44:17 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/cache/</guid><description>
+&lt;p>缓存记录即表示DNS解析域名本地与公有云的映射关系。&lt;/p>
+&lt;p>&lt;strong>缓存列表来源&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>PrivateZone类型的DNS解析关联VPC后将会为对应平台产生一条缓存记录。&lt;/li>
+&lt;li>PublicZone类型的DNS解析通过新建缓存功能为对应平台产生一条缓存记录。&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 查看操作日志</title><link>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/log/</link><pubDate>Thu, 25 Nov 2021 18:47:28 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/dns/tutorial/log/</guid><description>
+&lt;p>该功能用于查看DNS解析相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：在操作日志页面，列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

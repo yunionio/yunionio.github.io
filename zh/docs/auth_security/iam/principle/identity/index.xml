@@ -1,0 +1,195 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+认证体系</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/principle/identity/</link><description>Recent content in 认证体系 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 04 Aug 2019 20:51:23 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/auth_security/iam/principle/identity/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 认证源</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/principle/identity/providers/</link><pubDate>Sun, 04 Aug 2019 20:51:23 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/principle/identity/providers/</guid><description>
+&lt;p>认证源定义了用户信息的来源。每个认证源有driver和template两个属性，说明这个认证源的工作机制。目前，driver支持如下多种认证源：&lt;/p>
+&lt;p>认证源定义了用户的来源，每个认证源有driver和template两个属性，说明这个认证源的工作机制。目前，driver只支持两种：sql和ldap。后续会增加更多认证源，例如openid, saml认证源。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Driver&lt;/th>
+&lt;th>Template&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;th>用户或组归属域&lt;/th>
+&lt;th>导入行为&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>sql&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>用户和组的定义来自于本地的sql数据库&lt;/td>
+&lt;td>任意多个域&lt;/td>
+&lt;td>不需要导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ldap&lt;/td>
+&lt;td>msad_one_domain&lt;/td>
+&lt;td>用户和组的定义来自于本地的Microsoft Active Diectoy Domain&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>自动导入一个域以及用户和组&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ldap&lt;/td>
+&lt;td>msad_multi_domain&lt;/td>
+&lt;td>用户和组以及域的定义来自于本地的Microsoft Active Directory Domain&lt;/td>
+&lt;td>多个域&lt;/td>
+&lt;td>自动导入多个域，一个域对应domain_dn下的一个OU，OU下的用户和组导入对应的域。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ldap&lt;/td>
+&lt;td>openldap_one_domain&lt;/td>
+&lt;td>用户和组的定义来自于本地openldap或者freeIPA&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>自动导入一个域，user_dn和group_dn下的&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ldap&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>用户和组的定义来自于任意的ldap数据源&lt;/td>
+&lt;td>单个或多个域&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cas&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>Java CAS Server&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>oauth2&lt;/td>
+&lt;td>dingtalk&lt;/td>
+&lt;td>钉钉企业认证&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>oauth2&lt;/td>
+&lt;td>feishu&lt;/td>
+&lt;td>飞书企业认证&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>oauth2&lt;/td>
+&lt;td>wecom&lt;/td>
+&lt;td>企业微信SSO认证&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>oidc&lt;/td>
+&lt;td>GitHub&lt;/td>
+&lt;td>GitHub SSO&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>oidc&lt;/td>
+&lt;td>Azure&lt;/td>
+&lt;td>Azure OpenID Connect SSO&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>oidc&lt;/td>
+&lt;td>dex&lt;/td>
+&lt;td>Dex OpenID Connect SSO&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>saml&lt;/td>
+&lt;td>Azure&lt;/td>
+&lt;td>Azure SAML 2.0 SSO&lt;/td>
+&lt;td>单个域&lt;/td>
+&lt;td>每次用户登录时导入&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="常用命令">常用命令&lt;/h2>
+&lt;h3 id="查看认证源">查看认证源&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc idp-list --scope system
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看认证源的配置">查看认证源的配置&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc idp-config-show &amp;lt;idp_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="编辑认证源的配置">编辑认证源的配置&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc idp-config-edit &amp;lt;idp_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 用户与组</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/principle/identity/user/</link><pubDate>Sun, 04 Aug 2019 20:51:23 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/principle/identity/user/</guid><description>
+&lt;h2 id="用户">用户&lt;/h2>
+&lt;p>用户是平台的使用者和操作者，具有如下属性：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>属性&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>id&lt;/td>
+&lt;td>用户ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>name&lt;/td>
+&lt;td>用户名称，只能为字母和数字&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>displayname&lt;/td>
+&lt;td>显示名称，可以使中文&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>mobile&lt;/td>
+&lt;td>用户手机号&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>email&lt;/td>
+&lt;td>用户邮箱地址&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>description&lt;/td>
+&lt;td>描述&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>enabled&lt;/td>
+&lt;td>是否启用，禁用用户无法认证&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>domain_id&lt;/td>
+&lt;td>域ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>project_domain&lt;/td>
+&lt;td>域名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>is_system_account&lt;/td>
+&lt;td>是否为系统账号，如果是系统账号，user-list时无法看到用户，只有指定system属性时才能查看&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>enable_mfa&lt;/td>
+&lt;td>是否开web控制台启双因子认证&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>allow_web_console&lt;/td>
+&lt;td>是否允许登入控制台&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="用户资源的限制">用户资源的限制&lt;/h3>
+&lt;ul>
+&lt;li>用户只能加入同一个域下的组&lt;/li>
+&lt;li>ldap用户的组成员属性无法更改，ldap用户不能加入或者离开ldap组&lt;/li>
+&lt;li>sysadmin用户无法删除和修改&lt;/li>
+&lt;/ul>
+&lt;h3 id="用户名字空间">用户名字空间&lt;/h3>
+&lt;p>用户的名字空间为域，不同域下的用户的名称可以相同，一个域下的用户名称不能冲突。&lt;/p>
+&lt;h3 id="预置用户">预置用户&lt;/h3>
+&lt;p>系统初始化后，default域有一个预置用户sysadmin，以admin的角色加入system项目，作为系统的root用户。每个服务都有一个预置的用户，例如 regionadmin, meteradmin 等。&lt;/p>
+&lt;h2 id="组">组&lt;/h2>
+&lt;p>组是用户的集合，目前不支持组的嵌套，组内成员只能是用户。&lt;/p>
+&lt;h3 id="组的限制">组的限制&lt;/h3>
+&lt;ul>
+&lt;li>组内的用户必须和组归属同一个域&lt;/li>
+&lt;li>ldap用户的组成员属性无法更改，ldap用户不能加入或者离开ldap组&lt;/li>
+&lt;/ul>
+&lt;h3 id="组名字空间">组名字空间&lt;/h3>
+&lt;p>组的名字空间为域，不同域下的组的名称可以相同。&lt;/p></description></item></channel></rss>

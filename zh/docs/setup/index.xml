@@ -677,7 +677,7 @@ valid_lft forever preferred_lft forever
 &lt;/li>
 &lt;li>数据库: mariadb (CentOS 7自带的版本：Ver 15.1 Distrib 5.5.56-MariaDB）&lt;/li>
 &lt;li>docker: ce-20.10.5&lt;/li>
-&lt;li>kubernetes: v1.15.8&lt;/li>
+&lt;li>kubernetes: v1.15.12&lt;/li>
 &lt;/ul>
 &lt;p>需要能访问如下网址，如果企业有外网隔离规则，则需要打开相应白名单：&lt;/p>
 &lt;ul>
@@ -779,7 +779,7 @@ $ reboot
 $ uname -r
 3.10.0-1160.6.1.el7.yn20201125.x86_64
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-kubelet">安装配置 kubelet&lt;/h3>
-&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
+&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.12，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.12-0 kubectl-1.15.12-0 kubeadm-1.15.12-0
 $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
@@ -835,7 +835,7 @@ $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&
 &lt;span style="color:#8f5902;font-style:italic"># 安装必要的服务，并启动和设置为开机自启&lt;/span>
 $ yum install -y yunion-executor &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h3>
-&lt;p>接下来会现在当前节点启动 v1.15.8 的 kubernetes 服务，然后部署 Cloudpods 控制节点相关的服务到 kubernetes 集群。&lt;/p>
+&lt;p>接下来会现在当前节点启动 v1.15.12 的 kubernetes 服务，然后部署 Cloudpods 控制节点相关的服务到 kubernetes 集群。&lt;/p>
 &lt;p>拉取必要的 docker 镜像&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm config images pull
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 ocadm 部署 kubernetes 集群&lt;/p>
@@ -1149,9 +1149,9 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/dae
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="安装配置-kubelet">安装配置 kubelet&lt;/h4>
-&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.8，并设置 kubelet 开机自启动&lt;/p>
+&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.12，并设置 kubelet 开机自启动&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.8-0 kubectl-1.15.8-0 kubeadm-1.15.8-0
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.12-0 kubectl-1.15.12-0 kubeadm-1.15.12-0
 $ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
 $ &lt;span style="color:#204a87">source&lt;/span> /etc/profile
 $ systemctl &lt;span style="color:#204a87">enable&lt;/span> kubelet

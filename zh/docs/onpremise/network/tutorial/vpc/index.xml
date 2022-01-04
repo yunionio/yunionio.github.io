@@ -469,7 +469,68 @@ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now ovn-controller
 &lt;ol>
 &lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改带宽&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改带宽对话框。&lt;/li>
 &lt;li>修改带宽值，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 虚拟IP（VIP）</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/vpcvip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/vpcvip/</guid><description>
+&lt;/ol></description></item><item><title>Docs: MTU</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/mtu/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/mtu/</guid><description>
+&lt;p>VPC网络是一个虚拟网络，通过隧道技术在物理网络上构建，因此每个VPC网络报文需要在头部预留出一定的空间给隧道协议使用，这个预留字节数在 pkg/apis/compute/vpcs_ovn.go 的常量 VPC_OVN_ENCAP_COST 定义，默认值为60字节。(注意：3.8版本之前默认值为58字节)。同时，物理网络的MTU一般是1500字节，因此VPC内虚拟机的MTU默认是1440字节。本文介绍在默认情况下，1440字节MTU对应用的影响和解决方案。同时，也介绍如何设置将VPC虚拟机的MTU调整为1500。&lt;/p>
+&lt;h2 id="1440字节mtu对虚拟机应用的影响">1440字节MTU对虚拟机应用的影响&lt;/h2>
+&lt;p>目前看对绝大部分应用，MTU设置是透明的，没有影响。除了以下应用：&lt;/p>
+&lt;h3 id="docker">Docker&lt;/h3>
+&lt;p>从用户反馈看，当虚拟机的MTU为1440时，Docker内运行的应用会受到影响。&lt;/p>
+&lt;p>对于常规Docker应用，需要修改 /etc/docker/daemon.json ，添加如下配置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;mtu&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1440&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，重启Docker容器。&lt;/p>
+&lt;p>注意：云平台默认会自动注入该配置。&lt;/p>
+&lt;h3 id="docker-compose">Docker Compose&lt;/h3>
+&lt;p>以上修改只会设置Docker的默认网桥docker0的MTU。对于使用Docker Compose的应用，Docker Compose会为每个应用创建一个网桥。需要在每个Docker Compose的配置文件 docker-compose.yml 中添加如下的配置，使得每个Docker Compose添加的网桥MTU也被正确设置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#000">...&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">default&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">driver&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">bridge&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">driver_opts&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">com.docker.network.driver.mtu&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1440&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，需要重建Docker Compose应用，使得该应用对应网桥的MTU设置为1440。&lt;/p>
+&lt;p>具体请参考这篇文章：https://mlohr.com/docker-mtu/&lt;/p>
+&lt;h2 id="设置虚拟机mtu">设置虚拟机MTU&lt;/h2>
+&lt;p>以下介绍如何设置平台参数，使得虚拟机可以使用自定义的MTU值，例如使用1500字节的MTU。&lt;/p>
+&lt;h3 id="控制节点配置">控制节点配置&lt;/h3>
+&lt;p>云平台定义了一个全局的配置 ovn_underlay_mtu 用于设置云平台底层承载VPC流量的物理网络的MTU，该值默认为1500。需要修改该值为 虚拟机MTU + VPC_OVN_ENCAP_COST。例如虚拟机MTU为1500，则 ovn_underlay_mtu = 1560。&lt;/p>
+&lt;p>需要修改如下服务的配置文件的 ovn_underlay_mtu 参数：&lt;/p>
+&lt;ol>
+&lt;li>修改 region 服务的 ovn_underlay_mtu&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-config-edit region2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，无需重启服务，立即生效。&lt;/p>
+&lt;ol start="2">
+&lt;li>修改 vpcagent 服务的 ovn_underlay_mtu&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud edit configmaps default-vpcagent
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，需要重启 vpcagent 服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud rollout restart deployments default-vpcagent
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="计算节点设置">计算节点设置&lt;/h3>
+&lt;ol>
+&lt;li>修改网卡MTU&lt;/li>
+&lt;/ol>
+&lt;p>首先需要将计算节点ovn_encap_ip对应的物理网卡的MTU值设置为 ovn_underlay_mtu 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ip link &lt;span style="color:#204a87">set&lt;/span> eth0 mtu &lt;span style="color:#0000cf;font-weight:bold">1560&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里 eth0 为物理网卡的名称。&lt;/p>
+&lt;p>如果该物理网卡加入了Openvswitch的网桥，则同时需要执行如下命令，将ovs网桥的MTU也设置为跟物理网卡一致：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl &lt;span style="color:#204a87">set&lt;/span> int br0 &lt;span style="color:#000">mtu_request&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1560&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里br0是eth0加入的ovs网桥。&lt;/p>
+&lt;p>同时，需要将改MTU值持久化，这样下次服务器重启的时候自动生效。&lt;/p>
+&lt;p>在CentOS系统，持久化方法为:&lt;/p>
+&lt;p>修改 /etc/sysconfig/network-scripts/ifcfg-eth0，增加 MTU=1560 的配置。&lt;/p>
+&lt;p>以上修改需要针对每个计算节点进行。&lt;/p>
+&lt;ol start="2">
+&lt;li>修改 sdnagent 服务的 ovn_underlay_mtu&lt;/li>
+&lt;/ol>
+&lt;p>需要修改每个计算节点的配置文件 /etc/yunion/host.conf。设置 ovn_underlay_mtu。&lt;/p>
+&lt;ol start="3">
+&lt;li>重启生效&lt;/li>
+&lt;/ol>
+&lt;p>以上修改完成后，需要重启default-host容器生效。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud rollout restart daemonsets default-host
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 虚拟IP（VIP）</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/vpcvip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/vpcvip/</guid><description>
 &lt;p>现已支持在VPC内的IP子网分配虚拟IP给一组虚拟机共享，通过keepalived等高可用软件实现在VIP这组虚拟机之间的漂移，keepalived检测服务在主机上的状态，自动地将虚拟IP设置在服务可用的优先级最高的虚拟机的网卡上。&lt;/p>
 &lt;h2 id="模型概念">模型概念&lt;/h2>
 &lt;p>在资源模型上，VIP绑定到一个反亲和组（instancegroup）。可以通过前端，或者climc的命令，为一个反亲和组绑定一个VIP。绑定后，该VIP可以用于在该反亲和组包含的虚拟机之间使用。&lt;/p>

@@ -1262,7 +1262,7 @@ Server migration prefer host id or name
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: GPU相关</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: GPU 相关</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</guid><description>
 &lt;p>目前仅支持 Cloudpods kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。&lt;/p>
 &lt;h2 id="web界面操作">Web界面操作&lt;/h2>
 &lt;h3 id="设置gpu卡">设置GPU卡&lt;/h3>
@@ -1386,29 +1386,83 @@ Server migration prefer host id or name
 &lt;ol>
 &lt;li>在反亲和组列表中勾选一个或多个反亲和组，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: USB相关</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/usb/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/usb/</guid><description>
-&lt;p>Cloudpods KVM虚拟机并未正式支持USB透传，但是可以通过虚拟机的extra参数，将USB透传的qemu命令参数传递给qemu，从而也能从某种程度上实现将宿主机挂载的指定USB设备透传给在该宿主机上运行的虚拟机的目的，目前，只能通过climc命令行工具来更新虚拟机的extra参数。&lt;/p>
-&lt;p>第一步，在宿主机上运行 lsusb -t 命令找到USB设备在宿主机的设备ID。&lt;/p>
-&lt;p>如果是USB 2.0的设备，执行 lsusb -t 有如下输出：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">/: Bus 03.Port 1: Dev 1, &lt;span style="color:#000">Class&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>root_hub, &lt;span style="color:#000">Driver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>xhci_hcd/14p, 480M
-&lt;span style="color:#000;font-weight:bold">|&lt;/span>__ Port 10: Dev 8, If 0, &lt;span style="color:#000">Class&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Human Interface Device, &lt;span style="color:#000">Driver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>usbhid, 12M
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>则透传USB的qemu参数为：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-device usb-host,hostbus&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3,hostport&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果是USB 3.0的设备，执行 lsusb -t 有如下输出:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">/: Bus &lt;span style="color:#0000cf;font-weight:bold">03&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span>__ Port 2: some stuff
-&lt;span style="color:#000;font-weight:bold">|&lt;/span>__ Port 1: some stuff
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>则透传USB的qemu参数为：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-device usb-host,hostbus&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3,hostport&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>2.1
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>第二步，执行climc命令，更新目标虚拟机的extra参数&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-add-extra-options &amp;lt;sid&amp;gt; &lt;span style="color:#4e9a06">&amp;#39;device&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;usb-host,hostbus=3,hostport=2.1&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令执行后，将会给qemu虚拟机的命令行参数增加如下额外参数：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-device usb-host,hostbus&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3,hostport&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>2.1
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>第三步：重启虚拟机&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-restart &amp;lt;sid&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果希望虚拟机不再透传该USB设备，则执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-remove-extra-options &amp;lt;sid&amp;gt; &lt;span style="color:#4e9a06">&amp;#39;device&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后，再restart该虚拟机。&lt;/p></description></item><item><title>Docs: 迁移磁盘存储</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/change-disk-storge/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/change-disk-storge/</guid><description>
+&lt;/ol></description></item><item><title>Docs: USB 透传</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/usb-passthrough/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/usb-passthrough/</guid><description>
+&lt;p>目前只有内置私有云平台的虚拟机可以使用宿主机上的 USB 设备。前提条件是宿主机需要有 &lt;code>lsusb&lt;/code> 这个工具，如果没有请安装 &lt;code>usbutils&lt;/code> 这个包。&lt;/p>
+&lt;h2 id="配置宿主机">配置宿主机&lt;/h2>
+&lt;p>查看宿主机上的 USB 设备，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lsusb
+Bus &lt;span style="color:#0000cf;font-weight:bold">002&lt;/span> Device 002: ID 0951:1666 Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50
+Bus &lt;span style="color:#0000cf;font-weight:bold">002&lt;/span> Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus &lt;span style="color:#0000cf;font-weight:bold">001&lt;/span> Device 002: ID 0627:0001 Adomax Technology Co., Ltd
+Bus &lt;span style="color:#0000cf;font-weight:bold">001&lt;/span> Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>默认情况下宿主机透传 USB 设备功能是禁用的，需要在 &lt;code>/etc/yunion/host.conf&lt;/code> 配置文件里面设置 &lt;code>disable_usb: false&lt;/code> 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vim /etc/yunion/host.conf
+...
+disable_usb: &lt;span style="color:#204a87">false&lt;/span>
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>假设宿主机 hostname 为 &lt;code>oc-node-1&lt;/code>，然后重启宿主机服务，登录到控制节点，执行下面的命令：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 先找到对应的宿主机服务&lt;/span>
+$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep oc-node-1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep -v &lt;span style="color:#4e9a06">&amp;#39;deployer|image&amp;#39;&lt;/span>
+default-host-59k76 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> 3d22h 192.168.121.21 oc-node-1 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 删除宿主机上的 pod ，等待重建&lt;/span>
+$ kubectl delete pods -n onecloud default-host-59k76
+pod &lt;span style="color:#4e9a06">&amp;#34;default-host-59k76&amp;#34;&lt;/span> deleted
+&lt;span style="color:#8f5902;font-style:italic"># 查看新创建的 host 服务&lt;/span>
+$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep oc-node-1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep -v &lt;span style="color:#4e9a06">&amp;#39;deployer|image&amp;#39;&lt;/span>
+default-host-6cl8w 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 17s 192.168.121.21 oc-node-1 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 确保该服务变成 Running ，然后到云平台查看透传 USB 设备&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果宿主机很多，也可以使用 &lt;code>kubectl -n rollout restart daemonset default-host&lt;/code> 命令来重启所有宿主机上的 host 服务。&lt;/p>
+&lt;h2 id="查看-usb-透传设备">查看 USB 透传设备&lt;/h2>
+&lt;p>使用命令行 &lt;code>climc isolated-device-list --details&lt;/code> 查看设备：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc isolated-device-list --details
++--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+--------------------------+----------+-------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Dev_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Model &lt;span style="color:#000;font-weight:bold">|&lt;/span> Addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Vendor_device_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_status &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+--------------------------+----------+-------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 1541047f-0203-488a-8226-2de740da061f &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Adomax Technology Co., Ltd &lt;span style="color:#000;font-weight:bold">|&lt;/span> 001:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0627:0001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span> oc-node-1-192-168-121-21 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> a3fa9bd4-236c-4c5b-8056-f7afa807138d &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 002:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0951:1666 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span> oc-node-1-192-168-121-21 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+--------------------------+----------+-------+--------------+
+*** Total: &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在云平台就有了宿主机 oc-node-1 上的 USB 透传设备，接下来就可以把这些设备给虚拟机使用。&lt;/p>
+&lt;h2 id="虚拟机挂载-usb">虚拟机挂载 USB&lt;/h2>
+&lt;p>USB 可以在虚拟机运行状态下挂载进去，可以在前端的透传设备列表那里把 USB 挂载到虚拟机里面。对应命令行操作如下 &lt;code>climc server-attach-isolated-device $server_id $device_id&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如虚拟机名称为 testvm，透传设备 id 为 a3fa9bd4-236c-4c5b-8056-f7afa807138d&lt;/span>
+$ climc server-attach-isolated-device testvm a3fa9bd4-236c-4c5b-8056-f7afa807138d
+&lt;span style="color:#8f5902;font-style:italic"># 然后登录到 testvm 虚拟机里面，执行 lsusb 就能看到宿主机的 USB 设备&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@testvm ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># lsusb&lt;/span>
+Bus &lt;span style="color:#0000cf;font-weight:bold">002&lt;/span> Device 002: ID 0951:1666 Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="虚拟机卸载-usb">虚拟机卸载 USB&lt;/h2>
+&lt;p>USB 可以在虚拟机运行状态下卸载 USB ，可以在前端的透传设备列表那里卸载 USB 对应的虚拟机。对应命令行操作如下 &lt;code>climc server-detach-isolated-device $server_id $device_id&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如虚拟机名称为 testvm，透传设备 id 为 a3fa9bd4-236c-4c5b-8056-f7afa807138d&lt;/span>
+$ climc server-detach-isolated-device testvm a3fa9bd4-236c-4c5b-8056-f7afa807138d
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="宿主机刷新设备">宿主机刷新设备&lt;/h2>
+&lt;p>有些情况会频繁在宿主机上插拔 USB 设备，这样会导致云平台记录的 USB 设备信息和宿主机上的实际设备信息不一致，可以使用下面的命令 &lt;code>climc host-probe-isolated-devices $host_id&lt;/code> 进行设备信息同步：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 假设宿主机名称为 oc-node-1-192-168-121-21，看下目前的设备列表&lt;/span>
+$ lsusb
+Bus &lt;span style="color:#0000cf;font-weight:bold">002&lt;/span> Device 002: ID 0951:1666 Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50
+Bus &lt;span style="color:#0000cf;font-weight:bold">001&lt;/span> Device 002: ID 0627:0001 Adomax Technology Co., Ltd
+&lt;span style="color:#8f5902;font-style:italic"># 对应云平台的设备列表是一致的&lt;/span>
+$ climc isolated-device-list --host oc-node-1-192-168-121-21
++--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Dev_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Model &lt;span style="color:#000;font-weight:bold">|&lt;/span> Addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Vendor_device_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host_id &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 1541047f-0203-488a-8226-2de740da061f &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Adomax Technology Co., Ltd &lt;span style="color:#000;font-weight:bold">|&lt;/span> 001:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0627:0001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> a3fa9bd4-236c-4c5b-8056-f7afa807138d &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 002:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0951:1666 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+
+*** Total: &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
+&lt;span style="color:#8f5902;font-style:italic"># 从上面看到有两个 USB 设备列表，然后我把 Kingston U 盘拔掉&lt;/span>
+$ lsusb
+Bus &lt;span style="color:#0000cf;font-weight:bold">001&lt;/span> Device 002: ID 0627:0001 Adomax Technology Co., Ltd
+&lt;span style="color:#8f5902;font-style:italic"># 执行命令同步当前宿主机设备信息&lt;/span>
+$ climc host-probe-isolated-devices oc-node-1-192-168-121-21
+&lt;span style="color:#8f5902;font-style:italic"># 再查看设备列表就只有一个了，Kingston U 盘记录已经被删掉&lt;/span>
+$ climc isolated-device-list --host oc-node-1-192-168-121-21
++--------------------------------------+----------+----------------------------+---------+------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Dev_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Model &lt;span style="color:#000;font-weight:bold">|&lt;/span> Addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Vendor_device_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host_id &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+----------------------------+---------+------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> fa3cdbbd-7c54-4d2a-87cd-9362aa590a7d &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Adomax Technology Co., Ltd &lt;span style="color:#000;font-weight:bold">|&lt;/span> 001:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0627:0001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+----------------------------+---------+------------------+--------------------------------------+
+*** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 迁移磁盘存储</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/change-disk-storge/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/change-disk-storge/</guid><description>
 &lt;p>在 v3.8.4 版本后可以把虚拟机的磁盘迁移到另一个存储，应用场景如下：&lt;/p>
 &lt;ul>
 &lt;li>Ceph RBD 磁盘迁移到本地存储&lt;/li>

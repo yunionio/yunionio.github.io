@@ -205,21 +205,22 @@ $ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
 &lt;/code>&lt;/pre>&lt;pre>&lt;code># 查看指定主机上运行的所有pod信息
 $ kubectl get pods -n onecloud -o wide --field-selector=spec.nodeName=&amp;lt;host-name&amp;gt;
 &lt;/code>&lt;/pre>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
-&lt;p>在Kubernetes集群上，组件pods大部分通过deployment管理的，当删除pod时将会自动重建新的pod，所以重启组件服务时可以直接删除对应组件的pod。&lt;/p>
-&lt;pre>&lt;code># 重启web服务，如删除web前端pod
-$ kubectl delete pods $web_pod_name -n onecloud
+&lt;pre>&lt;code># 重启web服务
+$ kubectl rollout restart deployment -n onecloud default-web
 &lt;/code>&lt;/pre>&lt;pre>&lt;code># 重启host服务，如删除所有host pod
-$ kubectl get pods -n onecloud -o wide | grep default-host | awk '{print 1}' | xargs kubectl delete pods -n onecloud
+$ kubectl rollout restart deployment -n onecloud default-host
 # 重启所有服务，平台服务都以default开头
-$ kubectl get pods -n onecloud |grep default | awk '{print $1}' | xargs kubectl delete pods -n onecloud
+$ kubectl get deployment -n onecloud |grep default | awk '{print $1}' | xargs kubectl rollout restart deployment -n onecloud
+# 重启onecloud命名空间下的所有pod
+$ kubectl get ds -n onecloud | awk '{print $1}' | xargs kubectl rollout ds -n onecloud
 &lt;/code>&lt;/pre>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
 &lt;p>平台所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
 &lt;pre>&lt;code># 以region服务为例更新其configmaps配置信息
 $ kubectl edit configmaps default-region -n onecloud
-&lt;/code>&lt;/pre>&lt;pre>&lt;code># 修改完成后，删除对应服务的pod即可生效
-$ kubectl get pods -n onecloud |grep region
-$ kubectl delete $region_pod_name -n onecloud
+&lt;/code>&lt;/pre>&lt;pre>&lt;code># 修改完成后，重启服务
+$ kubectl -n onecloud rollout restart deployment default-region
 &lt;/code>&lt;/pre>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
+&lt;p>查看持久化服务日志，请参考&lt;a href="https://www.cloudpods.org/zh/docs/ops/backendlogs/">持久化后端日志&lt;/a>&lt;/p>
 &lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
 &lt;pre>&lt;code># 首先需要找到region服务所在pod
 $ kubectl get pods -n onecloud |grep region
@@ -243,7 +244,7 @@ $ kubectl get onecloudcluster -n onecloud
 $ kubeclt get oc -n onecloud -o yaml
 &lt;/code>&lt;/pre>&lt;h3 id="其它常用管理命令">其它常用管理命令&lt;/h3>
 &lt;p>kubectl更多命令请参考kubectl官方文档。
-&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">https://kubernetes.io/zh/docs/reference/kubectl/&lt;/a>&lt;/p></description></item><item><title>Docs: 排查Kubernetes pod异常</title><link>https://www.cloudpods.org/zh/docs/ops/poderror/</link><pubDate>Wed, 10 Nov 2021 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/poderror/</guid><description>
+&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">https://kubernetes.io/zh/docs/reference/kubectl/&lt;/a>&lt;/p></description></item><item><title>Docs: 排查pod异常</title><link>https://www.cloudpods.org/zh/docs/ops/poderror/</link><pubDate>Wed, 10 Nov 2021 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/poderror/</guid><description>
 &lt;h3 id="确认pod状态">确认Pod状态&lt;/h3>
 &lt;pre>&lt;code># 设置默认命名空间，后续执行相关命令时可以不带“-n onecloud”
 $ kubectl config set-context --current --namespace=onecloud
@@ -335,7 +336,31 @@ Warning Failed 3s kubelet, yunion320 Error: ImagePullBackOff
 &lt;li>请求的资源超过了管理员设置的限制，比如超过了 LimitRange 等；&lt;/li>
 &lt;li>违反集群的安全策略，比如违反了 PodSecurityPolicy 等；&lt;/li>
 &lt;li>容器无权操作集群内的资源，比如开启 RBAC 后，需要为 ServiceAccount 配置角色绑定;&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 清理日志</title><link>https://www.cloudpods.org/zh/docs/ops/log/</link><pubDate>Wed, 08 Dec 2021 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org/zh/docs/ops/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/backendlogs/</guid><description>
+&lt;p>Cloudpods平台自&lt;code>3.7.6&lt;/code>版本后，operator服务 结合 kubeserver 会默认部署 grafana 和 loki 提供查看后端服务日志的功能。&lt;/p>
+&lt;p>查看日志只用登录 grafana 即可，默认的 grafana 访问方式是以 ingress 的方式暴露服务。&lt;/p>
+&lt;h3 id="访问grafana">访问Grafana&lt;/h3>
+&lt;ol>
+&lt;li>访问Grafana的地址默认为 &lt;code>http://控制节点IP地址/grafana&lt;/code>，默认登录密码为&lt;code>admin / admin@123&lt;/code>。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="../images/grafanahome.png" alt="">&lt;/p>
+&lt;ol start="2">
+&lt;li>点击上图中的2 explore 按钮，进入Loki日志查询页面。如在该页面可查询某节点的host pod日志等。在查询条件中输入&lt;code>{app=&amp;quot;host&amp;quot;,hostname=&amp;quot;testhost&amp;quot;}&lt;/code>，在下方将会显示出该节点上的host pod日志。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="../images/explore.png" alt="">&lt;/p>
+&lt;h3 id="查询条件">查询条件&lt;/h3>
+&lt;p>loki 的日志服务查询是按标签进行过滤的，常用的标签 &amp;ldquo;app&amp;rdquo; 对应服务的名称，&amp;ldquo;hostname&amp;rdquo; 对应 pod 所在的机器，“container_name&amp;quot; 对应容器名称。&lt;/p>
+&lt;pre>&lt;code># 比如要查看 &amp;quot;ovn-north&amp;quot; 容器的日志
+{container_name=&amp;quot;ovn-north&amp;quot;}
+# 查看节点 test 上的 host 服务日志
+{app=&amp;quot;host&amp;quot;,hostname=&amp;quot;test&amp;quot;}
+# 查看 baremetal 服务日志
+{app=&amp;quot;baremetal-agent&amp;quot;}
+&lt;/code>&lt;/pre>&lt;p>更多使用方法请参考 &lt;a href="https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md">https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md&lt;/a>&lt;/p>
+&lt;h3 id="使用举例">使用举例&lt;/h3>
+&lt;p>如查询region服务过去3小时的日志。&lt;/p>
+&lt;p>查询条件可设置为&lt;code>{app=&amp;quot;region&amp;quot;}&lt;/code>，时间过滤设置为“Last 3 hours” 。&lt;/p>
+&lt;p>&lt;img src="../images/explore-region.png" alt="">&lt;/p></description></item><item><title>Docs: 清理日志</title><link>https://www.cloudpods.org/zh/docs/ops/log/</link><pubDate>Wed, 08 Dec 2021 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/</guid><description>
 &lt;h3 id="清理服务日志">清理服务日志&lt;/h3>
 &lt;pre>&lt;code># 查看具体服务的分表日志
 $ climc logs-splitable --service &amp;lt;service_type&amp;gt;
@@ -771,10 +796,8 @@ sc query telegraf
 &lt;li>通过镜像创建虚拟机。&lt;/li>
 &lt;li>若原来的虚拟机挂载了云硬盘，可按照以下方式迁移：
 &lt;ul>
-&lt;li>与上述操作类似，需要先将数据盘生成镜像，同理导入，Cloudpods使用该镜像创建数据
-云盘，再将云硬盘挂载到虚拟机即可。&lt;/li>
-&lt;li>先在Cloudpods中创建一个相同大小的云硬盘，找到对应的路径，将原云盘数据直接复
-制到新的路径下，最后再挂载到虚拟机上。&lt;/li>
+&lt;li>与上述操作类似，需要先将数据盘生成镜像，同理导入，Cloudpods使用该镜像创建数据云盘，再将云硬盘挂载到虚拟机即可。&lt;/li>
+&lt;li>先在Cloudpods中创建一个相同大小的云硬盘，找到对应的路径，将原云盘数据直接复制到新的路径下，最后再挂载到虚拟机上。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ol></description></item><item><title>Docs: Host服务问题排查</title><link>https://www.cloudpods.org/zh/docs/ops/hosterror/</link><pubDate>Thu, 11 Nov 2021 15:59:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/hosterror/</guid><description>

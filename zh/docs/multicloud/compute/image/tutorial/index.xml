@@ -40,92 +40,7 @@ $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard 
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &amp;lsquo;active&amp;rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: &lt;a href="../query/">镜像查询&lt;/a> )&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep status
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> active &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>climc help image-upload&lt;/code> 获取各个参数解释。&lt;/p></description></item><item><title>Docs: 查询镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/query/</link><pubDate>Fri, 19 Jul 2019 11:34:38 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/query/</guid><description>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
-&lt;h3 id="列表">列表&lt;/h3>
-&lt;p>支持通过搜索框查询镜像。&lt;/p>
-&lt;h3 id="详情">详情&lt;/h3>
-&lt;p>该功能用于查看系统镜像的详细信息。&lt;/p>
-&lt;ol>
-&lt;li>在系统镜像页面，单击镜像名称项，进入系统镜像详情页面。&lt;/li>
-&lt;li>详情页面顶部菜单项支持对镜像镜像管理操作。&lt;/li>
-&lt;li>查看镜像的信息。
-&lt;ul>
-&lt;li>基本信息：包括ID、名称、状态、域、项目、共享范围、类型、大小、创建时间、更新时间、备注。&lt;/li>
-&lt;li>镜像属性：包括磁盘格式、系统语言、最小内存要求、最小磁盘要求、磁盘驱动、网卡驱动、应用平台。&lt;/li>
-&lt;li>多云镜像：除ISO格式的镜像外，其他格式镜像导入到Cloudpods平台时都会转换成3份不同格式的镜像，多云镜像可查看镜像的校验和、格式、大小以及状态。
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">说明&lt;/h4>
-用户从镜像市场或手动上传的镜像都会保存在First Node服务器的/opt/cloud/workspace/data/glance/image目录下。以镜像ID为名称保存1~3份不同格式的镜像。
-&lt;/div>
-&lt;/li>
-&lt;li>其他信息：支持开启或关闭删除保护。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
-&lt;h3 id="列表-1">列表&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询所有镜像列表&lt;/span>
-$ climc image-list
-&lt;span style="color:#8f5902;font-style:italic"># 查询所有缓存的镜像列表&lt;/span>
-$ climc cached-image-list
-&lt;span style="color:#8f5902;font-style:italic"># 查询包含 ubuntu 关键字的镜像&lt;/span>
-$ climc image-list --search ubuntu
-&lt;span style="color:#8f5902;font-style:italic"># 查询公有云包含 centos 关键字的缓存&lt;/span>
-$ climc cached-image-list --search centos --public-cloud
-&lt;span style="color:#8f5902;font-style:italic"># image-list 支持的查询条件&lt;/span>
-$ climc &lt;span style="color:#204a87">help&lt;/span> image-list
-&lt;span style="color:#8f5902;font-style:italic"># cached-image-list 支持的查询条件&lt;/span>
-$ climc &lt;span style="color:#204a87">help&lt;/span> cached-image-list
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="详情-1">详情&lt;/h3>
-&lt;p>根据 image-list 可以获取镜像的列表，第1、2列包含镜像的 id 和 name，通过 id 或 name 可以获取镜像的详情。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询名称包含 CentOS 的镜像&lt;/span>
-$ climc image-list --search centos
-+--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_format &lt;span style="color:#000;font-weight:bold">|&lt;/span> Size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Is_public &lt;span style="color:#000;font-weight:bold">|&lt;/span> Protected &lt;span style="color:#000;font-weight:bold">|&lt;/span> Is_Standard &lt;span style="color:#000;font-weight:bold">|&lt;/span> Min_disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Min_ram &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> Tenant_Id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> is_guest_image &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> abf0fd6e-ec40-44ef-8fa2-cfb7187ea656 &lt;span style="color:#000;font-weight:bold">|&lt;/span> CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">876740608&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8192&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> active &lt;span style="color:#000;font-weight:bold">|&lt;/span> 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> d53ea650bfe144da8ee8f3fba417b904 &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
-*** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
-&lt;span style="color:#8f5902;font-style:italic"># 查看 CentOS-7-x86_64-GenericCloud-1711.qcow2 的详情&lt;/span>
-$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2
-+--------------------+-------------------------------------------------------------------------------------------------------------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------+-------------------------------------------------------------------------------------------------------------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_delete &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_update &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2020-06-16T09:17:57.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> delete_fail_reason &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;error&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;class&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;ForbiddenError&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;code&amp;#34;&lt;/span>:403,&lt;span style="color:#4e9a06">&amp;#34;data&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;image is protected&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;details&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;image is protected&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> disk_format &lt;span style="color:#000;font-weight:bold">|&lt;/span> qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> fast_hash &lt;span style="color:#000;font-weight:bold">|&lt;/span> 4c53ba2c464213ddc2a77c9b4c5ad3b7 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> abf0fd6e-ec40-44ef-8fa2-cfb7187ea656 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_data &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_emulated &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_guest_image &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_public &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_standard &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_system &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> min_disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8192&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> min_ram &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> name &lt;span style="color:#000;font-weight:bold">|&lt;/span> CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> oss_checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> owner &lt;span style="color:#000;font-weight:bold">|&lt;/span> d53ea650bfe144da8ee8f3fba417b904 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> pending_deleted &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_src &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> properties &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;os_arch&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;x86_64&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;os_type&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;Linux&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> protected &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> public_scope &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> size &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">876740608&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> active &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> d53ea650bfe144da8ee8f3fba417b904 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> update_version &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> updated_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2020-06-16T09:19:24.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------+-------------------------------------------------------------------------------------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 制作镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/create/</link><pubDate>Fri, 19 Jul 2019 11:12:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/create/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>climc help image-upload&lt;/code> 获取各个参数解释。&lt;/p></description></item><item><title>Docs: 制作镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/create/</link><pubDate>Fri, 19 Jul 2019 11:12:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/create/</guid><description>
 &lt;p>你可能需要自己定制发行版的镜像，用于给不同的业务使用。本文介绍如何制作镜像。&lt;/p>
 &lt;p>可以通过下载发行版操作系统的 iso , 然后本地启动虚拟机，将 iso 安装到虚拟机的磁盘，然后保存该磁盘，这个磁盘就可以作为镜像上传到 glance，但是这种方法人工参与的步骤太多，容易出错。&lt;/p>
 &lt;p>推荐使用 &lt;a href="https://www.packer.io/intro/getting-started/install.html">packer&lt;/a> 这个工具来自动化制作镜像，详细操作可以参考对应的文档 &lt;a href="https://www.packer.io/docs/index.html">https://www.packer.io/docs/index.html&lt;/a> 。&lt;/p>
@@ -133,7 +48,7 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2
 &lt;h2 id="镜像制作流程">镜像制作流程&lt;/h2>
 &lt;ol>
 &lt;li>提前准备好标准ISO镜像，支持用户从镜像市场-ISO界面导入或直接上传ISO镜像。&lt;/li>
-&lt;li>在虚拟机列表中新建虚拟机，选择“从ISO启动”并选择对应的ISO镜像，创建成功后，并通过VNC终端进行按照界面提示安装操作系统。&lt;/li>
+&lt;li>在虚拟机列表中新建虚拟机，选择“从ISO启动”并选择对应的ISO镜像，创建成功后，并通过VNC终端进行按照界面提示安装操作系统。&lt;/li>
 &lt;/ol>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
@@ -470,7 +385,118 @@ APT::Periodic::Update-Package-Lists &lt;span style="color:#4e9a06">&amp;#34;0&am
 disable_root: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 ssh_pwauth: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="windows系统安装配置cloudbase-init可选">Windows系统安装配置Cloudbase-init（可选）&lt;/h3>
-&lt;p>请参考&lt;a href="https://cloud.tencent.com/document/product/213/30000">腾讯云文档中心-Windows操作系统安装Cloudbase-Init&lt;/a>。&lt;/p></description></item><item><title>Docs: 扩容镜像后端存储</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/resize/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/resize/</guid><description>
+&lt;p>请参考&lt;a href="https://cloud.tencent.com/document/product/213/30000">腾讯云文档中心-Windows操作系统安装Cloudbase-Init&lt;/a>。&lt;/p></description></item><item><title>Docs: 新建虚拟机</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/create_server/</link><pubDate>Thu, 23 Dec 2021 19:25:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/create_server/</guid><description>
+&lt;p>该功能用于基于系统镜像创建虚拟机。&lt;/p>
+&lt;ol>
+&lt;li>在系统镜像页面，单击镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;新建虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建虚拟机对话框。&lt;/li>
+&lt;li>选择平台为本地IDC、私有云、公有云，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，跳转到新建虚拟机页面。&lt;/li>
+&lt;li>配置虚拟机创建其他参数，单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建虚拟机。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 修改属性</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/modify/</link><pubDate>Tue, 04 Jan 2022 17:53:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/modify/</guid><description>
+&lt;ol>
+&lt;li>在系统镜像页面，单击镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>支持修改以下参数：
+&lt;ul>
+&lt;li>名称：设置镜像的名称，建议名称与镜像的发行版本相关。&lt;/li>
+&lt;li>CPU架构：包括x86和ARM。&lt;/li>
+&lt;li>操作系统：包括Linux、Windows、macOS、VMware以及其他操作系统。&lt;/li>
+&lt;li>发行版：选择镜像的发行版本。&lt;/li>
+&lt;li>最小磁盘要求：要求使用镜像创建的主机设备最小配置要求。&lt;/li>
+&lt;li>磁盘驱动：包括系统自动选择、virtio、scsi、pvscsi、ide、sata。根据磁盘类型选择对应的驱动，建议选择”系统自动选择“。&lt;/li>
+&lt;li>网卡驱动：包括系统自动选择、virtio、e1000、vmxnet3。建议选择“系统自动选择”。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成修改。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 设置为公共镜像/自定义镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/public/</link><pubDate>Fri, 19 Jul 2019 17:29:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/public/</guid><description>
+&lt;p>仅系统管理员支持将自定义镜像设置为公共镜像或将公共镜像设置为自定义镜像。&lt;/p>
+&lt;ul>
+&lt;li>公共镜像：公共镜像默认系统共享，共享范围不可更改。&lt;/li>
+&lt;li>自定义镜像：自定义镜像默认为私有，可设置共享范围。&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>在系统镜像页面，单击“自定义镜像”类型的镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置为公共镜像&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将自定义镜像设置为公共镜像。&lt;/li>
+&lt;li>在系统镜像页面，单击“公共镜像”类型的镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置为自定义&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将公共镜像设置为自定义镜像。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/delete/</link><pubDate>Thu, 23 Dec 2021 19:25:43 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/delete/</guid><description>
+&lt;h3 id="设置删除保护">设置删除保护&lt;/h3>
+&lt;p>该功能用于设置系统镜像的删除保护。当系统镜像启用删除保护后，系统镜像无法被删除；当系统镜像禁用删除保护后，系统镜像才可以被删除。&lt;/p>
+&lt;p>&lt;strong>单个系统镜像设置删除保护&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>禁用删除保护：
+&lt;ul>
+&lt;li>单击系统镜像名称右侧带有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标时，单击系统镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择“禁用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用删除保护：
+&lt;ul>
+&lt;li>当系统镜像名称右侧不带&lt;img src="../../../images/computing/delprotect1.png" alt="">图标时，单击系统镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择“启用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置删除保护&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>禁用删除保护：
+&lt;ul>
+&lt;li>在系统镜像列表中勾选一个或多个系统镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择“禁用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为系统镜像禁用删除保护。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用删除保护：
+&lt;ul>
+&lt;li>在系统镜像列表中勾选一个或多个系统镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择“启用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为系统镜像启用删除保护。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除镜像">删除镜像&lt;/h3>
+&lt;p>该功能用于删除系统镜像，当系统镜像名称项右侧有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标，表示系统镜像启用了删除保护，无法删除系统镜像，如需删除系统镜像，需要先禁用删除保护。从镜像市场导入的系统镜像删除后将重新回到未导入页面。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>管理员可以删除所有系统镜像。&lt;/li>
+&lt;li>域管理员只可以删除本域的系统镜像。&lt;/li>
+&lt;li>项目用户只可以删除本项目的系统镜像。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在系统镜像页面，单击系统镜像名称右侧带有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标时，单击系统镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择“禁用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>单击镜像右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在系统镜像列表中勾选一个或多个系统镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择“禁用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为系统镜像禁用删除保护。&lt;/li>
+&lt;li>在系统镜像列表中选择一个或多个镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;/ol>
+&lt;h3 id="climc命令删除镜像">Climc命令删除镜像&lt;/h3>
+&lt;p>镜像默认启用了删除保护，当镜像确定不用了，需要先通过&lt;code>climc image-update&lt;/code>禁用删除保护，再通过 &lt;code>climc image-delete&lt;/code> 删除镜像。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">
+&lt;span style="color:#8f5902;font-style:italic"># 禁用镜像删除保护&lt;/span>
+$ climc image-update --unprotected &amp;lt;image_id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 删除镜像&lt;/span>
+$ climc image-delete &amp;lt;image_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 查看镜像详情</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/show/</link><pubDate>Tue, 04 Jan 2022 17:55:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/show/</guid><description>
+&lt;ol>
+&lt;li>在系统镜像页面，单击镜像名称项，进入系统镜像详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对镜像镜像管理操作。&lt;/li>
+&lt;li>查看镜像的信息。
+&lt;ul>
+&lt;li>基本信息：包括云上ID、ID、名称、状态、域、项目、共享范围、类型、大小、创建时间、更新时间、备注。&lt;/li>
+&lt;li>镜像属性：包括磁盘格式、系统语言、最小内存要求、最小磁盘要求、磁盘驱动、网卡驱动、应用平台。&lt;/li>
+&lt;li>多云镜像：除ISO格式的镜像外，其他格式镜像导入到Cloudpods平台时都会转换成3份不同格式的镜像，多云镜像可查看镜像的校验和、格式、大小以及状态。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+用户从镜像市场或手动上传的镜像都会保存在First Node服务器的/opt/cloud/workspace/data/glance/image目录下。以镜像ID为名称保存1~3份不同格式的镜像。
+&lt;/div>
+&lt;/li>
+&lt;li>其他信息：支持开启或关闭删除保护。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 镜像缓存</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/cache/</link><pubDate>Tue, 04 Jan 2022 17:57:42 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/cache/</guid><description>
+&lt;p>仅管理员视图支持管理镜像缓存&lt;/p></description></item><item><title>Docs: 扩容镜像后端存储</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/resize/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/resize/</guid><description>
 &lt;h2 id="扩容适用于以下两种情况">扩容适用于以下两种情况&lt;/h2>
 &lt;ul>
 &lt;li>新部署的环境 &lt;strong>/opt/cloud/workspace/data/glance&lt;/strong> 空间太小，不足以存储所需要的镜像&lt;/li>
@@ -519,78 +545,72 @@ ssh_pwauth: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
 &lt;/li>
 &lt;/ol>
 &lt;/li>
-&lt;/ul></description></item><item><title>Docs: 设置为公共镜像/自定义镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/public/</link><pubDate>Fri, 19 Jul 2019 17:29:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/public/</guid><description>
-&lt;p>仅系统管理员支持将自定义镜像设置为公共镜像或将公共镜像设置为自定义镜像。&lt;/p>
-&lt;ul>
-&lt;li>公共镜像：公共镜像默认系统共享，共享范围不可更改。&lt;/li>
-&lt;li>自定义镜像：自定义镜像默认为私有，可设置共享范围。&lt;/li>
-&lt;/ul>
-&lt;ol>
-&lt;li>在系统镜像页面，单击“自定义镜像”类型的镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置为公共镜像&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将自定义镜像设置为公共镜像。&lt;/li>
-&lt;li>在系统镜像页面，单击“公共镜像”类型的镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置为自定义&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将公共镜像设置为自定义镜像。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 其他操作</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/operation/</link><pubDate>Fri, 19 Jul 2019 17:29:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/operation/</guid><description>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
-&lt;h3 id="导入镜像">导入镜像&lt;/h3>
-&lt;p>该功能用于上传系统镜像文件，用户上传的镜像文件默认为自定义镜像。&lt;/p>
-&lt;ol>
-&lt;li>在系统镜像页面，单击 &lt;strong>&lt;em>&amp;ldquo;上传&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入上传镜像页面。&lt;/li>
-&lt;li>设置以下参数：
-&lt;ul>
-&lt;li>指定项目：选择系统镜像的所属项目。&lt;/li>
-&lt;li>镜像名称：设置镜像的名称，建议名称与镜像的发行版本相关。&lt;/li>
-&lt;li>发行版、版本号：镜像的发行版本。&lt;/li>
-&lt;li>CPU架构：支持x86和ARM架构。&lt;/li>
-&lt;li>系统位数：支持32bit和64bit。请根据实际情况选择CPU架构和系统位数。&lt;/li>
-&lt;li>上传方式：支持上传镜像文件和输入镜像URL两种方式。虚拟机镜像列表支持上传后缀为QCOW2、VMDK、RAW、VHD格式的镜像。ISO镜像列表仅支持上传ISO后缀的镜像。
-&lt;ul>
-&lt;li>上传镜像文件：表示选择当前浏览器可访问的镜像直接上传。&lt;/li>
-&lt;li>输入镜像URL：通过URL路径来添加镜像。目前仅支持以http、https开头的url链接。格式为 &lt;a href="http://path/file">http://path/file&lt;/a> 或 &lt;a href="https://path/file">https://path/file&lt;/a>。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="删除镜像">删除镜像&lt;/h3>
-&lt;p>该功能用于删除系统镜像，当系统镜像名称项右侧有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标，表示系统镜像启用了删除保护，无法删除系统镜像，如需删除系统镜像，需要先禁用删除保护。从镜像市场导入的系统镜像删除后将重新回到未导入页面。&lt;/p>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">说明&lt;/h4>
-&lt;ul>
-&lt;li>管理员可以删除所有系统镜像。&lt;/li>
-&lt;li>域管理员只可以删除本域的系统镜像。&lt;/li>
-&lt;li>项目用户只可以删除本项目的系统镜像。&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在系统镜像页面，单击系统镜像名称右侧带有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标时，单击系统镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
-&lt;li>选择“禁用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;li>单击镜像右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在系统镜像列表中勾选一个或多个系统镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
-&lt;li>选择“禁用”删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为系统镜像禁用删除保护。&lt;/li>
-&lt;li>在系统镜像列表中选择一个或多个镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
-&lt;h3 id="导入镜像-1">导入镜像&lt;/h3>
-&lt;p>云平台的 glance 镜像服务支持从外部 url 导入镜像，对应 climc 的子命令为 &lt;code>image-import&lt;/code>　。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 导入 https://iso.yunion.cn/yumrepo-3.2/images/cirros-0.4.0-x86_64-disk.qcow2 镜像&lt;/span>
-$ climc image-import --format qcow2 --os-type Linux cirros-test.qcow2 https://iso.yunion.cn/yumrepo-3.2/images/cirros-0.4.0-x86_64-disk.qcow2
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>image-list&lt;/code> 或 &lt;code>image-show&lt;/code> 查询导入镜像的状态，变为 active 时表明可以使用。&lt;/p>
-&lt;h3 id="下载镜像">下载镜像&lt;/h3>
+&lt;/ul></description></item><item><title>Docs: 查询镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/query/</link><pubDate>Fri, 19 Jul 2019 11:34:38 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/query/</guid><description>
+&lt;h3 id="列表">列表&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询所有镜像列表&lt;/span>
+$ climc image-list
+&lt;span style="color:#8f5902;font-style:italic"># 查询所有缓存的镜像列表&lt;/span>
+$ climc cached-image-list
+&lt;span style="color:#8f5902;font-style:italic"># 查询包含 ubuntu 关键字的镜像&lt;/span>
+$ climc image-list --search ubuntu
+&lt;span style="color:#8f5902;font-style:italic"># 查询公有云包含 centos 关键字的缓存&lt;/span>
+$ climc cached-image-list --search centos --public-cloud
+&lt;span style="color:#8f5902;font-style:italic"># image-list 支持的查询条件&lt;/span>
+$ climc &lt;span style="color:#204a87">help&lt;/span> image-list
+&lt;span style="color:#8f5902;font-style:italic"># cached-image-list 支持的查询条件&lt;/span>
+$ climc &lt;span style="color:#204a87">help&lt;/span> cached-image-list
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="详情">详情&lt;/h3>
+&lt;p>根据 image-list 可以获取镜像的列表，第1、2列包含镜像的 id 和 name，通过 id 或 name 可以获取镜像的详情。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询名称包含 CentOS 的镜像&lt;/span>
+$ climc image-list --search centos
++--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_format &lt;span style="color:#000;font-weight:bold">|&lt;/span> Size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Is_public &lt;span style="color:#000;font-weight:bold">|&lt;/span> Protected &lt;span style="color:#000;font-weight:bold">|&lt;/span> Is_Standard &lt;span style="color:#000;font-weight:bold">|&lt;/span> Min_disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Min_ram &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> Tenant_Id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> is_guest_image &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> abf0fd6e-ec40-44ef-8fa2-cfb7187ea656 &lt;span style="color:#000;font-weight:bold">|&lt;/span> CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">876740608&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8192&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> active &lt;span style="color:#000;font-weight:bold">|&lt;/span> 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> d53ea650bfe144da8ee8f3fba417b904 &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-----------------------------------------+-------------+-----------+-----------+-----------+-------------+----------+---------+--------+----------------------------------+----------------------------------+--------+----------------+
+*** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
+&lt;span style="color:#8f5902;font-style:italic"># 查看 CentOS-7-x86_64-GenericCloud-1711.qcow2 的详情&lt;/span>
+$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2
++--------------------+-------------------------------------------------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------+-------------------------------------------------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_delete &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_update &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2020-06-16T09:17:57.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> delete_fail_reason &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;error&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;class&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;ForbiddenError&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;code&amp;#34;&lt;/span>:403,&lt;span style="color:#4e9a06">&amp;#34;data&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;image is protected&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;details&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;image is protected&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> disk_format &lt;span style="color:#000;font-weight:bold">|&lt;/span> qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> fast_hash &lt;span style="color:#000;font-weight:bold">|&lt;/span> 4c53ba2c464213ddc2a77c9b4c5ad3b7 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> abf0fd6e-ec40-44ef-8fa2-cfb7187ea656 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_data &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_emulated &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_guest_image &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_public &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_standard &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_system &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> min_disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8192&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> min_ram &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> name &lt;span style="color:#000;font-weight:bold">|&lt;/span> CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> oss_checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> 317ecf7d1128e0e53cb285b8704dc3d3 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> owner &lt;span style="color:#000;font-weight:bold">|&lt;/span> d53ea650bfe144da8ee8f3fba417b904 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> pending_deleted &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_src &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> properties &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;os_arch&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;x86_64&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;os_type&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;Linux&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> protected &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> public_scope &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> size &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">876740608&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> active &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> d53ea650bfe144da8ee8f3fba417b904 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> update_version &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> updated_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2020-06-16T09:19:24.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------+-------------------------------------------------------------------------------------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 下载镜像</title><link>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/download/</link><pubDate>Thu, 23 Dec 2021 19:25:38 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/compute/image/tutorial/download/</guid><description>
 &lt;p>如果需要将云平台的镜像导出到本地，就需要用 &lt;code>climc image-download&lt;/code> 把 glance 存的镜像下载下来。&lt;/p>
 &lt;p>参考 &lt;a href="../query/">查询镜像&lt;/a> 查询你想要下载的镜像，获取镜像 id 或 name。&lt;/p>
 &lt;p>下载镜像:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># OUTPUT 指定镜像的保存路径和文件名称，如/root/test.qcow2&lt;/span>
 $ climc image-download &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--output OUTPUT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;image_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="删除镜像-1">删除镜像&lt;/h3>
-&lt;p>镜像默认启用了删除保护，当镜像确定不用了，需要先通过&lt;code>climc image-update&lt;/code>禁用删除保护，再通过 &lt;code>climc image-delete&lt;/code> 删除镜像。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">
-&lt;span style="color:#8f5902;font-style:italic"># 禁用镜像删除保护&lt;/span>
-$ climc image-update --unprotected &amp;lt;image_id&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># 删除镜像&lt;/span>
-$ climc image-delete &amp;lt;image_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

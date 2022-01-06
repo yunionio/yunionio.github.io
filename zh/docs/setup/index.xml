@@ -245,174 +245,7 @@
 &lt;ul>
 &lt;li>管理 kvm 虚拟机: 部署 host 服务&lt;/li>
 &lt;li>管理物理机: 部署 baremetal-agent 服务&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 部署 HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/controlplane-ha/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/controlplane-ha/</guid><description>
-&lt;p>在部署生产可用的 kubernetes 集群之前，需要先部署 LoadBalancer 环境，这里使用 &lt;strong>keepalived + haproxy&lt;/strong> 的方式实现负载均衡和高可用。&lt;/p>
-&lt;h2 id="环境说明">环境说明&lt;/h2>
-&lt;p>单独拿两个节点部署 keepalived 和 haproxy 作为后端 kubernetes 控制平面的负载均衡器，拓扑结构如下:&lt;/p>
-&lt;p>&lt;img src="../images/k8s.png" alt="">&lt;/p>
-&lt;p>两个节点上面分别部署 keepalived 和 haproxy 组成负载均衡集群，haproxy 的 backend 为后端的 kubernetes control plane node，vip(虚ip) 在这两个节点之间漂移形成高可用。&lt;/p>
-&lt;p>另外 Cloudpods 服务使用 Mariadb，如果没有专门的数据库集群，可以单独拿两个节点部署 Mariadb 高可用。参考 &lt;a href="../../setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
-&lt;h2 id="部署">部署&lt;/h2>
-&lt;p>keepalived 的主要作用是为 haproxy 提供 vip，在2个 haproxy 实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。&lt;/p>
-&lt;h3 id="部署配置-keepalived">部署配置 keepalived&lt;/h3>
-&lt;p>设置相关的环境变量，根据不同的环境自行配置。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># keepalived vip 地址&lt;/span>
-&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">K8SHA_VIP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.168.222.18
-&lt;span style="color:#8f5902;font-style:italic"># keepalived auth toke&lt;/span>
-&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">K8SHA_KA_AUTH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>412f7dc3bfed32194d1600c483e10ad1d
-&lt;span style="color:#8f5902;font-style:italic"># keepalived network interface&lt;/span>
-&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">K8SHA_NETIF&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>eth0
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置 sysctl 选项&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt;/etc/sysctl.conf
-&lt;/span>&lt;span style="color:#4e9a06">net.ipv4.ip_forward = 1
-&lt;/span>&lt;span style="color:#4e9a06">net.ipv4.ip_nonlocal_bind = 1
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ sysctl -p
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装 keepalived&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y keepalived
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>添加配置&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/keepalived/keepalived.conf
-&lt;/span>&lt;span style="color:#4e9a06">! Configuration File for keepalived
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">global_defs {
-&lt;/span>&lt;span style="color:#4e9a06"> router_id LVS_DEVEL
-&lt;/span>&lt;span style="color:#4e9a06">}
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">vrrp_script check_haproxy {
-&lt;/span>&lt;span style="color:#4e9a06"> script &amp;#34;pidof haproxy&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> interval 3
-&lt;/span>&lt;span style="color:#4e9a06"> weight -2
-&lt;/span>&lt;span style="color:#4e9a06"> fall 10
-&lt;/span>&lt;span style="color:#4e9a06"> rise 2
-&lt;/span>&lt;span style="color:#4e9a06">}
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">vrrp_instance VI_1 {
-&lt;/span>&lt;span style="color:#4e9a06"> state MASTER
-&lt;/span>&lt;span style="color:#4e9a06"> interface $K8SHA_NETIF
-&lt;/span>&lt;span style="color:#4e9a06"> virtual_router_id 51
-&lt;/span>&lt;span style="color:#4e9a06"> priority 250
-&lt;/span>&lt;span style="color:#4e9a06"> advert_int 1
-&lt;/span>&lt;span style="color:#4e9a06"> authentication {
-&lt;/span>&lt;span style="color:#4e9a06"> auth_type PASS
-&lt;/span>&lt;span style="color:#4e9a06"> auth_pass $K8SHA_KA_AUTH
-&lt;/span>&lt;span style="color:#4e9a06"> }
-&lt;/span>&lt;span style="color:#4e9a06"> virtual_ipaddress {
-&lt;/span>&lt;span style="color:#4e9a06"> $K8SHA_VIP
-&lt;/span>&lt;span style="color:#4e9a06"> }
-&lt;/span>&lt;span style="color:#4e9a06"> track_script {
-&lt;/span>&lt;span style="color:#4e9a06"> check_haproxy
-&lt;/span>&lt;span style="color:#4e9a06"> }
-&lt;/span>&lt;span style="color:#4e9a06">}
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 keepalived&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now keepalived
-$ ip addr show &lt;span style="color:#000">$K8SHA_NETIF&lt;/span>
-2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span style="color:#0000cf;font-weight:bold">1500&lt;/span> qdisc mq state UP qlen &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
-link/ether 00:22:ff:95:87:f7 brd ff:ff:ff:ff:ff:ff
-inet 10.168.222.189/24 brd 10.168.222.255 scope global eth0
-valid_lft forever preferred_lft forever
-inet 10.168.222.18/32 scope global eth0
-valid_lft forever preferred_lft forever
-inet6 fe80::222:ffff:fe95:87f7/64 scope link
-valid_lft forever preferred_lft forever
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署配置-haproxy">部署配置 haproxy&lt;/h3>
-&lt;p>此处的 haproxy 为 apiserver 提供反向代理，haproxy 将所有请求轮询转发到每个master节点上。&lt;/p>
-&lt;p>系统配置&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">K8S_MASTER0&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.168.222.218
-&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">K8S_MASTER1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.168.222.197
-&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">K8S_MASTER2&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.168.222.207
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装 haproxy&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y haproxy
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 haproxy&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/haproxy/haproxy.cfg
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06"># Global settings
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06">global
-&lt;/span>&lt;span style="color:#4e9a06"> # to have these messages end up in /var/log/haproxy.log you will
-&lt;/span>&lt;span style="color:#4e9a06"> # need to:
-&lt;/span>&lt;span style="color:#4e9a06"> #
-&lt;/span>&lt;span style="color:#4e9a06"> # 1) configure syslog to accept network log events. This is done
-&lt;/span>&lt;span style="color:#4e9a06"> # by adding the &amp;#39;-r&amp;#39; option to the SYSLOGD_OPTIONS in
-&lt;/span>&lt;span style="color:#4e9a06"> # /etc/sysconfig/syslog
-&lt;/span>&lt;span style="color:#4e9a06"> #
-&lt;/span>&lt;span style="color:#4e9a06"> # 2) configure local2 events to go to the /var/log/haproxy.log
-&lt;/span>&lt;span style="color:#4e9a06"> # file. A line like the following can be added to
-&lt;/span>&lt;span style="color:#4e9a06"> # /etc/sysconfig/syslog
-&lt;/span>&lt;span style="color:#4e9a06"> #
-&lt;/span>&lt;span style="color:#4e9a06"> # local2.* /var/log/haproxy.log
-&lt;/span>&lt;span style="color:#4e9a06"> #
-&lt;/span>&lt;span style="color:#4e9a06"> log 127.0.0.1 local2
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06"> chroot /var/lib/haproxy
-&lt;/span>&lt;span style="color:#4e9a06"> pidfile /var/run/haproxy.pid
-&lt;/span>&lt;span style="color:#4e9a06"> maxconn 4000
-&lt;/span>&lt;span style="color:#4e9a06"> user haproxy
-&lt;/span>&lt;span style="color:#4e9a06"> group haproxy
-&lt;/span>&lt;span style="color:#4e9a06"> daemon
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06"> # turn on stats unix socket
-&lt;/span>&lt;span style="color:#4e9a06"> stats socket /var/lib/haproxy/stats
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06"># common defaults that all the &amp;#39;listen&amp;#39; and &amp;#39;backend&amp;#39; sections will
-&lt;/span>&lt;span style="color:#4e9a06"># use if not designated in their block
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06">defaults
-&lt;/span>&lt;span style="color:#4e9a06"> mode http
-&lt;/span>&lt;span style="color:#4e9a06"> log global
-&lt;/span>&lt;span style="color:#4e9a06"> option httplog
-&lt;/span>&lt;span style="color:#4e9a06"> option dontlognull
-&lt;/span>&lt;span style="color:#4e9a06"> option http-server-close
-&lt;/span>&lt;span style="color:#4e9a06"> option forwardfor except 127.0.0.0/8
-&lt;/span>&lt;span style="color:#4e9a06"> option redispatch
-&lt;/span>&lt;span style="color:#4e9a06"> retries 3
-&lt;/span>&lt;span style="color:#4e9a06"> timeout http-request 10s
-&lt;/span>&lt;span style="color:#4e9a06"> timeout queue 1m
-&lt;/span>&lt;span style="color:#4e9a06"> timeout connect 10s
-&lt;/span>&lt;span style="color:#4e9a06"> timeout client 1m
-&lt;/span>&lt;span style="color:#4e9a06"> timeout server 1m
-&lt;/span>&lt;span style="color:#4e9a06"> timeout http-keep-alive 10s
-&lt;/span>&lt;span style="color:#4e9a06"> timeout check 10s
-&lt;/span>&lt;span style="color:#4e9a06"> maxconn 3000
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06"># kubernetes apiserver frontend which proxys to the backends
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06">frontend kubernetes-apiserver
-&lt;/span>&lt;span style="color:#4e9a06"> mode tcp
-&lt;/span>&lt;span style="color:#4e9a06"> bind *:6443
-&lt;/span>&lt;span style="color:#4e9a06"> option tcplog
-&lt;/span>&lt;span style="color:#4e9a06"> default_backend kubernetes-apiserver
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06"># round robin balancing between the various backends
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06">backend kubernetes-apiserver
-&lt;/span>&lt;span style="color:#4e9a06"> mode tcp
-&lt;/span>&lt;span style="color:#4e9a06"> balance roundrobin
-&lt;/span>&lt;span style="color:#4e9a06"> server master-0 $K8S_MASTER0:6443 check
-&lt;/span>&lt;span style="color:#4e9a06"> server master-1 $K8S_MASTER1:6443 check
-&lt;/span>&lt;span style="color:#4e9a06"> server master-2 $K8S_MASTER2:6443 check
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06"># collection haproxy statistics message
-&lt;/span>&lt;span style="color:#4e9a06">#---------------------------------------------------------------------
-&lt;/span>&lt;span style="color:#4e9a06">listen stats
-&lt;/span>&lt;span style="color:#4e9a06"> bind *:1080
-&lt;/span>&lt;span style="color:#4e9a06"> stats auth admin:awesomePassword
-&lt;/span>&lt;span style="color:#4e9a06"> stats refresh 5s
-&lt;/span>&lt;span style="color:#4e9a06"> stats realm HAProxy\ Statistics
-&lt;/span>&lt;span style="color:#4e9a06"> stats uri /admin?stats
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动并检测服务&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> haproxy.service --now
-$ systemctl status haproxy.service
-$ netstat -tulnp &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep &lt;span style="color:#4e9a06">&amp;#39;6443|1080&amp;#39;&lt;/span>
-tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:6443 0.0.0.0:* LISTEN 10033/haproxy
-tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:1080 0.0.0.0:* LISTEN 10033/haproxy
-&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h1>
-&lt;p>参考 &lt;a href="../../setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
@@ -664,7 +497,12 @@ inet 192.168.199.97/32 scope global eth0
 valid_lft forever preferred_lft forever
 inet6 fe80::222:cfff:fe40:1e29/64 scope link
 valid_lft forever preferred_lft forever
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org/zh/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/controlplane/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群(已废弃)</title><link>https://www.cloudpods.org/zh/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/controlplane/</guid><description>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;p>本章内容是通过手动在 CentOS 7 上一步一步部署 Cloudpods 服务，已经不建议这么做，本文只是保留作为参考，提供给想要了解部署流程的用户查看。&lt;/p>
+&lt;p>实际环境中部署请根据自己使用需求参考: &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 或者 &lt;a href="../../quickstart/ha">高可用安装&lt;/a> 部署。&lt;/p>
+&lt;/div>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;p>Cloudpods 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
@@ -962,48 +800,7 @@ $ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bo
 default-host-7b5cr 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.4 controller01
 default-host-ctx5s 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.5 controller02
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="升级组件版本">升级组件版本&lt;/h3>
-&lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org/zh/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/components/</guid><description>
-&lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，Cloudpods 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;p>参考 &lt;a href="../../setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
-&lt;h3 id="获取加入集群-token">获取加入集群 token&lt;/h3>
-&lt;p>然后在控制节点使用 ocadm 拿到加入集群的 token，在待部署节点使用 ocadm 加入集群，操作如下:&lt;/p>
-&lt;p>在&lt;strong>控制节点&lt;/strong>获取加入节点的 token&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm token list &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep bootstrap
-4s4meb.xvgk2bwpmbospn3s 23h 2019-07-10T15:41:10+08:00 authentication,signing The default bootstrap token generated by &lt;span style="color:#4e9a06">&amp;#39;ocadm init&amp;#39;&lt;/span>. system:bootstrappers:kubeadm:default-node-token
-&lt;/code>&lt;/pre>&lt;/div>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">提示&lt;/h4>
-&lt;blockquote>
-&lt;p>如果 token 过期了，可以在管理节点使用 &lt;code>ocadm token create&lt;/code> 创建新的 token 。&lt;/p>
-&lt;/blockquote>
-&lt;/div>
-&lt;h3 id="加入节点">加入节点&lt;/h3>
-&lt;p>加入已有 kubernetes 集群的节点有两种角色，&amp;lsquo;controlplane&amp;rsquo; 和 &amp;lsquo;node&amp;rsquo;。&lt;/p>
-&lt;p>controlplane 角色的节点会运行 kube-apiserver、kube-controller-manager、kube-scheduler 和 etcd，加入 controlplane 节点的好处是让 kubernetes 控制相关服务和 etcd 变为高可用。&lt;/p>
-&lt;p>node 角色的节点只会运行 kubelet，运行负载容器。&lt;/p>
-&lt;h4 id="加入-controlplane">加入 controlplane&lt;/h4>
-&lt;p>加入控制节点需要从已有的 kubernetes 集群下载证书，证书使用 certificate key 加密，通过以下方法获取 certificate-key&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm init phase upload-certs
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>upload-certs&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> Storing the certificates in Secret &lt;span style="color:#4e9a06">&amp;#34;kubeadm-certs&amp;#34;&lt;/span> in the &lt;span style="color:#4e9a06">&amp;#34;kube-system&amp;#34;&lt;/span> Namespace
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>upload-certs&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> Using certificate key:
-afa5e18bacb3f50b424cbf815fce6d1bd916fe91b58ba467053dc6b460198c55
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 这里的 10.168.222.18 是控制节点的 ip，如果是高可用部署则为负载均衡器的 vip，请根据你的环境修改&lt;/span>
-$ ocadm join --control-plane 10.168.222.18:6443 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --token 4s4meb.xvgk2bwpmbospn3s &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --certificate-key afa5e18bacb3f50b424cbf815fce6d1bd916fe91b58ba467053dc6b460198c55 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --discovery-token-unsafe-skip-ca-verification
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="加入-node">加入 node&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 这里的 10.168.222.18 是控制节点的 ip，如果是高可用部署则为负载均衡器的 vip, 请根据你的环境修改&lt;/span>
-$ ocadm join 10.168.222.18:6443 &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --token 4s4meb.xvgk2bwpmbospn3s &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --discovery-token-unsafe-skip-ca-verification
-...
-This node has joined the cluster:
-* Certificate signing request was sent to apiserver and a response was received.
-* The Kubelet was informed of the new secure connection details.
-Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span> on the control-plane to see this node join the cluster.
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host/</guid><description>
+&lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host/</guid><description>
 &lt;p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -1084,151 +881,26 @@ Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="安装依赖">安装依赖&lt;/h2>
-&lt;p>计算节点所需的依赖以 rpm 的方式安装&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 添加 yum 源&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/yunion.repo
-&lt;/span>&lt;span style="color:#4e9a06">[yunion]
-&lt;/span>&lt;span style="color:#4e9a06">name=Packages for Yunion Multi-Cloud Platform
-&lt;/span>&lt;span style="color:#4e9a06">baseurl=https://iso.yunion.cn/yumrepo-3.8
-&lt;/span>&lt;span style="color:#4e9a06">sslverify=0
-&lt;/span>&lt;span style="color:#4e9a06">failovermethod=priority
-&lt;/span>&lt;span style="color:#4e9a06">enabled=1
-&lt;/span>&lt;span style="color:#4e9a06">gpgcheck=0
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 禁用防火墙和selinux&lt;/span>
-$ systemctl disable firewalld
-$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/SELINUX=enforcing/SELINUX=disabled/g&amp;#39;&lt;/span> /etc/selinux/config
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装 rpm 包&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> epel-release libaio jq libusb lvm2 nc ntp yunion-fetcherfs fuse fuse-devel fuse-libs &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> oniguruma pciutils spice spice-protocol sysstat tcpdump usbredir &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> yunion-qemu-2.12.1 yunion-executor yunion-ocadm &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kernel-lt &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> kmod-openvswitch &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> openvswitch net-tools ceph-common
-$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now yunion-executor
-&lt;span style="color:#8f5902;font-style:italic"># 安装完成后需要重启进入我们的内核&lt;/span>
-$ reboot
-&lt;span style="color:#8f5902;font-style:italic"># 重启完成后，查看当前节点内核信息，确保为 yn 内核&lt;/span>
-$ uname -r
-3.10.0-1062.4.3.el7.yn20191203.x86_64
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-docker-和-kubelet">安装 docker 和 kubelet&lt;/h3>
-&lt;p>参考 &lt;a href="../../setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
-&lt;h4 id="安装配置-docker">安装配置 docker&lt;/h4>
-&lt;p>安装 docker&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils bash-completion
-&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
-$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.8/yunion.repo
-$ yum install -y docker-ce docker-ce-cli containerd.io
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置 docker&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ mkdir -p /etc/docker
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/docker/daemon.json
-&lt;/span>&lt;span style="color:#4e9a06">{
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;bridge&amp;#34;: &amp;#34;none&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;iptables&amp;#34;: false,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;exec-opts&amp;#34;:
-&lt;/span>&lt;span style="color:#4e9a06"> [
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;native.cgroupdriver=systemd&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> ],
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;data-root&amp;#34;: &amp;#34;/opt/docker&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;live-restore&amp;#34;: true,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;log-driver&amp;#34;: &amp;#34;json-file&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;log-opts&amp;#34;:
-&lt;/span>&lt;span style="color:#4e9a06"> {
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;max-size&amp;#34;: &amp;#34;100m&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> },
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;registry-mirrors&amp;#34;:
-&lt;/span>&lt;span style="color:#4e9a06"> [
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;https://lje6zxpk.mirror.aliyuncs.com&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;https://lms7sxqp.mirror.aliyuncs.com&amp;#34;,
-&lt;/span>&lt;span style="color:#4e9a06"> &amp;#34;https://registry.docker-cn.com&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> ]
-&lt;/span>&lt;span style="color:#4e9a06">}
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 docker&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="安装配置-kubelet">安装配置 kubelet&lt;/h4>
-&lt;p>从 Cloudpods rpm 的 yum 源安装 kubernetes 1.15.12，并设置 kubelet 开机自启动&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y bridge-utils ipvsadm conntrack-tools &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> jq kubelet-1.15.12-0 kubectl-1.15.12-0 kubeadm-1.15.12-0
-$ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;source &amp;lt;(kubectl completion bash)&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
-$ &lt;span style="color:#204a87">source&lt;/span> /etc/profile
-$ systemctl &lt;span style="color:#204a87">enable&lt;/span> kubelet
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装完 kubernetes 相关的二进制后，还需要对系统做一些配置并启用 ipvs 作为 kube-proxy 内部的 service 负载均衡&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用 swap&lt;/span>
-$ swapoff -a
-&lt;span style="color:#8f5902;font-style:italic"># 如果设置了自动挂载 swap，需要去 /etc/fstab 里面注释掉挂载 swap 那一行&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 关闭 selinux&lt;/span>
-$ setenforce &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/SELINUX=enforcing/SELINUX=disabled/&amp;#39;&lt;/span> /etc/selinux/config
-&lt;span style="color:#8f5902;font-style:italic"># 禁用 firewalld&lt;/span>
-$ systemctl stop firewalld
-$ systemctl disable firewalld
-&lt;span style="color:#8f5902;font-style:italic"># 禁用 NetworkManager&lt;/span>
-$ systemctl stop NetworkManager
-$ systemctl disable NetworkManager
-$ ps -ef&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep dhcp &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $2}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>xargs &lt;span style="color:#204a87">kill&lt;/span> -9
-&lt;span style="color:#8f5902;font-style:italic"># 做一些 sysctl 的配置, kubernetes 要求&lt;/span>
-$ modprobe br_netfilter
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; /etc/sysctl.conf
-&lt;/span>&lt;span style="color:#4e9a06">net.bridge.bridge-nf-call-iptables=1
-&lt;/span>&lt;span style="color:#4e9a06">net.bridge.bridge-nf-call-ip6tables=1
-&lt;/span>&lt;span style="color:#4e9a06">net.ipv4.ip_forward=1
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ sysctl -p
-&lt;span style="color:#8f5902;font-style:italic"># 配置并开启 ipvs&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysconfig/modules/ipvs.modules
-&lt;/span>&lt;span style="color:#4e9a06">#!/bin/bash
-&lt;/span>&lt;span style="color:#4e9a06">ipvs_modules=&amp;#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">for kernel_module in \${ipvs_modules}; do
-&lt;/span>&lt;span style="color:#4e9a06"> /sbin/modinfo -F filename \${kernel_module} &amp;gt; /dev/null 2&amp;gt;&amp;amp;1
-&lt;/span>&lt;span style="color:#4e9a06"> if [ $? -eq 0 ]; then
-&lt;/span>&lt;span style="color:#4e9a06"> /sbin/modprobe \${kernel_module}
-&lt;/span>&lt;span style="color:#4e9a06"> fi
-&lt;/span>&lt;span style="color:#4e9a06">done
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ chmod &lt;span style="color:#0000cf;font-weight:bold">755&lt;/span> /etc/sysconfig/modules/ipvs.modules &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> bash /etc/sysconfig/modules/ipvs.modules &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> lsmod &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep ip_vs
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="控制节点操作">控制节点操作&lt;/h2>
-&lt;p>以下操作在控制节点进行。&lt;/p>
-&lt;h3 id="创建计算节点所在的网段">创建计算节点所在的网段&lt;/h3>
-&lt;p>我的环境&lt;strong>计算节点&lt;/strong>的 ip 为 10.168.222.140，就创建一个对应的 &lt;strong>计算节点(host)网段&lt;/strong>。&lt;/p>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">提示&lt;/h4>
-需要根据自己的计算节点环境创建对应的网段，如果不创建该网段，计算节点就没法注册进来。
-&lt;/div>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看当前环境的 zone&lt;/span>
-$ climc zone-list
-+--------------------------------------+-------+--------+----------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cloudregion_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+-------+--------+----------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> f73a2120-1206-45fa-8d43-de374ab0f494 &lt;span style="color:#000;font-weight:bold">|&lt;/span> zone0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">enable&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+-------+--------+----------------+
-&lt;span style="color:#8f5902;font-style:italic"># 在 zone0 里面创建一个 wire bcast0，该资源抽象计算节点所在的二层广播域信息&lt;/span>
-$ climc wire-create zone0 bcast0 &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 在 wire bcast0 之上创建一个计算节点的网络，计算节点的 host 服务注册会用到，如果 host 注册时没有在云平台找到对应的网络，将会注册失败&lt;/span>
-$ climc network-create --gateway 10.168.222.1 --server-type baremetal bcast0 adm0 10.168.222.140 10.168.222.140 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="计算节点host操作">计算节点(host)操作&lt;/h2>
-&lt;p>以下操作在计算节点进行，计算节点也叫 host，私有云计算节点上面会运行 host 服务来管理 kvm 虚拟机。&lt;/p>
-&lt;h3 id="配置-host-服务">配置 host 服务&lt;/h3>
-&lt;p>参考 &lt;a href="../../setup/components/#%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4-token">&amp;ldquo;添加节点/获取加入集群token&amp;rdquo;&lt;/a> 的流程获取join所需的信息&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocadm join 来创建一台计算节点&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 可选参数 --host-networks: 配置host服务的网络，比如: &amp;#39;eth0/br0/10.168.222.140&amp;#39;, eth0是物理网卡，br0是网桥名称，10.168.222.140是宿主机的ip&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 获取计算节点 IP&lt;/span>
-$ &lt;span style="color:#000">host_addr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>ip route get &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $NF;exit}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
-$ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#000">$host_addr&lt;/span>
-10.168.222.140
-&lt;span style="color:#8f5902;font-style:italic"># 可选参数 --host-local-image-path: 配置host服务磁盘的存储路径，比如: &amp;#39;/opt/cloud/workspace/disks&amp;#39;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 注意：容器部署的host服务只会挂载/opt/cloud目录&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果有其他挂载点需要bind mount到/opt/cloud下，可在fstab中添加一行如&amp;#39;/src /opt/cloud/dst none defaults,bind 0 0&amp;#39;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 可选参数 --host-hostname: 配置宿主机的hostname, 比如: &amp;#39;node1&amp;#39;&lt;/span>
-$ ./ocadm join &lt;span style="color:#000">$api_server_addr&lt;/span> &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --enable-host-agent &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --token &lt;span style="color:#000">$token&lt;/span> &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --discovery-token-unsafe-skip-ca-verification
-&lt;span style="color:#8f5902;font-style:italic"># 然后等待宿主机上的host pod和host-deployer pod为running状态&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="控制节点启用-host">控制节点启用 host&lt;/h2>
-&lt;p>回到控制节点，启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。&lt;/p>
+&lt;h2 id="使用-ocboot-添加对应节点">使用 ocboot 添加对应节点&lt;/h2>
+&lt;p>以下操作在控制节点进行，在控制节点使用 &lt;code>ocboot add-node&lt;/code> 命令把对应计算节点添加进来。&lt;/p>
+&lt;p>假设要给控制节点 10.168.26.216 添加计算节点 10.168.222.140 首先需要 ssh root 免密码登录对应的计算节点以及控制节点自身。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将控制节点自己设置成免密登录&lt;/span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+&lt;span style="color:#8f5902;font-style:italic"># 尝试免密登录控制节点是否成功&lt;/span>
+$ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 将生成的 ~/.ssh/id_rsa.pub 公钥拷贝到待部署的计算机器&lt;/span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.222.140
+&lt;span style="color:#8f5902;font-style:italic"># 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span>
+$ ssh root@10.168.222.140 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>控制节点应该已经部署好了 docker，为了环境干净，可以直接在容器里面使用 ocboot 的添加计算节点，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 代码&lt;/span>
+$ git clone https://github.com/yunionio/ocboot
+$ &lt;span style="color:#204a87">cd&lt;/span> ocboot
+&lt;span style="color:#8f5902;font-style:italic"># 使用 run-in-docker.sh 添加节点&lt;/span>
+$ ./run-docker.sh add-node 10.168.26.216 10.168.222.140
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>等 ocboot 容器镜像拉取完后，就会调用 ansible-playbook 把对应的计算节点加入进来。&lt;/p>
+&lt;h3 id="启用计算节点宿主机">启用计算节点(宿主机)&lt;/h3>
+&lt;p>等计算节点添加完成后，需要启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 climc 查看注册的 host 列表&lt;/span>
 $ climc host-list
 +--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+

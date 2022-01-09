@@ -1221,7 +1221,94 @@ $ climc project-add-user system svcuser admin
 &lt;li>&lt;a href="https://github.com/yunionio/dashboard/tree/master/babel.config.js">babel.config.js&lt;/a>: Babel配置文件&lt;/li>
 &lt;li>&lt;a href="https://github.com/yunionio/dashboard/tree/master/Dockerfile">Dockerfile&lt;/a>: 构建镜像文件&lt;/li>
 &lt;li>&lt;a href="https://github.com/yunionio/dashboard/tree/master/jest.config.js">jest.config.js&lt;/a>: 单元测试配合文件&lt;/li>
-&lt;/ul></description></item><item><title>Docs: Operator 相关</title><link>https://www.cloudpods.org/zh/docs/development/operator-intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/operator-intro/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 问题排查工具</title><link>https://www.cloudpods.org/zh/docs/development/devtools/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/devtools/</guid><description>
+&lt;p>本节介绍有助于调试服务程序的工具和API。&lt;/p>
+&lt;h2 id="内置api">内置API&lt;/h2>
+&lt;p>每个采用Cloudpods服务框架的服务都会自动注册一系列的API，用于获得服务的关键运行指标和状态，方便诊断服务程序问题。下面逐一介绍。&lt;/p>
+&lt;h3 id="内置状态api">内置状态API&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>请求方法&lt;/th>
+&lt;th>API路径&lt;/th>
+&lt;th>climc子命令&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/stats&lt;/td>
+&lt;td>api-stats-show&lt;/td>
+&lt;td>对应服务的每个API URL的请求统计，累计请求次数，平均请求延时等&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/db_stats&lt;/td>
+&lt;td>db-stats-show&lt;/td>
+&lt;td>对应服务的数据库统计，包括最大连接数，活跃连接数等&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/worker_stats&lt;/td>
+&lt;td>worker-stats-show&lt;/td>
+&lt;td>对应服务内的goroutine池的worker的统计，包括每个worker的活跃数量，队列长度等&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/version&lt;/td>
+&lt;td>version-show&lt;/td>
+&lt;td>服务的版本号&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="profile-api">Profile API&lt;/h3>
+&lt;p>Cloudpods服务内置了golang的profile工具(&lt;a href="https://pkg.go.dev/net/http/pprof">https://pkg.go.dev/net/http/pprof&lt;/a>)，可以通过调用这些API获得服务的profile数据。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>请求方法&lt;/th>
+&lt;th>API路径&lt;/th>
+&lt;th>对应pprof方法&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/debug/pprof/&lt;/td>
+&lt;td>pprof.Index&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/debug/pprof/cmdline&lt;/td>
+&lt;td>pprof.Cmdline&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/debug/pprof/profile&lt;/td>
+&lt;td>pprof.Profile&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/debug/pprof/symbol&lt;/td>
+&lt;td>pprof.Symbol&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>POST&lt;/td>
+&lt;td>/debug/pprof/symbol&lt;/td>
+&lt;td>pprof.Symbol&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GET&lt;/td>
+&lt;td>/debug/pprof/trace&lt;/td>
+&lt;td>pprof.Trace&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="获取调用栈">获取调用栈&lt;/h3>
+&lt;p>可以通过给服务进程发送SIGUSR1信号，触发服务进程打印当前调用栈。该方法有助于发现程序Block的函数调用栈，找到阻塞的函数方法。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87">kill&lt;/span> -s SIGUSR1 &amp;lt;pid&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Operator 相关</title><link>https://www.cloudpods.org/zh/docs/development/operator-intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/operator-intro/</guid><description>
 &lt;p>&lt;a href="https://github.com/yunionio/cloudpods-operator">cloudpods-operator&lt;/a> 是单独编写的一个组件，作为一个长期运行的服务运行在 Kubernetes 集群内部，作用是自动搭建和维护 Cloudpods 所有服务。详细的介绍可以参考 &lt;a href="https://github.com/yunionio/cloudpods-operator/blob/master/docs/intro.md">cloudpods-operator 工作原理&lt;/a>。&lt;/p>
 &lt;h2 id="简介">简介&lt;/h2>
 &lt;p>operator 在 K8S 里面创建一个叫做 OnecloudCluster 的资源，该资源里面定义了各个服务组件要使用的 docker 镜像仓库和版本，通过修改 OnecloudCluster 这个资源，可以实现对各个服务多方面的镜像版本控制。&lt;/p>

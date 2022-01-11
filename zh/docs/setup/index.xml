@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 12 Feb 2020 12:55:46 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
+安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 10 Jan 2022 16:03:30 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
 &lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10 (arm64) 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -1297,4 +1297,149 @@ api_server: https://foo.bar.com
 &lt;span style="color:#204a87;font-weight:bold">proxy_read_timeout&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">86400&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 备份/恢复平台</title><link>https://www.cloudpods.org/zh/docs/setup/backup/</link><pubDate>Mon, 10 Jan 2022 16:03:30 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/backup/</guid><description>
+&lt;h3 id="备份平台">备份平台&lt;/h3>
+&lt;h4 id="原理">原理&lt;/h4>
+&lt;p>平台支持通过ocboot进行备份当前系统的配置文件（&lt;code>config.yml&lt;/code>）以及使用mysqldump来备份数据库临时文件&lt;code>onecloud.sql&lt;/code>并将其压缩。&lt;/p>
+&lt;p>&lt;strong>备份流程&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>将平台配置文件拷贝到&lt;code>/opt/ocboot&lt;/code>；&lt;/li>
+&lt;li>明确备份目标目录；&lt;/li>
+&lt;li>在&lt;code>/opt/ocboot&lt;/code>目录下执行备份命令；&lt;/li>
+&lt;/ul>
+&lt;h4 id="备份命令">备份命令&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">usage: ocboot.py backup &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--backup-path BACKUP_PATH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> config
+positional arguments:
+config config yaml file
+optional arguments:
+-h, --help show this &lt;span style="color:#204a87">help&lt;/span> message and &lt;span style="color:#204a87">exit&lt;/span>
+--backup-path BACKUP_PATH
+backup path
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面介绍各个参数的作用和注意事项&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>--backup-path&lt;/code>保存备份文件的目标目录，备份的内容包括config配置文件，通过&lt;code>mysqldump&lt;/code>命令备份的数据库临时文件的压缩包&lt;code>onecloud.sql.tgz&lt;/code>，请确保目标目录磁盘空间足够且可写。&lt;/li>
+&lt;li>&lt;code>config&lt;/code>是必选参数，即需要备份的配置文件名称，例如&lt;code>config-allinone.yml, config-nodes.yml, config-k8s-ha.yml，&lt;/code>以及使用快速安装时会生成的&lt;code>config-allinone-current.yml&lt;/code>，因此备份命令不对配置文件名称作假设，&lt;strong>需由使用者自行输入配置文件名称&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>如果平台通过ocboot部署，请将用户自己配置的&lt;code>config&lt;/code>文件或快速安装生成的&lt;code>config-allinone-current.yml&lt;/code>文件等都拷贝到&lt;code>/opt/ocboot&lt;/code>目录。&lt;/li>
+&lt;li>如果平台通过iso部署，请将&lt;code> /opt/yunion/upgrade/config.yml&lt;/code>文件拷贝到&lt;code>/opt/ocboot&lt;/code> 目录。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ul>
+&lt;li>备份后的配置文件名称为&lt;code>config.yml&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;ul>
+&lt;li>备份的流程全部采用命令行参数接受输入，备份过程中无交互。因此支持 &lt;code>crontab&lt;/code>方式自动备份。但备份程序本身不支持版本 &lt;code>rotate&lt;/code>，用户可以使用 &lt;code>logrotate&lt;/code> 之类的工具来做备份管理。&lt;/li>
+&lt;/ul>
+&lt;h4 id="举例说明">举例说明&lt;/h4>
+&lt;p>以iso部署的环境为例介绍如何备份节点到本地的&lt;code>/opt/backup&lt;/code>目录。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将 `/opt/yunion/upgrade/config.yml`文件拷贝到`/opt/ocboot`目录&lt;/span>
+$ cp -i /opt/yunion/upgrade/config.yml /opt/ocboot
+$ &lt;span style="color:#204a87">cd&lt;/span> /opt/ocboot
+&lt;span style="color:#8f5902;font-style:italic"># 在`/opt/ocboot`目录执行备份命令，将备份文件保存到`/opt/backup`目录&lt;/span>
+$ ./ocboot.py backup --backup-path /opt/backup config.yml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="恢复平台">恢复平台&lt;/h3>
+&lt;h4 id="原理-1">原理&lt;/h4>
+&lt;p>恢复节点即基于上面备份的配置文件和数据库文件恢复到新的节点中，主要包括解压数据库，并根据用户根据新环境生成的配置文件重新安装环境。&lt;/p>
+&lt;p>&lt;strong>恢复流程&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>参考&lt;code>config.yml&lt;/code>配置文件准备新环境，节点数需保持一致；&lt;/li>
+&lt;li>将备份文件拷贝到新环境。&lt;/li>
+&lt;li>在新环境中配置ocboot工具；&lt;/li>
+&lt;li>使用ocboot restore命令恢复环境。&lt;/li>
+&lt;/ul>
+&lt;h4 id="恢复命令">恢复命令&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">usage: ocboot.py restore &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--backup-path BACKUP_PATH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--install-db-to-localhost&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--master-node-ips MASTER_NODE_IPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--master-node-as-host&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--worker-node-ips WORKER_NODE_IPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--worker-node-as-host&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--mysql-host MYSQL_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--mysql-user MYSQL_USER&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--mysql-password MYSQL_PASSWORD&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--mysql-port MYSQL_PORT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+primary_ip
+positional arguments:
+primary_ip primary node ip
+optional arguments:
+-h, --help show this &lt;span style="color:#204a87">help&lt;/span> message and &lt;span style="color:#204a87">exit&lt;/span>
+--backup-path BACKUP_PATH
+backup path, &lt;span style="color:#000">default&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/opt/backup
+--install-db-to-localhost
+use this option when install &lt;span style="color:#204a87">local&lt;/span> db
+--master-node-ips MASTER_NODE_IPS
+master nodes ips, seperated by comma &lt;span style="color:#4e9a06">&amp;#39;,&amp;#39;&lt;/span>
+--master-node-as-host
+use this option when use master nodes as host
+--worker-node-ips WORKER_NODE_IPS
+worker nodes ips, seperated by comma &lt;span style="color:#4e9a06">&amp;#39;,&amp;#39;&lt;/span>
+--worker-node-as-host
+use this option when use worker nodes as host
+--mysql-host MYSQL_HOST
+mysql host&lt;span style="color:#000;font-weight:bold">;&lt;/span> not needed &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#204a87">set&lt;/span> --install-db-to-
+localhost
+--mysql-user MYSQL_USER
+mysql user, default: root&lt;span style="color:#000;font-weight:bold">;&lt;/span> not needed &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#204a87">set&lt;/span>
+--install-db-to-localhost
+--mysql-password MYSQL_PASSWORD
+mysql password&lt;span style="color:#000;font-weight:bold">;&lt;/span> not needed &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#204a87">set&lt;/span> --install-db-to-
+localhost
+--mysql-port MYSQL_PORT
+mysql port, default: 3306&lt;span style="color:#000;font-weight:bold">;&lt;/span> not needed &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#204a87">set&lt;/span>
+--install-db-to-localhost
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>primary_ip&lt;/code>为必填项，即新环境的IP地址。&lt;/li>
+&lt;li>&lt;code>--backup-path&lt;/code> 备份文件所在目录，不填，默认值为&lt;code>/opt/backup&lt;/code>目录。&lt;/li>
+&lt;li>&lt;code>--install-db-to-localhost&lt;/code> 如需要在本机(&lt;code>primary&lt;/code>节点)安装数据库（&lt;code>mariadb-server&lt;/code>稳定版），则添加该参数，并自动赋予下面参数默认值
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">--mysql-host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>127.0.0.1
+--mysql-user&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>root
+--mysql-password&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;继承备份文件里 mysql 的密码&amp;gt;
+--mysql-port&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3306&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>&lt;code>--mysql-host&lt;/code>及其他同类选项：如使用已有数据库则需要配置相关参数。注意&lt;code>--install-db-to-localhost&lt;/code>参数与&lt;code>--mysql-*&lt;/code>参数互斥。&lt;/li>
+&lt;li>&lt;code>--master-node-ips &lt;/code> 同时安装&lt;code>master&lt;/code> 节点，如存在多个master节点。该参数是以半角逗号分隔的 &lt;code>ip&lt;/code> 列表。适用于多节点模式。&lt;/li>
+&lt;li>&lt;code>--master-node-as-host &lt;/code>安装控制节点&lt;code>master-node&lt;/code>时，将其作为&lt;code>host&lt;/code> 节点。&lt;/li>
+&lt;li>&lt;code>--worker-node-ips&lt;/code>、&lt;code>--worker-node-as-host&lt;/code>，安装计算节点&lt;code>worker-node&lt;/code>，将其作为&lt;code>host&lt;/code> 节点。&lt;/li>
+&lt;/ul>
+&lt;h4 id="举例说明-1">举例说明&lt;/h4>
+&lt;p>以一个控制节点&lt;code>master node&lt;/code>(IP:&lt;code>10.127.190.228&lt;/code>)和一个计算节点&lt;code>work node&lt;/code>(IP:&lt;code>10.127.190.219&lt;/code>)为例，介绍如何基于备份文件恢复到新环境。&lt;/p>
+&lt;ol>
+&lt;li>根据备份文件&lt;code>config.yml&lt;/code>文件部署新环境，节点数需保持一致。&lt;/li>
+&lt;li>将备份文件拷贝到新环境。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在备份文件所在服务器将备份文件拷贝到新环境下的`/opt/backup`目录&lt;/span>
+$ scp /opt/backup/* root@&amp;lt;新环境IP地址&amp;gt;:/opt/backup
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>在新环境上配置控制节点&lt;code>master node&lt;/code>可以免密登录到计算节点&lt;code>work node&lt;/code>。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在控制节点`master node`上生成ssh密钥&lt;/span>
+$ ssh-keygen
+&lt;span style="color:#8f5902;font-style:italic"># 将生成的~/.ssh/id_rsa.pub 公钥拷贝到计算节点`work node`&lt;/span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.127.190.219
+&lt;span style="color:#8f5902;font-style:italic"># 在控制节点`master node`上尝试免密登录，获取计算节点的名称&lt;/span>
+$ ssh root@10.127.190.219 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 免密登录控制节点&lt;/span>
+$ ssh-copy-id 10.127.190.228
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>根据新环境的IP信息修改&lt;code>config.yml&lt;/code>文件，修改当前机器 ip、worker node ips、master node ips，生成新的&lt;code>config.yml&lt;/code>配置文件。&lt;/li>
+&lt;li>部署&lt;code>ocboot&lt;/code>服务&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在`master`节点上安装ansible，以centos为例&lt;/span>
+$ yum install -y ansible
+&lt;span style="color:#8f5902;font-style:italic"># 安装pip&lt;/span>
+$ yum -y install python-pip
+&lt;span style="color:#8f5902;font-style:italic"># 拉取ocboot代码&lt;/span>
+$ git clone https://github.com/yunionio/ocboot.git
+$ &lt;span style="color:#204a87">cd&lt;/span> ./ocboot &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span> pip install -r ./requirements.txt
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
+&lt;li>通过&lt;code>ocboot&lt;/code>工具的&lt;code>restore&lt;/code>命令恢复节点。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在ocboot目录下执行`restore`命令&lt;/span>
+$ ./ocboot.py restore --backup-path /opt/backup --install-db-to-localhost --master-node-ips 10.127.190.228 --master-node-as-host --worker-node-ips 10.127.190.219 --worker-node-as-host 10.127.190.228
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
+&lt;li>数据库恢复完成后，根据配置文件恢复平台。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ /root/ocboot/run.py /root/ocboot/config.yml
 &lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

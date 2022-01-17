@@ -796,6 +796,27 @@ Server migration prefer host id or name
 &lt;/ul>
 &lt;/li>
 &lt;/ol>
+&lt;h3 id="在gpu透传设备页面关联虚拟机">在GPU透传设备页面关联虚拟机&lt;/h3>
+&lt;ol>
+&lt;li>在透传设备页面，单击GPU类型透传设备右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联虚拟机对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>选择虚拟机：选择需要关联透传设备的虚拟机。&lt;/li>
+&lt;li>自动启动：挂载GPU设备成功后虚拟机是否自动启动，仅虚拟机关机状态下生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，为GPU透传设备关联虚拟机。&lt;/li>
+&lt;/ol>
+&lt;h3 id="在gpu透传设备页面取消关联虚拟机">在GPU透传设备页面取消关联虚拟机&lt;/h3>
+&lt;ol>
+&lt;li>在透传设备页面，单击GPU类型透传设备右侧操作列 &lt;strong>&lt;em>&amp;ldquo;取消关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联虚拟机对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>自动启动：卸载GPU设备成功后虚拟机是否自动启动，仅虚拟机关机状态下生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，GPU透传设备取消关联虚拟机。&lt;/li>
+&lt;/ol>
 &lt;h2 id="climc">Climc&lt;/h2>
 &lt;h3 id="创建-gpu-云主机">创建 GPU 云主机&lt;/h3>
 &lt;ul>
@@ -848,6 +869,7 @@ default-host-6cl8w 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0
 &lt;span style="color:#8f5902;font-style:italic"># 确保该服务变成 Running ，然后到云平台查看透传 USB 设备&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>如果宿主机很多，也可以使用 &lt;code>kubectl -n rollout restart daemonset default-host&lt;/code> 命令来重启所有宿主机上的 host 服务。&lt;/p>
 &lt;h2 id="查看-usb-透传设备">查看 USB 透传设备&lt;/h2>
+&lt;h3 id="climc-命令行查看透传设备">climc 命令行查看透传设备&lt;/h3>
 &lt;p>使用命令行 &lt;code>climc isolated-device-list --details&lt;/code> 查看设备：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc isolated-device-list --details
 +--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+--------------------------+----------+-------+--------------+
@@ -857,16 +879,70 @@ default-host-6cl8w 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> a3fa9bd4-236c-4c5b-8056-f7afa807138d &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 002:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0951:1666 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span> oc-node-1-192-168-121-21 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+----------+------------------------------------------------------+---------+------------------+--------------------------------------+--------------------------+----------+-------+--------------+
 *** Total: &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在云平台就有了宿主机 oc-node-1 上的 USB 透传设备，接下来就可以把这些设备给虚拟机使用。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="web界面查看透传设备">web界面查看透传设备&lt;/h3>
+&lt;ol>
+&lt;li>在透传设备页面，可以查看到宿主机上的USB透传设备。&lt;/li>
+&lt;/ol>
+&lt;p>现在云平台就有了宿主机 oc-node-1 上的 USB 透传设备，接下来就可以把这些设备给虚拟机使用。&lt;/p>
 &lt;h2 id="虚拟机挂载-usb">虚拟机挂载 USB&lt;/h2>
-&lt;p>USB 可以在虚拟机运行状态下挂载进去，可以在前端的透传设备列表那里把 USB 挂载到虚拟机里面。对应命令行操作如下 &lt;code>climc server-attach-isolated-device $server_id $device_id&lt;/code>：&lt;/p>
+&lt;p>USB 可以在虚拟机运行状态下挂载进去，可以在前端的透传设备列表那里把 USB 挂载到虚拟机里面，一个虚拟机可关联多个USB透传设备。但是一个USB透传设备仅可被一个虚拟机使用。&lt;/p>
+&lt;h3 id="web界面挂载usb">web界面挂载USB&lt;/h3>
+&lt;p>&lt;strong>在虚拟机页面挂载USB透传设备&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置USB透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置USB透传对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>是否绑定：选择绑定USB透传设备。&lt;/li>
+&lt;li>USB设备：当启用绑定USB透传设备后，显示该项，并选择具体的透传设备。&lt;/li>
+&lt;li>自动启动：挂载USB设备成功后虚拟机是否自动启动，仅虚拟机关机状态下生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，挂载或取消挂载USB透传设备。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>在透传设备页面关联虚拟机&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在透传设备页面，单击USB类型透传设备右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联虚拟机对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>选择虚拟机：选择需要关联透传设备的虚拟机。&lt;/li>
+&lt;li>自动启动：挂载USB设备成功后虚拟机是否自动启动，仅虚拟机关机状态下生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，为USB透传设备关联虚拟机。&lt;/li>
+&lt;/ol>
+&lt;h3 id="climc命令行挂载usb设备">Climc命令行挂载USB设备&lt;/h3>
+&lt;p>对应命令行操作如下 &lt;code>climc server-attach-isolated-device $server_id $device_id&lt;/code>：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如虚拟机名称为 testvm，透传设备 id 为 a3fa9bd4-236c-4c5b-8056-f7afa807138d&lt;/span>
 $ climc server-attach-isolated-device testvm a3fa9bd4-236c-4c5b-8056-f7afa807138d
 &lt;span style="color:#8f5902;font-style:italic"># 然后登录到 testvm 虚拟机里面，执行 lsusb 就能看到宿主机的 USB 设备&lt;/span>
 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@testvm ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># lsusb&lt;/span>
 Bus &lt;span style="color:#0000cf;font-weight:bold">002&lt;/span> Device 002: ID 0951:1666 Kingston Technology DataTraveler &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> G3/G4/SE9 G2/50
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="虚拟机卸载-usb">虚拟机卸载 USB&lt;/h2>
-&lt;p>USB 可以在虚拟机运行状态下卸载 USB ，可以在前端的透传设备列表那里卸载 USB 对应的虚拟机。对应命令行操作如下 &lt;code>climc server-detach-isolated-device $server_id $device_id&lt;/code>：&lt;/p>
+&lt;p>USB 可以在虚拟机运行状态下卸载 USB ，可以在前端的透传设备列表那里卸载 USB 对应的虚拟机。&lt;/p>
+&lt;h3 id="web界面卸载usb">web界面卸载USB&lt;/h3>
+&lt;p>&lt;strong>在虚拟机页面卸载USB透传设备&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置USB透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置USB透传对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>是否绑定：关闭绑定USB透传设备。&lt;/li>
+&lt;li>自动启动：挂载USB设备成功后虚拟机是否自动启动，仅虚拟机关机状态下生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，挂载或取消挂载USB透传设备。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>在透传设备页面取消关联虚拟机&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在透传设备页面，单击USB类型透传设备右侧操作列 &lt;strong>&lt;em>&amp;ldquo;取消关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联虚拟机对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>自动启动：卸载USB设备成功后虚拟机是否自动启动，仅虚拟机关机状态下生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，USB透传设备取消关联虚拟机。&lt;/li>
+&lt;/ol>
+&lt;h3 id="climc命令卸载usb">Climc命令卸载USB&lt;/h3>
+&lt;p>对应命令行操作如下 &lt;code>climc server-detach-isolated-device $server_id $device_id&lt;/code>：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如虚拟机名称为 testvm，透传设备 id 为 a3fa9bd4-236c-4c5b-8056-f7afa807138d&lt;/span>
 $ climc server-detach-isolated-device testvm a3fa9bd4-236c-4c5b-8056-f7afa807138d
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="宿主机刷新设备">宿主机刷新设备&lt;/h2>

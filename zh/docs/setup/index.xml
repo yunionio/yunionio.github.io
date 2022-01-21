@@ -646,16 +646,16 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; /etc/s
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 $ sysctl -p
 &lt;span style="color:#8f5902;font-style:italic"># 配置并开启 ipvs&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; /etc/sysconfig/modules/ipvs.modules
-&lt;/span>&lt;span style="color:#4e9a06">#!/bin/bash
-&lt;/span>&lt;span style="color:#4e9a06">ipvs_modules=&amp;#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">for kernel_module in \${ipvs_modules}; do
-&lt;/span>&lt;span style="color:#4e9a06"> /sbin/modinfo -F filename \${kernel_module} &amp;gt; /dev/null 2&amp;gt;&amp;amp;1
-&lt;/span>&lt;span style="color:#4e9a06"> if [ $? -eq 0 ]; then
-&lt;/span>&lt;span style="color:#4e9a06"> /sbin/modprobe \${kernel_module}
-&lt;/span>&lt;span style="color:#4e9a06"> fi
-&lt;/span>&lt;span style="color:#4e9a06">done
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+$ cat &amp;lt;&amp;lt;&lt;span style="color:#4e9a06">&amp;#34;EOF&amp;#34;&lt;/span> &amp;gt; /etc/sysconfig/modules/ipvs.modules
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/bash&lt;/span>
+&lt;span style="color:#000">ipvs_modules&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_fo ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack br_netfilter&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> kernel_module in &lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">ipvs_modules&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
+/sbin/modinfo -F filename &lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">kernel_module&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span> &amp;gt; /dev/null 2&amp;gt;&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> &lt;span style="color:#000">$?&lt;/span> -eq &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+/sbin/modprobe &lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">kernel_module&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
+EOF
 $ chmod &lt;span style="color:#0000cf;font-weight:bold">755&lt;/span> /etc/sysconfig/modules/ipvs.modules &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> bash /etc/sysconfig/modules/ipvs.modules &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> lsmod &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep ip_vs
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="部署集群">部署集群&lt;/h2>
 &lt;div class="alert alert-primary" role="alert">

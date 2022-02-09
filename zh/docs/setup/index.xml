@@ -984,8 +984,12 @@ https://console.yunion.cn/web-console?access_token&lt;span style="color:#ce5c00;
 &lt;span style="color:#204a87">cd&lt;/span> /opt/yunion/scripts/tools/
 clean_host.sh &amp;lt;host_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
-&lt;li>删除该节点在ovn中的chassis记录，在控制节点执行：&lt;/li>
+&lt;li>删除该节点在ovn中的chassis记录&lt;/li>
 &lt;/ol>
+&lt;p>首先，停止该宿主机上的openvswitch服务，清理 /etc/openvswitch 目录：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl stop openvswitch
+rm -fr /etc/openvswitch/*
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其次，在控制节点执行：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl -n onecloude &lt;span style="color:#204a87">exec&lt;/span> -it default-ovn-north-xxxxx /bin/sh &lt;span style="color:#8f5902;font-style:italic"># 进入ovn-northd容器执行以下命令&lt;/span>
 / &lt;span style="color:#8f5902;font-style:italic"># ovn-sbctl show # 找到该宿主机对应的chassis id，通过hostname和ip确认&lt;/span>
 ...
@@ -1507,4 +1511,93 @@ $ climc wire-list --details
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> d80a4163-5466-43e3-8876-6bbcb042c911 &lt;span style="color:#000;font-weight:bold">|&lt;/span> node2-192-168-121-61 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 52:54:00:e0:ed:9d &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.121.61 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://192.168.121.61:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3686&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> Not Specified &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span> release/3.8&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>4064385d922011109&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">29405&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+----------------------+-------------------+----------------+-----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+--------------------------------+--------------+-----------+--------------+
 *** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现 192.168.121.61 的宿主机已经添加到新建的可用区 my-zone-1 了。&lt;/p></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现 192.168.121.61 的宿主机已经添加到新建的可用区 my-zone-1 了。&lt;/p></description></item><item><title>Docs: 前端双向认证配置</title><link>https://www.cloudpods.org/zh/docs/setup/traefik-mutual-tls/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/traefik-mutual-tls/</guid><description>
+&lt;p>平台部署后默认打开了 TLS 服务端(单向)认证，本文介绍如何在已有服务端认证的情况下，开启客户端验证(双向)认证。&lt;/p>
+&lt;p>整个云平台运行在 Kubernetes 之上，前端服务通过 ingress 暴露出来，我们使用了开源的 &lt;a href="https://doc.traefik.io/traefik/v1.7">traefik&lt;/a> 组件来负责 ingress 的实现，所以在 traefik 上设置客户端认证。&lt;/p>
+&lt;h2 id="生成证书">生成证书&lt;/h2>
+&lt;p>下面使用生成自签名证书的方式来配置，如果已经有证书机构签发的服务端和客户端证书，可以忽略这个步骤。&lt;/p>
+&lt;h3 id="生成-ca">生成 CA&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ openssl req -x509 -sha256 -newkey rsa:4096 -keyout ca.key -out ca.crt -days &lt;span style="color:#0000cf;font-weight:bold">356&lt;/span> -nodes -subj &lt;span style="color:#4e9a06">&amp;#39;/CN=My Cert Authority&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="生成-server-服务端证书">生成 Server 服务端证书&lt;/h3>
+&lt;p>基于上面生成的 CA 签发 server 证书：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr -nodes -subj &lt;span style="color:#4e9a06">&amp;#39;/CN=mydomain.com&amp;#39;&lt;/span>
+$ openssl x509 -req -sha256 -days &lt;span style="color:#0000cf;font-weight:bold">365&lt;/span> -in server.csr -CA ca.crt -CAkey ca.key -set_serial &lt;span style="color:#0000cf;font-weight:bold">01&lt;/span> -out server.crt
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="生成-client-客户端证书">生成 Client 客户端证书&lt;/h3>
+&lt;p>基于上面生成的 CA 签发 client 证书：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ openssl req -new -newkey rsa:4096 -keyout client.key -out client.csr -nodes -subj &lt;span style="color:#4e9a06">&amp;#39;/CN=My Client&amp;#39;&lt;/span>
+$ openssl x509 -req -sha256 -days &lt;span style="color:#0000cf;font-weight:bold">365&lt;/span> -in client.csr -CA ca.crt -CAkey ca.key -set_serial &lt;span style="color:#0000cf;font-weight:bold">02&lt;/span> -out client.crt
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="上传证书到-kubernetes">上传证书到 Kubernetes&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 上传 ca 到 kube-system 命令空间&lt;/span>
+$ kubectl -n kube-system create secret generic ca-secret --from-file&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ca.crt&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ca.crt
+&lt;span style="color:#8f5902;font-style:italic"># 上传 server 证书到 onecloud 命名空间&lt;/span>
+$ kubectl -n onecloud create secret generic tls-secret --from-file&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>tls.crt&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>server.crt --from-file&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>tls.key&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>server.key
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="修改前端-default-web-ingress">修改前端 default-web ingress&lt;/h2>
+&lt;p>前端是通过 onecloud 命令空间里面的 default-web ingress 访问的，把前端使用的 tls 证书换成 tls-secret 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit ingress -n onecloud default-web
+...
+tls:
+&lt;span style="color:#8f5902;font-style:italic"># 修改这个 secretName 为 tls-secret&lt;/span>
+- secretName: tls-secret
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="修改-traefik-配置">修改 traefik 配置&lt;/h2>
+&lt;h3 id="修改-traefik-configmap">修改 traefik configmap&lt;/h3>
+&lt;p>traefik 的配置在 kube-system 命名空间的 traefik-ingress-lb config 里面，开启客户端验证主要是配置 &lt;strong>entryPoints.https.tls.ClientCA&lt;/strong> 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit configmaps -n kube-system traefik-ingress-lb
+...
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.https&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;:443&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 添加如下的 ClientCA 配置&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.https.tls&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.https.tls.ClientCA&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">files&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;/tests/ca.crt&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">optional&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="修改-traefik-daemonset">修改 traefik daemonset&lt;/h3>
+&lt;p>然后修改 kube-system 命令空间里面的 traefik-ingress-controller daemonset ，主要是把刚才创建的 ca-secret 挂载到配置的 &lt;strong>/tests/ca.crt&lt;/strong> 目录。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit daemonsets -n kube-system traefik-ingress-controller
+...
+volumeMounts:
+- mountPath: /config
+name: config
+&lt;span style="color:#8f5902;font-style:italic"># 添加这个 volume mount，名称为 ca&lt;/span>
+- mountPath: /tests
+name: ca
+...
+volumes:
+- configMap:
+defaultMode: &lt;span style="color:#0000cf;font-weight:bold">420&lt;/span>
+name: traefik-ingress-lb
+name: config
+- name: ca
+secret:
+defaultMode: &lt;span style="color:#0000cf;font-weight:bold">420&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里引用之前创建的 ca-secret&lt;/span>
+secretName: ca-secret
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启-traefik-服务">重启 traefik 服务&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n kube-system
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>等待 traefik 容器变成 Running。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik
+traefik-ingress-controller-fk54h 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 9s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用-curl-进行测试">使用 curl 进行测试&lt;/h2>
+&lt;p>假设部署的前端访问地址是 https://192.168.121.21 ，下面验证客户端认证是否开启：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 不使用 client 证书访问失败，符合预期&lt;/span>
+$ curl -k https://192.168.121.21
+curl: &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>58&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> NSS: client certificate not found &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>nickname not specified&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用 client 证书访问成功&lt;/span>
+$ curl -k --cert ./client.crt --key ./client.key https://192.168.121.21
+&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html &lt;span style="color:#000">lang&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>en &lt;span style="color:#000">translate&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>no&amp;gt;&amp;lt;head&amp;gt;&amp;lt;meta &lt;span style="color:#000">charset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>utf-8&amp;gt;&amp;lt;meta http-equiv&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>X-UA-Compatible &lt;span style="color:#000">content&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;IE=edge&amp;#34;&lt;/span>&amp;gt;&amp;lt;meta &lt;span style="color:#000">name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>viewport &lt;span style="color:#000">content&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;width=device-width,initial-scale=1&amp;#34;&lt;/span>&amp;gt;&amp;lt;meta &lt;span style="color:#000">name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>google &lt;span style="color:#000">content&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>notranslate&amp;gt;&amp;lt;link &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>icon &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/favicon.ico&amp;gt;&amp;lt;title&amp;gt;云联壹云&amp;lt;/title&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/js/chunk-2d216214.5f7b7e0c.js &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>prefetch&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/js/chunk-39bb5eb4.8512e62d.js &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>prefetch&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/css/app.fb52a32e.css &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>preload &lt;span style="color:#000">as&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>style&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/css/chunk-vendors.09e9c25d.css &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>preload &lt;span style="color:#000">as&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>style&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/js/app.74cda7af.js &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>preload &lt;span style="color:#000">as&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>script&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/js/chunk-vendors.a7b5c015.js &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>preload &lt;span style="color:#000">as&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>script&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/css/chunk-vendors.09e9c25d.css &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>stylesheet&amp;gt;&amp;lt;link &lt;span style="color:#000">href&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/css/app.fb52a32e.css &lt;span style="color:#000">rel&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>stylesheet&amp;gt;&amp;lt;/head&amp;gt;&amp;lt;body&amp;gt;&amp;lt;noscript&amp;gt;&amp;lt;strong&amp;gt;We&lt;span style="color:#4e9a06">&amp;#39;re sorry but OneCloud doesn&amp;#39;&lt;/span>t work properly without JavaScript enabled. Please &lt;span style="color:#204a87">enable&lt;/span> it to &lt;span style="color:#204a87;font-weight:bold">continue&lt;/span>.&amp;lt;/strong&amp;gt;&amp;lt;/noscript&amp;gt;&amp;lt;div &lt;span style="color:#000">id&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>app&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;script &lt;span style="color:#000">src&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/vendor.b82688a471b737ceddd1.js&amp;gt;&amp;lt;/script&amp;gt;&amp;lt;script &lt;span style="color:#000">src&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/js/chunk-vendors.a7b5c015.js&amp;gt;&amp;lt;/script&amp;gt;&amp;lt;script &lt;span style="color:#000">src&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/js/app.74cda7af.js&amp;gt;&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="浏览器配置">浏览器配置&lt;/h2>
+&lt;p>通过以上的配置，发现客户端配置已经成功，但通过浏览器访问，还需要把客户端的证书放到浏览器里面，否则访问就会出现下面的界面：&lt;/p>
+&lt;p>&lt;img src="../images/chrome-bad-ssl-client.png" alt="">&lt;/p>
+&lt;p>下面以 Chrome 浏览器为例， 需要把之前生成的 client.crt 和 client.key 装换成 pfx/pkcs12 格式，就能导入浏览器，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 把 client.crt 和 client.key 组合到一起&lt;/span>
+$ cat client.crt client.key &amp;gt; pkcs12.pem
+&lt;span style="color:#8f5902;font-style:italic"># 转换成 pkcs12 格式&lt;/span>
+$ openssl pkcs12 -in pkcs12.pem -export -out pkcs12.p12
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>把 pkcs12.p12 导入到浏览器：&lt;/p>
+&lt;p>&lt;img src="../images/chrome-certs.png" alt="">&lt;/p>
+&lt;p>选择刚才生成的 pkcs12.p12 证书：&lt;/p>
+&lt;p>&lt;img src="../images/chrome-import-pkcs12.png" alt="">&lt;/p>
+&lt;p>导入后再刷新访问前端，就可以成功访问界面。&lt;/p>
+&lt;p>&lt;img src="../images/chrome-web.png" alt="">&lt;/p></description></item></channel></rss>

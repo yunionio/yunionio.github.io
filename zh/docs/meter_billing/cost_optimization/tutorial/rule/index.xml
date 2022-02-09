@@ -1,0 +1,132 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+规则配置</title><link>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/</link><description>Recent content in 规则配置 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sat, 22 Jan 2022 11:08:00 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 规则介绍</title><link>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/intro/</link><pubDate>Sat, 22 Jan 2022 11:10:06 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/intro/</guid><description>
+&lt;h3 id="定时开关机的虚拟机">定时开关机的虚拟机&lt;/h3>
+&lt;p>虚拟机负载成周期性变化，并在一段时间内虚拟机的负载可忽略不计。&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>具有周期性使用规律，在设定时间范围内，CPU使用情况：CPU 使用率 &amp;lt; 5 % 触发；&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>使用定时任务为虚拟机设置定时开关机。&lt;/p>
+&lt;h3 id="建议使用弹性伸缩组的虚拟机">建议使用弹性伸缩组的虚拟机&lt;/h3>
+&lt;p>虚拟机负载成周期性变化，某个时间段负载较低，没有被充分利用。&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>具有周期性使用规律，在设定时间范围内，CPU使用情况：CPU 使用率 &amp;lt; 50 % 触发；&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>替换为使用弹性伸缩组的虚拟机&lt;/p>
+&lt;h3 id="虚拟机过时套餐推荐">虚拟机过时套餐推荐&lt;/h3>
+&lt;p>虚拟机一直在使用过时套餐，新套餐比旧套餐优惠且性能更强&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>一直在使用过时套餐的虚拟机&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>升级虚拟机套餐类型&lt;/p>
+&lt;h3 id="建议升配虚拟机">建议升配虚拟机&lt;/h3>
+&lt;p>虚拟机负载较高，影响虚拟机的正常使用&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>在设定时间范围内，CPU使用情况：CPU 使用率 &amp;gt; 80 % 触发；&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>对虚拟机进行升配&lt;/p>
+&lt;h3 id="建议降配虚拟机">建议降配虚拟机&lt;/h3>
+&lt;p>虚拟机负载较低，有资源闲置的情况&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>在设定时间范围内，CPU使用情况：CPU 使用率 [15%, 50%] 触发&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>对虚拟机进行降配&lt;/p>
+&lt;h3 id="低负载虚拟机">低负载虚拟机&lt;/h3>
+&lt;p>虚拟机负载极低，几乎忽略不计，有资源浪费的情况&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>在设定时间范围内，CPU使用情况：CPU 使用率 &amp;lt; 5 % 触发&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>建议删除虚拟机或降低虚拟机配置&lt;/p>
+&lt;h3 id="未使用快照">未使用快照&lt;/h3>
+&lt;p>长期不使用的快照，存在资源浪费的情况&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>超过n天，未使用的主机快照和硬盘快照&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>建议删除快照&lt;/p>
+&lt;h3 id="未挂载的弹性公网ip">未挂载的弹性公网IP&lt;/h3>
+&lt;p>长期未挂载到资源上的弹性公网IP，存在资源浪费的情况。&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>超过n天，未关联资源的弹性公网IP&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>建议删除弹性公网IP&lt;/p>
+&lt;h3 id="未使用的负载均衡实例">未使用的负载均衡实例&lt;/h3>
+&lt;p>负载均衡实例下不存在能提供服务的监听时，存在资源浪费的情况。&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>超过n天，满足以下任意条件：1.没有监听；2.没有后端服务器组；3.没有后端服务器。&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>建议删除负载均衡实例&lt;/p>
+&lt;h3 id="未挂载的硬盘">未挂载的硬盘&lt;/h3>
+&lt;p>长期未挂载到资源上的硬盘，存在资源浪费的情况。&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>超过n天，未关联资源的云硬盘&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>建议删除未挂载的硬盘&lt;/p>
+&lt;h3 id="空闲的rds">空闲的RDS&lt;/h3>
+&lt;p>RDS的负载长期保持较低的状态，可能存在资源浪费的情况&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>在设定时间范围内，CPU使用情况：CPU 使用率 &amp;lt; 5 % 触发&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>降配或释放未使用的RDS&lt;/p>
+&lt;h3 id="空闲的redis">空闲的Redis&lt;/h3>
+&lt;p>RDS的缓存键数较低，长期未使用，可能存在资源浪费的情况&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>在设定时间范围内，键情况：缓存键数 &amp;lt; 100&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>降配或释放未使用的Redis&lt;/p>
+&lt;h3 id="空闲的对象存储">空闲的对象存储&lt;/h3>
+&lt;p>对象存储长期不被访问，可能存在资源浪费的情况&lt;/p>
+&lt;p>&lt;strong>规则&lt;/strong>&lt;/p>
+&lt;p>在设定时间范围内，请求情况：请求数量 &amp;lt; 100&lt;/p>
+&lt;p>&lt;strong>优化建议&lt;/strong>&lt;/p>
+&lt;p>释放未使用的对象存储&lt;/p></description></item><item><title>Docs: 修改规则配置</title><link>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/modify/</link><pubDate>Sat, 22 Jan 2022 11:10:19 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/modify/</guid><description>
+&lt;p>该功能用于修改规则配置，目前仅支持修改时间范围。时间范围将会影响扫描结果，即超过时间范围内闲置的资源才会被扫描出来。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>单击规则右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改规则配置对话框。&lt;/li>
+&lt;li>修改时间范围，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 启用/禁用规则</title><link>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/enable/</link><pubDate>Sat, 22 Jan 2022 11:10:24 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/enable/</guid><description>
+&lt;h2 id="启用规则">启用规则&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的规则。禁用状态的规则不生效。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的规则右侧操作列 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用规则。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>在规则列表中选择一个或多个规则，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用规则。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用规则">禁用规则&lt;/h2>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的规则，禁用状态的规则不生效。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>单击&amp;quot;启用&amp;quot;状态的规则右侧操作列 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>在规则列表中选择一个或多个规则，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看规则详情</title><link>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/show/</link><pubDate>Sat, 22 Jan 2022 11:10:31 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/show/</guid><description>
+&lt;p>该功能用于查看规则的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>单击规则名称项，进入规则详情页面。&lt;/li>
+&lt;li>查看规则的云上ID、ID、名称、状态、域、项目、启用状态、规则、上一次执行时间、创建时间、更新时间、备注。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看操作日志</title><link>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/log/</link><pubDate>Sat, 22 Jan 2022 11:10:34 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/meter_billing/cost_optimization/tutorial/rule/log/</guid><description>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;优化建议/成本优化/规则配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入规则配置页面。&lt;/li>
+&lt;li>单击规则名称项，进入规则详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：在操作日志页面，列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../../images/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

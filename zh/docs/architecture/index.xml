@@ -1,2 +1,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-平台架构</title><link>https://www.cloudpods.org/zh/docs/architecture/</link><description>Recent content in 平台架构 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/architecture/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+平台架构</title><link>https://www.cloudpods.org/zh/docs/architecture/</link><description>Recent content in 平台架构 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 安全相关</title><link>https://www.cloudpods.org/zh/docs/architecture/security/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/architecture/security/</guid><description>
+&lt;p>Cloudpods平台具备如下安全相关的设计：&lt;/p>
+&lt;h2 id="系统安全">系统安全&lt;/h2>
+&lt;p>通过部署系统层面的网络安全措施，确保系统平台的安全，具体措施有：&lt;/p>
+&lt;ul>
+&lt;li>组件之间的通信都是完全采用https加密，有效防止中间人攻击，回放攻击，防止信息被监听。&lt;/li>
+&lt;li>每个服务都采用独立的服务账号，每个服务访问数据库的账号都是独立的账号，避免账号信息泄露导致的风险。&lt;/li>
+&lt;li>服务之间的REST API调用都需要通过keystone的认证授权才可以使用，有效避免未经授权的API访问&lt;/li>
+&lt;li>采用网络安全策略，在私有化部署环境，采用calico network policy限制不必要的服务端口暴漏，在公有云部署环境，应用公有云VPC安全组策略限制不必要的服务端口暴漏，降低服务被网络攻击的风险&lt;/li>
+&lt;/ul>
+&lt;h2 id="账户安全">账户安全&lt;/h2>
+&lt;p>通过账户安全措施，保证平台的安全，主要措施有：&lt;/p>
+&lt;ul>
+&lt;li>账户安全：为保证登录账户的密码安全，强制要求密码复杂度（密码长度和包含的字符种类），密码定期失效，历史密码重复校验等。&lt;/li>
+&lt;li>登录安全：为保证账户登录安全，开启多因子认证（MFA），强制限制用户只能有一个有效登录会话，允许禁用特定用户的控制台登录权限或API访问权限，如果一个用户多次密码登录失败则禁用账户&lt;/li>
+&lt;/ul></description></item></channel></rss>

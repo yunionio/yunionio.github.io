@@ -118,14 +118,26 @@
 &lt;li>导入安全组规则需要按照预先设定的格式，请先下载模板，在下载的export-secgrouprules.xlsx文件中补充安全组规则信息，安全组出入方向请都放在同一个sheet页面，用in和out区分。&lt;/li>
 &lt;li>单击虚线框或将export-secgrouprules.xlsx文件拖拽到虚线框，单击**_&amp;ldquo;确定&amp;rdquo;_** 按钮，完成操作。&lt;/li>
 &lt;/ol></description></item><item><title>Docs: 关联虚拟机</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/secgroup/resourse/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/secgroup/resourse/</guid><description>
-&lt;p>一个安全组可以关联多个虚拟机，一个虚拟机也可以关联多个安全组（最多5个安全组）。&lt;/p>
-&lt;h2 id="关联虚拟机">关联虚拟机&lt;/h2>
+&lt;h2 id="普通安全组">普通安全组&lt;/h2>
+&lt;p>对于内置私有云虚拟机，每台虚拟机有一个主安全组，由虚拟机的 secgroup_id 字段指定。当创建主机未指定安全组时，则平台会默认关联一个安全组，该默认安全组由region服务的 default_security_group_id 指定。同时，主机还可以额外关联多个安全组（最多5个安全组）。&lt;/p>
+&lt;h3 id="climc操作">climc操作&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 为主机增加安全组&lt;/span>
+climc server-add-secgroup &amp;lt;server&amp;gt; &amp;lt;secgroup1&amp;gt; &amp;lt;secgroup2&amp;gt; ...
+&lt;span style="color:#8f5902;font-style:italic"># 全量替换主机安全组&lt;/span>
+climc server-set-secgroup &amp;lt;server&amp;gt; &amp;lt;secgroup1&amp;gt; &amp;lt;secgroup2&amp;gt; ...
+&lt;span style="color:#8f5902;font-style:italic"># 取消安全组&lt;/span>
+climc server-revoke-secgroup &amp;lt;server&amp;gt; &amp;lt;secgroup&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过如下命令修改region的 default_security_group_id:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-config-edit region2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="web控制台操作">Web控制台操作&lt;/h3>
+&lt;p>通过web控制台关联虚拟机和安全组的操作如下：&lt;/p>
+&lt;h4 id="关联虚拟机">关联虚拟机&lt;/h4>
 &lt;ol>
 &lt;li>在安全组页面，单击安全组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;管理虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入关联虚拟机页面。&lt;/li>
 &lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联虚拟机对话框。&lt;/li>
 &lt;li>选择需要关联安全组的虚拟机（支持选择多个），单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将安全组关联到虚拟机。&lt;/li>
 &lt;/ol>
-&lt;h2 id="解绑虚拟机">解绑虚拟机&lt;/h2>
+&lt;h4 id="解绑虚拟机">解绑虚拟机&lt;/h4>
 &lt;p>&lt;strong>单个解绑&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>在安全组页面，单击安全组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;管理虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入关联虚拟机页面。&lt;/li>
@@ -137,7 +149,18 @@
 &lt;li>在安全组页面，单击安全组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;管理虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入关联虚拟机页面。&lt;/li>
 &lt;li>在列表中选择一个或多个虚拟机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;解绑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 其他操作</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/secgroup/operator/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/secgroup/operator/</guid><description>
+&lt;/ol>
+&lt;h2 id="管理安全组">管理安全组&lt;/h2>
+&lt;p>同时，每台虚拟机有一个管理安全组，由虚拟机的 admin_secgroup_id 字段指定。管理安全组只能由系统管理员权限指定，用户无法指定。管理安全组用于实现平台层面的网络安全策略，例如：禁止虚拟机访问宿主机网段，禁止虚拟机提供80/443端口服务（未在公网备案）等。主机创建时，如果region服务的 default_admin_security_group_id 设置了管理安全组的ID，则主机自动设置 admin_secgroup_id。否则，需要管理在事后，通过如下 climc 命令设置或者解除设置 管理安全组。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置主机的管理安全组，只有系统管理员权限才能设置&lt;/span>
+climc server-assign-admin-secgroup &amp;lt;server&amp;gt; &amp;lt;secgroup&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 清除主机的管理安全组，只有系统管理员权限才能设置&lt;/span>
+climc server-revoke-admin-secgroup &amp;lt;server&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过如下命令修改region服务的 default_admin_security_group_id 配置:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-config-edit region2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>默认管理安全组在系统初始化时未设置。管理员设置了默认管理安全组后，重启region，则会自动将 admin_secgroup_id 未设置的主机 设置 admin_secgroup_id 为该 default_admin_security_group_id 。新创建的主机的 admin_secgroup_id 都会自动设置为 default_admin_security_group_id 的值。&lt;/p>
+&lt;p>在清除主机的管理安全组后，如果 default_admin_security_group_id 不为空，则会自动恢复为 default_admin_security_group_id 。&lt;/p>
+&lt;p>注意：管理安全组在应用生效时，总是会以比普通安全组高的优先级进行应用。无论如何配置，普通安全组规则无法override管理安全组的规则。&lt;/p></description></item><item><title>Docs: 其他操作</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/secgroup/operator/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/secgroup/operator/</guid><description>
 &lt;h2 id="设置共享">设置共享&lt;/h2>
 &lt;p>该功能用于设置安全的组的共享范围。&lt;/p>
 &lt;p>项目资源的共享范围有五种：&lt;/p>

@@ -761,6 +761,28 @@ Server migration prefer host id or name
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="宿主机宕机自动迁移">宿主机宕机自动迁移&lt;/h3>
+&lt;h4 id="原理">原理&lt;/h4>
+&lt;p>宿主机宕机自动迁移会自动检测宿主机的在线状况，当控制器（region）检测到宿主机离线，则会自动将宿主机上使用共享存储的虚拟机在别的宿主机上启动起来。宿主机宕机检测原理是 host会维持 etcd 上的一个 key (路径为：/onecloud/kvm/host/health/&amp;lt;host_id&amp;gt;)，region会watch这个key，一旦host离线，这个key会超时删除，region检测到这个事件后，开始把host上的共享存储主机强制迁移到别的宿主机。&lt;/p>
+&lt;h4 id="开启宕机自动迁移">开启宕机自动迁移&lt;/h4>
+&lt;p>通过如下步骤开启宕机自动迁移：&lt;/p>
+&lt;h5 id="修改宿主机host配置">修改宿主机host配置&lt;/h5>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">vi /etc/yunion/host.conf
+把
+enable_health_checker: &lt;span style="color:#204a87">false&lt;/span>
+改为true
+enable_health_checker: &lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="修改region服务的配置">修改region服务的配置&lt;/h5>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-config-show region2
+climc service-config-edit region2
+把
+enable_host_health_check: &lt;span style="color:#204a87">false&lt;/span>
+改为
+enable_host_health_check: &lt;span style="color:#204a87">true&lt;/span>
+climc host-auto-migrate-on-host-down --enable &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>宿主机ID&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="重启服务">重启服务&lt;/h5>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud rollout restart daemonset default-host
+kubectl -n onecloud rollout restart deployment default-region
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: GPU 相关</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</guid><description>
 &lt;p>目前仅支持 Cloudpods kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。&lt;/p>
 &lt;h2 id="web界面操作">Web界面操作&lt;/h2>
@@ -1811,7 +1833,59 @@ CPU: Intel(R) Xeon(R) Gold 5218R CPU @ 2.10GHz
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>说明：饱和流量情况下，网络虚拟化开销很低（3%量级）。由于转换路径较长，EIP的性能要差很多（36%损耗）。&lt;/p></description></item><item><title>Docs: 调试QEMU参数</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/customize/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/customize/</guid><description>
+&lt;p>说明：饱和流量情况下，网络虚拟化开销很低（3%量级）。由于转换路径较长，EIP的性能要差很多（36%损耗）。&lt;/p></description></item><item><title>Docs: 内存大页(Hugepage)</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/hugepage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/hugepage/</guid><description>
+&lt;p>内置私有云支持虚拟机使用内存大页（Hugepage）。使用内存大页有助于减少内存碎片，提高虚拟机访问内存效率，从而提高虚拟机性能。&lt;/p>
+&lt;p>通过设置每台宿主机的配置(/etc/yunion/host.conf) hugepages_option 来关闭或开启大页，该选项的值有三个：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>disable: 不开启大页支持&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>transparent：开启透明大页支持，该选项为默认选项。启用透明大页支持后，操作系统会尽力而为地为虚拟机使用大页内存，并且自动地将虚拟机的普通内存合并为大页内存。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>native：开启原生大页内存支持，这种模式需要显式地分配大页内存池，并且虚拟机使用的内存需要预先从大页内存池中预留分配，并作为参数传递给虚拟机使用。这种方式能够保证内存的连续性，可以分配1G的大页内存，提供最佳的性能。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>使用透明大页支持比较方便，只需要设置 hugepages_option 为 transparent。但这种方式无法使用1G的大页，并且并不保证虚拟机总是使用大页内存。&lt;/p>
+&lt;h2 id="开启native大页内存">开启native大页内存&lt;/h2>
+&lt;p>下面介绍启用native大页的方法：&lt;/p>
+&lt;p>1、设置/etc/yunion/host.conf的hugepages_options 为native&lt;/p>
+&lt;p>2、预留大页内存&lt;/p>
+&lt;p>有两种方式: 自动和手动。&lt;/p>
+&lt;p>2.1 自动预留大页内存&lt;/p>
+&lt;p>重启宿主机，宿主机重启后，host服务会根据该宿主机的物理内存总量，减去预留内存量（mem_reserved），再减去kubelet Evition需要预留的内存（一般为500MB），剩下的内存预留。&lt;/p>
+&lt;p>自动预留大页内存只能预留2MB的大页。&lt;/p>
+&lt;p>2.2 手动预留大页内存&lt;/p>
+&lt;p>手动方式需修改内核启动参数，在系统启动时刻就把大页内存预留出来。这种方式能够保证大页内存的空间连续性，能够域1GB的大页。但是1GB的大页预留后将无法修改。如果采用手动预留大页内存，建议预留1GB的大页。&lt;/p>
+&lt;p>注意：使用1GB大页内存的虚拟机的内存必须是1GB的整数倍。&lt;/p>
+&lt;p>下面是手动预留1GB大页内存的步骤：&lt;/p>
+&lt;p>设置内核启动参数，让宿主机在启动后自动预留大页内存，需要设置如下两个参数：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>hugepagesz：大页内存的大小。对于x86_64的宿主机，一般支持2MB或1GB的大页。可以通过查看/proc/cpuinfo的flags判断宿主机支持哪种大页。如果flags中包含pse，则支持2MB大页。如果flags中包含pdpe1gb，则支持1GB大页。对于arm的宿主机，支持2MB或1GB的大页。推荐使用1GB大页。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hugepages：预留大页的数量，总预留内存为 hugepagesz x hugepages。由于大页内存无法给操作系统使用，因此需要留足够的普通内存。一般是给操作系统预留至少10G，或10%的内存。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>举例：&lt;/p>
+&lt;p>修改 /etc/default/grub，在GRUB_CMDLINE_LINUX末尾添加（宿主机有128GB内存，分配给大页110GB，给操作系统预留18GB内存）：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">hugepagesz&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>1GB &lt;span style="color:#000">hugepages&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">110&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">grub2-mkconfig -o /boot/grub2/grub.cfg（BIOS引导执行这个）
+grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg（UEFI引导执行这个）
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改完成后，重启宿主机&lt;/p>
+&lt;p>重启后，查看如下参数，确认1GB大页内存是否预留成功&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+&lt;span style="color:#0000cf;font-weight:bold">110&lt;/span>
+$ cat /sys/kernel/mm/hugepages/hugepages-1048576kB/free_hugepages
+&lt;span style="color:#0000cf;font-weight:bold">110&lt;/span>
+$ free -h
+total used free shared buff/cache available
+Mem: 125G 113G 7.6G 4.5M 4.5G 11G
+Swap: 0B 0B 0B
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 调试QEMU参数</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/customize/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/customize/</guid><description>
 &lt;p>本文介绍如何调试 Cloudpods KVM虚拟机的配置参数。&lt;/p>
 &lt;h2 id="hahahugoshortcode-s1-hbhb-kvm虚拟机的配置存储位置一般在宿主机的-optcloudworkspaceservers-下该位置可以修改-etcyunionhostconf-的-servers_path">Cloudpods KVM虚拟机的配置存储位置一般在宿主机的 /opt/cloud/workspace/servers 下，该位置可以修改 /etc/yunion/host.conf 的 servers_path&lt;/h2>
 &lt;p>在 servers 目录下，每个虚拟机ID的目录存储了该虚拟机相关的配置文件，主要的文件有：&lt;/p>

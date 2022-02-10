@@ -5,10 +5,13 @@
 &lt;li>如需创建内置私有云虚拟机，请确保环境中存在启用状态的宿主机。&lt;/li>
 &lt;li>如需创建VMware平台虚拟机，请确保环境中已添加了VMware账号。&lt;/li>
 &lt;/ul>
-&lt;h3 id="web操作步骤">web操作步骤&lt;/h3>
+&lt;h3 id="界面操作">界面操作&lt;/h3>
 &lt;ol>
 &lt;li>
-&lt;p>在虚拟机列表页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建本地IDC虚拟机页面。&lt;/p>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建本地IDC虚拟机页面。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>配置以下参数：&lt;/p>
@@ -27,7 +30,7 @@
 &lt;li>到期释放：设置新建虚拟机到期释放前的使用时长，超过设置的时间后虚拟机将会被删除放入回收站。默认不设置到期释放，用户可根据需要设置“1小时”、“6小时”、“1天”、“3天”、“1周”、“1月”或自定义使用时长。&lt;/li>
 &lt;li>数量：设置创建虚拟机的数量。&lt;/li>
 &lt;li>平台（本地IDC）：选择虚拟机所属的平台为Cloudpods和VMware。&lt;/li>
-&lt;li>CPU架构：目前支持x86和ARM架构。仅 Cloudpods 平台支持ARM架构，其他平台默认只支持x86架构。&lt;/li>
+&lt;li>CPU架构：目前支持x86和aarch64架构。仅 Cloudpods 平台支持aarch64架构，其他平台默认只支持x86架构。&lt;/li>
 &lt;li>是否配置GPU：是否为虚拟机配置GPU卡，启用该项后，还需要选择具体GPU卡。&lt;/li>
 &lt;li>CPU核数、内存：设置虚拟机的规格。并可以根据虚拟机规格等选择可用套餐。&lt;/li>
 &lt;li>套餐：虚拟机套餐为虚拟机CPU、内存规格的组合搭配，不同套餐价格不同。其中本地IDC和私有云套餐可通过云管平台进行维护，用户创建私有云平台的虚拟机时可以选择本地IDC的套餐或私有云平台的套餐。公有云套餐信息同步对应公有云平台上信息。
@@ -217,7 +220,7 @@
 &lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>引导方式：包括BIOS和UEFI模式，仅Cloudpods平台支持，且ARM架构仅支持UEFI模式。&lt;/li>
+&lt;li>引导方式：包括BIOS和UEFI模式，仅Cloudpods平台支持，且aarch64架构仅支持UEFI模式。&lt;/li>
 &lt;li>远程终端协议：包括VNC和SPICE，仅Cloudpods平台支持。
 &lt;ul>
 &lt;li>VNC：主要用于linux的服务器的管理，由于无声音和usb传输，不满足于虚拟桌面的使用。&lt;/li>
@@ -237,7 +240,7 @@
 &lt;p>若启用了工单，则需要填入申请原因，单击 &lt;strong>&lt;em>&amp;ldquo;提交工单&amp;rdquo;&lt;/em>&lt;/strong> 按钮，提交创建虚拟机的工单，等待审批通过后才会开始创建虚拟机。&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;h3 id="climc命令行操作">Climc命令行操作&lt;/h3>
+&lt;h3 id="climc操作">climc操作&lt;/h3>
 &lt;p>&lt;code>climc server-create&lt;/code> 命令提供创建云主机的操作。 Cloudpods 可以同时管理多个私有云和公有云，不同供应商有各自的认证方式，在创建云主机之前需要做一些不同的准备工作。&lt;/p>
 &lt;p>创建机器命令为 &lt;code>server-create&lt;/code>，可以使用 &lt;code>climc help server-create&lt;/code> 查看创建 server 的所有参数，常用的参数如下：&lt;/p>
 &lt;table>
@@ -483,7 +486,7 @@ $ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4
 &lt;li>rdp: windows 远程桌面，要求虚拟机网络可达；可通过RDP对应的客户端连接Windows操作系统的虚拟机。&lt;/li>
 &lt;li>vnc: vnc 链接，对虚拟机网络没有要求，只要能链接云平台 vnc proxy 即可;&lt;/li>
 &lt;/ul>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
+&lt;h2 id="界面操作">界面操作&lt;/h2>
 &lt;p>该功能用于通过过VNC远程终端或Web SSH远程连接到虚拟机。
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
@@ -496,7 +499,8 @@ $ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4
 &lt;/div>
 &lt;/p>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;VNC远程终端&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，新建Web Console名称的浏览器标签页。
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;VNC远程终端&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，新建Web Console名称的浏览器标签页。
 &lt;ul>
 &lt;li>发送远程命令：单击 &lt;strong>&lt;em>&amp;ldquo;发送远程命令&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;Ctrl-Alt-F1~F6&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，向虚拟机控制台发送具体的命令。&lt;/li>
 &lt;li>Ctrl-Alt-Delete：单击\ &lt;strong>&lt;em>Ctrl-Alt-Delete&lt;/em>&lt;/strong> 按钮，若虚拟机为Windows系统，则向虚拟机控制台发送Ctrl-Alt-Delete命令，若虚拟机为Linux系统，则将弹出重启服务器提示，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮后将重启虚拟机。&lt;/li>
@@ -506,7 +510,7 @@ $ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，与虚拟机建立web SSH连接。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>远程终端&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址:任意端口&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出的对话框中设置端口号，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，与虚拟机建立web SSH连接。&lt;/li>
 &lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
+&lt;h2 id="climc操作">climc操作&lt;/h2>
 &lt;p>针对以上的链接方式，我们提供以下接口链接云虚拟机：&lt;/p>
 &lt;h3 id="vnc-连接">vnc 连接&lt;/h3>
 &lt;p>&lt;code>climc webconsole-server&lt;/code> 命令提供通过 vnc 的方式链接虚拟机，该方式对裸金属服务器不可用。&lt;/p>
@@ -541,7 +545,7 @@ https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1
 &lt;li>Agent监控，即为虚拟机安装Agent后获取的监控信息。监控指标包括CPU使用率、内存使用率、网络入流量、网络出流量、磁盘使用率、磁盘读速率、磁盘写速率&lt;/li>
 &lt;/ul>
 &lt;p>虚拟机监控查询时间支持查看近1小时、近1天、近1周、近1月、近3月、近6月的性能监控信息，支持设置时间粒度，时间粒度大小与查看的时长有关。&lt;/p></description></item><item><title>Docs: 删除</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/delete/</link><pubDate>Fri, 19 Jul 2019 17:32:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/delete/</guid><description>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
+&lt;h2 id="界面操作">界面操作&lt;/h2>
 &lt;h3 id="设置删除保护">设置删除保护&lt;/h3>
 &lt;p>该功能用于设置虚拟机的删除保护。当虚拟机启用删除保护后，虚拟机无法被删除；当虚拟机禁用删除保护后，虚拟机才可以被删除。&lt;/p>
 &lt;p>&lt;strong>单个虚拟机设置删除保护&lt;/strong>&lt;/p>
@@ -589,7 +593,8 @@ https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1
 &lt;/div>
 &lt;h4 id="删除虚拟机">删除虚拟机&lt;/h4>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除-删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除-删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
 &lt;li>支持勾选“同时删除快照”、“同时删除后挂载的数据盘”、“同时删除EIP”等。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;li>若开启了工单，则还需要填入申请原因，单击 &lt;strong>&lt;em>&amp;ldquo;提交工单&amp;rdquo;&lt;/em>&lt;/strong> 按钮，提交删除主机工单，等待审批通过后才会成功删除虚拟机。&lt;/li>
@@ -601,7 +606,7 @@ https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;li>若开启了工单，则还需要填入申请原因，单击 &lt;strong>&lt;em>&amp;ldquo;提交工单&amp;rdquo;&lt;/em>&lt;/strong> 按钮，提交删除主机工单，等待审批通过后才会成功删除虚拟机。&lt;/li>
 &lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
+&lt;h2 id="climc操作">climc操作&lt;/h2>
 &lt;h3 id="删除-1">删除&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除至回收站&lt;/span>
 $ climc server-delete &amp;lt;server_id&amp;gt;
@@ -624,7 +629,8 @@ $ climc server-delete -f &amp;lt;server_id&amp;gt;
 &lt;/ul>
 &lt;/div>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;高可用-添加备份机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出添加备份机对话框。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;高可用-添加备份机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出添加备份机对话框。&lt;/li>
 &lt;li>选择备份机的宿主机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;li>虚拟机名称右侧将出现&lt;img src="../../../images/computing/HA.png" alt="">的图标。&lt;/li>
 &lt;/ol>
@@ -646,7 +652,7 @@ $ climc server-delete -f &amp;lt;server_id&amp;gt;
 &lt;p>但热迁移默认要求目标宿主机和源宿主机的 CPU microcode 一致，可以通过以下命令查看 CPU 的 microcode：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /proc/cpuinfo &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep microcode &lt;span style="color:#000;font-weight:bold">|&lt;/span> uniq
 microcode : 0xca
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="界面操作">界面操作&lt;/h2>
 &lt;h3 id="迁移">迁移&lt;/h3>
 &lt;p>该功能用于将虚拟机迁移到其他宿主机上面。当未指定宿主机时，系统将自动选择宿主机。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -658,7 +664,8 @@ microcode : 0xca
 &lt;/div>
 &lt;p>&lt;strong>单个虚拟机迁移&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;高可用-迁移&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出迁移对话框。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;高可用-迁移&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出迁移对话框。&lt;/li>
 &lt;li>配置以下参数：
 &lt;ul>
 &lt;li>强制迁移：若宿主机宕机，且虚拟机使用共享存储，可勾选“强制迁移”。&lt;/li>
@@ -785,7 +792,7 @@ climc host-auto-migrate-on-host-down --enable &lt;span style="color:#ce5c00;font
 kubectl -n onecloud rollout restart deployment default-region
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: GPU 相关</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/gpu/</guid><description>
 &lt;p>目前仅支持 Cloudpods kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。&lt;/p>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
+&lt;h2 id="界面操作">界面操作&lt;/h2>
 &lt;h3 id="设置gpu卡">设置GPU卡&lt;/h3>
 &lt;p>该功能用于设置为虚拟机绑定或解绑GPU卡，绑定GPU卡之前请确保虚拟机所在宿主机上存在GPU透传设备。当虚拟机用于高性能计算、图形显示等用途时，建议绑定GPU卡。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -800,7 +807,8 @@ kubectl -n onecloud rollout restart deployment default-region
 &lt;/div>
 &lt;p>&lt;strong>单个虚拟机设置GPU卡&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置GPU卡&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置GPU卡对话框。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置GPU卡&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置GPU卡对话框。&lt;/li>
 &lt;li>设置GPU卡页面支持绑定和解绑GPU卡。
 &lt;ul>
 &lt;li>绑定GPU卡：勾选是否绑定，并选择GPU卡，支持选择为虚拟机绑定多个GPU卡，默认勾选设置成功后自动启动，即绑定GPU卡后自动启动虚拟机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
@@ -911,7 +919,8 @@ default-host-6cl8w 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0
 &lt;h3 id="web界面挂载usb">web界面挂载USB&lt;/h3>
 &lt;p>&lt;strong>在虚拟机页面挂载USB透传设备&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置USB透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置USB透传对话框。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置USB透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置USB透传对话框。&lt;/li>
 &lt;li>配置以下参数：
 &lt;ul>
 &lt;li>是否绑定：选择绑定USB透传设备。&lt;/li>
@@ -944,7 +953,8 @@ Bus &lt;span style="color:#0000cf;font-weight:bold">002&lt;/span> Device 002: ID
 &lt;h3 id="web界面卸载usb">web界面卸载USB&lt;/h3>
 &lt;p>&lt;strong>在虚拟机页面卸载USB透传设备&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置USB透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置USB透传对话框。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
+&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-设置USB透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置USB透传对话框。&lt;/li>
 &lt;li>配置以下参数：
 &lt;ul>
 &lt;li>是否绑定：关闭绑定USB透传设备。&lt;/li>

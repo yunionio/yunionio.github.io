@@ -2,9 +2,7 @@
 操作指南</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 25 Nov 2021 14:39:13 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 负载均衡集群</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/lbcluster/</link><pubDate>Mon, 20 Dec 2021 16:33:42 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/lbcluster/</guid><description>
 &lt;p>Cloudpods平台提供的本地IDC的负载均衡功能需要管理员先部署负载均衡集群和LBAgent转发节点。&lt;/p>
 &lt;p>Cloudpods支持负载均衡多集群功能，用户可根据需求配置负载均衡集群以及集群下的转发节点LBAgent，部署集群和转发节点后才可以部署负载均衡实例等。&lt;/p>
-&lt;p>集群为一组LBAgent转发节点的集合，同一时刻集群中只有一个转发节点处于MASTER，用于监控负载监控实例配置的IP地址和端口，并将用户请求转发给后端服务器处理等，当MASTER转发节点故障后，集群中的其他转发节点将自动切换成MASTER，保证业务高可用。&lt;/p>
-&lt;p>&lt;strong>负载均衡集群入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡集群/集群&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入集群页面。&lt;/p>
-&lt;p>&lt;img src="../../images/lbcluster1.png" alt="">&lt;/p></description></item><item><title>Docs: 负载均衡节点</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/lbagent/</link><pubDate>Mon, 20 Dec 2021 16:42:13 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/lbagent/</guid><description>
+&lt;p>集群为一组LBAgent转发节点的集合，同一时刻集群中只有一个转发节点处于MASTER，用于监控负载监控实例配置的IP地址和端口，并将用户请求转发给后端服务器处理等，当MASTER转发节点故障后，集群中的其他转发节点将自动切换成MASTER，保证业务高可用。&lt;/p></description></item><item><title>Docs: 负载均衡节点</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/lbagent/</link><pubDate>Mon, 20 Dec 2021 16:42:13 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/lbagent/</guid><description>
 &lt;p>负载均衡集群中的节点用于监听负载均衡实例，并将客户端的请求根据监听和转发规则转发给后端服务器。&lt;/p>
 &lt;p>同一个集群下可以有多个转发节点，但同一时刻只有一个节点作为Master节点提供转发服务。属于一个集群的节点的VRRP路由ID必须相同。&lt;/p>
 &lt;p>节点生命周期管理：&lt;/p>
@@ -13,9 +11,7 @@
 &lt;li>部署节点：将节点的配置文件下发到指定机器，提供转发功能的机器可称为转发实例，当节点状态为Master时，表示集群中的节点可正常提供负载均衡转发服务。&lt;/li>
 &lt;li>下线节点：当不需要节点提供服务时，可下线节点，将配置文件从转发实例上删除。&lt;/li>
 &lt;li>删除节点：删除节点的配置文件信息等。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>负载均衡节点入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡集群/节点&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入节点页面。&lt;/p>
-&lt;p>&lt;img src="../../images/lbagent1.png" alt="">&lt;/p></description></item><item><title>Docs: 监听</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/listener/</link><pubDate>Fri, 17 Dec 2021 17:04:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/listener/</guid><description/></item><item><title>Docs: 转发策略</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/forward/</link><pubDate>Fri, 17 Dec 2021 16:47:20 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/forward/</guid><description>
+&lt;/ol></description></item><item><title>Docs: 监听</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/listener/</link><pubDate>Fri, 17 Dec 2021 17:04:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/listener/</guid><description/></item><item><title>Docs: 转发策略</title><link>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/forward/</link><pubDate>Fri, 17 Dec 2021 16:47:20 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/lb/tutorial/forward/</guid><description>
 &lt;p>仅HTTP和HTTPS类型的监听支持设置转发策略。配置转发策略后将来自不同域名或URL的请求转发给不同的后端服务器组处理。&lt;/p>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>

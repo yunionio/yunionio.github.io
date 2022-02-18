@@ -52,9 +52,11 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-10" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-10">OpenStack&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-11" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-11">ZStack&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-12" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-12">阿里云飞天私有云(Apsara)&lt;/a>&lt;/li>
-&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-13" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-13">S3&lt;/a>&lt;/li>
-&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14">Ceph&lt;/a>&lt;/li>
-&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15">XSKY&lt;/a>&lt;/li>&lt;/ul>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-13" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-13">Cloudpods&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14">Nutanix&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15">S3&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-16" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-16">Ceph&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-17" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-17">XSKY&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1">&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-0" class="tab-pane show active" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-0">
 &lt;p>&lt;ol>
 &lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
@@ -349,6 +351,50 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;/ol>
 &lt;/div>
 &lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-13" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-13">
+&lt;p>&lt;p>该功能用于纳管Cloudpods账号。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为Cloudpods，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：Cloudpods云账号的名称。&lt;/li>
+&lt;li>认证地址：即对应的keystone服务地址，可在Cloudpods控制节点通过&lt;code>ocadm cluster rcadmin&lt;/code>命令获取OS_AUTH_URL。一般为http://域名(IP地址):30500/v3。&lt;/li>
+&lt;li>密钥ID/密码：通过Access Key验证方式对接Cloudpods，获取方式请参考&lt;a href="https://www.cloudpods.org/zh/docs/multicloud/cloudaccounts/tutorial/aksk/">获取云平台AccessKey&lt;/a>。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>自动同步：设置是否自动同步HCSO平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建Cloudpods账号。&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14">
+&lt;p>&lt;p>该功能用于纳管Nutanix平台资源，支持纳管Nutanix V2版本。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为Cloudpods，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：Nutanix云账号的名称。&lt;/li>
+&lt;li>备注：Nutanix云账号的备注。&lt;/li>
+&lt;li>Prism地址：Nutanix平台的Prism web控制台的地址。&lt;/li>
+&lt;li>端口：Prism web控制台的访问端口，默认为9440。&lt;/li>
+&lt;li>账号、密码：即登录Prism web控制台的账号和密码。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>自动同步：设置是否自动同步HCSO平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建Nutanix平台的账号。&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15">
 &lt;p>&lt;p>S3即Simple Storage service。在创建S3账号之前需要先部署基于S3协议的对象存储服务器，如MinIO等，MinIO的安装部署&lt;a href="https://min.io/download#/linux">参考链接&lt;/a>。&lt;/p>
 &lt;ol>
 &lt;li>
@@ -386,7 +432,7 @@ SecretKey: mUd+e+h0DS3oIDEvF27b2EE4l+WN5MuZ2ZI+VOag
 &lt;/li>
 &lt;/ol>
 &lt;/div>
-&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-14">
+&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-16" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-16">
 &lt;p>&lt;p>Ceph秘钥创建&lt;a href="https://docs.ceph.com/en/pacific/radosgw/admin/#add-remove-a-key">参考链接&lt;/a>&lt;/p>
 &lt;ul>
 &lt;li>密钥ID 对应生成结果中 &lt;strong>keys&lt;/strong> 中的 &lt;em>access_key&lt;/em>&lt;/li>
@@ -412,7 +458,7 @@ SecretKey: mUd+e+h0DS3oIDEvF27b2EE4l+WN5MuZ2ZI+VOag
 &lt;li>测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建Ceph账号。&lt;/li>
 &lt;/ol>
 &lt;/div>
-&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-15">
+&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-17" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-17">
 &lt;p>&lt;ol>
 &lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
 &lt;li>选择云平台为XSKY，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
@@ -748,11 +794,11 @@ VMware云账号暂不支持更新账号。
 &lt;tbody>
 &lt;tr>
 &lt;td>Azure中国&lt;/td>
-&lt;td>Dictionary: Dictionary.Read.All, Dictionary.ReadWrite.All&lt;/br> Domain: Domain.Read.All&lt;/td>
+&lt;td>Directory: Directory.Read.All, Directory.ReadWrite.All&lt;/br> Domain: Domain.Read.All&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>Azure国际区&lt;/td>
-&lt;td>Dictionary: Dictionary.Read.All, Dictionary.ReadWrite.All&lt;/br> Domain: Domain.Read.All, Domain.ReadWrite.All); &lt;/br>Member: Member.Read.Hidden; &lt;/br>Policy: Policy.Read.All;&lt;/td>
+&lt;td>Directory: Directory.Read.All, Directory.ReadWrite.All&lt;/br> Domain: Domain.Read.All, Domain.ReadWrite.All); &lt;/br>Member: Member.Read.Hidden; &lt;/br>Policy: Policy.Read.All;&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -771,7 +817,7 @@ VMware云账号暂不支持更新账号。
 &lt;p>&lt;img src="../../images/azurerequestapi.png" alt="">&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>选择“Azure Active Directory”，应用程序选择“应用程序权限”，并勾选Dictionary和Domian下的所有权限，单击 &lt;strong>&lt;em>&amp;ldquo;添加权限&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成配置。&lt;/p>
+&lt;p>选择“Microsoft Graph”，应用程序选择“应用程序权限”，并勾选Directory和Domian下的所有权限，单击 &lt;strong>&lt;em>&amp;ldquo;添加权限&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成配置。&lt;/p>
 &lt;p>&lt;img src="../../images/azurecreateapi.png" alt="">&lt;/p>
 &lt;/li>
 &lt;/ol>
@@ -791,7 +837,8 @@ VMware云账号暂不支持更新账号。
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-7" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-7">天翼云&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-8" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-8">移动云&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-9" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-9">ZStack&lt;/a>&lt;/li>
-&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-10" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-10">阿里云飞天私有云(Apsara)&lt;/a>&lt;/li>&lt;/ul>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-10" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-10">阿里云飞天私有云(Apsara)&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-11" role="tab" aria-controls="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-11">Cloudpods&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1">&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-0" class="tab-pane show active" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-0">
 &lt;p>&lt;h3 id="主账号获取accesskey">主账号获取AccessKey&lt;/h3>
 &lt;ol>
@@ -1143,5 +1190,22 @@ $ curl 'https://api.ipify.org?format=json'
 &lt;li>在服务注册变量页面，单击Service旁边的图标，搜索对应产品服务。&lt;/li>
 &lt;li>在服务的Service Registration列中，单击鼠标右键，选择 &lt;strong>&lt;em>&amp;ldquo;选择更多&amp;rdquo;&lt;/em>&lt;/strong> 。&lt;/li>
 &lt;li>在 &lt;strong>&lt;em>&amp;ldquo;详情&amp;rdquo;&lt;/em>&lt;/strong> 页面查看产品服务的Endpoint地址。&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-11" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialaksk-1-11">
+&lt;p>&lt;h3 id="cloudpods获取accesskey">Cloudpods获取AccessKey&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>登录Cloudpods平台，鼠标悬停在右上角用户名处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;访问凭证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入访问凭证页面。&lt;/p>
+&lt;img src= "../../images/cloudpodsaksk.png" width="400" alt="aksk">
+&lt;/li>
+&lt;li>
+&lt;p>在AccessKey管理页面中单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建Accesskey。&lt;/p>
+&lt;p>&lt;img src="../../images/cloudpodsaddaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>已有AccessKey，则对应的ID、Client Secret即对应的密钥ID和密码信息。&lt;/p>
+&lt;p>&lt;img src="../../images/cloudpodsaksklist.png" alt="">&lt;/p>
+&lt;/li>
 &lt;/ol>
 &lt;/div>&lt;/div></description></item></channel></rss>

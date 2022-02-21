@@ -38,7 +38,7 @@
 $ wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1711.qcow2
 &lt;span style="color:#8f5902;font-style:italic"># 上传镜像到云平台并名为 CentOS-7-x86_64-GenericCloud-1711.qcow2&lt;/span>
 $ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 --standard CentOS-7-x86_64-GenericCloud-1711.qcow2 ./CentOS-7-x86_64-GenericCloud-1711.qcow2
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &amp;lsquo;active&amp;rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: &lt;a href="../query/">镜像查询&lt;/a> )&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上传时间长短取决于网络环境和镜像大小，上传完成后需要查询镜像的状态，当状态变为 &amp;lsquo;active&amp;rsquo; 时，就可以拿来使用了。( 更多的关于镜像的查询参考: &lt;a href="../show/#%E6%9F%A5%E8%AF%A2%E9%95%9C%E5%83%8F">镜像查询&lt;/a> )&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep status
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> active &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>climc help image-upload&lt;/code> 获取各个参数解释。&lt;/p></description></item><item><title>Docs: 制作镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/create/</link><pubDate>Fri, 19 Jul 2019 11:12:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/create/</guid><description>
@@ -485,6 +485,8 @@ $ climc image-update --unprotected &amp;lt;image_id&amp;gt;
 &lt;span style="color:#8f5902;font-style:italic"># 删除镜像&lt;/span>
 $ climc image-delete &amp;lt;image_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 查看镜像详情</title><link>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/show/</link><pubDate>Tue, 04 Jan 2022 17:55:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/show/</guid><description>
+&lt;h3 id="查看镜像详情">查看镜像详情&lt;/h3>
+&lt;p>&lt;big>&lt;strong>界面操作&lt;/strong>&lt;/big>&lt;/p>
 &lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/镜像/系统镜像&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入系统镜像页面。&lt;/li>
 &lt;li>单击镜像名称项，进入系统镜像详情页面。&lt;/li>
@@ -502,21 +504,8 @@ $ climc image-delete &amp;lt;image_id&amp;gt;
 &lt;li>其他信息：支持开启或关闭删除保护。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;/ol></description></item><item><title>Docs: 查询镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/query/</link><pubDate>Fri, 19 Jul 2019 11:34:38 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/query/</guid><description>
-&lt;h3 id="列表">列表&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询所有镜像列表&lt;/span>
-$ climc image-list
-&lt;span style="color:#8f5902;font-style:italic"># 查询所有缓存的镜像列表&lt;/span>
-$ climc cached-image-list
-&lt;span style="color:#8f5902;font-style:italic"># 查询包含 ubuntu 关键字的镜像&lt;/span>
-$ climc image-list --search ubuntu
-&lt;span style="color:#8f5902;font-style:italic"># 查询公有云包含 centos 关键字的缓存&lt;/span>
-$ climc cached-image-list --search centos --public-cloud
-&lt;span style="color:#8f5902;font-style:italic"># image-list 支持的查询条件&lt;/span>
-$ climc &lt;span style="color:#204a87">help&lt;/span> image-list
-&lt;span style="color:#8f5902;font-style:italic"># cached-image-list 支持的查询条件&lt;/span>
-$ climc &lt;span style="color:#204a87">help&lt;/span> cached-image-list
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="详情">详情&lt;/h3>
+&lt;/ol>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
 &lt;p>根据 image-list 可以获取镜像的列表，第1、2列包含镜像的 id 和 name，通过 id 或 name 可以获取镜像的详情。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询名称包含 CentOS 的镜像&lt;/span>
 $ climc image-list --search centos
@@ -564,9 +553,23 @@ $ climc image-show CentOS-7-x86_64-GenericCloud-1711.qcow2
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> update_version &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> updated_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2020-06-16T09:19:24.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------+-------------------------------------------------------------------------------------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 下载镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/download/</link><pubDate>Thu, 23 Dec 2021 19:25:38 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/download/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查询镜像">查询镜像&lt;/h3>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询所有镜像列表&lt;/span>
+$ climc image-list
+&lt;span style="color:#8f5902;font-style:italic"># 查询所有缓存的镜像列表&lt;/span>
+$ climc cached-image-list
+&lt;span style="color:#8f5902;font-style:italic"># 查询包含 ubuntu 关键字的镜像&lt;/span>
+$ climc image-list --search ubuntu
+&lt;span style="color:#8f5902;font-style:italic"># 查询公有云包含 centos 关键字的缓存&lt;/span>
+$ climc cached-image-list --search centos --public-cloud
+&lt;span style="color:#8f5902;font-style:italic"># image-list 支持的查询条件&lt;/span>
+$ climc &lt;span style="color:#204a87">help&lt;/span> image-list
+&lt;span style="color:#8f5902;font-style:italic"># cached-image-list 支持的查询条件&lt;/span>
+$ climc &lt;span style="color:#204a87">help&lt;/span> cached-image-list
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 导出镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/download/</link><pubDate>Thu, 23 Dec 2021 19:25:38 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/image/tutorial/sysimage/download/</guid><description>
 &lt;p>如果需要将云平台的镜像导出到本地，就需要用 &lt;code>climc image-download&lt;/code> 把 glance 存的镜像下载下来。&lt;/p>
-&lt;p>参考 &lt;a href="../query/">查询镜像&lt;/a> 查询你想要下载的镜像，获取镜像 id 或 name。&lt;/p>
+&lt;p>参考 &lt;a href="../show/#%E6%9F%A5%E8%AF%A2%E9%95%9C%E5%83%8F">查询镜像&lt;/a> 查询你想要下载的镜像，获取镜像 id 或 name。&lt;/p>
 &lt;p>下载镜像:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># OUTPUT 指定镜像的保存路径和文件名称，如/root/test.qcow2&lt;/span>
 $ climc image-download &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--output OUTPUT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;image_id&amp;gt;

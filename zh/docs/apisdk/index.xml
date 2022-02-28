@@ -2,707 +2,684 @@
 API与SDK</title><link>https://www.cloudpods.org/zh/docs/apisdk/</link><description>Recent content in API与SDK on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 11 Jul 2019 20:39:39 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/apisdk/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: API调用方法</title><link>https://www.cloudpods.org/zh/docs/apisdk/01_api/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/apisdk/01_api/</guid><description>
 &lt;p>本章节介绍Cloudpods API的调用方法。&lt;/p>
 &lt;p>&lt;a href="../../swagger">详细的API内容请参考API&lt;/a>。&lt;/p>
-&lt;h2 id="请求方法">请求方法&lt;/h2>
-&lt;p>不同类型的API使用不同的请求方法，如下所示&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>API类型&lt;/th>
-&lt;th>请求方法&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>查询资源&lt;/td>
-&lt;td>GET&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>更新资源&lt;/td>
-&lt;td>PUT&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>创建资源&lt;/td>
-&lt;td>POST&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>删除资源&lt;/td>
-&lt;td>DELETE&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="公共请求头">公共请求头&lt;/h2>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>头域&lt;/th>
-&lt;th>是否必须&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>X-Auth-Token&lt;/td>
-&lt;td>必须&lt;/td>
-&lt;td>使用keystone v3认证机制&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Content-Type&lt;/td>
-&lt;td>必须&lt;/td>
-&lt;td>应该总是application/json&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="公共响应头">公共响应头&lt;/h2>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>头域&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>Content-Type&lt;/td>
-&lt;td>总是application/json; charset=UTF-8&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>X-Request-Id&lt;/td>
-&lt;td>对应请求的requestId&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="api调用方法">API调用方法&lt;/h2>
-&lt;p>API调用分为两个步骤：&lt;/p>
 &lt;ol>
-&lt;li>
-&lt;p>调用Keystone的认证接口，获得token（如果已经获得token，并且在token有效期内，则可以跳过该步骤）&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>调用接口，此时需要第1步获得的服务访问地址以及token，将token作为请求header的X-Auth-Token参数中保存。&lt;/p>
-&lt;/li>
+&lt;li>使用climc先创建aksk&lt;/li>
 &lt;/ol>
-&lt;h2 id="keystone认证">keystone认证&lt;/h2>
-&lt;h3 id="认证信息">认证信息&lt;/h3>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>方法&lt;/th>
-&lt;th>API&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>POST&lt;/td>
-&lt;td>/v3/auth/tokens&lt;/td>
-&lt;td>获取认证信息&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="请求示例">请求示例&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;gt; POST /v3/auth/tokens HTTP/1.1
-&amp;gt; Host: 192.168.0.246:5000
-&amp;gt; Content-Type: application/json
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;auth&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;context&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;ip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;identity&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;access_key_secret&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cas_ticket&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;methods&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;password&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;user&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;password&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;token&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;scope&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="返回示例">返回示例&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt; HTTP/1.1 &lt;span style="color:#0000cf;font-weight:bold">201&lt;/span> Created
-&amp;lt; Date: Thu, &lt;span style="color:#0000cf;font-weight:bold">12&lt;/span> Jul &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span> 10:04:10 GMT
-&amp;lt; Server: Apache/2.4.6 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>CentOS&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> PHP/5.6.24 mod_wsgi/3.4 Python/2.7.5
-&amp;lt; X-Subject-Token: gAAAAABbRyeaDF-FJj_roQXFXA2KLILvQbAxUcQ4TjT65UGL9C2v3jfDqfhWix9UURZ0TkIN0q_8GF5EjNxTTIEdh2k5vtqgCImYKtf_WKA03C8vlb1tl6gNukyxmH7yNiFZQFvXLHTo8ZPyL1vvI9m_bnW5NxTpCI9JVyTDe3BG_BG9gW8Lrsg
-&amp;lt; Vary: X-Auth-Token
-&amp;lt; x-openstack-request-id: req-3ed7d320-956e-4ee7-a424-d3d3b12a4bf7
-&amp;lt; Content-Length: &lt;span style="color:#0000cf;font-weight:bold">3514&lt;/span>
-&amp;lt; Content-Type: application/json
-&amp;lt;
-* Connection &lt;span style="color:#8f5902;font-style:italic">#0 to host 10.168.222.209 left intact&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;token&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;access_key&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;AccessKey&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;expire&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;secret&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;catalog&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;endpoints&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;75f4e36100184a5a8a3e36cb0f12aa87&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;interface&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;url&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;context&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;ip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;expires_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:32:39Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_domain&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;issued_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:32:39Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;methods&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;policies&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;System&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;projects&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;role_assignments&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;group&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;policies&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;scope&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;user&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;roles&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;user&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;Displayname&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Domain&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Email&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Mobile&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;PasswordExpiresAt&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:32:39Z&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="api网关">API网关&lt;/h2>
-&lt;p>目前只应用于前端。&lt;/p>
-&lt;h2 id="举例说明">举例说明&lt;/h2>
-&lt;p>以虚拟机API为例介绍具体的使用方法&lt;/p>
-&lt;h3 id="server-list">虚拟机列表&lt;/h3>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>方法&lt;/th>
-&lt;th>API&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>GET&lt;/td>
-&lt;td>/servers&lt;/td>
-&lt;td>获取虚拟机列表&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="请求示例-1">请求示例&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;gt; GET /servers?details&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">with_meta&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">limit&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> HTTP/1.1
-&amp;gt; Host: 192.168.222.171:8888
-&amp;gt; Content-Type: application/json
-&amp;gt; X-Auth-Token: gAAAAABbQHesYGnonUgZo2vqHIb4RFAE5ptZVOpKA0DcH5dyVB_5-rBAAsjGZszFXJNr46q52iXh7K26G1tYAGh9PtDHUv9j3E7bb4dt9Q6NBXRhGodJ7L25D-yvVL0Qx3dpXqGvqcSAhEe-wBKqN8pmyMyXKvQLfhwW7LsXc0dC8SIp6uUBKiFIxXzdlh1APAmqTTjR9Bog8DKDtXbFPHhKN2o4NNaItdo4h5ZJ3qFzo7Uy19osyQg
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="返回示例-1">返回示例&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt; HTTP/1.1 &lt;span style="color:#0000cf;font-weight:bold">200&lt;/span> OK
-&amp;lt; X-Request-Id: 7bc5a
-&amp;lt; Content-Length: &lt;span style="color:#0000cf;font-weight:bold">1330&lt;/span>
-&amp;lt; Server: TornadoServer/3.2.2
-&amp;lt; Date: Sat, &lt;span style="color:#0000cf;font-weight:bold">07&lt;/span> Jul &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span> 08:32:21 GMT
-&amp;lt; Content-Type: application/json&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">charset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UTF-8
-&amp;lt;
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;limit&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;offset&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;servers&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;account&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;account_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;admin_secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;admin_security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;attach_time&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;auto_delete_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;auto_renew&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;backup_host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;backup_host_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;backup_host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;billing_cycle&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;billing_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;postpaid&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;bios&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;boot_order&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;brand&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;can_delete&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;can_recycle&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;can_update&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;cdrom&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cdrom_support&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;cloud_env&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;public&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cloudregion&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cloudregion_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;delete_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disable_delete&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;disk&amp;#34;&lt;/span>: 30720,
-&lt;span style="color:#4e9a06">&amp;#34;disk_count&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;disks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disks_info&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;aio_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;bps&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;cache_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disk_format&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disk_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;driver&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;fs&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;image_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;index&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;iops&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;medium_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;size&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;storage_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;eip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;eip_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;environment&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;expired_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;flavor_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_service_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_sn&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;hypervisor&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;kvm&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;instance_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;10.165.2.1,172.16.8.1&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;is_gpu&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;is_prepaid_recycle&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;is_system&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;isolated_devices&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;dev_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;model&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;reserved_cpu&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;reserved_memory&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;reserved_storage&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vendor_device_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;keypair&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;keypair_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;machine&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;metadata&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;property1&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;property2&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;networks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;nics&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;ip_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;ip6_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_exit&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;mac&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;network_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;team_with&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;os_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;os_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;pending_deleted&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;pending_deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project_src&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;local&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;provider&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;ZStack/59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;scaling_group_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;scaling_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;secgroup&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;secgroups&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;shutdown_behavior&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;stop&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;src_ip_check&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;src_mac_check&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;tenant&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;tenant_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;update_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vcpu_count&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;vdi&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vga&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;virtual_ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vmem_size&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;vpc&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;zone&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;zone1&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;zone_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;zone_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;total&amp;#34;&lt;/span>: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="server-show">虚拟机详情&lt;/h3>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>方法&lt;/th>
-&lt;th>API&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>GET&lt;/td>
-&lt;td>/servers/&amp;lt;id&amp;gt;&lt;/td>
-&lt;td>获取虚拟机详情&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="请求示例-2">请求示例&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;gt; GET /servers/d983993b-2356-48ed-860b-550b8490c45d HTTP/1.1
-&amp;gt; Host: 192.168.222.171:8888
-&amp;gt; Content-Type: application/json
-&amp;gt; X-Auth-Token: gAAAAABbQHesYGnonUgZo2vqHIb4RFAE5ptZVOpKA0DcH5dyVB_5-rBAAsjGZszFXJNr46q52iXh7K26G1tYAGh9PtDHUv9j3E7bb4dt9Q6NBXRhGodJ7L25D-yvVL0Qx3dpXqGvqcSAhEe-wBKqN8pmyMyXKvQLfhwW7LsXc0dC8SIp6uUBKiFIxXzdlh1APAmqTTjR9Bog8DKDtXbFPHhKN2o4NNaItdo4h5ZJ3qFzo7Uy19osyQg
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="返回示例-2">返回示例&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&amp;lt; HTTP/1.1 &lt;span style="color:#0000cf;font-weight:bold">200&lt;/span> OK
-&amp;lt; X-Request-Id: 7bc5a
-&amp;lt; Content-Length: &lt;span style="color:#0000cf;font-weight:bold">2085&lt;/span>
-&amp;lt; Server: TornadoServer/3.2.2
-&amp;lt; Date: Sat, &lt;span style="color:#0000cf;font-weight:bold">07&lt;/span> Jul &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span> 08:32:21 GMT
-&amp;lt; Content-Type: application/json&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">charset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UTF-8
-&amp;lt;
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;server&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;account&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;account_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;admin_secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;admin_security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;attach_time&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;auto_delete_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;auto_renew&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;backup_host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;backup_host_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;backup_host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;billing_cycle&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;billing_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;postpaid&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;bios&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;boot_order&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;brand&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;can_delete&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;can_recycle&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;can_update&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;cdrom&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cdrom_support&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;cloud_env&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;public&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cloudregion&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;cloudregion_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;delete_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disable_delete&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;disk&amp;#34;&lt;/span>: 30720,
-&lt;span style="color:#4e9a06">&amp;#34;disk_count&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;disks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disks_info&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;aio_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;bps&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;cache_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disk_format&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;disk_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;driver&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;fs&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;image_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;index&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;iops&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;medium_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;size&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;storage_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;eip&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;eip_mode&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;environment&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;expired_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;flavor_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_service_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_sn&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;hypervisor&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;kvm&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;instance_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;10.165.2.1,172.16.8.1&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;is_gpu&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;is_prepaid_recycle&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;is_system&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;isolated_devices&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;created_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;deleted&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;dev_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_emulated&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;model&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;reserved_cpu&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;reserved_memory&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;reserved_storage&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vendor_device_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;keypair&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;keypair_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;machine&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;google-account&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_domain_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;manager_project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;metadata&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;property1&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;property2&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;networks&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;nics&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;ip_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;ip6_addr&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;is_exit&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;mac&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;network_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;team_with&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;os_name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;os_type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;pending_deleted&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;pending_deleted_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project_domain&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;project_src&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;local&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;provider&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Google&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_external_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;ZStack/59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;region_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;scaling_group_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;scaling_status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;secgroup&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;secgroups&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;secgrp_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;security_rules&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;shutdown_behavior&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;stop&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;src_ip_check&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;src_mac_check&amp;#34;&lt;/span>: true,
-&lt;span style="color:#4e9a06">&amp;#34;status&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;tenant&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;tenant_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;update_fail_reason&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;update_version&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;updated_at&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2020-07-21T07:40:04Z&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vcpu_count&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;vdi&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vga&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;virtual_ips&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vmem_size&amp;#34;&lt;/span>: 0,
-&lt;span style="color:#4e9a06">&amp;#34;vpc&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;vpc_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;zone&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;zone1&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;zone_ext_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>,
-&lt;span style="color:#4e9a06">&amp;#34;zone_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;string&amp;#34;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 使用SDK</title><link>https://www.cloudpods.org/zh/docs/apisdk/02_sdk/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/apisdk/02_sdk/</guid><description>
+&lt;pre>&lt;code>$climc credential-create-aksk
++--------+----------------------------------------------+
+| Field | Value |
++--------+----------------------------------------------+
+| expire | 0 |
+| secret | OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI= |
++--------+----------------------------------------------+
+&lt;/code>&lt;/pre>&lt;ol start="2">
+&lt;li>使用climc查询刚创建出来的aksk&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code>$climc credential-get-aksk
++--------+----------------------------------+----------------------------------+----------------------------------------------+----------------------+
+| expire | key_id | project_id | secret | time_stamp |
++--------+----------------------------------+----------------------------------+----------------------------------------------+----------------------+
+| 0 | ba92f912922044268d4ad1dc70aafe57 | 0e4416c837644f5a8f0d67c9930ff228 | OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI= | 2022-02-20T17:12:26Z |
++--------+----------------------------------+----------------------------------+----------------------------------------------+----------------------+
+&lt;/code>&lt;/pre>&lt;ol start="3">
+&lt;li>获取认证地址&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code>$ocadm cluster rcadmin
+export OS_AUTH_URL=https://10.211.55.9:30500/v3
+export OS_USERNAME=sysadmin
+export OS_PASSWORD=qNVaPTw9fCCMJ7eJ
+export OS_PROJECT_DOMAIN=default
+export OS_PROJECT_NAME=system
+export YUNION_INSECURE=true
+export OS_REGION_NAME=region0
+export OS_ENDPOINT_TYPE=publicURL
+&lt;/code>&lt;/pre>&lt;ol start="4">
+&lt;li>通过climc获取各个服务的endpoint&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code>// 可以看到认证地址是https://10.211.55.9:30500/v3, 在通过上面创建出来的aksk进行认证(同样可以用用户密码认证，不过需要传的参数多一些，认证也比较慢，不推荐使用), 使用climc命令时，可以通过--debug来查看传参
+// 这里aksk认证加密算法可以参考 https://github.com/yunionio/cloudpods/blob/10b1d9bdd35776cf8cb597d918fa571fbc356238/pkg/mcclient/aksk.go#L80
+$climc --debug --os-access-key ba92f912922044268d4ad1dc70aafe57 --os-secret-key 'OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI=' region-list
+POST /v3/auth/tokens HTTP/1.1
+Host: 10.211.55.9:30500
+User-Agent: yunioncloud-go/201708
+Content-Length: 573
+Accept: */*
+Accept-Encoding: *
+Content-Type: application/json
+CURL: curl -X 'POST' -d '{&amp;quot;auth&amp;quot;:{&amp;quot;context&amp;quot;:{&amp;quot;source&amp;quot;:&amp;quot;cli&amp;quot;},&amp;quot;identity&amp;quot;:{&amp;quot;access_key_secret&amp;quot;:&amp;quot;{\&amp;quot;access_key\&amp;quot;:\&amp;quot;ba92f912922044268d4ad1dc70aafe57\&amp;quot;,\&amp;quot;algorithm\&amp;quot;:\&amp;quot;AWS4-HMAC-SHA256\&amp;quot;,\&amp;quot;location\&amp;quot;:\&amp;quot;cn-beijing\&amp;quot;,\&amp;quot;request\&amp;quot;:\&amp;quot;AWS4-HMAC-SHA256\\n20220220T172931Z\\n20220220/cn-beijing/s3/aws4_request\\n5ff6dad4605ea24e0f0be6c6885eddbbe1a5619c89f682b21d719aa50dcb9264\&amp;quot;,\&amp;quot;sign_date\&amp;quot;:\&amp;quot;2022-02-20T17:29:31.000000Z\&amp;quot;,\&amp;quot;signature\&amp;quot;:\&amp;quot;4c92b91266168fc650fec9303a9dc3309f12d0fe66c5b0a605082e0260c70ce2\&amp;quot;,\&amp;quot;signed_headers\&amp;quot;:[\&amp;quot;date\&amp;quot;,\&amp;quot;host\&amp;quot;,\&amp;quot;x-amz-content-sha256\&amp;quot;,\&amp;quot;x-amz-date\&amp;quot;]}&amp;quot;,&amp;quot;methods&amp;quot;:[&amp;quot;aksk&amp;quot;]}}}' -H 'Accept: */*' -H 'Accept-Encoding: *' -H 'Content-Length: 573' -H 'Content-Type: application/json' -H 'User-Agent: yunioncloud-go/201708' 'https://10.211.55.9:30500/v3/auth/tokens'
+HTTP/1.1 200 OK
+Content-Length: 11253
+Content-Type: application/json;charset=utf-8
+Date: Sun, 20 Feb 2022 17:29:31 GMT
+Server: Yunion AppServer/Go/2018.4
+Vary: Origin
+X-Frame-Options: SAMEORIGIN
+X-Request-Host-Id: E1-kuT8w8_MRxLW1dXWRr9NPrGw=
+X-Request-Id: 51fde4
+X-Subject-Token: gAAAAABiEnp7Z3hP_xecU36DvRzu8Y67m2mDM9JfFip6NMcH2BjI8FT3-vaJ6JztgdGJaztXQDj1mDno-X-fHU0AvG-s56Yb-kXQj8dwo9g56EutyqVFgZ77FAdjvZNfcfEKt_sgrBbsPaVTqLOrrqHiu6UQckEJDKIp744zQOsZii66_CXwnc9MKQZO9sCw91BFDZMUrghj
+X-Yunion-Peer-Service-Name: identity
+X-Yunion-Remote-Addr: 10.211.55.9:43648
+X-Yunion-Span-Name: auth_tokens_v3
+Response body: {&amp;quot;id&amp;quot;:&amp;quot;gAAAAABiEnp7Z3hP_xecU36DvRzu8Y67m2mDM9JfFip6NMcH2BjI8FT3-vaJ6JztgdGJaztXQDj1mDno-X-fHU0AvG-s56Yb-kXQj8dwo9g56EutyqVFgZ77FAdjvZNfcfEKt_sgrBbsPaVTqLOrrqHiu6UQckEJDKIp744zQOsZii66_CXwnc9MKQZO9sCw91BFDZMUrghj&amp;quot;,&amp;quot;token&amp;quot;:{&amp;quot;access_key&amp;quot;:{&amp;quot;access_key&amp;quot;:&amp;quot;ba92f912922044268d4ad1dc70aafe57&amp;quot;,&amp;quot;expire&amp;quot;:0,&amp;quot;secret&amp;quot;:&amp;quot;OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI=&amp;quot;},&amp;quot;audit_ids&amp;quot;:[&amp;quot;58076f50591e288d4aa4fdc76b946f7b&amp;quot;],&amp;quot;catalog&amp;quot;:[{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;0d81a11591584b958a04804dd5abbabc&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;yunionconf-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-yunionconf:30889&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;9cfa500c785c4195831bd70161133802&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;yunionconf-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30889&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;87217758659c4cb18ba26bf0577e3427&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;yunionconf&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;yunionconf&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;0dd167cc3194438e88467a0a7bd6ef3c&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;notify-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30777&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;68f22940bccc47eb8666cfe1cbc6d256&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;notify-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-notify:30777&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;0db18c12231c4f16895f9c562128118e&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;notify&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;notify&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;264468c6e2b14ccc80a3dc174be14124&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;autoupdate-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-autoupdate:30981&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;de136a3d766d4c178b84cf10e0740592&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;autoupdate-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30981&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;cd7482a6ffa042b789185c5c1f4ab020&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;autoupdate&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;autoupdate&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;4ce974d81f494bef85b9e4f8e7654632&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;log-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30999&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;87f433df2d624ce28c1143f4d5db238e&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;log-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-logger:30999&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;60cf87cd573749b58250fa6c0d6794af&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;log&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;log&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;5123f3dab82b47f780f284637a18a518&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;admin&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;identity-admin&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30357/v3&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;885a45a04af2419783906d069c737465&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;identity-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30500/v3&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;b453e1ca7dfc4595884fed16011d1717&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;identity-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-keystone:30500/v3&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;55e14f71e0c34a8682dbeaef10a7cbb4&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;keystone&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;identity&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;67f79d211c284bc08afe707cdc81106e&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;websocket-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-apigateway:30443&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;d5d5962163c148068bf44a3341898e73&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;websocket-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30443&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;0185442fc0f040d2815a83ded61bb009&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;websocket&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;websocket&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;202b6def24134ce7813062c850e40850&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;s3gateway-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-s3gateway:30884&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;8c931e66bb874e8e80d71a509ef0fef8&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;s3gateway-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30884&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;f46030569f6e4de58c04bbbe017f0ca5&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;s3gateway&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;s3gateway&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;47226520bc0d45a6838a3e51fa29b6e4&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;image-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30292/v1&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;c1646e81c8944be98683a3d3b0c798be&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;image-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-glance:30292/v1&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;f22c933cdf37427d88ea6e9d98b4a221&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;glance&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;image&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;731c5e0a9918439683ff5467fbbc5dde&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;monitor-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30093&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;e2e88b11e60f42df80ac3d4d4b076000&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;monitor-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-monitor:30093&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;e42a56482f67437a8a8e213386da07d7&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;monitor&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;monitor&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;a9c1b32c54fb4a028803d52180e8b5a3&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;compute_v2-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-region:30888&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;adecd09b5e20436e8651b4a66d4326c8&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;compute_v2-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30888&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;efd8e0bed6cc43bf8b2c7ef0a5e1803b&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;region2&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;compute_v2&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;19f2eadbf2b9406b8e2e3aa2684ad7e5&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;offlinecloudmeta-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;7ba10412dfbc42ee82dada7eda7a1014&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;offlinecloudmeta-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;a8f6bc5429af48228d0da5dd520af0a7&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;offlinecloudmeta&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;offlinecloudmeta&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;25df9d4db3964d158d3201eb33118e09&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;influxdb-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-influxdb:30086&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;31551be071934bec8e41e15c2e7d2b45&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;influxdb-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30086&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;0b2b9c3d45e742e38fcce3063b00b2d7&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;influxdb&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;influxdb&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;3924af6d9ccd4dd28d0d5627d0f916dd&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;webconsole-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30899&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;403d0d9f349e447f809752ce1c8a2c0e&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;webconsole-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-webconsole:30899&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;017d07de150a435180f12931272ad286&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;webconsole&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;webconsole&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;650d0a29ac534d36852efeaec12ecb7b&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;k8s-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-kubeserver:30442/api&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;c9b157c4bf7b47258b17d2b9dccfc609&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;k8s-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30442/api&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;00aa0118f4bc40f38b12576675db9922&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;k8s&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;k8s&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;9361347388bf461a8a88543aa6df0af1&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudid-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30893&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;dd5f11acb719481380c7e7fcc2c57fe2&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudid-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudid:30893&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;a5bc5f118c484d6b812c8f807c5e5981&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudid&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;cloudid&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;b61f4332c4594d05866634b9e7e87319&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;torrent-tracker-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://tracker.yunion.cn&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;e543ab98873c4d838a2d1950e5fc2cb6&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;torrent-tracker-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://tracker.yunion.cn&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;29a4f2e4fd8b4e6c876ac3c41fdad610&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;torrent-tracker&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;torrent-tracker&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;48e06ade707040d38a2c81054d916772&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;etcd-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;http://default-etcd-client.onecloud.svc:2379&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;012622a60c814d478d180ee28107caf0&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;etcd&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;etcd&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;84293895e9db410e8c8584afc3fde39b&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;ansible-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-ansibleserver:30890&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;a9e5c8be89254bb98c444bb04344e1f7&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;ansible-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30890&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;1313597e674a4bfc8f7dcf06f3033280&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;ansible&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;ansible&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;022b48ad6b6640858471aa2074f600ee&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;devtool-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30997&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;5ed574340c40491f8506b6aa48b2be8b&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;devtool-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-devtool:30997&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;c239df97fd0148e78ce143e7017f3859&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;devtool&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;devtool&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;05655d3ea1da4aca8b4441c2597a4a73&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudevent-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30892&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;87b37bf1dea940208d9e5731baabb4b9&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudevent-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudevent:30892&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;6b78e4f08c68421d8497591c44f53965&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudevent&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;cloudevent&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;0ae9af784f2a4c35865fbf94f5e371eb&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudnet-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30891&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;18234fdf11fb453e8aeb27f5ce1a4a09&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudnet-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudnet:30891&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;0164ae489d50476382544fa82d35c651&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudnet&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;cloudnet&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;10714444f63d460f89b42872c7b8a2e4&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudmeta-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://meta.yunion.cn&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;cd3f9d63e5f3486d8d6ef1a2e5de240b&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudmeta-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://meta.yunion.cn&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;5ffa814de268402d82e709e6e43c8a27&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudmeta&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;cloudmeta&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;1ae5a40781a542b284f4058e7fa57819&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudproxy-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30882&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;c4f1d6c3241c466181102cfa04db5a48&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudproxy-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudproxy:30882&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;c166b15b68384f6b8d79c625a2a4d6e4&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;cloudproxy&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;cloudproxy&amp;quot;},{&amp;quot;endpoints&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;33dd58d495484d7885ac3ef6766b5cd6&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;scheduler-public&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30887&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;36cb905a8f284bb2840d38c3af1ebab8&amp;quot;,&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;scheduler-internal&amp;quot;,&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,&amp;quot;url&amp;quot;:&amp;quot;https://default-scheduler:30887&amp;quot;}],&amp;quot;id&amp;quot;:&amp;quot;8155088ac46c4bd1816adf5537ccaedf&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;scheduler&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;scheduler&amp;quot;}],&amp;quot;context&amp;quot;:{&amp;quot;ip&amp;quot;:&amp;quot;10.211.55.9&amp;quot;,&amp;quot;source&amp;quot;:&amp;quot;cli&amp;quot;},&amp;quot;expires_at&amp;quot;:&amp;quot;2022-02-21T17:29:31.370591Z&amp;quot;,&amp;quot;is_domain&amp;quot;:false,&amp;quot;issued_at&amp;quot;:&amp;quot;2022-02-20T17:29:31.370591Z&amp;quot;,&amp;quot;methods&amp;quot;:[&amp;quot;aksk&amp;quot;],&amp;quot;policies&amp;quot;:{&amp;quot;system&amp;quot;:[&amp;quot;sysadmin&amp;quot;]},&amp;quot;project&amp;quot;:{&amp;quot;domain&amp;quot;:{&amp;quot;id&amp;quot;:&amp;quot;default&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;Default&amp;quot;},&amp;quot;id&amp;quot;:&amp;quot;0e4416c837644f5a8f0d67c9930ff228&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;system&amp;quot;},&amp;quot;roles&amp;quot;:[{&amp;quot;id&amp;quot;:&amp;quot;2c85811d739d4fca892b41df6bc0484b&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;admin&amp;quot;}],&amp;quot;user&amp;quot;:{&amp;quot;domain&amp;quot;:{&amp;quot;id&amp;quot;:&amp;quot;default&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;Default&amp;quot;},&amp;quot;id&amp;quot;:&amp;quot;a09dbd66f37245518bb2b7984dca46bf&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;sysadmin&amp;quot;}}}
+从上面的请求可以看到, 第一次请求的是https://10.211.55.9:30500/v3/auth/tokens, 并且使用了刚才创建的aksk进行认证, 认证通过后返回了一个很大的json结果, 下面将对json结果做进一步说明
+{
+&amp;quot;id&amp;quot;:&amp;quot;gAAAAABiEnp7Z3hP_xecU36DvRzu8Y67m2mDM9JfFip6NMcH2BjI8FT3-vaJ6JztgdGJaztXQDj1mDno-X-fHU0AvG-s56Yb-kXQj8dwo9g56EutyqVFgZ77FAdjvZNfcfEKt_sgrBbsPaVTqLOrrqHiu6UQckEJDKIp744zQOsZii66_CXwnc9MKQZO9sCw91BFDZMUrghj&amp;quot;, // 这个Id是认证返回的token, 和返回header中的X-Subject-Token是一样的，后面可以用这个id作为请求的header(X-Auth-Token)进行认证
+&amp;quot;token&amp;quot;:{
+&amp;quot;access_key&amp;quot;:{
+&amp;quot;access_key&amp;quot;:&amp;quot;ba92f912922044268d4ad1dc70aafe57&amp;quot;,
+&amp;quot;expire&amp;quot;:0,
+&amp;quot;secret&amp;quot;:&amp;quot;OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI=&amp;quot;
+},
+&amp;quot;audit_ids&amp;quot;:[
+&amp;quot;58076f50591e288d4aa4fdc76b946f7b&amp;quot;
+],
+&amp;quot;catalog&amp;quot;:[ // 这个是各个服务的endpoint, 商业版会多一些服务
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;0d81a11591584b958a04804dd5abbabc&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;yunionconf-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-yunionconf:30889&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;9cfa500c785c4195831bd70161133802&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;yunionconf-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30889&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;87217758659c4cb18ba26bf0577e3427&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;yunionconf&amp;quot;, // 这个是配置服务
+&amp;quot;type&amp;quot;:&amp;quot;yunionconf&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;0dd167cc3194438e88467a0a7bd6ef3c&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;notify-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30777&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;68f22940bccc47eb8666cfe1cbc6d256&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;notify-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-notify:30777&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;0db18c12231c4f16895f9c562128118e&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;notify&amp;quot;, // 这个是通知服务
+&amp;quot;type&amp;quot;:&amp;quot;notify&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;264468c6e2b14ccc80a3dc174be14124&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;autoupdate-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-autoupdate:30981&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;de136a3d766d4c178b84cf10e0740592&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;autoupdate-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30981&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;cd7482a6ffa042b789185c5c1f4ab020&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;autoupdate&amp;quot;, // 这个是自动更新服务
+&amp;quot;type&amp;quot;:&amp;quot;autoupdate&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;4ce974d81f494bef85b9e4f8e7654632&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;log-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30999&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;87f433df2d624ce28c1143f4d5db238e&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;log-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-logger:30999&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;60cf87cd573749b58250fa6c0d6794af&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;log&amp;quot;, // 这个是日志服务
+&amp;quot;type&amp;quot;:&amp;quot;log&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;5123f3dab82b47f780f284637a18a518&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;admin&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;identity-admin&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30357/v3&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;885a45a04af2419783906d069c737465&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;identity-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30500/v3&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;b453e1ca7dfc4595884fed16011d1717&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;identity-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-keystone:30500/v3&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;55e14f71e0c34a8682dbeaef10a7cbb4&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;keystone&amp;quot;, // 这个是认证服务
+&amp;quot;type&amp;quot;:&amp;quot;identity&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;67f79d211c284bc08afe707cdc81106e&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;websocket-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-apigateway:30443&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;d5d5962163c148068bf44a3341898e73&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;websocket-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30443&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;0185442fc0f040d2815a83ded61bb009&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;websocket&amp;quot;, // 这个是websocket服务
+&amp;quot;type&amp;quot;:&amp;quot;websocket&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;202b6def24134ce7813062c850e40850&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;s3gateway-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-s3gateway:30884&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;8c931e66bb874e8e80d71a509ef0fef8&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;s3gateway-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30884&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;f46030569f6e4de58c04bbbe017f0ca5&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;s3gateway&amp;quot;, // s3网关服务
+&amp;quot;type&amp;quot;:&amp;quot;s3gateway&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;47226520bc0d45a6838a3e51fa29b6e4&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;image-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30292/v1&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;c1646e81c8944be98683a3d3b0c798be&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;image-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-glance:30292/v1&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;f22c933cdf37427d88ea6e9d98b4a221&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;glance&amp;quot;, // 这个是镜像服务
+&amp;quot;type&amp;quot;:&amp;quot;image&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;731c5e0a9918439683ff5467fbbc5dde&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;monitor-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30093&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;e2e88b11e60f42df80ac3d4d4b076000&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;monitor-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-monitor:30093&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;e42a56482f67437a8a8e213386da07d7&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;monitor&amp;quot;, // 这个是监控服务
+&amp;quot;type&amp;quot;:&amp;quot;monitor&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;a9c1b32c54fb4a028803d52180e8b5a3&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;compute_v2-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-region:30888&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;adecd09b5e20436e8651b4a66d4326c8&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;compute_v2-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30888&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;efd8e0bed6cc43bf8b2c7ef0a5e1803b&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;region2&amp;quot;, // 这个是计算服务(控制节点)
+&amp;quot;type&amp;quot;:&amp;quot;compute_v2&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;19f2eadbf2b9406b8e2e3aa2684ad7e5&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;offlinecloudmeta-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;7ba10412dfbc42ee82dada7eda7a1014&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;offlinecloudmeta-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;a8f6bc5429af48228d0da5dd520af0a7&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;offlinecloudmeta&amp;quot;, // 这个是套餐同步的服务
+&amp;quot;type&amp;quot;:&amp;quot;offlinecloudmeta&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;25df9d4db3964d158d3201eb33118e09&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;influxdb-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-influxdb:30086&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;31551be071934bec8e41e15c2e7d2b45&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;influxdb-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30086&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;0b2b9c3d45e742e38fcce3063b00b2d7&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;influxdb&amp;quot;,
+&amp;quot;type&amp;quot;:&amp;quot;influxdb&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;3924af6d9ccd4dd28d0d5627d0f916dd&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;webconsole-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30899&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;403d0d9f349e447f809752ce1c8a2c0e&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;webconsole-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-webconsole:30899&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;017d07de150a435180f12931272ad286&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;webconsole&amp;quot;, // 这个是webconsole服务
+&amp;quot;type&amp;quot;:&amp;quot;webconsole&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;650d0a29ac534d36852efeaec12ecb7b&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;k8s-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-kubeserver:30442/api&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;c9b157c4bf7b47258b17d2b9dccfc609&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;k8s-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30442/api&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;00aa0118f4bc40f38b12576675db9922&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;k8s&amp;quot;, // k8s服务
+&amp;quot;type&amp;quot;:&amp;quot;k8s&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;9361347388bf461a8a88543aa6df0af1&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudid-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30893&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;dd5f11acb719481380c7e7fcc2c57fe2&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudid-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudid:30893&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;a5bc5f118c484d6b812c8f807c5e5981&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudid&amp;quot;, // 这个是公有云iam免密认证服务
+&amp;quot;type&amp;quot;:&amp;quot;cloudid&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;b61f4332c4594d05866634b9e7e87319&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;torrent-tracker-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://tracker.yunion.cn&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;e543ab98873c4d838a2d1950e5fc2cb6&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;torrent-tracker-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://tracker.yunion.cn&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;29a4f2e4fd8b4e6c876ac3c41fdad610&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;torrent-tracker&amp;quot;,
+&amp;quot;type&amp;quot;:&amp;quot;torrent-tracker&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;48e06ade707040d38a2c81054d916772&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;etcd-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;http://default-etcd-client.onecloud.svc:2379&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;012622a60c814d478d180ee28107caf0&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;etcd&amp;quot;, // etcd
+&amp;quot;type&amp;quot;:&amp;quot;etcd&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;84293895e9db410e8c8584afc3fde39b&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;ansible-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-ansibleserver:30890&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;a9e5c8be89254bb98c444bb04344e1f7&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;ansible-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30890&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;1313597e674a4bfc8f7dcf06f3033280&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;ansible&amp;quot;, // ansible
+&amp;quot;type&amp;quot;:&amp;quot;ansible&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;022b48ad6b6640858471aa2074f600ee&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;devtool-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30997&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;5ed574340c40491f8506b6aa48b2be8b&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;devtool-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-devtool:30997&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;c239df97fd0148e78ce143e7017f3859&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;devtool&amp;quot;, // 运维工具服务
+&amp;quot;type&amp;quot;:&amp;quot;devtool&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;05655d3ea1da4aca8b4441c2597a4a73&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudevent-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30892&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;87b37bf1dea940208d9e5731baabb4b9&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudevent-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudevent:30892&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;6b78e4f08c68421d8497591c44f53965&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudevent&amp;quot;, // 公有云日志服务
+&amp;quot;type&amp;quot;:&amp;quot;cloudevent&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;0ae9af784f2a4c35865fbf94f5e371eb&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudnet-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30891&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;18234fdf11fb453e8aeb27f5ce1a4a09&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudnet-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudnet:30891&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;0164ae489d50476382544fa82d35c651&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudnet&amp;quot;,
+&amp;quot;type&amp;quot;:&amp;quot;cloudnet&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;10714444f63d460f89b42872c7b8a2e4&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudmeta-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://meta.yunion.cn&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;cd3f9d63e5f3486d8d6ef1a2e5de240b&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudmeta-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://meta.yunion.cn&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;5ffa814de268402d82e709e6e43c8a27&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudmeta&amp;quot;,
+&amp;quot;type&amp;quot;:&amp;quot;cloudmeta&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;1ae5a40781a542b284f4058e7fa57819&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudproxy-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30882&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;c4f1d6c3241c466181102cfa04db5a48&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudproxy-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-cloudproxy:30882&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;c166b15b68384f6b8d79c625a2a4d6e4&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;cloudproxy&amp;quot;,
+&amp;quot;type&amp;quot;:&amp;quot;cloudproxy&amp;quot;
+},
+{
+&amp;quot;endpoints&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;33dd58d495484d7885ac3ef6766b5cd6&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;public&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;scheduler-public&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://10.211.55.9:30887&amp;quot;
+},
+{
+&amp;quot;id&amp;quot;:&amp;quot;36cb905a8f284bb2840d38c3af1ebab8&amp;quot;,
+&amp;quot;interface&amp;quot;:&amp;quot;internal&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;scheduler-internal&amp;quot;,
+&amp;quot;region&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;region_id&amp;quot;:&amp;quot;region0&amp;quot;,
+&amp;quot;url&amp;quot;:&amp;quot;https://default-scheduler:30887&amp;quot;
+}
+],
+&amp;quot;id&amp;quot;:&amp;quot;8155088ac46c4bd1816adf5537ccaedf&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;scheduler&amp;quot;, //调度服务
+&amp;quot;type&amp;quot;:&amp;quot;scheduler&amp;quot;
+}
+],
+&amp;quot;context&amp;quot;:{
+&amp;quot;ip&amp;quot;:&amp;quot;10.211.55.9&amp;quot;,
+&amp;quot;source&amp;quot;:&amp;quot;cli&amp;quot;
+},
+&amp;quot;expires_at&amp;quot;:&amp;quot;2022-02-21T17:29:31.370591Z&amp;quot;, // 认证失效时间，如果超过这个时间上面的id认证就失效了，需要重新认证获取新的id
+&amp;quot;is_domain&amp;quot;:false,
+&amp;quot;issued_at&amp;quot;:&amp;quot;2022-02-20T17:29:31.370591Z&amp;quot;,
+&amp;quot;methods&amp;quot;:[
+&amp;quot;aksk&amp;quot;
+],
+&amp;quot;policies&amp;quot;:{
+&amp;quot;system&amp;quot;:[
+&amp;quot;sysadmin&amp;quot;
+]
+},
+&amp;quot;project&amp;quot;:{
+&amp;quot;domain&amp;quot;:{
+&amp;quot;id&amp;quot;:&amp;quot;default&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;Default&amp;quot;
+},
+&amp;quot;id&amp;quot;:&amp;quot;0e4416c837644f5a8f0d67c9930ff228&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;system&amp;quot;
+},
+&amp;quot;roles&amp;quot;:[
+{
+&amp;quot;id&amp;quot;:&amp;quot;2c85811d739d4fca892b41df6bc0484b&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;admin&amp;quot;
+}
+],
+&amp;quot;user&amp;quot;:{
+&amp;quot;domain&amp;quot;:{
+&amp;quot;id&amp;quot;:&amp;quot;default&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;Default&amp;quot;
+},
+&amp;quot;id&amp;quot;:&amp;quot;a09dbd66f37245518bb2b7984dca46bf&amp;quot;,
+&amp;quot;name&amp;quot;:&amp;quot;sysadmin&amp;quot;
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;ol start="4">
+&lt;li>以获取虚拟机列表举例&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code>通过步骤3获取到了认证的token，并且也知道了计算服务的endpoint是 https://10.211.55.9:30888
+虚拟机列表的api是 GET /servers, 因此可以构造出curl:
+$curl -k -X 'GET' -d '' -H 'Accept: */*' -H 'Accept-Encoding: *' -H 'Content-Length: 0' -H 'Content-Type: application/json' -H 'User-Agent: yunioncloud-go/201708' -H 'X-Auth-Token: gAAAAABiEn7_nBvGcZX-XeHRcm5oQjI6Vxz66atfQIXPCu0OEUmpkTBX4yjIz2CIVtuWuUfjTpExAxzuNybZzRf6bHnlgDdKOBJmxzvrikbTGBkltQJAi7bKzIs3MC0pmAFrULm306izk-z1AKjRIVD4x2njfriPuH9KAs3ToHzfatPi18xx3GRWpngFTQ3xJa6n4Gzigilh' 'https://10.211.55.9:30888/servers'
+{&amp;quot;servers&amp;quot;:[]}
+同样这一步也可以通过climc命令进行调试: climc --debug --os-auth-token gAAAAABiEnp4SlVCjoLmRdLbuaskbHUJIMDnwZcURyEp-5REXZ-ePPd0H4ZQj7GA8-9UEs1ALuDaXklu1dYdv51AWt7UoemvHiS0_hl_rJYOgKUKZQ4RNqsdIpfNsq-9qkjmo2YvFLMrTf2Z1oxrm9WASSGPeGtGSIoJC_X6XbbxIMC4oW26Z4GJaFe1NJaw5JkmpoErA45Q server-list
+&lt;/code>&lt;/pre>&lt;ol start="5">
+&lt;li>总结&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code>1. 通过认证拿到token id, 和各个服务的endpoint
+2. 通过组合endpoint和各个资源，并且指定X-Auth-Token header为token id,即可发送api操作资源
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 使用SDK</title><link>https://www.cloudpods.org/zh/docs/apisdk/02_sdk/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/apisdk/02_sdk/</guid><description>
 &lt;p>本章节介绍Cloudpods SDK的调用方法。目前提供了golang，Java，Python3和Nodejs等四种语言的SDK：&lt;/p>
 &lt;ul>
 &lt;li>

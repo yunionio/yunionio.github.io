@@ -1,12 +1,12 @@
 <!doctype html><html lang=zh class=no-js><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.83.1"><meta name=ROBOTS content="NOINDEX, NOFOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>API调用方法</title><meta property="og:title" content="API调用方法"><meta property="og:description" content="介绍Cloudpods API调用方法
 "><meta property="og:type" content="article"><meta property="og:url" content="https://www.cloudpods.org/zh/docs/apisdk/01_api/"><meta property="article:section" content="docs"><meta property="article:published_time" content="2019-07-11T20:39:39+08:00"><meta property="article:modified_time" content="2019-07-11T20:39:39+08:00"><meta property="og:site_name" content="Cloudpods"><meta itemprop=name content="API调用方法"><meta itemprop=description content="介绍Cloudpods API调用方法
-"><meta itemprop=datePublished content="2019-07-11T20:39:39+08:00"><meta itemprop=dateModified content="2019-07-11T20:39:39+08:00"><meta itemprop=wordCount content="1146"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="API调用方法"><meta name=twitter:description content="介绍Cloudpods API调用方法
+"><meta itemprop=datePublished content="2019-07-11T20:39:39+08:00"><meta itemprop=dateModified content="2019-07-11T20:39:39+08:00"><meta itemprop=wordCount content="862"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="API调用方法"><meta name=twitter:description content="介绍Cloudpods API调用方法
 "><link rel=preload href=/scss/main.min.179f2a0cebe6c26066f5b26018cacc453d89d47132e3f6f1faddf3f26a090071.css as=style><link href=/scss/main.min.179f2a0cebe6c26066f5b26018cacc453d89d47132e3f6f1faddf3f26a090071.css rel=stylesheet integrity><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/fuse.js@6.4.3></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-LX0MD5KG60"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-LX0MD5KG60')</script></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar"><a id=cloudpods-top href=/zh/ class="logo flex-shrink-0 navbar-brand"><img src=/images/cloudpods_logo_white.png height=46></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/docs/quickstart/><span>快速开始</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link active" href=/zh/docs/><span class=active>文档</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/blog/><span>博客</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=https://github.com/yunionio/cloudpods target=_blank><span>GitHub</span></a></li><li class="nav-item mr-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/docs/swagger><span>API</span></a></li><li class="nav-item dropdown d-none d-lg-block"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>3.8</a><div class=dropdown-menu aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/>v3.8 (latest)</a>
 <a class=dropdown-item href=/v3.7>v3.7</a>
 <a class=dropdown-item href=/v3.6>v3.6</a>
 <a class=dropdown-item href=/v3.4>v3.4</a>
 <a class=dropdown-item href=/v3.3>v3.3</a>
-<a class=dropdown-item href=/v3.2>v3.2</a></div></li><li class="nav-item dropdown d-none d-lg-block"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文</a><div class=dropdown-menu aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/en/>English</a></div></li></ul></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none"><div id=td-sidebar-menu class=td-sidebar__inner><form class="td-sidebar__search d-flex align-items-center"><input type=search class="form-control td-search-input" placeholder="&#xf002; 站内搜索…" aria-label=站内搜索… autocomplete=off data-offline-search-index-json-src=/offline-search-index.c07d45ac8238296aab70b79481c87682.json data-offline-search-base-href=/ data-offline-search-max-results=10>
+<a class=dropdown-item href=/v3.2>v3.2</a></div></li><li class="nav-item dropdown d-none d-lg-block"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文</a><div class=dropdown-menu aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/en/>English</a></div></li></ul></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none"><div id=td-sidebar-menu class=td-sidebar__inner><form class="td-sidebar__search d-flex align-items-center"><input type=search class="form-control td-search-input" placeholder="&#xf002; 站内搜索…" aria-label=站内搜索… autocomplete=off data-offline-search-index-json-src=/offline-search-index.b2a13e06c7a1f6fd7a778f2f8acb4b87.json data-offline-search-base-href=/ data-offline-search-max-results=10>
 <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type=button data-toggle=collapse data-target=#td-section-nav aria-controls=td-docs-nav aria-expanded=false aria-label="Toggle section navigation"></button></form><nav class="collapse td-sidebar-nav" id=td-section-nav><div class="nav-item dropdown d-block d-lg-none"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文</a><div class=dropdown-menu aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/en/>English</a></div></div><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/zh/docs/ class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">文档</a></li><ul><li class="collapse show" id=zhdocs><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/zh/docs/quickstart/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">快速开始</a></li><ul><li class=collapse id=zhdocsquickstart><a class="td-sidebar-link td-sidebar-link__page" id=m-zhdocsquickstartallinone href=/zh/docs/quickstart/allinone/>All in One 安装</a>
 <a class="td-sidebar-link td-sidebar-link__page" id=m-zhdocsquickstartha href=/zh/docs/quickstart/ha/>高可用安装</a>
 <a class="td-sidebar-link td-sidebar-link__page" id=m-zhdocsquickstartk8s href=/zh/docs/quickstart/k8s/>Kubernetes 安装</a>
@@ -795,565 +795,671 @@
 <a class="td-sidebar-link td-sidebar-link__page" id=m-zhdocschangelogrelease-333-3-0 href=/zh/docs/changelog/release-3.3/3-3-0/>v3.3.0</a></li></ul></ul></li></ul></ul><ul class="td-sidebar-nav__section pr-md-3"><li class=td-sidebar-nav__section-title><a href=/zh/docs/roadmap/ class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">开发计划</a></li><ul><li class=collapse id=zhdocsroadmap></li></ul></ul></li></ul></ul></nav></div></div><div class="d-none d-xl-block col-xl-2 td-toc d-print-none"><div class="td-page-meta ml-2 pb-1 pt-2 mb-0"><a href=https://github.com/yunionio/docs/edit/master/content/zh/docs/apisdk/01_api.md target=_blank><i class="fa fa-edit fa-fw"></i> 编辑此页</a>
 <a href="https://github.com/yunionio/docs/new/master/content/zh/docs/apisdk/01_api.md?filename=change-me.md&value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" target=_blank><i class="fa fa-edit fa-fw"></i> 添加子页面</a>
 <a href="https://github.com/yunionio/docs/issues/new?title=API%e8%b0%83%e7%94%a8%e6%96%b9%e6%b3%95" target=_blank><i class="fab fa-github fa-fw"></i> 提交文档问题</a>
-<a href=https://github.com/yunionio/cloudpods/issues/new target=_blank><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a></div><nav id=TableOfContents><ul><li><a href=#请求方法>请求方法</a></li><li><a href=#公共请求头>公共请求头</a></li><li><a href=#公共响应头>公共响应头</a></li><li><a href=#api调用方法>API调用方法</a></li><li><a href=#keystone认证>keystone认证</a><ul><li><a href=#认证信息>认证信息</a></li><li><a href=#请求示例>请求示例</a></li><li><a href=#返回示例>返回示例</a></li></ul></li><li><a href=#api网关>API网关</a></li><li><a href=#举例说明>举例说明</a><ul><li><a href=#server-list>虚拟机列表</a></li><li><a href=#server-show>虚拟机详情</a></li></ul></li></ul></nav></div><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudpods.org/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudpods.org/zh/docs/apisdk/>API与SDK</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudpods.org/zh/docs/apisdk/01_api/>API调用方法</a></li></ol></nav><div class=td-content><h1>API调用方法</h1><div class=lead>介绍Cloudpods API调用方法</div><p>本章节介绍Cloudpods API的调用方法。</p><p><a href=../../swagger>详细的API内容请参考API</a>。</p><h2 id=请求方法>请求方法</h2><p>不同类型的API使用不同的请求方法，如下所示</p><table><thead><tr><th>API类型</th><th>请求方法</th></tr></thead><tbody><tr><td>查询资源</td><td>GET</td></tr><tr><td>更新资源</td><td>PUT</td></tr><tr><td>创建资源</td><td>POST</td></tr><tr><td>删除资源</td><td>DELETE</td></tr></tbody></table><h2 id=公共请求头>公共请求头</h2><table><thead><tr><th>头域</th><th>是否必须</th><th>说明</th></tr></thead><tbody><tr><td>X-Auth-Token</td><td>必须</td><td>使用keystone v3认证机制</td></tr><tr><td>Content-Type</td><td>必须</td><td>应该总是application/json</td></tr></tbody></table><h2 id=公共响应头>公共响应头</h2><table><thead><tr><th>头域</th><th>说明</th></tr></thead><tbody><tr><td>Content-Type</td><td>总是application/json; charset=UTF-8</td></tr><tr><td>X-Request-Id</td><td>对应请求的requestId</td></tr></tbody></table><h2 id=api调用方法>API调用方法</h2><p>API调用分为两个步骤：</p><ol><li><p>调用Keystone的认证接口，获得token（如果已经获得token，并且在token有效期内，则可以跳过该步骤）</p></li><li><p>调用接口，此时需要第1步获得的服务访问地址以及token，将token作为请求header的X-Auth-Token参数中保存。</p></li></ol><h2 id=keystone认证>keystone认证</h2><h3 id=认证信息>认证信息</h3><table><thead><tr><th>方法</th><th>API</th><th>说明</th></tr></thead><tbody><tr><td>POST</td><td>/v3/auth/tokens</td><td>获取认证信息</td></tr></tbody></table><h3 id=请求示例>请求示例</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>&gt; POST /v3/auth/tokens HTTP/1.1
-&gt; Host: 192.168.0.246:5000
-&gt; Content-Type: application/json
+<a href=https://github.com/yunionio/cloudpods/issues/new target=_blank><i class="fas fa-tasks fa-fw"></i> 提交项目问题</a></div></div><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudpods.org/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudpods.org/zh/docs/apisdk/>API与SDK</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudpods.org/zh/docs/apisdk/01_api/>API调用方法</a></li></ol></nav><div class=td-content><h1>API调用方法</h1><div class=lead>介绍Cloudpods API调用方法</div><p>本章节介绍Cloudpods API的调用方法。</p><p><a href=../../swagger>详细的API内容请参考API</a>。</p><ol><li>使用climc先创建aksk</li></ol><pre><code>$climc credential-create-aksk
++--------+----------------------------------------------+
+| Field  |                    Value                     |
++--------+----------------------------------------------+
+| expire | 0                                            |
+| secret | OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI= |
++--------+----------------------------------------------+
+</code></pre><ol start=2><li>使用climc查询刚创建出来的aksk</li></ol><pre><code>$climc credential-get-aksk
++--------+----------------------------------+----------------------------------+----------------------------------------------+----------------------+
+| expire |              key_id              |            project_id            |                    secret                    |      time_stamp      |
++--------+----------------------------------+----------------------------------+----------------------------------------------+----------------------+
+| 0      | ba92f912922044268d4ad1dc70aafe57 | 0e4416c837644f5a8f0d67c9930ff228 | OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI= | 2022-02-20T17:12:26Z |
++--------+----------------------------------+----------------------------------+----------------------------------------------+----------------------+
+</code></pre><ol start=3><li>获取认证地址</li></ol><pre><code>$ocadm cluster rcadmin
+export OS_AUTH_URL=https://10.211.55.9:30500/v3
+export OS_USERNAME=sysadmin
+export OS_PASSWORD=qNVaPTw9fCCMJ7eJ
+export OS_PROJECT_DOMAIN=default
+export OS_PROJECT_NAME=system
+export YUNION_INSECURE=true
+export OS_REGION_NAME=region0
+export OS_ENDPOINT_TYPE=publicURL
+</code></pre><ol start=4><li>通过climc获取各个服务的endpoint</li></ol><pre><code>// 可以看到认证地址是https://10.211.55.9:30500/v3, 在通过上面创建出来的aksk进行认证(同样可以用用户密码认证，不过需要传的参数多一些，认证也比较慢，不推荐使用), 使用climc命令时，可以通过--debug来查看传参
+// 这里aksk认证加密算法可以参考 https://github.com/yunionio/cloudpods/blob/10b1d9bdd35776cf8cb597d918fa571fbc356238/pkg/mcclient/aksk.go#L80
+$climc --debug --os-access-key ba92f912922044268d4ad1dc70aafe57 --os-secret-key 'OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI=' region-list
+POST /v3/auth/tokens HTTP/1.1
+Host: 10.211.55.9:30500
+User-Agent: yunioncloud-go/201708
+Content-Length: 573
+Accept: */*
+Accept-Encoding: *
+Content-Type: application/json
 
-<span style=color:#ce5c00;font-weight:700>{</span>
-  <span style=color:#4e9a06>&#34;auth&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-    <span style=color:#4e9a06>&#34;context&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;ip&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;source&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;identity&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;access_key_secret&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;cas_ticket&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>,
-      <span style=color:#4e9a06>&#34;methods&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;password&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;user&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;Domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>,
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;password&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>,
-      <span style=color:#4e9a06>&#34;token&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;scope&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>,
-      <span style=color:#4e9a06>&#34;project&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>,
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>
-  <span style=color:#ce5c00;font-weight:700>}</span>
-<span style=color:#ce5c00;font-weight:700>}</span>
-</code></pre></div><h3 id=返回示例>返回示例</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>&lt; HTTP/1.1 <span style=color:#0000cf;font-weight:700>201</span> Created
-&lt; Date: Thu, <span style=color:#0000cf;font-weight:700>12</span> Jul <span style=color:#0000cf;font-weight:700>2018</span> 10:04:10 GMT
-&lt; Server: Apache/2.4.6 <span style=color:#ce5c00;font-weight:700>(</span>CentOS<span style=color:#ce5c00;font-weight:700>)</span> PHP/5.6.24 mod_wsgi/3.4 Python/2.7.5
-&lt; X-Subject-Token: gAAAAABbRyeaDF-FJj_roQXFXA2KLILvQbAxUcQ4TjT65UGL9C2v3jfDqfhWix9UURZ0TkIN0q_8GF5EjNxTTIEdh2k5vtqgCImYKtf_WKA03C8vlb1tl6gNukyxmH7yNiFZQFvXLHTo8ZPyL1vvI9m_bnW5NxTpCI9JVyTDe3BG_BG9gW8Lrsg
-&lt; Vary: X-Auth-Token
-&lt; x-openstack-request-id: req-3ed7d320-956e-4ee7-a424-d3d3b12a4bf7
-&lt; Content-Length: <span style=color:#0000cf;font-weight:700>3514</span>
-&lt; Content-Type: application/json
-&lt;
-* Connection <span style=color:#8f5902;font-style:italic>#0 to host 10.168.222.209 left intact</span>
-<span style=color:#ce5c00;font-weight:700>{</span>
-  <span style=color:#4e9a06>&#34;token&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-    <span style=color:#4e9a06>&#34;access_key&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;AccessKey&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;expire&#34;</span>: 0,
-      <span style=color:#4e9a06>&#34;secret&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;catalog&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;endpoints&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-          <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;75f4e36100184a5a8a3e36cb0f12aa87&#34;</span>,
-            <span style=color:#4e9a06>&#34;interface&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;region&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;region_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;url&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>
-        <span style=color:#ce5c00;font-weight:700>]</span>,
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;context&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;ip&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;source&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;expires_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:32:39Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;is_domain&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;issued_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:32:39Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;methods&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;policies&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;Domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;Project&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;System&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;project&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;Domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>,
-      <span style=color:#4e9a06>&#34;Id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;Name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;projects&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;Domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>,
-        <span style=color:#4e9a06>&#34;Id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;Name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;role_assignments&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;group&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>,
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>,
-        <span style=color:#4e9a06>&#34;policies&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-            <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>]</span>,
-          <span style=color:#4e9a06>&#34;project&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-            <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>]</span>,
-          <span style=color:#4e9a06>&#34;system&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-            <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>]</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>,
-        <span style=color:#4e9a06>&#34;role&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>,
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>,
-        <span style=color:#4e9a06>&#34;scope&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>,
-          <span style=color:#4e9a06>&#34;project&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-              <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-              <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-            <span style=color:#ce5c00;font-weight:700>}</span>,
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>,
-        <span style=color:#4e9a06>&#34;user&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-            <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-            <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-          <span style=color:#ce5c00;font-weight:700>}</span>,
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;roles&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;user&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;Displayname&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;Domain&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>,
-      <span style=color:#4e9a06>&#34;Email&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;Id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;Mobile&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;Name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;PasswordExpiresAt&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:32:39Z&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>
-  <span style=color:#ce5c00;font-weight:700>}</span>
-<span style=color:#ce5c00;font-weight:700>}</span>
-</code></pre></div><h2 id=api网关>API网关</h2><p>目前只应用于前端。</p><h2 id=举例说明>举例说明</h2><p>以虚拟机API为例介绍具体的使用方法</p><h3 id=server-list>虚拟机列表</h3><table><thead><tr><th>方法</th><th>API</th><th>说明</th></tr></thead><tbody><tr><td>GET</td><td>/servers</td><td>获取虚拟机列表</td></tr></tbody></table><h4 id=请求示例-1>请求示例</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>&gt; GET /servers?details<span style=color:#ce5c00;font-weight:700>=</span>true<span style=color:#000;font-weight:700>&amp;</span><span style=color:#000>with_meta</span><span style=color:#ce5c00;font-weight:700>=</span>true<span style=color:#000;font-weight:700>&amp;</span><span style=color:#000>limit</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#0000cf;font-weight:700>1</span> HTTP/1.1
-&gt; Host: 192.168.222.171:8888
-&gt; Content-Type: application/json
-&gt; X-Auth-Token: gAAAAABbQHesYGnonUgZo2vqHIb4RFAE5ptZVOpKA0DcH5dyVB_5-rBAAsjGZszFXJNr46q52iXh7K26G1tYAGh9PtDHUv9j3E7bb4dt9Q6NBXRhGodJ7L25D-yvVL0Qx3dpXqGvqcSAhEe-wBKqN8pmyMyXKvQLfhwW7LsXc0dC8SIp6uUBKiFIxXzdlh1APAmqTTjR9Bog8DKDtXbFPHhKN2o4NNaItdo4h5ZJ3qFzo7Uy19osyQg
-</code></pre></div><h4 id=返回示例-1>返回示例</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>&lt; HTTP/1.1 <span style=color:#0000cf;font-weight:700>200</span> OK
-&lt; X-Request-Id: 7bc5a
-&lt; Content-Length: <span style=color:#0000cf;font-weight:700>1330</span>
-&lt; Server: TornadoServer/3.2.2
-&lt; Date: Sat, <span style=color:#0000cf;font-weight:700>07</span> Jul <span style=color:#0000cf;font-weight:700>2018</span> 08:32:21 GMT
-&lt; Content-Type: application/json<span style=color:#000;font-weight:700>;</span> <span style=color:#000>charset</span><span style=color:#ce5c00;font-weight:700>=</span>UTF-8
-&lt;
-<span style=color:#ce5c00;font-weight:700>{</span>
-  <span style=color:#ce5c00;font-weight:700>{</span>
-  <span style=color:#4e9a06>&#34;limit&#34;</span>: 0,
-  <span style=color:#4e9a06>&#34;offset&#34;</span>: 0,
-  <span style=color:#4e9a06>&#34;servers&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-    <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;account&#34;</span>: <span style=color:#4e9a06>&#34;google-account&#34;</span>,
-      <span style=color:#4e9a06>&#34;account_id&#34;</span>: <span style=color:#4e9a06>&#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&#34;</span>,
-      <span style=color:#4e9a06>&#34;admin_secgrp_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;admin_security_rules&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;attach_time&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;auto_delete_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;auto_renew&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;backup_host_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;backup_host_name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;backup_host_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;billing_cycle&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;billing_type&#34;</span>: <span style=color:#4e9a06>&#34;postpaid&#34;</span>,
-      <span style=color:#4e9a06>&#34;bios&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;boot_order&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;brand&#34;</span>: <span style=color:#4e9a06>&#34;Google&#34;</span>,
-      <span style=color:#4e9a06>&#34;can_delete&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;can_recycle&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;can_update&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;cdrom&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;cdrom_support&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;cloud_env&#34;</span>: <span style=color:#4e9a06>&#34;public&#34;</span>,
-      <span style=color:#4e9a06>&#34;cloudregion&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;cloudregion_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;created_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;delete_fail_reason&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;deleted&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;deleted_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;description&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;disable_delete&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;disk&#34;</span>: 30720,
-      <span style=color:#4e9a06>&#34;disk_count&#34;</span>: 0,
-      <span style=color:#4e9a06>&#34;disks&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;disks_info&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;aio_mode&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;bps&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;cache_mode&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;disk_format&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;disk_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;driver&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;fs&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;image&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;image_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;index&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;iops&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;medium_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;size&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;storage_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;domain_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;eip&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;eip_mode&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;environment&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;expired_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;external_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;flavor_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;host&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;host_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;host_service_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;host_sn&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;host_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;host_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;hypervisor&#34;</span>: <span style=color:#4e9a06>&#34;kvm&#34;</span>,
-      <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;instance_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;ips&#34;</span>: <span style=color:#4e9a06>&#34;10.165.2.1,172.16.8.1&#34;</span>,
-      <span style=color:#4e9a06>&#34;is_emulated&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;is_gpu&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;is_prepaid_recycle&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;is_system&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;isolated_devices&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;addr&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;created_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-          <span style=color:#4e9a06>&#34;deleted&#34;</span>: true,
-          <span style=color:#4e9a06>&#34;deleted_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-          <span style=color:#4e9a06>&#34;description&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;dev_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;guest_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;host_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;is_emulated&#34;</span>: true,
-          <span style=color:#4e9a06>&#34;model&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;reserved_cpu&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;reserved_memory&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;reserved_storage&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;update_version&#34;</span>: 0,
-          <span style=color:#4e9a06>&#34;updated_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-          <span style=color:#4e9a06>&#34;vendor_device_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;keypair&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;keypair_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;machine&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;manager&#34;</span>: <span style=color:#4e9a06>&#34;google-account&#34;</span>,
-      <span style=color:#4e9a06>&#34;manager_domain&#34;</span>: <span style=color:#4e9a06>&#34;Default&#34;</span>,
-      <span style=color:#4e9a06>&#34;manager_domain_id&#34;</span>: <span style=color:#4e9a06>&#34;default&#34;</span>,
-      <span style=color:#4e9a06>&#34;manager_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;manager_project&#34;</span>: <span style=color:#4e9a06>&#34;system&#34;</span>,
-      <span style=color:#4e9a06>&#34;manager_project_id&#34;</span>: <span style=color:#4e9a06>&#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&#34;</span>,
-      <span style=color:#4e9a06>&#34;metadata&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;property1&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;property2&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>,
-      <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;networks&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;nics&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;ip_addr&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;ip6_addr&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;is_exit&#34;</span>: true,
-          <span style=color:#4e9a06>&#34;mac&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;network_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;team_with&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;vpc_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;os_name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;os_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;pending_deleted&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;pending_deleted_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;project&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;project_domain&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;project_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;project_src&#34;</span>: <span style=color:#4e9a06>&#34;local&#34;</span>,
-      <span style=color:#4e9a06>&#34;provider&#34;</span>: <span style=color:#4e9a06>&#34;Google&#34;</span>,
-      <span style=color:#4e9a06>&#34;region&#34;</span>: <span style=color:#4e9a06>&#34;Default&#34;</span>,
-      <span style=color:#4e9a06>&#34;region_ext_id&#34;</span>: <span style=color:#4e9a06>&#34;59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&#34;</span>,
-      <span style=color:#4e9a06>&#34;region_external_id&#34;</span>: <span style=color:#4e9a06>&#34;ZStack/59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&#34;</span>,
-      <span style=color:#4e9a06>&#34;region_id&#34;</span>: <span style=color:#4e9a06>&#34;default&#34;</span>,
-      <span style=color:#4e9a06>&#34;scaling_group_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;scaling_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;secgroup&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;secgroups&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-        <span style=color:#ce5c00;font-weight:700>{</span>
-          <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-          <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-        <span style=color:#ce5c00;font-weight:700>}</span>
-      <span style=color:#ce5c00;font-weight:700>]</span>,
-      <span style=color:#4e9a06>&#34;secgrp_id&#34;</span>: <span style=color:#4e9a06>&#34;default&#34;</span>,
-      <span style=color:#4e9a06>&#34;security_rules&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;shutdown_behavior&#34;</span>: <span style=color:#4e9a06>&#34;stop&#34;</span>,
-      <span style=color:#4e9a06>&#34;src_ip_check&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;src_mac_check&#34;</span>: true,
-      <span style=color:#4e9a06>&#34;status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;tenant&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;tenant_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;update_fail_reason&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;update_version&#34;</span>: 0,
-      <span style=color:#4e9a06>&#34;updated_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-      <span style=color:#4e9a06>&#34;vcpu_count&#34;</span>: 0,
-      <span style=color:#4e9a06>&#34;vdi&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;vga&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;virtual_ips&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;vmem_size&#34;</span>: 0,
-      <span style=color:#4e9a06>&#34;vpc&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;vpc_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;zone&#34;</span>: <span style=color:#4e9a06>&#34;zone1&#34;</span>,
-      <span style=color:#4e9a06>&#34;zone_ext_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;zone_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>
-  <span style=color:#ce5c00;font-weight:700>]</span>,
-  <span style=color:#4e9a06>&#34;total&#34;</span>: <span style=color:#0000cf;font-weight:700>0</span>
-<span style=color:#ce5c00;font-weight:700>}</span>
-</code></pre></div><h3 id=server-show>虚拟机详情</h3><table><thead><tr><th>方法</th><th>API</th><th>说明</th></tr></thead><tbody><tr><td>GET</td><td>/servers/&lt;id></td><td>获取虚拟机详情</td></tr></tbody></table><h4 id=请求示例-2>请求示例</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>&gt; GET /servers/d983993b-2356-48ed-860b-550b8490c45d HTTP/1.1
-&gt; Host: 192.168.222.171:8888
-&gt; Content-Type: application/json
-&gt; X-Auth-Token: gAAAAABbQHesYGnonUgZo2vqHIb4RFAE5ptZVOpKA0DcH5dyVB_5-rBAAsjGZszFXJNr46q52iXh7K26G1tYAGh9PtDHUv9j3E7bb4dt9Q6NBXRhGodJ7L25D-yvVL0Qx3dpXqGvqcSAhEe-wBKqN8pmyMyXKvQLfhwW7LsXc0dC8SIp6uUBKiFIxXzdlh1APAmqTTjR9Bog8DKDtXbFPHhKN2o4NNaItdo4h5ZJ3qFzo7Uy19osyQg
-</code></pre></div><h4 id=返回示例-2>返回示例</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>&lt; HTTP/1.1 <span style=color:#0000cf;font-weight:700>200</span> OK
-&lt; X-Request-Id: 7bc5a
-&lt; Content-Length: <span style=color:#0000cf;font-weight:700>2085</span>
-&lt; Server: TornadoServer/3.2.2
-&lt; Date: Sat, <span style=color:#0000cf;font-weight:700>07</span> Jul <span style=color:#0000cf;font-weight:700>2018</span> 08:32:21 GMT
-&lt; Content-Type: application/json<span style=color:#000;font-weight:700>;</span> <span style=color:#000>charset</span><span style=color:#ce5c00;font-weight:700>=</span>UTF-8
-&lt;
-<span style=color:#ce5c00;font-weight:700>{</span>
-  <span style=color:#ce5c00;font-weight:700>{</span>
-  <span style=color:#4e9a06>&#34;server&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-    <span style=color:#4e9a06>&#34;account&#34;</span>: <span style=color:#4e9a06>&#34;google-account&#34;</span>,
-    <span style=color:#4e9a06>&#34;account_id&#34;</span>: <span style=color:#4e9a06>&#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&#34;</span>,
-    <span style=color:#4e9a06>&#34;admin_secgrp_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;admin_security_rules&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;attach_time&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;auto_delete_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;auto_renew&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;backup_host_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;backup_host_name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;backup_host_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;billing_cycle&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;billing_type&#34;</span>: <span style=color:#4e9a06>&#34;postpaid&#34;</span>,
-    <span style=color:#4e9a06>&#34;bios&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;boot_order&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;brand&#34;</span>: <span style=color:#4e9a06>&#34;Google&#34;</span>,
-    <span style=color:#4e9a06>&#34;can_delete&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;can_recycle&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;can_update&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;cdrom&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;cdrom_support&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;cloud_env&#34;</span>: <span style=color:#4e9a06>&#34;public&#34;</span>,
-    <span style=color:#4e9a06>&#34;cloudregion&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;cloudregion_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;created_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;delete_fail_reason&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;deleted&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;deleted_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;description&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;disable_delete&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;disk&#34;</span>: 30720,
-    <span style=color:#4e9a06>&#34;disk_count&#34;</span>: 0,
-    <span style=color:#4e9a06>&#34;disks&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;disks_info&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;aio_mode&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;bps&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;cache_mode&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;disk_format&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;disk_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;driver&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;fs&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;image&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;image_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;index&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;iops&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;medium_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;size&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;storage_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;domain_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;eip&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;eip_mode&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;environment&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;expired_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;external_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;flavor_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;host&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;host_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;host_service_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;host_sn&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;host_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;host_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;hypervisor&#34;</span>: <span style=color:#4e9a06>&#34;kvm&#34;</span>,
-    <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;instance_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;ips&#34;</span>: <span style=color:#4e9a06>&#34;10.165.2.1,172.16.8.1&#34;</span>,
-    <span style=color:#4e9a06>&#34;is_emulated&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;is_gpu&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;is_prepaid_recycle&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;is_system&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;isolated_devices&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;addr&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;created_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-        <span style=color:#4e9a06>&#34;deleted&#34;</span>: true,
-        <span style=color:#4e9a06>&#34;deleted_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-        <span style=color:#4e9a06>&#34;description&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;dev_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;guest_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;host_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;is_emulated&#34;</span>: true,
-        <span style=color:#4e9a06>&#34;model&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;reserved_cpu&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;reserved_memory&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;reserved_storage&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;update_version&#34;</span>: 0,
-        <span style=color:#4e9a06>&#34;updated_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-        <span style=color:#4e9a06>&#34;vendor_device_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;keypair&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;keypair_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;machine&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;manager&#34;</span>: <span style=color:#4e9a06>&#34;google-account&#34;</span>,
-    <span style=color:#4e9a06>&#34;manager_domain&#34;</span>: <span style=color:#4e9a06>&#34;Default&#34;</span>,
-    <span style=color:#4e9a06>&#34;manager_domain_id&#34;</span>: <span style=color:#4e9a06>&#34;default&#34;</span>,
-    <span style=color:#4e9a06>&#34;manager_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;manager_project&#34;</span>: <span style=color:#4e9a06>&#34;system&#34;</span>,
-    <span style=color:#4e9a06>&#34;manager_project_id&#34;</span>: <span style=color:#4e9a06>&#34;4d3c8979-9dd0-439b-8d78-36fe1ab1666c&#34;</span>,
-    <span style=color:#4e9a06>&#34;metadata&#34;</span>: <span style=color:#ce5c00;font-weight:700>{</span>
-      <span style=color:#4e9a06>&#34;property1&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-      <span style=color:#4e9a06>&#34;property2&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-    <span style=color:#ce5c00;font-weight:700>}</span>,
-    <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;networks&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;nics&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;ip_addr&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;ip6_addr&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;is_exit&#34;</span>: true,
-        <span style=color:#4e9a06>&#34;mac&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;network_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;team_with&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;vpc_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;os_name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;os_type&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;pending_deleted&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;pending_deleted_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;project&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;project_domain&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;project_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;project_src&#34;</span>: <span style=color:#4e9a06>&#34;local&#34;</span>,
-    <span style=color:#4e9a06>&#34;provider&#34;</span>: <span style=color:#4e9a06>&#34;Google&#34;</span>,
-    <span style=color:#4e9a06>&#34;region&#34;</span>: <span style=color:#4e9a06>&#34;Default&#34;</span>,
-    <span style=color:#4e9a06>&#34;region_ext_id&#34;</span>: <span style=color:#4e9a06>&#34;59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&#34;</span>,
-    <span style=color:#4e9a06>&#34;region_external_id&#34;</span>: <span style=color:#4e9a06>&#34;ZStack/59e7bc87-a6b3-4c39-8f02-c68e8243d4e4&#34;</span>,
-    <span style=color:#4e9a06>&#34;region_id&#34;</span>: <span style=color:#4e9a06>&#34;default&#34;</span>,
-    <span style=color:#4e9a06>&#34;scaling_group_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;scaling_status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;secgroup&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;secgroups&#34;</span>: <span style=color:#ce5c00;font-weight:700>[</span>
-      <span style=color:#ce5c00;font-weight:700>{</span>
-        <span style=color:#4e9a06>&#34;id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-        <span style=color:#4e9a06>&#34;name&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-      <span style=color:#ce5c00;font-weight:700>}</span>
-    <span style=color:#ce5c00;font-weight:700>]</span>,
-    <span style=color:#4e9a06>&#34;secgrp_id&#34;</span>: <span style=color:#4e9a06>&#34;default&#34;</span>,
-    <span style=color:#4e9a06>&#34;security_rules&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;shutdown_behavior&#34;</span>: <span style=color:#4e9a06>&#34;stop&#34;</span>,
-    <span style=color:#4e9a06>&#34;src_ip_check&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;src_mac_check&#34;</span>: true,
-    <span style=color:#4e9a06>&#34;status&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;tenant&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;tenant_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;update_fail_reason&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;update_version&#34;</span>: 0,
-    <span style=color:#4e9a06>&#34;updated_at&#34;</span>: <span style=color:#4e9a06>&#34;2020-07-21T07:40:04Z&#34;</span>,
-    <span style=color:#4e9a06>&#34;vcpu_count&#34;</span>: 0,
-    <span style=color:#4e9a06>&#34;vdi&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;vga&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;virtual_ips&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;vmem_size&#34;</span>: 0,
-    <span style=color:#4e9a06>&#34;vpc&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;vpc_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;zone&#34;</span>: <span style=color:#4e9a06>&#34;zone1&#34;</span>,
-    <span style=color:#4e9a06>&#34;zone_ext_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>,
-    <span style=color:#4e9a06>&#34;zone_id&#34;</span>: <span style=color:#4e9a06>&#34;string&#34;</span>
-  <span style=color:#ce5c00;font-weight:700>}</span>
-<span style=color:#ce5c00;font-weight:700>}</span>
-</code></pre></div><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><h2 class=feedback--title>Feedback</h2><p class=feedback--question>Was this page helpful?</p><button class="feedback--answer feedback--answer-yes">Yes</button>
+
+CURL: curl -X 'POST' -d '{&quot;auth&quot;:{&quot;context&quot;:{&quot;source&quot;:&quot;cli&quot;},&quot;identity&quot;:{&quot;access_key_secret&quot;:&quot;{\&quot;access_key\&quot;:\&quot;ba92f912922044268d4ad1dc70aafe57\&quot;,\&quot;algorithm\&quot;:\&quot;AWS4-HMAC-SHA256\&quot;,\&quot;location\&quot;:\&quot;cn-beijing\&quot;,\&quot;request\&quot;:\&quot;AWS4-HMAC-SHA256\\n20220220T172931Z\\n20220220/cn-beijing/s3/aws4_request\\n5ff6dad4605ea24e0f0be6c6885eddbbe1a5619c89f682b21d719aa50dcb9264\&quot;,\&quot;sign_date\&quot;:\&quot;2022-02-20T17:29:31.000000Z\&quot;,\&quot;signature\&quot;:\&quot;4c92b91266168fc650fec9303a9dc3309f12d0fe66c5b0a605082e0260c70ce2\&quot;,\&quot;signed_headers\&quot;:[\&quot;date\&quot;,\&quot;host\&quot;,\&quot;x-amz-content-sha256\&quot;,\&quot;x-amz-date\&quot;]}&quot;,&quot;methods&quot;:[&quot;aksk&quot;]}}}' -H 'Accept: */*' -H 'Accept-Encoding: *' -H 'Content-Length: 573' -H 'Content-Type: application/json' -H 'User-Agent: yunioncloud-go/201708' 'https://10.211.55.9:30500/v3/auth/tokens'
+
+HTTP/1.1 200 OK
+Content-Length: 11253
+Content-Type: application/json;charset=utf-8
+Date: Sun, 20 Feb 2022 17:29:31 GMT
+Server: Yunion AppServer/Go/2018.4
+Vary: Origin
+X-Frame-Options: SAMEORIGIN
+X-Request-Host-Id: E1-kuT8w8_MRxLW1dXWRr9NPrGw=
+X-Request-Id: 51fde4
+X-Subject-Token: gAAAAABiEnp7Z3hP_xecU36DvRzu8Y67m2mDM9JfFip6NMcH2BjI8FT3-vaJ6JztgdGJaztXQDj1mDno-X-fHU0AvG-s56Yb-kXQj8dwo9g56EutyqVFgZ77FAdjvZNfcfEKt_sgrBbsPaVTqLOrrqHiu6UQckEJDKIp744zQOsZii66_CXwnc9MKQZO9sCw91BFDZMUrghj
+X-Yunion-Peer-Service-Name: identity
+X-Yunion-Remote-Addr: 10.211.55.9:43648
+X-Yunion-Span-Name: auth_tokens_v3
+
+
+Response body: {&quot;id&quot;:&quot;gAAAAABiEnp7Z3hP_xecU36DvRzu8Y67m2mDM9JfFip6NMcH2BjI8FT3-vaJ6JztgdGJaztXQDj1mDno-X-fHU0AvG-s56Yb-kXQj8dwo9g56EutyqVFgZ77FAdjvZNfcfEKt_sgrBbsPaVTqLOrrqHiu6UQckEJDKIp744zQOsZii66_CXwnc9MKQZO9sCw91BFDZMUrghj&quot;,&quot;token&quot;:{&quot;access_key&quot;:{&quot;access_key&quot;:&quot;ba92f912922044268d4ad1dc70aafe57&quot;,&quot;expire&quot;:0,&quot;secret&quot;:&quot;OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI=&quot;},&quot;audit_ids&quot;:[&quot;58076f50591e288d4aa4fdc76b946f7b&quot;],&quot;catalog&quot;:[{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;0d81a11591584b958a04804dd5abbabc&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;yunionconf-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-yunionconf:30889&quot;},{&quot;id&quot;:&quot;9cfa500c785c4195831bd70161133802&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;yunionconf-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30889&quot;}],&quot;id&quot;:&quot;87217758659c4cb18ba26bf0577e3427&quot;,&quot;name&quot;:&quot;yunionconf&quot;,&quot;type&quot;:&quot;yunionconf&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;0dd167cc3194438e88467a0a7bd6ef3c&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;notify-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30777&quot;},{&quot;id&quot;:&quot;68f22940bccc47eb8666cfe1cbc6d256&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;notify-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-notify:30777&quot;}],&quot;id&quot;:&quot;0db18c12231c4f16895f9c562128118e&quot;,&quot;name&quot;:&quot;notify&quot;,&quot;type&quot;:&quot;notify&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;264468c6e2b14ccc80a3dc174be14124&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;autoupdate-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-autoupdate:30981&quot;},{&quot;id&quot;:&quot;de136a3d766d4c178b84cf10e0740592&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;autoupdate-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30981&quot;}],&quot;id&quot;:&quot;cd7482a6ffa042b789185c5c1f4ab020&quot;,&quot;name&quot;:&quot;autoupdate&quot;,&quot;type&quot;:&quot;autoupdate&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;4ce974d81f494bef85b9e4f8e7654632&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;log-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30999&quot;},{&quot;id&quot;:&quot;87f433df2d624ce28c1143f4d5db238e&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;log-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-logger:30999&quot;}],&quot;id&quot;:&quot;60cf87cd573749b58250fa6c0d6794af&quot;,&quot;name&quot;:&quot;log&quot;,&quot;type&quot;:&quot;log&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;5123f3dab82b47f780f284637a18a518&quot;,&quot;interface&quot;:&quot;admin&quot;,&quot;name&quot;:&quot;identity-admin&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30357/v3&quot;},{&quot;id&quot;:&quot;885a45a04af2419783906d069c737465&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;identity-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30500/v3&quot;},{&quot;id&quot;:&quot;b453e1ca7dfc4595884fed16011d1717&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;identity-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-keystone:30500/v3&quot;}],&quot;id&quot;:&quot;55e14f71e0c34a8682dbeaef10a7cbb4&quot;,&quot;name&quot;:&quot;keystone&quot;,&quot;type&quot;:&quot;identity&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;67f79d211c284bc08afe707cdc81106e&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;websocket-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-apigateway:30443&quot;},{&quot;id&quot;:&quot;d5d5962163c148068bf44a3341898e73&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;websocket-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30443&quot;}],&quot;id&quot;:&quot;0185442fc0f040d2815a83ded61bb009&quot;,&quot;name&quot;:&quot;websocket&quot;,&quot;type&quot;:&quot;websocket&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;202b6def24134ce7813062c850e40850&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;s3gateway-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-s3gateway:30884&quot;},{&quot;id&quot;:&quot;8c931e66bb874e8e80d71a509ef0fef8&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;s3gateway-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30884&quot;}],&quot;id&quot;:&quot;f46030569f6e4de58c04bbbe017f0ca5&quot;,&quot;name&quot;:&quot;s3gateway&quot;,&quot;type&quot;:&quot;s3gateway&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;47226520bc0d45a6838a3e51fa29b6e4&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;image-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30292/v1&quot;},{&quot;id&quot;:&quot;c1646e81c8944be98683a3d3b0c798be&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;image-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-glance:30292/v1&quot;}],&quot;id&quot;:&quot;f22c933cdf37427d88ea6e9d98b4a221&quot;,&quot;name&quot;:&quot;glance&quot;,&quot;type&quot;:&quot;image&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;731c5e0a9918439683ff5467fbbc5dde&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;monitor-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30093&quot;},{&quot;id&quot;:&quot;e2e88b11e60f42df80ac3d4d4b076000&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;monitor-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-monitor:30093&quot;}],&quot;id&quot;:&quot;e42a56482f67437a8a8e213386da07d7&quot;,&quot;name&quot;:&quot;monitor&quot;,&quot;type&quot;:&quot;monitor&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;a9c1b32c54fb4a028803d52180e8b5a3&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;compute_v2-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-region:30888&quot;},{&quot;id&quot;:&quot;adecd09b5e20436e8651b4a66d4326c8&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;compute_v2-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30888&quot;}],&quot;id&quot;:&quot;efd8e0bed6cc43bf8b2c7ef0a5e1803b&quot;,&quot;name&quot;:&quot;region2&quot;,&quot;type&quot;:&quot;compute_v2&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;19f2eadbf2b9406b8e2e3aa2684ad7e5&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;offlinecloudmeta-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&quot;},{&quot;id&quot;:&quot;7ba10412dfbc42ee82dada7eda7a1014&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;offlinecloudmeta-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&quot;}],&quot;id&quot;:&quot;a8f6bc5429af48228d0da5dd520af0a7&quot;,&quot;name&quot;:&quot;offlinecloudmeta&quot;,&quot;type&quot;:&quot;offlinecloudmeta&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;25df9d4db3964d158d3201eb33118e09&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;influxdb-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-influxdb:30086&quot;},{&quot;id&quot;:&quot;31551be071934bec8e41e15c2e7d2b45&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;influxdb-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30086&quot;}],&quot;id&quot;:&quot;0b2b9c3d45e742e38fcce3063b00b2d7&quot;,&quot;name&quot;:&quot;influxdb&quot;,&quot;type&quot;:&quot;influxdb&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;3924af6d9ccd4dd28d0d5627d0f916dd&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;webconsole-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30899&quot;},{&quot;id&quot;:&quot;403d0d9f349e447f809752ce1c8a2c0e&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;webconsole-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-webconsole:30899&quot;}],&quot;id&quot;:&quot;017d07de150a435180f12931272ad286&quot;,&quot;name&quot;:&quot;webconsole&quot;,&quot;type&quot;:&quot;webconsole&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;650d0a29ac534d36852efeaec12ecb7b&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;k8s-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-kubeserver:30442/api&quot;},{&quot;id&quot;:&quot;c9b157c4bf7b47258b17d2b9dccfc609&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;k8s-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30442/api&quot;}],&quot;id&quot;:&quot;00aa0118f4bc40f38b12576675db9922&quot;,&quot;name&quot;:&quot;k8s&quot;,&quot;type&quot;:&quot;k8s&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;9361347388bf461a8a88543aa6df0af1&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;cloudid-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30893&quot;},{&quot;id&quot;:&quot;dd5f11acb719481380c7e7fcc2c57fe2&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;cloudid-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-cloudid:30893&quot;}],&quot;id&quot;:&quot;a5bc5f118c484d6b812c8f807c5e5981&quot;,&quot;name&quot;:&quot;cloudid&quot;,&quot;type&quot;:&quot;cloudid&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;b61f4332c4594d05866634b9e7e87319&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;torrent-tracker-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://tracker.yunion.cn&quot;},{&quot;id&quot;:&quot;e543ab98873c4d838a2d1950e5fc2cb6&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;torrent-tracker-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://tracker.yunion.cn&quot;}],&quot;id&quot;:&quot;29a4f2e4fd8b4e6c876ac3c41fdad610&quot;,&quot;name&quot;:&quot;torrent-tracker&quot;,&quot;type&quot;:&quot;torrent-tracker&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;48e06ade707040d38a2c81054d916772&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;etcd-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;http://default-etcd-client.onecloud.svc:2379&quot;}],&quot;id&quot;:&quot;012622a60c814d478d180ee28107caf0&quot;,&quot;name&quot;:&quot;etcd&quot;,&quot;type&quot;:&quot;etcd&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;84293895e9db410e8c8584afc3fde39b&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;ansible-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-ansibleserver:30890&quot;},{&quot;id&quot;:&quot;a9e5c8be89254bb98c444bb04344e1f7&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;ansible-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30890&quot;}],&quot;id&quot;:&quot;1313597e674a4bfc8f7dcf06f3033280&quot;,&quot;name&quot;:&quot;ansible&quot;,&quot;type&quot;:&quot;ansible&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;022b48ad6b6640858471aa2074f600ee&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;devtool-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30997&quot;},{&quot;id&quot;:&quot;5ed574340c40491f8506b6aa48b2be8b&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;devtool-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-devtool:30997&quot;}],&quot;id&quot;:&quot;c239df97fd0148e78ce143e7017f3859&quot;,&quot;name&quot;:&quot;devtool&quot;,&quot;type&quot;:&quot;devtool&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;05655d3ea1da4aca8b4441c2597a4a73&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;cloudevent-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30892&quot;},{&quot;id&quot;:&quot;87b37bf1dea940208d9e5731baabb4b9&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;cloudevent-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-cloudevent:30892&quot;}],&quot;id&quot;:&quot;6b78e4f08c68421d8497591c44f53965&quot;,&quot;name&quot;:&quot;cloudevent&quot;,&quot;type&quot;:&quot;cloudevent&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;0ae9af784f2a4c35865fbf94f5e371eb&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;cloudnet-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30891&quot;},{&quot;id&quot;:&quot;18234fdf11fb453e8aeb27f5ce1a4a09&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;cloudnet-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-cloudnet:30891&quot;}],&quot;id&quot;:&quot;0164ae489d50476382544fa82d35c651&quot;,&quot;name&quot;:&quot;cloudnet&quot;,&quot;type&quot;:&quot;cloudnet&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;10714444f63d460f89b42872c7b8a2e4&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;cloudmeta-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://meta.yunion.cn&quot;},{&quot;id&quot;:&quot;cd3f9d63e5f3486d8d6ef1a2e5de240b&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;cloudmeta-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://meta.yunion.cn&quot;}],&quot;id&quot;:&quot;5ffa814de268402d82e709e6e43c8a27&quot;,&quot;name&quot;:&quot;cloudmeta&quot;,&quot;type&quot;:&quot;cloudmeta&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;1ae5a40781a542b284f4058e7fa57819&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;cloudproxy-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30882&quot;},{&quot;id&quot;:&quot;c4f1d6c3241c466181102cfa04db5a48&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;cloudproxy-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-cloudproxy:30882&quot;}],&quot;id&quot;:&quot;c166b15b68384f6b8d79c625a2a4d6e4&quot;,&quot;name&quot;:&quot;cloudproxy&quot;,&quot;type&quot;:&quot;cloudproxy&quot;},{&quot;endpoints&quot;:[{&quot;id&quot;:&quot;33dd58d495484d7885ac3ef6766b5cd6&quot;,&quot;interface&quot;:&quot;public&quot;,&quot;name&quot;:&quot;scheduler-public&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://10.211.55.9:30887&quot;},{&quot;id&quot;:&quot;36cb905a8f284bb2840d38c3af1ebab8&quot;,&quot;interface&quot;:&quot;internal&quot;,&quot;name&quot;:&quot;scheduler-internal&quot;,&quot;region&quot;:&quot;region0&quot;,&quot;region_id&quot;:&quot;region0&quot;,&quot;url&quot;:&quot;https://default-scheduler:30887&quot;}],&quot;id&quot;:&quot;8155088ac46c4bd1816adf5537ccaedf&quot;,&quot;name&quot;:&quot;scheduler&quot;,&quot;type&quot;:&quot;scheduler&quot;}],&quot;context&quot;:{&quot;ip&quot;:&quot;10.211.55.9&quot;,&quot;source&quot;:&quot;cli&quot;},&quot;expires_at&quot;:&quot;2022-02-21T17:29:31.370591Z&quot;,&quot;is_domain&quot;:false,&quot;issued_at&quot;:&quot;2022-02-20T17:29:31.370591Z&quot;,&quot;methods&quot;:[&quot;aksk&quot;],&quot;policies&quot;:{&quot;system&quot;:[&quot;sysadmin&quot;]},&quot;project&quot;:{&quot;domain&quot;:{&quot;id&quot;:&quot;default&quot;,&quot;name&quot;:&quot;Default&quot;},&quot;id&quot;:&quot;0e4416c837644f5a8f0d67c9930ff228&quot;,&quot;name&quot;:&quot;system&quot;},&quot;roles&quot;:[{&quot;id&quot;:&quot;2c85811d739d4fca892b41df6bc0484b&quot;,&quot;name&quot;:&quot;admin&quot;}],&quot;user&quot;:{&quot;domain&quot;:{&quot;id&quot;:&quot;default&quot;,&quot;name&quot;:&quot;Default&quot;},&quot;id&quot;:&quot;a09dbd66f37245518bb2b7984dca46bf&quot;,&quot;name&quot;:&quot;sysadmin&quot;}}}
+
+从上面的请求可以看到, 第一次请求的是https://10.211.55.9:30500/v3/auth/tokens, 并且使用了刚才创建的aksk进行认证, 认证通过后返回了一个很大的json结果, 下面将对json结果做进一步说明
+{
+    &quot;id&quot;:&quot;gAAAAABiEnp7Z3hP_xecU36DvRzu8Y67m2mDM9JfFip6NMcH2BjI8FT3-vaJ6JztgdGJaztXQDj1mDno-X-fHU0AvG-s56Yb-kXQj8dwo9g56EutyqVFgZ77FAdjvZNfcfEKt_sgrBbsPaVTqLOrrqHiu6UQckEJDKIp744zQOsZii66_CXwnc9MKQZO9sCw91BFDZMUrghj&quot;, // 这个Id是认证返回的token, 和返回header中的X-Subject-Token是一样的，后面可以用这个id作为请求的header(X-Auth-Token)进行认证
+    &quot;token&quot;:{
+        &quot;access_key&quot;:{
+            &quot;access_key&quot;:&quot;ba92f912922044268d4ad1dc70aafe57&quot;,
+            &quot;expire&quot;:0,
+            &quot;secret&quot;:&quot;OGVmTXNKQWpBWHpUejZTWDNKcndSdXlHQUNFeXhLVWI=&quot;
+        },
+        &quot;audit_ids&quot;:[
+            &quot;58076f50591e288d4aa4fdc76b946f7b&quot;
+        ],
+        &quot;catalog&quot;:[ // 这个是各个服务的endpoint, 商业版会多一些服务
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;0d81a11591584b958a04804dd5abbabc&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;yunionconf-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-yunionconf:30889&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;9cfa500c785c4195831bd70161133802&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;yunionconf-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30889&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;87217758659c4cb18ba26bf0577e3427&quot;,
+                &quot;name&quot;:&quot;yunionconf&quot;, // 这个是配置服务
+                &quot;type&quot;:&quot;yunionconf&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;0dd167cc3194438e88467a0a7bd6ef3c&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;notify-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30777&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;68f22940bccc47eb8666cfe1cbc6d256&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;notify-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-notify:30777&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;0db18c12231c4f16895f9c562128118e&quot;,
+                &quot;name&quot;:&quot;notify&quot;, // 这个是通知服务
+                &quot;type&quot;:&quot;notify&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;264468c6e2b14ccc80a3dc174be14124&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;autoupdate-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-autoupdate:30981&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;de136a3d766d4c178b84cf10e0740592&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;autoupdate-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30981&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;cd7482a6ffa042b789185c5c1f4ab020&quot;,
+                &quot;name&quot;:&quot;autoupdate&quot;, // 这个是自动更新服务
+                &quot;type&quot;:&quot;autoupdate&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;4ce974d81f494bef85b9e4f8e7654632&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;log-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30999&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;87f433df2d624ce28c1143f4d5db238e&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;log-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-logger:30999&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;60cf87cd573749b58250fa6c0d6794af&quot;,
+                &quot;name&quot;:&quot;log&quot;, // 这个是日志服务
+                &quot;type&quot;:&quot;log&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;5123f3dab82b47f780f284637a18a518&quot;,
+                        &quot;interface&quot;:&quot;admin&quot;,
+                        &quot;name&quot;:&quot;identity-admin&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30357/v3&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;885a45a04af2419783906d069c737465&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;identity-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30500/v3&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;b453e1ca7dfc4595884fed16011d1717&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;identity-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-keystone:30500/v3&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;55e14f71e0c34a8682dbeaef10a7cbb4&quot;,
+                &quot;name&quot;:&quot;keystone&quot;, // 这个是认证服务
+                &quot;type&quot;:&quot;identity&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;67f79d211c284bc08afe707cdc81106e&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;websocket-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-apigateway:30443&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;d5d5962163c148068bf44a3341898e73&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;websocket-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30443&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;0185442fc0f040d2815a83ded61bb009&quot;,
+                &quot;name&quot;:&quot;websocket&quot;, // 这个是websocket服务
+                &quot;type&quot;:&quot;websocket&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;202b6def24134ce7813062c850e40850&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;s3gateway-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-s3gateway:30884&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;8c931e66bb874e8e80d71a509ef0fef8&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;s3gateway-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30884&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;f46030569f6e4de58c04bbbe017f0ca5&quot;,
+                &quot;name&quot;:&quot;s3gateway&quot;, // s3网关服务
+                &quot;type&quot;:&quot;s3gateway&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;47226520bc0d45a6838a3e51fa29b6e4&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;image-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30292/v1&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;c1646e81c8944be98683a3d3b0c798be&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;image-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-glance:30292/v1&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;f22c933cdf37427d88ea6e9d98b4a221&quot;,
+                &quot;name&quot;:&quot;glance&quot;, // 这个是镜像服务
+                &quot;type&quot;:&quot;image&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;731c5e0a9918439683ff5467fbbc5dde&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;monitor-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30093&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;e2e88b11e60f42df80ac3d4d4b076000&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;monitor-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-monitor:30093&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;e42a56482f67437a8a8e213386da07d7&quot;,
+                &quot;name&quot;:&quot;monitor&quot;, // 这个是监控服务
+                &quot;type&quot;:&quot;monitor&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;a9c1b32c54fb4a028803d52180e8b5a3&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;compute_v2-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-region:30888&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;adecd09b5e20436e8651b4a66d4326c8&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;compute_v2-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30888&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;efd8e0bed6cc43bf8b2c7ef0a5e1803b&quot;,
+                &quot;name&quot;:&quot;region2&quot;, // 这个是计算服务(控制节点)
+                &quot;type&quot;:&quot;compute_v2&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;19f2eadbf2b9406b8e2e3aa2684ad7e5&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;offlinecloudmeta-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;7ba10412dfbc42ee82dada7eda7a1014&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;offlinecloudmeta-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://yunionmeta.oss-cn-beijing.aliyuncs.com&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;a8f6bc5429af48228d0da5dd520af0a7&quot;,
+                &quot;name&quot;:&quot;offlinecloudmeta&quot;, // 这个是套餐同步的服务
+                &quot;type&quot;:&quot;offlinecloudmeta&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;25df9d4db3964d158d3201eb33118e09&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;influxdb-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-influxdb:30086&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;31551be071934bec8e41e15c2e7d2b45&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;influxdb-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30086&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;0b2b9c3d45e742e38fcce3063b00b2d7&quot;,
+                &quot;name&quot;:&quot;influxdb&quot;,
+                &quot;type&quot;:&quot;influxdb&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;3924af6d9ccd4dd28d0d5627d0f916dd&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;webconsole-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30899&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;403d0d9f349e447f809752ce1c8a2c0e&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;webconsole-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-webconsole:30899&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;017d07de150a435180f12931272ad286&quot;,
+                &quot;name&quot;:&quot;webconsole&quot;, // 这个是webconsole服务
+                &quot;type&quot;:&quot;webconsole&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;650d0a29ac534d36852efeaec12ecb7b&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;k8s-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-kubeserver:30442/api&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;c9b157c4bf7b47258b17d2b9dccfc609&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;k8s-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30442/api&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;00aa0118f4bc40f38b12576675db9922&quot;,
+                &quot;name&quot;:&quot;k8s&quot;, // k8s服务
+                &quot;type&quot;:&quot;k8s&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;9361347388bf461a8a88543aa6df0af1&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;cloudid-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30893&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;dd5f11acb719481380c7e7fcc2c57fe2&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;cloudid-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-cloudid:30893&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;a5bc5f118c484d6b812c8f807c5e5981&quot;,
+                &quot;name&quot;:&quot;cloudid&quot;, // 这个是公有云iam免密认证服务
+                &quot;type&quot;:&quot;cloudid&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;b61f4332c4594d05866634b9e7e87319&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;torrent-tracker-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://tracker.yunion.cn&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;e543ab98873c4d838a2d1950e5fc2cb6&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;torrent-tracker-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://tracker.yunion.cn&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;29a4f2e4fd8b4e6c876ac3c41fdad610&quot;,
+                &quot;name&quot;:&quot;torrent-tracker&quot;,
+                &quot;type&quot;:&quot;torrent-tracker&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;48e06ade707040d38a2c81054d916772&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;etcd-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;http://default-etcd-client.onecloud.svc:2379&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;012622a60c814d478d180ee28107caf0&quot;,
+                &quot;name&quot;:&quot;etcd&quot;, // etcd
+                &quot;type&quot;:&quot;etcd&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;84293895e9db410e8c8584afc3fde39b&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;ansible-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-ansibleserver:30890&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;a9e5c8be89254bb98c444bb04344e1f7&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;ansible-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30890&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;1313597e674a4bfc8f7dcf06f3033280&quot;,
+                &quot;name&quot;:&quot;ansible&quot;, // ansible
+                &quot;type&quot;:&quot;ansible&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;022b48ad6b6640858471aa2074f600ee&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;devtool-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30997&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;5ed574340c40491f8506b6aa48b2be8b&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;devtool-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-devtool:30997&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;c239df97fd0148e78ce143e7017f3859&quot;,
+                &quot;name&quot;:&quot;devtool&quot;, // 运维工具服务
+                &quot;type&quot;:&quot;devtool&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;05655d3ea1da4aca8b4441c2597a4a73&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;cloudevent-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30892&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;87b37bf1dea940208d9e5731baabb4b9&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;cloudevent-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-cloudevent:30892&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;6b78e4f08c68421d8497591c44f53965&quot;,
+                &quot;name&quot;:&quot;cloudevent&quot;, // 公有云日志服务
+                &quot;type&quot;:&quot;cloudevent&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;0ae9af784f2a4c35865fbf94f5e371eb&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;cloudnet-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30891&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;18234fdf11fb453e8aeb27f5ce1a4a09&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;cloudnet-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-cloudnet:30891&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;0164ae489d50476382544fa82d35c651&quot;,
+                &quot;name&quot;:&quot;cloudnet&quot;,
+                &quot;type&quot;:&quot;cloudnet&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;10714444f63d460f89b42872c7b8a2e4&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;cloudmeta-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://meta.yunion.cn&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;cd3f9d63e5f3486d8d6ef1a2e5de240b&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;cloudmeta-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://meta.yunion.cn&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;5ffa814de268402d82e709e6e43c8a27&quot;,
+                &quot;name&quot;:&quot;cloudmeta&quot;, 
+                &quot;type&quot;:&quot;cloudmeta&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;1ae5a40781a542b284f4058e7fa57819&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;cloudproxy-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30882&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;c4f1d6c3241c466181102cfa04db5a48&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;cloudproxy-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-cloudproxy:30882&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;c166b15b68384f6b8d79c625a2a4d6e4&quot;,
+                &quot;name&quot;:&quot;cloudproxy&quot;,
+                &quot;type&quot;:&quot;cloudproxy&quot;
+            },
+            {
+                &quot;endpoints&quot;:[
+                    {
+                        &quot;id&quot;:&quot;33dd58d495484d7885ac3ef6766b5cd6&quot;,
+                        &quot;interface&quot;:&quot;public&quot;,
+                        &quot;name&quot;:&quot;scheduler-public&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://10.211.55.9:30887&quot;
+                    },
+                    {
+                        &quot;id&quot;:&quot;36cb905a8f284bb2840d38c3af1ebab8&quot;,
+                        &quot;interface&quot;:&quot;internal&quot;,
+                        &quot;name&quot;:&quot;scheduler-internal&quot;,
+                        &quot;region&quot;:&quot;region0&quot;,
+                        &quot;region_id&quot;:&quot;region0&quot;,
+                        &quot;url&quot;:&quot;https://default-scheduler:30887&quot;
+                    }
+                ],
+                &quot;id&quot;:&quot;8155088ac46c4bd1816adf5537ccaedf&quot;,
+                &quot;name&quot;:&quot;scheduler&quot;, //调度服务
+                &quot;type&quot;:&quot;scheduler&quot;
+            }
+        ],
+        &quot;context&quot;:{
+            &quot;ip&quot;:&quot;10.211.55.9&quot;,
+            &quot;source&quot;:&quot;cli&quot;
+        },
+        &quot;expires_at&quot;:&quot;2022-02-21T17:29:31.370591Z&quot;, // 认证失效时间，如果超过这个时间上面的id认证就失效了，需要重新认证获取新的id
+        &quot;is_domain&quot;:false,
+        &quot;issued_at&quot;:&quot;2022-02-20T17:29:31.370591Z&quot;,
+        &quot;methods&quot;:[
+            &quot;aksk&quot;
+        ],
+        &quot;policies&quot;:{
+            &quot;system&quot;:[
+                &quot;sysadmin&quot;
+            ]
+        },
+        &quot;project&quot;:{
+            &quot;domain&quot;:{
+                &quot;id&quot;:&quot;default&quot;,
+                &quot;name&quot;:&quot;Default&quot;
+            },
+            &quot;id&quot;:&quot;0e4416c837644f5a8f0d67c9930ff228&quot;,
+            &quot;name&quot;:&quot;system&quot;
+        },
+        &quot;roles&quot;:[
+            {
+                &quot;id&quot;:&quot;2c85811d739d4fca892b41df6bc0484b&quot;,
+                &quot;name&quot;:&quot;admin&quot;
+            }
+        ],
+        &quot;user&quot;:{
+            &quot;domain&quot;:{
+                &quot;id&quot;:&quot;default&quot;,
+                &quot;name&quot;:&quot;Default&quot;
+            },
+            &quot;id&quot;:&quot;a09dbd66f37245518bb2b7984dca46bf&quot;,
+            &quot;name&quot;:&quot;sysadmin&quot;
+        }
+    }
+}
+</code></pre><ol start=4><li>以获取虚拟机列表举例</li></ol><pre><code>通过步骤3获取到了认证的token，并且也知道了计算服务的endpoint是 https://10.211.55.9:30888
+虚拟机列表的api是 GET /servers, 因此可以构造出curl:
+$curl -k -X 'GET' -d '' -H 'Accept: */*' -H 'Accept-Encoding: *' -H 'Content-Length: 0' -H 'Content-Type: application/json' -H 'User-Agent: yunioncloud-go/201708' -H 'X-Auth-Token: gAAAAABiEn7_nBvGcZX-XeHRcm5oQjI6Vxz66atfQIXPCu0OEUmpkTBX4yjIz2CIVtuWuUfjTpExAxzuNybZzRf6bHnlgDdKOBJmxzvrikbTGBkltQJAi7bKzIs3MC0pmAFrULm306izk-z1AKjRIVD4x2njfriPuH9KAs3ToHzfatPi18xx3GRWpngFTQ3xJa6n4Gzigilh' 'https://10.211.55.9:30888/servers'
+{&quot;servers&quot;:[]}
+
+同样这一步也可以通过climc命令进行调试: climc --debug --os-auth-token gAAAAABiEnp4SlVCjoLmRdLbuaskbHUJIMDnwZcURyEp-5REXZ-ePPd0H4ZQj7GA8-9UEs1ALuDaXklu1dYdv51AWt7UoemvHiS0_hl_rJYOgKUKZQ4RNqsdIpfNsq-9qkjmo2YvFLMrTf2Z1oxrm9WASSGPeGtGSIoJC_X6XbbxIMC4oW26Z4GJaFe1NJaw5JkmpoErA45Q server-list
+</code></pre><ol start=5><li>总结</li></ol><pre><code>1. 通过认证拿到token id, 和各个服务的endpoint
+2. 通过组合endpoint和各个资源，并且指定X-Auth-Token header为token id,即可发送api操作资源
+</code></pre><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><h2 class=feedback--title>Feedback</h2><p class=feedback--question>Was this page helpful?</p><button class="feedback--answer feedback--answer-yes">Yes</button>
 <button class="feedback--answer feedback--answer-no">No</button><p class="feedback--response feedback--response-yes">Glad to hear it! Please <a href=https://github.com/yunionio/docs/issues/new>tell us how we can improve</a>.</p><p class="feedback--response feedback--response-no">Sorry to hear that. Please <a href=https://github.com/yunionio/docs/issues/new>tell us how we can improve</a>.</p><script>const yesButton=document.querySelector('.feedback--answer-yes'),noButton=document.querySelector('.feedback--answer-no'),yesResponse=document.querySelector('.feedback--response-yes'),noResponse=document.querySelector('.feedback--response-no'),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=b=>{if(typeof ga!='function')return;const a={command:'send',hitType:'event',category:'Helpful',action:'click',label:window.location.pathname,value:b};ga(a.command,a.hitType,a.category,a.action,a.label,a.value)};yesButton.addEventListener('click',()=>{yesResponse.classList.add('feedback--response__visible'),disableButtons(),sendFeedback(1)}),noButton.addEventListener('click',()=>{noResponse.classList.add('feedback--response__visible'),disableButtons(),sendFeedback(0)})</script><br><div class="text-muted mt-5 pt-3 border-top">最后修改 11.07.2019</div></div></main></div></div><script>var _hmt=_hmt||[];(function(){var a=document.createElement("script"),b;a.src="https://hm.baidu.com/hm.js?3c5253cd6530122d0f774cab69e3c07f",b=document.getElementsByTagName("script")[0],b.parentNode.insertBefore(a,b)})()</script><footer class="bg-dark pt-4 row d-print-none"><div class="container-fluid mx-sm-5"><div class=row><div class="col-6 col-sm-4 text-xs-center order-sm-2"></div><div class="col-6 col-sm-4 text-right text-xs-center order-sm-3"></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>Copyright &copy; 2017-2022 The Cloudpods Authors.</small></div></div></div></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js integrity=sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49 crossorigin=anonymous></script><script src=https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js integrity=sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy crossorigin=anonymous></script><script src=/js/main.min.850adc61a285d99ce101da9e59e623e62775ccafff57d900b719ecf4669196b4.js integrity="sha256-hQrcYaKF2ZzhAdqeWeYj5id1zK//V9kAtxns9GaRlrQ=" crossorigin=anonymous></script></body></html>

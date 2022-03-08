@@ -245,8 +245,98 @@
 &lt;ul>
 &lt;li>管理 kvm 虚拟机: 部署 host 服务&lt;/li>
 &lt;li>管理物理机: 部署 baremetal-agent 服务&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
-&lt;p>Cloudpods 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
+&lt;/ul></description></item><item><title>Docs: 配置要求</title><link>https://www.cloudpods.org/zh/docs/setup/config/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/config/</guid><description>
+&lt;p>下表为不同场景需要部署的节点及配置要求等。请根据具体使用场景进行规划部署。&lt;/p>
+&lt;style>
+table tr th, table tr td { border:1px solid #808080; padding:5px; }
+&lt;/style>
+&lt;table>
+&lt;tr>
+&lt;th>部署场景&lt;/th>
+&lt;th>部署组件&lt;/th>
+&lt;th>配置需求&lt;/th>
+&lt;th>资源占用情况&lt;/th>
+&lt;th>备注&lt;/th>
+&lt;/tr>
+&lt;tr>
+&lt;td>多云场景&lt;/td>
+&lt;td>控制节点&lt;/td>
+&lt;td>
+&lt;li>最低配置：8C16G500G（推荐使用SSD硬盘，且系统盘不低于200GB）；&lt;/li>
+&lt;li>服务器：支持部署在虚拟机或物理服务器；&lt;/li>
+&lt;li>操作系统：推荐CentOS 7.6~7.8 Minimal；&lt;/li>
+&lt;li>配置要求：每增加500台虚拟机，需要增加8C8G200G的系统资源；&lt;/li>
+&lt;li>高可用要求：至少需要3台相同配置的服务器&lt;/li>
+&lt;/td>
+&lt;td>全部资源&lt;/td>
+&lt;td>待纳管的云账号具有读写权限的Access Key ID和Access Key Secret&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td rowspan="3">私有云场景&lt;/td>
+&lt;td>控制节点&lt;/td>
+&lt;td>
+&lt;li>最低配置：8C16G500G（推荐使用SSD硬盘，且系统盘不低于200GB）；&lt;/li>
+&lt;li>服务器：支持部署在虚拟机或物理服务器；&lt;/li>
+&lt;li>操作系统：推荐CentOS 7.6~7.8 Minimal；&lt;/li>
+&lt;li>配置要求：每增加500台虚拟机，需要增加8C8G200G的系统资源；&lt;/li>
+&lt;li>高可用要求：至少需要3台相同配置的服务器&lt;/li>
+&lt;/td>
+&lt;td>全部资源&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>计算节点&lt;/td>
+&lt;td>
+&lt;li>服务器：带硬件虚拟化特性的通用X86物理服务器；&lt;/li>
+&lt;li>操作系统：推荐CentOS 7.6~7.8 Minimal；&lt;/li>
+&lt;li>配置要求：CPU需开启VT、32G以上内存、1T以上的硬盘&lt;/li>
+&lt;/td>
+&lt;td>产品服务需占用2C2G200G的系统资源&lt;/td>
+&lt;td>
+&lt;li>如使用经典网络则需为虚拟机申请网络可达的内网IP。&lt;/li>
+&lt;li>如使用VPC网络则需要申请内网可达的IP地址段作为弹性公网IP&lt;/li>
+&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Ceph存储&lt;/td>
+&lt;td>
+&lt;li>服务器：通用X86物理服务器；&lt;/li>
+&lt;li>配置要求：至少32C64G、系统盘使用单独硬盘、数据盘配置4块以上大容量SATA硬盘，且支持直通模式&lt;/li>
+&lt;li>网络：万兆及以上&lt;/li>
+&lt;/td>
+&lt;td>不占用资源&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td rowspan="3">物理机纳管&lt;/td>
+&lt;td>
+&lt;li>控制节点&lt;/li>
+&lt;li>启用Baremetal服务&lt;/li>
+&lt;/td>
+&lt;td>
+&lt;li>最低配置：8C16G500G（推荐使用SSD硬盘，且系统盘不低于200GB）；&lt;/li>
+&lt;li>服务器：支持部署在虚拟机或物理服务器；&lt;/li>
+&lt;li>操作系统：推荐CentOS 7.6~7.8 Minimal；&lt;/li>
+&lt;li>配置要求：每增加500台虚拟机，需要增加8C8G200G的系统资源；&lt;/li>
+&lt;li>高可用要求：至少需要3台相同配置的服务器&lt;/li>
+&lt;/td>
+&lt;td>全部资源&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>裸金属&lt;/td>
+&lt;td>
+&lt;li>服务器：通用X86物理服务器；&lt;/li>
+&lt;li>配置要求：具备IPMI管理功能；启用方式设置为BIOS PXE启动&lt;/li>
+&lt;/td>
+&lt;td>不占用资源&lt;/td>
+&lt;td>
+&lt;li>为物理机单独申请网络可达的IPMI和内网IP子网&lt;/li>
+&lt;li>若环境不支持DHCP Relay，则要求服务器支持Redfish&lt;/li>
+&lt;/td>
+&lt;/tr>
+&lt;/table></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
+&lt;p>Cloudpods 平台服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
 &lt;h3 id="部署配置-mariadb-主主复制">部署配置 Mariadb 主主复制&lt;/h3>
@@ -1010,11 +1100,10 @@ options: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span sty
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl get nodes &lt;span style="color:#8f5902;font-style:italic"># 查找该节点的k8s node名称&lt;/span>
 kubectl delete node &amp;lt;node_name&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org/zh/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/baremetal/</guid><description>
-&lt;p>启用 baremetal-agent 之前需要部署 Cloudpods 集群，详见 &lt;a href="../../setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
-&lt;p>待集群准备完毕后需要指定集群中的一个 node 来部署 baremetal-agent 服务。&lt;/p>
+&lt;p>当平台部署成功后，需要选择部署环境中的一个 node 来部署 baremetal-agent 服务。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
-目前只能指定一个 node 来部署运行 baremetal-agent 服务，因为 baremetal-agent 服务是有状态的，不能多副本夸节点运行。
+目前只能指定一个 node 来部署运行 baremetal-agent 服务，因为 baremetal-agent 服务是有状态的，不能多副本跨节点运行。
 &lt;/div>
 &lt;h2 id="启用-baremetal-agent">启用 baremetal-agent&lt;/h2>
 &lt;p>在通过 pxe 引导流程中，baremetal-agent 只会处理来自 dhcp relay 服务器的请求, 所以你需要事先在交换机配置 dhcp relay 或者使用 Cloudpods host 服务的 dhcp relay 功能。&lt;/p>

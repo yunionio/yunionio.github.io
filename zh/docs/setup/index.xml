@@ -246,10 +246,8 @@
 &lt;li>管理 kvm 虚拟机: 部署 host 服务&lt;/li>
 &lt;li>管理物理机: 部署 baremetal-agent 服务&lt;/li>
 &lt;/ul></description></item><item><title>Docs: 配置要求</title><link>https://www.cloudpods.org/zh/docs/setup/config/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/config/</guid><description>
+&lt;h3 id="硬件配置要求">硬件配置要求&lt;/h3>
 &lt;p>下表为不同场景需要部署的节点及配置要求等。请根据具体使用场景进行规划部署。&lt;/p>
-&lt;style>
-table tr th, table tr td { border:1px solid #808080; padding:5px; }
-&lt;/style>
 &lt;table>
 &lt;tr>
 &lt;th>部署场景&lt;/th>
@@ -335,7 +333,14 @@ table tr th, table tr td { border:1px solid #808080; padding:5px; }
 &lt;li>若环境不支持DHCP Relay，则要求服务器支持Redfish&lt;/li>
 &lt;/td>
 &lt;/tr>
-&lt;/table></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
+&lt;/table>
+&lt;h3 id="公有云主机配置注意事项">公有云主机配置注意事项&lt;/h3>
+&lt;p>如在公有云中的云主机上部署Cloudpods平台，请注意以下事项：&lt;/p>
+&lt;ul>
+&lt;li>由于公有云上的云主机不能设置vip，数据库不是双主模式，因此在公有云上无法安装高可用环境，建议仅配置k8s高可用，Cloudpods平台部署一个控制节点和两个计算节点。&lt;/li>
+&lt;li>当在公有云上部署多个节点时，建议云主机之间请放开全部端口。&lt;/li>
+&lt;li>在公有云上部署环境时，建议部署Mariadb数据库，不要使用mysql 5.6及以下版本，防止索引长度 bug： Index column size too large. The maximum column size is 767 bytes.&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 平台服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
@@ -1140,7 +1145,7 @@ $ climc agent-list
 &lt;h2 id="禁用-baremetal-agent">禁用 baremetal-agent&lt;/h2>
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版</title><link>https://www.cloudpods.org/zh/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/ce-ee-switch/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版/开源版</title><link>https://www.cloudpods.org/zh/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/ce-ee-switch/</guid><description>
 &lt;p>默认情况下部署好的版本是 &lt;strong>开源版本(CE: Community Edition)&lt;/strong>，可以使用 &lt;code>ocadm cluster update&lt;/code> 命令切换成 &lt;strong>企业版本(EE: Enterprise Edition)&lt;/strong>。&lt;/p>
 &lt;h2 id="切换操作">切换操作&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到企业版&lt;/span>

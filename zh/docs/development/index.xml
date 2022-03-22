@@ -1117,7 +1117,227 @@ $ climc project-add-user system svcuser admin
 &lt;/tbody>
 &lt;/table></description></item><item><title>Docs: 代码结构</title><link>https://www.cloudpods.org/zh/docs/development/codestruct/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/codestruct/</guid><description>
 &lt;h2 id="后端代码结构">后端代码结构&lt;/h2>
-&lt;p>TODO&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/build">build&lt;/a>: 编译、构建相关的目录，每个组件在此目录下均有对应的目录&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/cmd">cmd&lt;/a>: 各个组件的入口函数（main函数）所在目录
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/cmd/climc">climc&lt;/a>: 命令行工具climc代码
+&lt;ul>
+&lt;li>shell: 各个服务对应的命令行工具代码&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/docs">docs&lt;/a>: API swagger 文档，目前没用了&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/locales">locales&lt;/a>: 本地化代码目录，主要负责response中信息的本地化&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg">pkg&lt;/a>: 主要代码
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/ansibleserver">ansibleserver&lt;/a>: ansibleserver代码，执行ansible的服务&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/apigateway">apigateway&lt;/a>: API网关代码
+&lt;ul>
+&lt;li>app: web服务工具包&lt;/li>
+&lt;li>clientman: 访问其他服务client相关代码&lt;/li>
+&lt;li>constants: 常量&lt;/li>
+&lt;li>handler: web服务handler&lt;/li>
+&lt;li>options: 服务的参数&lt;/li>
+&lt;li>policy: keystone权限client代码&lt;/li>
+&lt;li>service: 主要的服务代码&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/apihelper">apihelper&lt;/a>: web服务工具包&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/apis">apis&lt;/a>: API数据结构，一般来说每个目录对应一个组件
+&lt;ul>
+&lt;li>compute: region的API数据结构
+&lt;ul>
+&lt;li>zz_generated.model.go: 根据region的models自动生成的对应的数据结构&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/appctx">appctx&lt;/a>: context 工具包&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/appsrv">appsrv&lt;/a>: web框架
+&lt;ul>
+&lt;li>dispatcher: web路由相关代码&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/baremetal">baremetal&lt;/a>: baremetal-agent 服务代码&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/cloudcommon">cloudcommon&lt;/a>: 通用工具包
+&lt;ul>
+&lt;li>agent: agent服务通用包，目前被baremetal-agent和esxi-agent所使用&lt;/li>
+&lt;li>app: web服务工具包&lt;/li>
+&lt;li>cmdline: 命令行工具包&lt;/li>
+&lt;li>cronman: cronjob工具包&lt;/li>
+&lt;li>db: 服务models通用代码
+&lt;ul>
+&lt;li>lockman: 锁工具包&lt;/li>
+&lt;li>proxy: 代理设置，主要被pkg/compute/models/cloudaccounts.go使用&lt;/li>
+&lt;li>quotas: 配额相关代码&lt;/li>
+&lt;li>taskman: 异步任务代码&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>elect: etcd相关代码&lt;/li>
+&lt;li>etcd: etcd相关代码&lt;/li>
+&lt;li>informer: 订阅通知相关代码，如果关注某些model的变化，就可以订阅&lt;/li>
+&lt;li>notifyclient: notify服务对应的client代码&lt;/li>
+&lt;li>options: 通用的options&lt;/li>
+&lt;li>pending_delete: pending_delete相关的option&lt;/li>
+&lt;li>policy: model默认权限通用代码，主要用来为各个服务的model设置默认的keystone权限&lt;/li>
+&lt;li>service: sevice通用代码&lt;/li>
+&lt;li>syncman: informer使用相关代码
+&lt;ul>
+&lt;li>watcher: 监视服务的model&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>validators: 校验web请求参数的通用代码&lt;/li>
+&lt;li>workmanager: worker代码&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/cloudevent">cloudevent&lt;/a>: cloudevent服务，公有云日志&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/cloudid">cloudid&lt;/a>: cloudid服务，公有云免密登陆&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/cloudmon">cloudmon&lt;/a>: cloudmon服务，公有云监控
+&lt;ul>
+&lt;li>collectors: 各个公有云的监控数据收集&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/cloudprovider">cloudprovider&lt;/a>: 多云的通用数据结构&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/cloudproxy">cloudproxy&lt;/a>: 代理服务，可以通过代理访问vpc内部的虚拟机&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/compute">compute&lt;/a>: region服务代码
+&lt;ul>
+&lt;li>baremetal: baremetal相关代码&lt;/li>
+&lt;li>capabilities: capabilities接口代码&lt;/li>
+&lt;li>guestdrivers: 多云场景下，虚拟机相关的操作代码，不同的云实现driver&lt;/li>
+&lt;li>hostdrivers: 多云场景下，宿主机相关的操作代码，不同的云实现driver&lt;/li>
+&lt;li>misc: 托管已有操作系统的物理机，接口代码&lt;/li>
+&lt;li>models: 服务资源模型代码，一般一个model对应数据库中的一张表&lt;/li>
+&lt;li>options: 服务选项&lt;/li>
+&lt;li>policy: 资源model默认权限&lt;/li>
+&lt;li>regiondrivers: 多云场景下，region级别的云资源操作代码，不同的云实现driver&lt;/li>
+&lt;li>service: service启动的代码&lt;/li>
+&lt;li>specs: 获取物理机和GPU规格的代码，用来创建裸金属和GPU虚拟机&lt;/li>
+&lt;li>sshkeys: 获取sshkey的代码，包括全局的sshkey和project的sshkey，可以用来访问虚拟机&lt;/li>
+&lt;li>storagedrivers: 多云场景下，存储相关的操作代码，不同的云实现driver&lt;/li>
+&lt;li>tasks: 服务相关的异步任务代码，比如创建虚拟机最终会作为异步任务执行&lt;/li>
+&lt;li>usages: 获取云资源使用量统计的接口&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/controller">controller&lt;/a>: 控制器代码
+&lt;ul>
+&lt;li>autoscaling: 弹性伸缩控制器，主要用于实现虚拟机的弹性伸缩功能&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/devtool">devtool&lt;/a>: 运维工具服务，比如安装监控agent&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/esxi">esxi&lt;/a>: esxi-agent服务，主要用来操作vmware集群或者esxi宿主机&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/hostimage">hostimage&lt;/a>: 部署在每台宿主机上，和镜像相关的服务&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/hostman">hostman&lt;/a>: host服务相关代码
+&lt;ul>
+&lt;li>diskutils: 磁盘操作工具包
+&lt;ul>
+&lt;li>fsutils: 文件系统操作工具包&lt;/li>
+&lt;li>libguestfs: 调用libguestfs的工具包&lt;/li>
+&lt;li>nbd: 调用nbd模块的工具包&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>downloader: 下载代码，包括镜像、快照等下载&lt;/li>
+&lt;li>guestfs: 主要用来mount完虚拟机磁盘后，检测磁盘的fs，并做一些初始化操作&lt;/li>
+&lt;li>guestman: host服务中，虚拟机相关接口&lt;/li>
+&lt;li>host_health: 宿主机健康检查相关接口&lt;/li>
+&lt;li>hostdeployer: host-deployer服务代码，host-deployer主要用来初始化虚拟机&lt;/li>
+&lt;li>hosthandler: host服务中，宿主机相关接口&lt;/li>
+&lt;li>storageman: host服务中，存储相关接口&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/httperrors">httperrors&lt;/a>: web服务errors工具包&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/i18n">i18n&lt;/a>: 本地化工具包&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/image">image&lt;/a>: glance服务代码
+&lt;ul>
+&lt;li>drivers: 存储driver&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/keystone">keystone&lt;/a>: keystone服务代码，主要是鉴权以及用户管理&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/lbagent">lbagent&lt;/a>: 负载均衡agent代码&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/logger">logger&lt;/a>: 日志服务&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/mcclient">mcclient&lt;/a>: 后端服务通用client代码
+&lt;ul>
+&lt;li>auth: 鉴权相关&lt;/li>
+&lt;li>informer: model订阅通知&lt;/li>
+&lt;li>modules: 每种资源对应一个module&lt;/li>
+&lt;li>options: 请求的结构体，目前主要被climc调用&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/monitor">monitor&lt;/a>: 监控服务&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/multicloud">multicloud&lt;/a>: 多云纳管，纳管各种云的代码，实现cloudpods定义的资源接口
+&lt;ul>
+&lt;li>aliyun: 阿里云纳管
+&lt;ul>
+&lt;li>shell: 每个云都会实现一个命令行工具，方便调试，对应cmd/aliyuncli&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/notify">notify&lt;/a>: 通知服务
+&lt;ul>
+&lt;li>rpc: 通知服务的rpc模块，用于调用notify-plugins组件&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/proxy">proxy&lt;/a>: web框架调用的代理代码&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/s3gateway">s3gateway&lt;/a>: s3网关服务&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/scheduler">scheduler&lt;/a>: 调度器服务
+&lt;ul>
+&lt;li>algorithm: 调度的两大步骤
+&lt;ul>
+&lt;li>predicates: 过滤宿主机&lt;/li>
+&lt;li>priorities: 给宿主机打分&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>algorithmprovider: 启用那些predicates和priorities&lt;/li>
+&lt;li>api: API数据结构&lt;/li>
+&lt;li>cache: 宿主机的缓存，宿主机的信息会缓存，提高调度效率&lt;/li>
+&lt;li>core: 核心代码，主要是调度的实现&lt;/li>
+&lt;li>test: 调度器的测试代码
+&lt;ul>
+&lt;li>mock: mock测试&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/util">util&lt;/a>: 工具包
+&lt;ul>
+&lt;li>alipayclient: 支付宝客户端&lt;/li>
+&lt;li>ansible: ansible工具包&lt;/li>
+&lt;li>ansiblev2: ansible工具包v2&lt;/li>
+&lt;li>atexit: web框架代码&lt;/li>
+&lt;li>billing: 计费工具&lt;/li>
+&lt;li>bitmap: 位图&lt;/li>
+&lt;li>cephutils: cepu存储&lt;/li>
+&lt;li>cgrouputils: Ccroup&lt;/li>
+&lt;li>choices: 命令行工具中的选项参数&lt;/li>
+&lt;li>fileutils2: 文件操作工具包&lt;/li>
+&lt;li>fuseutils: fuse工具包&lt;/li>
+&lt;li>gin: web框架gin&lt;/li>
+&lt;li>httputils: http工具包，主要用来构造client&lt;/li>
+&lt;li>imagetools: 镜像工具&lt;/li>
+&lt;li>influxdb: influxdb&lt;/li>
+&lt;li>logclient: 日志client，服务资源的操作可以借此记录日志&lt;/li>
+&lt;li>qemuimg: 调用qemu-img 工具包&lt;/li>
+&lt;li>qemutils: qemu工具包&lt;/li>
+&lt;li>rbacutils: rbac鉴权工具包&lt;/li>
+&lt;li>regutils2: 正则工具包&lt;/li>
+&lt;li>s3auth: s3鉴权&lt;/li>
+&lt;li>vmdkutils: vmware vmdk工具包&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/vpcagent">vpcagent&lt;/a>: vpc agent服务，实现私有云的vpc功能&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/webconsole">webconsole&lt;/a>: webconsole服务，比如vnc接口&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/pkg/yunionconf">yunionconf&lt;/a>: 配置服务&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://github.com/yunionio/cloudpods/tree/release/3.8/scripts">scripts&lt;/a>: 开发用到的各种脚本
+&lt;ul>
+&lt;li>gencopyright.sh: 生成copyright&lt;/li>
+&lt;li>cherry_pick_pull.sh: 最常用的，cherry pick PR 到其他分支&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
 &lt;h2 id="前端代码结构">前端代码结构&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/yunionio/dashboard/tree/master/containers">containers&lt;/a>: 功能模块（对应一级菜单）

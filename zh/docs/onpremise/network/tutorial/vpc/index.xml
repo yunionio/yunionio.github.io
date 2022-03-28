@@ -728,8 +728,8 @@ systemctl restart nginx &lt;span style="color:#8f5902;font-style:italic">#重启
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>以上配置完成后，分别在nginx-master和nginx-slave重启nginx和keepavlied服务。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl restart nginx keepalived
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>此时，可以在nginx-master上通过ip addr查看到eth0增加了附属VIP 192.168.7.246/22。&lt;/p>
-&lt;pre>&lt;code>[root@nginx-master ~]# ip addr show dev eth0
-2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1440 qdisc pfifo_fast state UP group default qlen 1000
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@nginx-master ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># ip addr show dev eth0&lt;/span>
+2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span style="color:#0000cf;font-weight:bold">1440&lt;/span> qdisc pfifo_fast state UP group default qlen &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
 link/ether 00:24:b1:6d:9b:7d brd ff:ff:ff:ff:ff:ff
 inet 192.168.7.247/22 brd 192.168.7.255 scope global dynamic eth0
 valid_lft 94550864sec preferred_lft 94550864sec
@@ -737,7 +737,7 @@ inet 192.168.7.246/22 scope global secondary eth0
 valid_lft forever preferred_lft forever
 inet6 fe80::224:b1ff:fe6d:9b7d/64 scope link
 valid_lft forever preferred_lft forever
-&lt;/code>&lt;/pre>&lt;p>最后，为反亲和组nginx绑定一个EIP，则可以在VPC外通过该EIP访问nginx集群。&lt;/p></description></item><item><title>Docs: EIP其他操作</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipoperation/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipoperation/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，为反亲和组nginx绑定一个EIP，则可以在VPC外通过该EIP访问nginx集群。&lt;/p></description></item><item><title>Docs: EIP其他操作</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipoperation/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/tutorial/vpc/eipoperation/</guid><description>
 &lt;h2 id="同步状态">同步状态&lt;/h2>
 &lt;p>该功能用于获取弹性公网IP的当前状态。&lt;/p>
 &lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>

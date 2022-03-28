@@ -17,18 +17,18 @@
 &lt;/ol>
 &lt;h2 id="修改宿主机配置">修改宿主机配置&lt;/h2>
 &lt;p>默认宿主机以网卡对应二层网络，所以需要在宿主机上配置网卡与二层网络的对应关系。&lt;/p>
-&lt;pre>&lt;code># 在宿主机上操作
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在宿主机上操作&lt;/span>
 $ vi /etc/yunion/host.conf
-# 在networks下添加
+&lt;span style="color:#8f5902;font-style:italic"># 在networks下添加&lt;/span>
 networks
 - eth0/br0/192.168.1.1
 - bond1/br1/wire10g
-&lt;/code>&lt;/pre>&lt;p>配置完成后，需要重启host服务。&lt;/p>
-&lt;pre>&lt;code># 找到该宿主机对应的host服务
-$ kubectl get pods -n onecloud -o wide |grep host
-# 如pod名称为default-host-zgrkg
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后，需要重启host服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 找到该宿主机对应的host服务&lt;/span>
+$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep host
+&lt;span style="color:#8f5902;font-style:italic"># 如pod名称为default-host-zgrkg&lt;/span>
 $ kubectl delete pods -n onecloud default-host-zgrkg
-&lt;/code>&lt;/pre>&lt;h2 id="创建ip子网">创建IP子网&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="创建ip子网">创建IP子网&lt;/h2>
 &lt;p>在上面创建的二层网络wire10g下创建IP子网，后续创建虚拟机使用这些IP子网，则将自动接入万兆网络。&lt;/p></description></item><item><title>Docs: 如何更改宿主机网卡接入的二层网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/replacewire/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/faq/replacewire/</guid><description>
 &lt;p>在对Cloudpods网络概念不太清晰的情况下，新接入宿主机时，经常发生无法判断是否需要新增二层网络，导致宿主机接入错误的二层网络的情况。&lt;/p>
 &lt;p>本文介绍在宿主机接入二层网络配置错误的情况下，如果通过命令修正，更改宿主机接入的二层网络。&lt;/p>

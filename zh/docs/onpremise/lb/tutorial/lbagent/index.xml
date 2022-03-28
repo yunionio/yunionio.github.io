@@ -63,10 +63,10 @@
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;p>当转发节点上有监听任意IP的某个端口的服务配置时，会造成在使用该转发节点的LB实例上配置对应协议端口的监听无法正常使用。&lt;/p>
-&lt;pre>&lt;code># 在转发节点上查看监听任意IP的端口情况
-$ netstat -nlp |grep 0.0.0.0:
-tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN 7120/sshd
-&lt;/code>&lt;/pre>&lt;p>通过查询可以发现转发节点上的sshd服务正在监听任意IP的TCP 22端口，如用户需要在LB实例上配置TCP 22端口的监听，则需要将转发节点的sshd配置文件，将&amp;quot;/etc/ssh/sshd_config&amp;quot;配置文件的&lt;code>#ListenAddress 0.0.0.0&lt;/code>改为&lt;code>ListenAddress &amp;lt;转发节点IP&amp;gt;&lt;/code> 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在转发节点上查看监听任意IP的端口情况&lt;/span>
+$ netstat -nlp &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep 0.0.0.0:
+tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:22 0.0.0.0:* LISTEN 7120/sshd
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过查询可以发现转发节点上的sshd服务正在监听任意IP的TCP 22端口，如用户需要在LB实例上配置TCP 22端口的监听，则需要将转发节点的sshd配置文件，将&amp;quot;/etc/ssh/sshd_config&amp;quot;配置文件的&lt;code>#ListenAddress 0.0.0.0&lt;/code>改为&lt;code>ListenAddress &amp;lt;转发节点IP&amp;gt;&lt;/code> 。&lt;/p>
 &lt;/div>
 &lt;ol>
 &lt;li>

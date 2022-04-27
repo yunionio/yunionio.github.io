@@ -253,7 +253,20 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;/ol>
 &lt;/div>
 &lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-9">
-&lt;p>&lt;ol>
+&lt;p>&lt;p>&lt;strong>支持版本&lt;/strong>&lt;/p>
+&lt;p>支持纳管VMware5.0 ~ 7.0 版本。&lt;/p>
+&lt;p>&lt;strong>VMware资源纳管流程&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>新建VMware云账号，自动在Cloudpods平台创建二层网络和IP子网，VMware网络与Cloudpods平台二层网络和IP子网的对应关系如下：
+&lt;ul>
+&lt;li>一个vSwitch或Distributed vSwitch对应一个二层网络；&lt;/li>
+&lt;li>同一个二层网络下具体相同VLAN的连续IP地址段为一个IP子网；&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>VMware云账号添加完成后，如自动添加的二层网络和IP子网不符合组网需求，请根据VMware的实际网络环境进行合并wire和合并IP子网的操作；合并wire操作不可逆，如配置错误，请删除云账号后重新添加。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>操作步骤&lt;/strong>&lt;/p>
+&lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;多云管理/云账号/云账号&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入云账号页面。&lt;/li>
 &lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
 &lt;li>选择云平台为VMware，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
@@ -266,7 +279,7 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>账号：vCenter的管理员用户名。&lt;/li>
 &lt;li>密码：vCenter管理员用户的密码。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
@@ -276,7 +289,10 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;/ol>
 &lt;/div>
 &lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-10" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-10">
-&lt;p>&lt;ol>
+&lt;p>&lt;p>&lt;strong>支持版本&lt;/strong>&lt;/p>
+&lt;p>支持纳管OpenStack M版及之后版本。&lt;/p>
+&lt;p>&lt;strong>操作步骤&lt;/strong>&lt;/p>
+&lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;多云管理/云账号/云账号&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入云账号页面。&lt;/li>
 &lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
 &lt;li>选择云平台为OpenStack，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
@@ -304,7 +320,10 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;/div>
 &lt;/div>
 &lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-11" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-11">
-&lt;p>&lt;ol>
+&lt;p>&lt;p>&lt;strong>支持版本&lt;/strong>&lt;/p>
+&lt;p>支持纳管ZStack 3.5.0版本及之后版本。&lt;/p>
+&lt;p>&lt;strong>操作步骤&lt;/strong>&lt;/p>
+&lt;ol>
 &lt;li>
 &lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;多云管理/云账号/云账号&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入云账号页面。&lt;/p>
 &lt;/li>
@@ -341,7 +360,10 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;/div>
 &lt;/div>
 &lt;div id="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-12" class="tab-pane" role="tabpanel" aria-labelledby="tabset-zhdocsmulticloudcloudaccountstutorialcreate-1-12">
-&lt;p>&lt;ol>
+&lt;p>&lt;p>&lt;strong>支持版本&lt;/strong>&lt;/p>
+&lt;p>支持纳管飞天 v3.12.0及之后版本。&lt;/p>
+&lt;p>&lt;strong>操作步骤&lt;/strong>&lt;/p>
+&lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;多云管理/云账号/云账号&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入云账号页面。&lt;/li>
 &lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
 &lt;li>选择云平台为飞天，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>

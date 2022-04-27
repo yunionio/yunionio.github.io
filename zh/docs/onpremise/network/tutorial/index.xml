@@ -10,25 +10,39 @@
 &lt;h2 id="dhcp">DHCP&lt;/h2>
 &lt;p>虚拟机默认开启DHCP，通过DHCP获取IP地址，静态路由，域名，NTP等设置。物理机则默认是通过静态写入配置文件方式获取这些配置。&lt;/p>
 &lt;h2 id="dns配置">DNS配置&lt;/h2>
+&lt;h3 id="全局配置">全局配置&lt;/h3>
 &lt;p>全局主机DNS server需要在两个地方配置：&lt;/p>
 &lt;ol>
 &lt;li>region配置&lt;/li>
 &lt;/ol>
 &lt;p>climc service-config-edit region2&lt;/p>
 &lt;p>修改配置：dns_server&lt;/p>
-&lt;ol start="2">
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">default&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">...&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">dns_domain&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">office.yunion.io&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">dns_server&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">172.16.22.11&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">...&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
 &lt;li>endpoint配置&lt;/li>
 &lt;/ol>
 &lt;p>首先注册dns服务&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-create dns dns
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>其次注册DNS服务的地址，可以注册多个。每个对应一条endpoint记录。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc endpoint-create dns region0 public &amp;lt;dns_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>针对每个IP子网，可以修改这个IP子网的guest_dns配置，可以设置多个，以逗号分隔。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="ip子网配置">IP子网配置&lt;/h3>
+&lt;p>针对每个IP子网，可以修改这个IP子网的guest_dns配置，可以设置多个，以逗号分隔。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-update --dns &lt;span style="color:#4e9a06">&amp;#39;172.16.22.11,172.16.22.12&amp;#39;&lt;/span> &amp;lt;network&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果同时配置了全局的DNS配置和IP子网的DNS配置，以IP子网的DNS配置优先生效。&lt;/p>
 &lt;h2 id="ntp配置">NTP配置&lt;/h2>
 &lt;p>从v3.8开始，支持通过平台配置虚拟机的NTP服务器，并通过DHCP自动下发到虚拟机。&lt;/p>
-&lt;p>通过注册ntp的endpoint来配置平台的NTP服务器信息。&lt;/p>
+&lt;h3 id="全局配置-1">全局配置&lt;/h3>
+&lt;p>同DNS配置，通过注册ntp的endpoint来配置平台的NTP服务器信息。&lt;/p>
 &lt;p>首先注册ntp服务&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-create ntp ntp
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>其次注册NTP服务的地址，可以注册多个。每个对应一条endpoint记录。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc endpoint-create ntp region0 public &amp;lt;dns_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>针对每个IP子网，可以修改这个IP子网的guest_ntp配置，可以设置多个，以逗号分隔。&lt;/p></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="ip子网配置-1">IP子网配置&lt;/h3>
+&lt;p>针对每个IP子网，可以修改这个IP子网的guest_ntp配置，可以设置多个，以逗号分隔。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-update --ntp &lt;span style="color:#4e9a06">&amp;#39;172.16.22.11,172.16.22.12&amp;#39;&lt;/span> &amp;lt;network&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果同时配置了全局的NTP配置和IP子网的NTP配置，以IP子网的NTP配置优先生效。&lt;/p>
+&lt;p>另外，和DNS配置不同，DNS服务器地址必须使用IP，而NTP服务器的地址可以使用域名。&lt;/p></description></item></channel></rss>

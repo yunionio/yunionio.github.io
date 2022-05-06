@@ -124,6 +124,15 @@
 &lt;li>勾选是否限速，若勾选，设置磁盘最大IOPS，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol></description></item><item><title>Docs: 到期释放</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/release/</link><pubDate>Thu, 06 Jan 2022 16:19:19 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/release/</guid><description>
 &lt;p>到期释放即设置虚拟机的使用时长，当超过设置期限时，虚拟机将会被自动删除，存放到回收站。&lt;/p>
+&lt;h3 id="注意事项">注意事项&lt;/h3>
+&lt;p>虚拟机到期释放到期后，默认不会删除虚拟机上对应的快照，若需将快照随虚拟机一起删除，需要按照下面的方式修改配置文件。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改region配置文件&lt;/span>
+$ climc service-config-edit region2
+- delete_snapshot_expired_release: &lt;span style="color:#204a87">false&lt;/span>
++ delete_snapshot_expired_release: &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 修改完成后重启region服务&lt;/span>
+$ kubectl rollout restart -n onecloud deployment default-region
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="操作步骤">操作步骤&lt;/h3>
 &lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
 &lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-到期释放&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出到期释放对话框。&lt;/li>

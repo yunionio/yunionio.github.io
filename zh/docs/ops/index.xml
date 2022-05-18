@@ -205,10 +205,12 @@ $ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
 &lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
 $ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">
+&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
 &lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
-$ kubectl rollout restart deployment -n onecloud default-host
+$ kubectl -n onecloud delete pods default-host-xxxxx
+$ kubectl rollout restart daemonset -n onecloud default-host
 &lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，平台服务都以default开头&lt;/span>
 $ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
 &lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
@@ -220,7 +222,7 @@ $ kubectl edit configmaps default-region -n onecloud
 &lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改完成后，重启服务&lt;/span>
 $ kubectl -n onecloud rollout restart deployment default-region
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
-&lt;p>查看持久化服务日志，请参考&lt;a href="https://www.cloudpods.org/zh/docs/ops/backendlogs/">持久化后端日志&lt;/a>&lt;/p>
+&lt;p>查看持久化服务日志，请参考&lt;a href="../backendlogs">持久化后端日志&lt;/a>&lt;/p>
 &lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先需要找到region服务所在pod&lt;/span>
 $ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region

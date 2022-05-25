@@ -23,7 +23,7 @@
 &lt;h2 id="为什么物理机的网卡名称总是命名为en0-en1-">为什么物理机的网卡名称总是命名为en0, en1, &amp;hellip;?&lt;/h2>
 &lt;p>传统的Linux网卡命名规则为按照内核探测网卡的顺序，把网卡依次命名为eth0, eth1, &amp;hellip;。这种命名方式导致的问题时在添加/删除网卡设备后，导致网卡的名称发生变化（例如将eth0的网卡移除，重启之后，原来命名为eth1的网卡会变成eth0）。为了让网卡的名称和内核探测网卡的顺序无关，从systemd/udev v197开始引入了Predictable-Network-Interface-Names的机制，采用网卡的firmware/topology/location信息来命名网卡，例如 eno1， ens1，enp2s0等。具体参见 &lt;a href="https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/">https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/&lt;/a> 。&lt;/p>
 &lt;p>采用新机制避免了因为网卡的检测顺序、增删网卡等导致的网卡名称不持久，但却导致网卡的名称没有规律可循，而云平台初始化裸金属时需要能够明确地配置指定物理机网卡的IP配置。&lt;/p>
-&lt;p>为此，Cloudpods按照YunionOS探测网卡的顺序给网卡依次命名为en0, en1, &amp;hellip;&lt;/p>
+&lt;p>为此，Cloudpods按照PXE引导系统探测网卡的顺序给网卡依次命名为en0, en1, &amp;hellip;&lt;/p>
 &lt;p>为了实现网卡的自定义命名，Cloudpods做了如下操作：&lt;/p>
 &lt;ol>
 &lt;li>
@@ -43,7 +43,7 @@
 &lt;p>手动修改 /etc/udev/rules.d/70-persistent-net.rules&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>如果允许物理机重启，可以执行如下命令，让物理机重启boot进入YunionOS，初始化一系列配置文件，包括udev的配置文件：&lt;/p>
+&lt;p>如果允许物理机重启，可以执行如下命令，让物理机重启boot进入PXE引导系统，初始化一系列配置文件，包括udev的配置文件：&lt;/p>
 &lt;/li>
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-deploy &amp;lt;baremetal_server_id&amp;gt;

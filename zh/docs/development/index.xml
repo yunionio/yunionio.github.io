@@ -2069,4 +2069,93 @@ image: 192.168.0.1:5000/yunionio/region:lzx-dev
 &lt;/ul>
 &lt;/li>
 &lt;li>若对接了多个存储厂商，且各厂商提供的rbd命令相互不兼容，需要考虑rbd命令和宿主机挂载关系，避免多套不兼容存储挂载到同一个宿主机&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 资源纳管</title><link>https://www.cloudpods.org/zh/docs/development/resource_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/resource_sync/</guid><description/></item></channel></rss>
+&lt;/ul></description></item><item><title>Docs: 定位后端代码</title><link>https://www.cloudpods.org/zh/docs/development/api-model/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/api-model/</guid><description>
+&lt;h1 id="查看前端请求">查看前端请求&lt;/h1>
+&lt;p>这里以虚拟机举例&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>打开虚拟机列表界面
+&lt;img src="../images/vms.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>右键打开检查并切换到Network
+&lt;img src="../images/vms-network.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击刷新并查看网络请求
+&lt;img src="../images/vms-api.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>这里看到API请求是 GET &lt;a href="https://office.ioito.com/api/v2/servers">https://office.ioito.com/api/v2/servers&lt;/a> 其他请求可以查看下&lt;a href="../framework/#model-dispatcher">API请求方法&lt;/a>&lt;/p>
+&lt;p>可以确定是请求的是servers资源&lt;/p>
+&lt;h1 id="通过资源名称定位代码">通过资源名称定位代码&lt;/h1>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 进入到cloudpods源码目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> cloudpods
+&lt;span style="color:#8f5902;font-style:italic"># 通过关键字&amp;#39;servers&amp;#39;查找&lt;/span>
+$ grep -r &lt;span style="color:#4e9a06">&amp;#39;servers&amp;#39;&lt;/span> pkg/mcclient/modules
+pkg/mcclient/modules/compute/mod_servers.go: &lt;span style="color:#000">Servers&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ServerManager&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>modules.NewComputeManager&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;server&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;servers&amp;#34;&lt;/span>,
+pkg/mcclient/modules/compute/mod_skus.go: &lt;span style="color:#000">ServerSkus&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ServerSkusManager&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>modules.NewComputeManager&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;serversku&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;serverskus&amp;#34;&lt;/span>,
+&lt;span style="color:#8f5902;font-style:italic"># 可以看到servers属于compute(region)服务,现在到compute服务的模型里面搜索servers关键字&lt;/span>
+$ grep -r &lt;span style="color:#4e9a06">&amp;#39;servers&amp;#39;&lt;/span> pkg/compute/models
+pkg/compute/models/loadbalanceragents.go: &lt;span style="color:#000">servers&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;{{ .telegraf.haproxy_input_stats_socket }}&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+pkg/compute/models/skus.go: &lt;span style="color:#4e9a06">&amp;#34;serverskus_tbl&amp;#34;&lt;/span>,
+pkg/compute/models/skus.go: &lt;span style="color:#4e9a06">&amp;#34;serversku&amp;#34;&lt;/span>,
+pkg/compute/models/skus.go: &lt;span style="color:#4e9a06">&amp;#34;serverskus&amp;#34;&lt;/span>,
+pkg/compute/models/skus.go: &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> httperrors.NewNotEmptyError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;now allow to delete inuse instance_type.please remove related servers first: %s&amp;#34;&lt;/span>, self.Name&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/skus.go: &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> httperrors.NewNotEmptyError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;instance_type used by servers&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/skus.go: lockman.LockRawObject&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ctx, &lt;span style="color:#4e9a06">&amp;#34;serverskus&amp;#34;&lt;/span>, region.Id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/skus.go: defer lockman.ReleaseRawObject&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ctx, &lt;span style="color:#4e9a06">&amp;#34;serverskus&amp;#34;&lt;/span>, region.Id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/skus.go: lockman.LockRawObject&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ctx, &lt;span style="color:#4e9a06">&amp;#34;serverskus&amp;#34;&lt;/span>, region.Id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/skus.go: defer lockman.ReleaseRawObject&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ctx, &lt;span style="color:#4e9a06">&amp;#34;serverskus&amp;#34;&lt;/span>, region.Id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/guests.go:// +onecloud:swagger-gen-model-plural&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>servers
+pkg/compute/models/guests.go: &lt;span style="color:#4e9a06">&amp;#34;servers&amp;#34;&lt;/span>,
+pkg/compute/models/guests.go: // fake delete expired prepaid servers
+pkg/compute/models/groups.go: &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> nil, errors.Wrapf&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>httperrors.ErrInvalidStatus, &lt;span style="color:#4e9a06">&amp;#34;inconsistent networkId for member servers&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/hosts.go: &lt;span style="color:#4e9a06">&amp;#34;__on_host_down&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;shutdown-servers&amp;#34;&lt;/span>,
+pkg/compute/models/hosts.go: _, err :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> self.Request&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ctx, userCred, &lt;span style="color:#4e9a06">&amp;#34;POST&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;/hosts/shutdown-servers-on-host-down&amp;#34;&lt;/span>,
+pkg/compute/models/hosts.go: db.OpsLog.LogEvent&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>host, db.ACT_HOST_DOWN, fmt.Sprintf&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;migrate servers failed %s&amp;#34;&lt;/span>, err&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, userCred&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/keypairs.go: &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> httperrors.NewNotEmptyError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Cannot delete keypair used by servers&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/disks.go: &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> httperrors.NewNotEmptyError&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Virtual disk %s(%s) used by virtual servers&amp;#34;&lt;/span>, self.Name, self.Id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/guest_actions.go: url :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> fmt.Sprintf&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;%s/servers/%s/monitor&amp;#34;&lt;/span>, host.ManagerUri, self.Id&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+pkg/compute/models/guest_actions.go: taskData.Set&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;servers&amp;#34;&lt;/span>, jsonutils.Marshal&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>host.Servers&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 从上可以看到只有 pkg/compute/models/guests.go 文件有完整的 servers 关键字, 可以确定代码就位于此文件&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 我们详细介绍下guests.go文件&lt;/span>
+$ cat pkg/compute/models/guests.go &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#39;&amp;#34;servers&amp;#34;&amp;#39;&lt;/span> -A &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> -B &lt;span style="color:#0000cf;font-weight:bold">6&lt;/span>
+func init&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">GuestManager&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>SGuestManager&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+SVirtualResourceBaseManager: db.NewVirtualResourceBaseManager&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>
+SGuest&lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;guests_tbl&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;server&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;servers&amp;#34;&lt;/span>,
+&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+SRecordChecksumResourceBaseManager: *db.NewRecordChecksumResourceBaseManager&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>,
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+GuestManager.SetVirtualObject&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>GuestManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+GuestManager.SetAlias&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;guests&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+GuestManager.NameRequireAscii &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 从上面可以看到这里初始化了虚拟机的Manager, 虚拟机数据是存储在数据库guests_tbl这个表里面&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="特殊api请求说明">特殊API请求说明&lt;/h1>
+&lt;p>大部分请求都可以从上面的方法找到后端代码, 但部分API请求是由网关直接注册的
+这类的API需要查看&lt;a href="https://github.com/yunionio/cloudpods/tree/master/pkg/apigateway">API网关&lt;/a>代码&lt;/p>
+&lt;p>这里以RPC API举例说明&lt;/p>
+&lt;ul>
+&lt;li>点击获取虚拟机密码查看api请求
+&lt;img src="../images/vms-rpc.png" alt="">&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 搜寻rpc关键字&lt;/span>
+$ grep -r &lt;span style="color:#4e9a06">&amp;#39;rpc&amp;#39;&lt;/span> pkg/apigateway/handler
+pkg/apigateway/handler/rpc.go: h.AddByMethod&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>GET, mf, NewHP&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>RpcHandler, APIVer, &lt;span style="color:#4e9a06">&amp;#34;rpc&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+pkg/apigateway/handler/rpc.go: h.AddByMethod&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>POST, mf, NewHP&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>RpcHandler, APIVer, &lt;span style="color:#4e9a06">&amp;#34;rpc&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 通过查看API网关RpcHandler源码可知, RPC请求是依靠反射调用mcclient模型中的GetXXX或DoXXX实现的&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里的XXX是驼峰命名&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里看到是GET请求，因此可以知道是调用了servers里面的GetLoginInfo&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 因此我们可以顺利找到相关的实现&lt;/span>
+$ grep -r &lt;span style="color:#4e9a06">&amp;#39;GetLoginInfo&amp;#39;&lt;/span> pkg/mcclient/modules/compute
+pkg/mcclient/modules/compute/mod_servers.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>this *ServerManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+pkg/mcclient/modules/compute/mod_hosts.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>this *HostManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+pkg/mcclient/modules/compute/mod_dbinstanceaccounts.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>this *SDBInstanceAccountManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+pkg/mcclient/modules/compute/mod_elasticcache.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>self *ElasticCacheManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+pkg/mcclient/modules/compute/mod_elasticcache.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>self *ElasticCacheAccountManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源纳管</title><link>https://www.cloudpods.org/zh/docs/development/resource_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/resource_sync/</guid><description/></item></channel></rss>

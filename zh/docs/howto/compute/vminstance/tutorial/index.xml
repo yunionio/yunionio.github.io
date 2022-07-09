@@ -1,0 +1,508 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 操作指南</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建虚拟机</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/create/</link><pubDate>Fri, 19 Jul 2019 15:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/create/</guid><description>
+&lt;p>&lt;code>climc server-create&lt;/code> 命令提供创建云主机的操作。 Cloudpods 可以同时管理多个私有云和公有云，不同供应商有各自的认证方式，在创建云主机之前需要做一些不同的准备工作。&lt;/p>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;h3 id="cloudpods-虚拟机">Cloudpods 虚拟机&lt;/h3>
+&lt;p>Cloudpods 提供自研的 kvm 虚拟机私有云管理平台，创建 kvm 虚拟机时需要有相应的宿主机，如果还没有添加 kvm 宿主机，请参考 &lt;a href="../../../setup/host/">安装部署/计算节点&lt;/a> 注册对应的宿主机到云平台。&lt;/p>
+&lt;h3 id="vmware-esxi-虚拟机">VMware ESXI 虚拟机&lt;/h3>
+&lt;p>TODO&lt;/p>
+&lt;h3 id="私有云">私有云&lt;/h3>
+&lt;p>私有云和公有云都有自己的认证体系，为了让 Cloudpods 能够管理各个云平台，需要把他们的认证信息导入到 Cloudpods 平台。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">平台&lt;/th>
+&lt;th style="text-align:center">准备工作&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">openstack&lt;/td>
+&lt;td style="text-align:center">TODO&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">zstack&lt;/td>
+&lt;td style="text-align:center">TODO&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="公有云">公有云&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">平台&lt;/th>
+&lt;th style="text-align:right">准备工作&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">阿里云&lt;/td>
+&lt;td style="text-align:right">TODO&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">腾讯云&lt;/td>
+&lt;td style="text-align:right">TODO&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">华为云&lt;/td>
+&lt;td style="text-align:right">TODO&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">AWS&lt;/td>
+&lt;td style="text-align:right">TODO&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Azure&lt;/td>
+&lt;td style="text-align:right">TODO&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">UCloud&lt;/td>
+&lt;td style="text-align:right">TODO&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="创建机器">创建机器&lt;/h2>
+&lt;p>创建机器命令为 &lt;code>server-create&lt;/code>，可以使用 &lt;code>climc help server-create&lt;/code> 查看创建 server 的所有参数，常用的参数如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">参数名称&lt;/th>
+&lt;th style="text-align:center">类型&lt;/th>
+&lt;th style="text-align:center">作用&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;ncpu&lt;/td>
+&lt;td style="text-align:center">int&lt;/td>
+&lt;td style="text-align:center">虚拟机 cpu 个数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;disk&lt;/td>
+&lt;td style="text-align:center">[]string&lt;/td>
+&lt;td style="text-align:center">指定创建的系统盘镜像，指定多次表示虚拟机创建多块磁盘&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;net&lt;/td>
+&lt;td style="text-align:center">[]string&lt;/td>
+&lt;td style="text-align:center">指定虚拟机使用的网络，指定多次将在虚拟机里面添加多个网卡&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;allow-delete&lt;/td>
+&lt;td style="text-align:center">bool&lt;/td>
+&lt;td style="text-align:center">允许删除虚拟机&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;auto-start&lt;/td>
+&lt;td style="text-align:center">bool&lt;/td>
+&lt;td style="text-align:center">创建完自动启动&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;password&lt;/td>
+&lt;td style="text-align:center">string&lt;/td>
+&lt;td style="text-align:center">设置虚拟机密码&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;tenant&lt;/td>
+&lt;td style="text-align:center">string&lt;/td>
+&lt;td style="text-align:center">创建到指定的项目&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;prefer-region&lt;/td>
+&lt;td style="text-align:center">string&lt;/td>
+&lt;td style="text-align:center">创建到指定的 region&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;prefer-zone&lt;/td>
+&lt;td style="text-align:center">string&lt;/td>
+&lt;td style="text-align:center">创建到指定的 zone&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">&amp;ndash;prefer-host&lt;/td>
+&lt;td style="text-align:center">string&lt;/td>
+&lt;td style="text-align:center">创建到指定的 host&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;strong>注意以下几点:&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>名称、内存或者套餐类型在创建主机时必须使用;&lt;/li>
+&lt;li>系统盘的镜像通过 &lt;code>image-list&lt;/code> 或者 &lt;code>cached-image-list&lt;/code>，公有云的镜像列表通过 &lt;code>cached-image-list&lt;/code> 接口查询，参考: &lt;a href="../howto/image/query/">查询镜像&lt;/a>;&lt;/li>
+&lt;/ol>
+&lt;p>下面以举例的方式创建机器：&lt;/p>
+&lt;h3 id="私有云主机">私有云主机&lt;/h3>
+&lt;p>待创建规格:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>名称&lt;/th>
+&lt;th>平台&lt;/th>
+&lt;th>套餐&lt;/th>
+&lt;th>内存&lt;/th>
+&lt;th>cpu&lt;/th>
+&lt;th>系统盘&lt;/th>
+&lt;th>网络&lt;/th>
+&lt;th>其他&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>vm1&lt;/td>
+&lt;td>kvm&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>4g&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>centos7.qcow2 60g&lt;/td>
+&lt;td>net1&lt;/td>
+&lt;td>2块数据盘， 一块100g ext4 挂载到 /opt，另外一块 50g xfs 挂载到 /data; 自动启动&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>vm2&lt;/td>
+&lt;td>esxi&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>2g&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>ubuntu18.04.qcow2 100g&lt;/td>
+&lt;td>net2&lt;/td>
+&lt;td>允许删除&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>vm3&lt;/td>
+&lt;td>opnstack&lt;/td>
+&lt;td>t2.nano&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>centos6.qcow2&lt;/td>
+&lt;td>net3&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建 kvm vm1&lt;/span>
+$ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4:/opt --disk 50g:xfs:/data --ncpu &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> --net net1 --auto-start vm1 4g
+&lt;span style="color:#8f5902;font-style:italic"># 创建 esxi vm2&lt;/span>
+$ climc server-create --hypervisor esxi --disk ubuntu18.04.qcow2:100g --net net2 --ncpu &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> --allow-delete vm2 2g
+&lt;span style="color:#8f5902;font-style:italic"># 创建 openstack vm3&lt;/span>
+$ climc server-create --hypervisor openstack --disk centos6.qcow2 --net net3 vm3 t2.nano
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="公有云主机">公有云主机&lt;/h3>
+&lt;p>创建共有云主机和虚拟机的参数一致，但通常情况下需要通过 &lt;code>cloud-region-list&lt;/code> 、&lt;code>zone-list&lt;/code> 和 &lt;code>vpc-list&lt;/code> 子命令挑选出各个公有云可用的 region, zone 和 network。&lt;/p>
+&lt;p>然后 server-create 的时候通过 &lt;code>--prefer-region&lt;/code> 或 &lt;code>--prefer-zone&lt;/code> 创建到指定的区域，&lt;code>--net&lt;/code> 创建到指定的 vpc 子网。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询 aliyun 的可用的 vpc&lt;/span>
+$ climc vpc-list --provider Aliyun --details
++--------------------------------------+-------------------------------------------+---------+-----------+--------------------------------------+------------+----------------+------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cloudregion_Id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Is_default &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cidr_Block &lt;span style="color:#000;font-weight:bold">|&lt;/span> Region &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------------------------------------------+---------+-----------+--------------------------------------+------------+----------------+------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 6aabd4c5-8a6a-4ffb-83cd-39f924f773b7 &lt;span style="color:#000;font-weight:bold">|&lt;/span> test12 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> available &lt;span style="color:#000;font-weight:bold">|&lt;/span> 9b0fdc39-701b-44fc-8842-664fe89359f1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.0.0/16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 阿里云 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 8f4d444f-cce4-4797-8441-e1b58c72ed26 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ali-yunion-bj &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> available &lt;span style="color:#000;font-weight:bold">|&lt;/span> 9b0fdc39-701b-44fc-8842-664fe89359f1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 172.17.0.0/16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 阿里云 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> bb8c1ec5-4577-4f84-8117-efab6586b799 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ali-transit-bj &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> available &lt;span style="color:#000;font-weight:bold">|&lt;/span> 9b0fdc39-701b-44fc-8842-664fe89359f1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.0.0/8 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 阿里云 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> c4e1a012-5f2a-48fc-80ef-4ac0371006eb &lt;span style="color:#000;font-weight:bold">|&lt;/span> hello &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> available &lt;span style="color:#000;font-weight:bold">|&lt;/span> dbbfea2f-8bf4-4676-8036-4ad6f6e6b1ea &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.0.0/8 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 阿里云 阿联酋（迪拜） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 查询 vpc 6aabd4c5-8a6a-4ffb-83cd-39f924f773b7 下可用的 network&lt;/span>
+$ climc network-list --vpc 6aabd4c5-8a6a-4ffb-83cd-39f924f773b7
++--------------------------------------+------------+----------------+-----------------+---------------+--------------------------------------+-----------+--------------+-----------------+-------------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_ip_start &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_ip_end &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_ip_mask &lt;span style="color:#000;font-weight:bold">|&lt;/span> wire_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> is_public &lt;span style="color:#000;font-weight:bold">|&lt;/span> public_scope &lt;span style="color:#000;font-weight:bold">|&lt;/span> guest_gateway &lt;span style="color:#000;font-weight:bold">|&lt;/span> server_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------------+----------------+-----------------+---------------+--------------------------------------+-----------+--------------+-----------------+-------------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> b3dee5e6-0dce-403c-80b2-ad62880b662f &lt;span style="color:#000;font-weight:bold">|&lt;/span> esrdfsfsd &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.0.1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.127.252 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">17&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> a421934d-9cb4-4163-85b9-ad0038e9cb89 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.127.254 &lt;span style="color:#000;font-weight:bold">|&lt;/span> guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> available &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> d131de82-1be5-4f70-8b22-2303f4f409bb &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdfsdfdsff &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.128.1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.255.252 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">17&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 8ccdbe42-0c62-456f-842d-bc279a5c2786 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.255.254 &lt;span style="color:#000;font-weight:bold">|&lt;/span> guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> available &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------------+----------------+-----------------+---------------+--------------------------------------+-----------+--------------+-----------------+-------------+-----------+
+&lt;span style="color:#8f5902;font-style:italic"># 查询 region 9b0fdc39-701b-44fc-8842-664fe89359f1 下可用的 sku&lt;/span>
+$ climc server-sku-list --region 9b0fdc39-701b-44fc-8842-664fe89359f1 --provider Aliyun
+&lt;span style="color:#8f5902;font-style:italic"># 创建 ecs.t5-lc2m1.nano aliyun vm4 虚拟机到 region 9b0fdc39-701b-44fc-8842-664fe89359f1 的子网 b3dee5e6-0dce-403c-80b2-ad62880b662f&lt;/span>
+$ climc server-create --prefer-region 9b0fdc39-701b-44fc-8842-664fe89359f1 vm4 --hypervisor aliyun --net b3dee5e6-0dce-403c-80b2-ad62880b662f vm4 ecs.t5-lc2m1.nano
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 登录虚拟机</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/connect/</link><pubDate>Fri, 19 Jul 2019 17:38:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/connect/</guid><description>
+&lt;p>创建好主机后，登录的方式大概分为以下几种：&lt;/p>
+&lt;ul>
+&lt;li>ssh: linux 通用，要求主机网络可达;&lt;/li>
+&lt;li>rdp: windows 远程桌面，要求主机网络可达；&lt;/li>
+&lt;li>vnc: vnc 链接，对主机网络没有要求，只要能链接云平台 vnc proxy 即可;&lt;/li>
+&lt;li>ipmi sol: 只对装有 BMC 的物理机可用;&lt;/li>
+&lt;/ul>
+&lt;p>针对以上的链接方式，我们提供以下接口链接云主机：&lt;/p>
+&lt;h3 id="vnc-链接">vnc 链接&lt;/h3>
+&lt;p>&lt;code>climc webconsole-server&lt;/code> 命令提供通过 vnc 的方式链接虚拟机，该方式对裸金属服务器不可用。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc webconsole-server &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="ssh-链接">ssh 链接&lt;/h3>
+&lt;p>查询 server 的 ip&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 可通过 server-list --search --details 的方式找到主机的 ip&lt;/span>
+$ climc server-list --search &amp;lt;server_name&amp;gt; --details
+&lt;span style="color:#8f5902;font-style:italic"># 或者通过 server-show &amp;lt;server_id&amp;gt; 的方式得到 ip&lt;/span>
+$ climc server-show &amp;lt;server_name&amp;gt; &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep ip
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ips &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.226 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查询 server 的登录信息&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-logininfo &amp;lt;server_name&amp;gt;
++----------+-----------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------+-----------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> password &lt;span style="color:#000;font-weight:bold">|&lt;/span> @2aWXB6AmCbV &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> updated &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2019-07-03T10:00:20.801716Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> username &lt;span style="color:#000;font-weight:bold">|&lt;/span> root &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------+-----------------------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>ssh 登录&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ssh root@10.168.222.226
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过 webconsole 登录&lt;/p>
+&lt;pre>&lt;code>$ climc webconsole-ssh 10.168.222.226
+https://console.yunion.cn/web-console?access_token=y7bjpBwtvJHLHpwOUMzNVvsYiAgY1vskIuVwB-aINfH4mm8MsZqwxKSfHqm2pCvY6O8bBA%3D%3D&amp;amp;api_server=https%3A%2F%2Foffice.yunion.io&amp;amp;protocol=tty
+&lt;/code>&lt;/pre>&lt;p>在浏览器打开 webconsole 放回的 url ，就会到对应虚拟机的登录界面&lt;/p>
+&lt;p>&lt;img src="../images/webssh.png" alt="">&lt;/p></description></item><item><title>Docs: 迁移相关</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/migrate/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/migrate/</guid><description>
+&lt;h2 id="介绍">介绍&lt;/h2>
+&lt;p>目前迁移功能主要用于 Cloudpods 内置私有云的虚拟机上，该功能用于将虚拟机迁移到其他宿主机上面。当未指定宿主机时，系统将自动选择宿主机。&lt;/p>
+&lt;p>迁移的方式分为“冷迁移”和“热迁移”，区别如下：&lt;/p>
+&lt;ul>
+&lt;li>冷迁移：在虚拟机&lt;strong>关机的状态&lt;/strong>下，将虚拟机磁盘从源宿主机拷贝到目标宿主机。&lt;/li>
+&lt;li>热迁移：在虚拟机&lt;strong>运行的状态&lt;/strong>下，将虚拟机的磁盘以及内存状态同步到目标宿主机，当两边数据同步后，再将虚拟机切换到目标宿主机。&lt;/li>
+&lt;/ul>
+&lt;p>热迁移和冷迁移比起来，能够在不关机，保证业务运行的情况下，将虚拟机从一台宿主机迁移到另一台宿主机。&lt;/p>
+&lt;p>但热迁移默认要求目标宿主机和源宿主机的 CPU microcode 一致，可以通过以下命令查看 CPU 的 microcode：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /proc/cpuinfo &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep microcode &lt;span style="color:#000;font-weight:bold">|&lt;/span> uniq
+microcode : 0xca
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="冷迁移">冷迁移&lt;/h2>
+&lt;p>虚拟机在关机状态下，可以执行冷迁移操作。&lt;/p>
+&lt;ul class="nav nav-tabs" id="migrate" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#migrate-0" role="tab" aria-controls="migrate-0" aria-selected="true">climc&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#migrate-1" role="tab" aria-controls="migrate-1">控制台&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="migrate">&lt;div id="migrate-0" class="tab-pane show active" role="tabpanel" aria-labelledby="migrate-0">
+&lt;p>&lt;h3 id="查看冷迁移帮助信息">查看冷迁移帮助信息&lt;/h3>
+&lt;p>冷迁移的命令为 &lt;code>climc server-migrate&lt;/code>，通过下面的命令可以查看参数的说明和帮助信息：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc &lt;span style="color:#204a87">help&lt;/span> server-migrate
+Usage: climc server-migrate &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-start&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--rescue-mode&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
+Migrate server
+Positional arguments:
+&amp;lt;ID&amp;gt;
+ID of server
+Optional arguments:
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-start&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Server auto start after migrate
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--rescue-mode&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Migrate server in rescue mode, all disks must reside on shared storage
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Server migration prefer host id or name
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="冷迁移举例">冷迁移举例&lt;/h3>
+&lt;ul>
+&lt;li>对已经关机的虚拟机 vm1 进行迁移&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code># 先查看虚拟机的信息
+$ climc server-list --search vm1 --details
+# 执行随机迁移
+$ climc server-migrate vm1
+# 迁移过程中虚拟机会处于 migrating 的状态
+$ climc server-list --search vm1
+# 迁移完成后虚拟机状态变为 ready，并且可以发现宿主机信息也发生了变化
+$ climc server-list --search vm1 --details
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>迁移到指定宿主机&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code># 先列出平台的 kvm 宿主机
+$ climc host-list --hypervisor kvm
+# 然后指定宿主机名称或者 id 迁移
+$ climc server-migrate --prefer-host xxx vm1
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>迁移后自动启动虚拟机&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>$ climc server-migrate --auto-start vm1
+$ climc server-migrate --auto-start --prefer-host xxx vm1
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>rescue mode 迁移：当宿主机完全宕机，虚拟机所有的磁盘都使用共享存储（ceph 等分布式块存储）的情况下，可以通过 rescue mode 把元数据迁移到另外的宿主机，然后启动&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-migrate --rescue-mode &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --auto-start &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host &lt;span style="color:#000">$host_name&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> &lt;span style="color:#000">$vm_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="migrate-1" class="tab-pane" role="tabpanel" aria-labelledby="migrate-1">
+&lt;p>&lt;p>TODO&lt;/p>
+&lt;/div>&lt;/div>
+&lt;h2 id="热迁移">热迁移&lt;/h2>
+&lt;p>虚拟机在运行状态进行的迁移叫做热迁移，热迁移的速度会比冷迁移慢，因为设计磁盘和内存等状态的同步，但好处是在不关机的状态下进行迁移，基本上对虚拟机上运行的业务没有影响。&lt;/p>
+&lt;ul class="nav nav-tabs" id="live_migrate" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#live_migrate-0" role="tab" aria-controls="live_migrate-0" aria-selected="true">climc&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#live_migrate-1" role="tab" aria-controls="live_migrate-1">控制台&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="live_migrate">&lt;div id="live_migrate-0" class="tab-pane show active" role="tabpanel" aria-labelledby="live_migrate-0">
+&lt;p>&lt;h3 id="查看热迁移帮助信息">查看热迁移帮助信息&lt;/h3>
+&lt;p>热迁移的命令为 &lt;code>climc server-live-migrate&lt;/code>，通过下面的命令查看帮助信息：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc &lt;span style="color:#204a87">help&lt;/span> server-live-migrate
+Usage: climc server-live-migrate &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-cpu-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
+Live-Migrate server
+Positional arguments:
+&amp;lt;ID&amp;gt;
+ID of server
+Optional arguments:
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-cpu-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Skip check CPU mode of the target host
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Server migration prefer host id or name
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="热迁移举例">热迁移举例&lt;/h3>
+&lt;ul>
+&lt;li>对虚拟机 vm1 进行热迁移，目标宿主机随机选择&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate vm1
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>热迁移默认要求目标宿主机和虚拟机当前所在的宿主机 CPU microcode 一致， 如果不一致该宿主机则会被调度器过滤掉，如果环境里面实在没有 CPU 一致的目标宿主机，可以使用 &lt;code>--skip-cpu-check&lt;/code> 绕过 CPU microcode 的检查&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate --skip-cpu-check vm1
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU microcode 检查&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="live_migrate-1" class="tab-pane" role="tabpanel" aria-labelledby="live_migrate-1">
+&lt;p>&lt;p>TODO&lt;/p>
+&lt;/div>&lt;/div></description></item><item><title>Docs: 修改磁盘驱动</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/change_disk_driver/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/change_disk_driver/</guid><description>
+&lt;h2 id="介绍">介绍&lt;/h2>
+&lt;p>默认情况下，虚拟机的磁盘驱动是 scsi 的，这种驱动在 Linux 虚拟机内部看到的磁盘就是 &amp;lsquo;/dev/sd&amp;rsquo; 开头的块设备。可以通过一些命令设置磁盘的驱动，比如 Windows 虚拟机在没有安装 virtio 驱动的时候，只能使用 ide 驱动的方式启动。&lt;/p>
+&lt;h2 id="查看虚拟机磁盘驱动">查看虚拟机磁盘驱动&lt;/h2>
+&lt;p>首先通过 server-disk-list 命令查看虚拟机所有磁盘的驱动，比如虚拟机的名称是 vm1 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># server-disk-list 命令查看虚拟机和关联磁盘的关系&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --details: 显示详细信息&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --server: 指定对应的虚拟机名称或者 ID&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --scope system: 表示显示系统里面所有资源&lt;/span>
+$ climc server-disk-list --details --server vm1 --scope system
++--------------------------------------+-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 968d9285-6353-4bce-8a6f-bf540efad3f5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> data-disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">10240&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> data &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5448ea7d-5c64-47a2-847d-06060e187a47 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-vm1-1624970026002516731 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中 Index 为 0 表示虚拟机的第一块磁盘，对应到 Linux 系统里面的 &amp;lsquo;/dev/sda&amp;rsquo;，Driver 表示对应驱动为 scsi，Disk_type 为 sys 表示系统盘。&lt;/p>
+&lt;p>Index 为 1 表示第二块磁盘，对应 Linux 系统里面的 &amp;lsquo;/dev/sdb&amp;rsquo;，驱动也为 scsi ，Disk_type 为 data 表示数据盘。&lt;/p>
+&lt;h2 id="修改驱动">修改驱动&lt;/h2>
+&lt;p>通过 server-disk-update 命令更新虚拟机上的磁盘驱动。&lt;/p>
+&lt;p>先看下 server-disk-update 命令的帮助信息。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc &lt;span style="color:#204a87">help&lt;/span> server-disk-update
+Usage: climc server-disk-update &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--cache &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>writethrough,none,writeback&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--aio &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>native,threads&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--index INDEX&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--driver &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>virtio,ide,scsi,pvscsi&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &amp;lt;SERVER&amp;gt; &amp;lt;DISK&amp;gt;
+Update details of a virtual disk of a virtual server
+Positional arguments:
+&amp;lt;SERVER&amp;gt;
+ID or Name of server
+&amp;lt;DISK&amp;gt;
+ID or Name of Disk
+Optional arguments:
+&lt;span style="color:#8f5902;font-style:italic"># 对应 qemu/kvm 虚拟机磁盘 cache mode&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--cache &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>writethrough,none,writeback&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span>
+Cache mode of vDisk
+&lt;span style="color:#8f5902;font-style:italic"># 对应 qemu/kvm 虚拟机磁盘的 aio&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--aio &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>native,threads&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span>
+Asynchronous IO mode of vDisk
+&lt;span style="color:#8f5902;font-style:italic"># 磁盘索引顺序&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--index INDEX&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Index of vDisk
+&lt;span style="color:#8f5902;font-style:italic"># 对应 qemu/kvm 虚拟机磁盘 driver&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--driver &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>virtio,ide,scsi,pvscsi&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span>
+Driver of vDisk
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从帮助信息可以看到支持的 driver 为 virtio, ide, scsi 或者 pvscsi ，请根据自己的需要进行选择。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 把虚拟机 vm1 的系统盘 5448ea7d-5c64-47a2-847d-06060e187a47 驱动改为 virtio&lt;/span>
+$ climc server-disk-update --driver virtio vm1 5448ea7d-5c64-47a2-847d-06060e187a47
+&lt;span style="color:#8f5902;font-style:italic"># 查看记录，发现已经改成 virtio 了&lt;/span>
+$ climc server-disk-list --details --server vm1 --scope system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 5448ea7d-5c64-47a2-847d-06060e187a47
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5448ea7d-5c64-47a2-847d-06060e187a47 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-vm1-1624970026002516731 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> virtio &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改了磁盘驱动后，需要重启虚拟机才能生效，使用 server-stop 和 server-start 命令重启虚拟机 vm1 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 停止虚拟机&lt;/span>
+$ climc server-stop vm1
+&lt;span style="color:#8f5902;font-style:italic"># 调用 server-list 查看虚拟机状态，等到状态变为 ready&lt;/span>
+$ climc server-list --search vm1 --scope system
++--------------------------------------+------+--------------+---------+------------+-----------+-----------+-----------------------------+------------+---------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Billing_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> vcpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> vmem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Secgrp_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> Hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span> os_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> is_system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------+---------+------------+-----------+-----------+-----------------------------+------------+---------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> postpaid &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1024&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-29T12:33:45.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span> kvm &lt;span style="color:#000;font-weight:bold">|&lt;/span> Linux &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------+---------+------------+-----------+-----------+-----------------------------+------------+---------+-----------+
+&lt;span style="color:#8f5902;font-style:italic"># 启动虚拟机&lt;/span>
+$ climc server-start vm1
+&lt;span style="color:#8f5902;font-style:italic"># 之后再重复查看虚拟机状态，知道变为 running&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后通过前端的 vnc 或者 ssh 登录虚拟机，用 lsblk 之类的磁盘工具查看磁盘，发现里面的磁盘块设备名称已经从 &amp;lsquo;/dev/sda&amp;rsquo; 变成 &amp;lsquo;/dev/vda&amp;rsquo; 了。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>cloudroot@vm1 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ lsblk
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sr0 11:0 &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 1024M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> rom
+vda 253:0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 30G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+├─vda1 253:1 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 1M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part
+├─vda2 253:2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 512M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /boot
+└─vda3 253:3 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 29.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: libvirt 管理虚机导入</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/import/</link><pubDate>Tue, 26 Nov 2019 16:57:43 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/import/</guid><description>
+&lt;p>支持将libvirt管理的虚拟机导入到Cloudpods平台。&lt;/p>
+&lt;h2 id="注意事项">注意事项&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>首先需要在libvirt管理的宿主机上安装我们的计算节点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>安装好计算节点后需要添加的虚拟机的网络到控制节点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>确保libvirt服务关闭&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="相关操作">相关操作&lt;/h2>
+&lt;ul>
+&lt;li>准备好需要导入虚拟机的信息文件&lt;code>servers.yaml&lt;/code>， 格式如下:&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>hosts:
+- host_ip: 10.168.222.137
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+- mac: 52:54:00:4A:19:AF
+ip: 10.168.222.53
+- mac: 52:54:00:4A:19:CC
+ip: 10.168.222.54
+- host_ip: 10.168.222.130
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+- mac: 53:54:00:4A:19:EC
+ip: 11.168.222.50
+- mac: 53:54:00:4A:19:EE
+ip: 11.168.222.51
+&lt;/code>&lt;/pre>&lt;pre>&lt;code>- `host_ip` 是要导入的宿主机的ip
+- `xml_file_path`是libvirt存储虚拟机xml文件的路径，
+- `monitor_path`是libvirt存储虚拟机monitor socket文件的路径，
+- `servers`是需要导入的虚拟机，里面描述了虚拟机的ip和mac对应关系
+&lt;/code>&lt;/pre>
+&lt;hr>
+&lt;ul>
+&lt;li>执行 climc servers-import-from-libvirt 开始导入&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 导入前确认libvirt服务关闭&lt;/span>
+$ climc servers-import-from-libvirt servers.yaml
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: GPU相关</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/gpu/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/gpu/</guid><description>
+&lt;p>目前仅支持 Cloudpods kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。&lt;/p>
+&lt;h2 id="相关操作">相关操作&lt;/h2>
+&lt;h3 id="创建-gpu-云主机">创建 GPU 云主机&lt;/h3>
+&lt;ul>
+&lt;li>查询 gpu 列表&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc isolated-device-list --gpu
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Dev_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Model &lt;span style="color:#000;font-weight:bold">|&lt;/span> Addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Vendor_device_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host_id &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 273f4f72-06b6-49aa-8456-4beceec44997 &lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU-HPC &lt;span style="color:#000;font-weight:bold">|&lt;/span> GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti &lt;span style="color:#000;font-weight:bold">|&lt;/span> 41:00.0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10de:1c82 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 3bce9607-2597-469f-8d9b-977345456739 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> a77333e9-08d9-45c6-87eb-a7d8d902c5f5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU-HPC &lt;span style="color:#000;font-weight:bold">|&lt;/span> Quadro FX &lt;span style="color:#0000cf;font-weight:bold">580&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 05:00.0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10de:0659 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 3bce9607-2597-469f-8d9b-977345456739 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+----------+---------------------+---------+------------------+--------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>创建 server&lt;/li>
+&lt;/ul>
+&lt;p>server-create 中的 &lt;code>--isolated-device&lt;/code> 参数指定透传的设备到云主机，可以重复使用多次，透传多个 gpu 到云主机，但要求透传到同一云主机的 gpu 必须在同一宿主机。其余创建参数和创建普通云主机是一样的。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-create --hypervisor kvm --isolated-device 273f4f72-06b6-49aa-8456-4beceec44997 ...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查询-gpu-云主机">查询 GPU 云主机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-list --gpu
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="关联-gpu">关联 GPU&lt;/h3>
+&lt;p>如果云主机所在的宿主机有可用的 gpu，在主机关机的情况下，可以通过 &lt;code>server-attach-isolated-device&lt;/code> 命令将 gpu 和云主机关联起来，下次主机启动后就可以使用该 gpu 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-attach-isolated-device &amp;lt;server_id&amp;gt; &amp;lt;device_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="卸载-gpu">卸载 GPU&lt;/h3>
+&lt;p>如果云主机关联了 gpu，可以通过 &lt;code>server-detach-isolated-device&lt;/code> 卸载主机的某一 gpu。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-detach-isolated-device &amp;lt;server_id&amp;gt; &amp;lt;device_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 其他操作</title><link>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/others/</link><pubDate>Fri, 19 Jul 2019 17:32:09 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/howto/compute/vminstance/tutorial/others/</guid><description>
+&lt;h3 id="开关机">开关机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开机&lt;/span>
+$ climc server-start &amp;lt;server_id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 关机&lt;/span>
+$ climc server-stop &amp;lt;server_id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 强制关机&lt;/span>
+$ climc server-stop --is-force &amp;lt;server_id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 重启&lt;/span>
+$ climc server-restart &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="删除">删除&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除至回收站&lt;/span>
+$ climc server-delete &amp;lt;server_id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 彻底删除&lt;/span>
+$ climc server-delete -f &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重装密码">重装密码&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-deploy --reset-password --password &amp;lt;your_password&amp;gt; &amp;lt;server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>TODO&lt;/p></description></item></channel></rss>

@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 12 Feb 2020 12:55:46 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.6/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/intro/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 安装部署</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/v3.6/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/intro/</guid><description>
 &lt;p>Cloudpods 目前仅支持在 CentOS 7 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -100,7 +100,7 @@
 &lt;ul>
 &lt;li>管理 kvm 虚拟机: 部署 host 服务&lt;/li>
 &lt;li>管理物理机: 部署 baremetal-agent 服务&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 部署 HA 环境</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/controlplane-ha/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/controlplane-ha/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 部署 HA 环境</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/controlplane-ha/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/controlplane-ha/</guid><description>
 &lt;p>在部署生产可用的 kubernetes 集群之前，需要先部署 LoadBalancer 环境，这里使用 &lt;strong>keepalived + haproxy&lt;/strong> 的方式实现负载均衡和高可用。&lt;/p>
 &lt;h2 id="环境说明">环境说明&lt;/h2>
 &lt;p>单独拿两个节点部署 keepalived 和 haproxy 作为后端 kubernetes 控制平面的负载均衡器，拓扑结构如下:&lt;/p>
@@ -267,7 +267,7 @@ $ netstat -tulnp &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep 
 tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:6443 0.0.0.0:* LISTEN 10033/haproxy
 tcp &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 0.0.0.0:1080 0.0.0.0:* LISTEN 10033/haproxy
 &lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="部署-kubernetes-集群">部署 kubernetes 集群&lt;/h1>
-&lt;p>参考 &lt;a href="../../setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/db-ha/</guid><description>
+&lt;p>参考 &lt;a href="../../setup/controlplane">部署集群&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
@@ -517,7 +517,7 @@ inet 192.168.199.97/32 scope global eth0
 valid_lft forever preferred_lft forever
 inet6 fe80::222:cfff:fe40:1e29/64 scope link
 valid_lft forever preferred_lft forever
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/controlplane/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 部署集群</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/controlplane/</link><pubDate>Sat, 13 Apr 2019 13:01:57 +0800</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/controlplane/</guid><description>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;p>Cloudpods 相关的组件运行在 kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
@@ -808,7 +808,7 @@ $ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bo
 default-host-7b5cr 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.4 controller01
 default-host-ctx5s 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.5 controller02
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="升级组件版本">升级组件版本&lt;/h3>
-&lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/components/</guid><description>
+&lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 添加 K8S 节点</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/components/</guid><description>
 &lt;p>部署完集群后，整个 kubernetes 集群只有一个节点，Cloudpods 相关服务都运行在了该节点上，为了服务的高可用，我们可以继续添加节点到 kubernetes 集群。&lt;/p>
 &lt;h3 id="环境准备">环境准备&lt;/h3>
 &lt;p>参考 &lt;a href="../../setup/controlplane/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">&amp;ldquo;部署集群/环境准备&amp;rdquo;&lt;/a> 的流程，安装好 docker 和 kubelet。&lt;/p>
@@ -849,7 +849,7 @@ This node has joined the cluster:
 * Certificate signing request was sent to apiserver and a response was received.
 * The Kubelet was informed of the new secure connection details.
 Run &lt;span style="color:#4e9a06">&amp;#39;kubectl get nodes&amp;#39;&lt;/span> on the control-plane to see this node join the cluster.
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/host/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/host/</guid><description>
 &lt;p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -1138,7 +1138,7 @@ $ climc endpoint-list --details &lt;span style="color:#000;font-weight:bold">|&l
 &lt;span style="color:#8f5902;font-style:italic"># 在通过 webconsole-server 命令获取 vnc web 界面的链接地址，然后用浏览器打开该地址&lt;/span>
 $ climc webconsole-server testvm01
 https://console.yunion.cn/web-console?access_token&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>FI-VXQSAonhzfSnxVTKCCbwHinp7swlRkmi-4p6s-4OfZpg6TG9YhWuwbHEUA1D7XoKu_w%3D%3D&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">api_server&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https%3A%2F%2F10.168.222.216%3A8899&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">password&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>65xB2kaE&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">protocol&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>vnc
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/baremetal/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机管理服务</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/baremetal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/baremetal/</guid><description>
 &lt;p>启用 baremetal-agent 之前需要部署 Cloudpods 集群，详见 &lt;a href="../../setup/controlplane">&amp;ldquo;安装部署/部署集群&amp;rdquo;&lt;/a> 。&lt;/p>
 &lt;p>待集群准备完毕后需要指定集群中的一个 node 来部署 baremetal-agent 服务。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -1180,7 +1180,7 @@ $ climc agent-list
 &lt;h2 id="禁用-baremetal-agent">禁用 baremetal-agent&lt;/h2>
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/ce-ee-switch/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/ce-ee-switch/</guid><description>
 &lt;p>默认情况下部署好的版本是 &lt;strong>开源版本(CE: Community Edition)&lt;/strong>，可以使用 &lt;code>ocadm cluster update&lt;/code> 命令切换成 &lt;strong>企业版本(EE: Enterprise Edition)&lt;/strong>。&lt;/p>
 &lt;h2 id="切换操作">切换操作&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到企业版&lt;/span>
@@ -1193,7 +1193,7 @@ $ ocadm cluster update --use-ce --wait
 $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/upgrade/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/upgrade/</guid><description>
 &lt;p>本文介绍从 v3.4.x 升级到 v3.6.x 的步骤以及注意事项。&lt;/p>
 &lt;p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.6.x 需要以下的步骤：&lt;/p>
 &lt;ol>
@@ -1248,7 +1248,7 @@ $ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.6.18
 &lt;span style="color:#8f5902;font-style:italic"># --as-bastion 可以让 PRIMARY_MASTER_HOST 作为堡垒机部署在内网的宿主机&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以在升级的过程中可以登录到 PRIMARY_MASTER_HOST， 使用 kubectl 查看对应 pods 的升级情况&lt;/span>
 $ kubectl get pods -n onecloud --watch
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/host-aarch64/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/host-aarch64/</guid><description>
 &lt;h2 id="简介">简介&lt;/h2>
 &lt;p>从 v3.6.10 版本开始，可以将”Cloudpods“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 和 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 。&lt;/p>
 &lt;p>因为服务是容器化运行在 Kubernetes 之上的，为了在 ARM 架构的机器上运行容器，我们使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 和交叉编译的技术编译打包了同时支持 x86_64 和 arm64 的统一容器镜像。这样的可以让 Kubernetes 屏蔽 CPU 架构的差异性，我们制作的支持多架构的容器镜像可以在不同架构的机器上运行服务，实现 X86 和 ARM 机器混合部署的效果。&lt;/p>
@@ -1352,7 +1352,7 @@ Password: admin@123
 &lt;p>镜像和对应的网路准备完成后，就可以到虚拟机创建界面根据需要选择不同 CPU 架构创建虚拟机。创建界面截图如下：&lt;/p>
 &lt;p>&lt;img src="../images/vm-hybrid-create.png" alt="虚拟机创建页面">&lt;/p>
 &lt;p>分别创建 aarch64 和 x86_64 架构的虚拟机后，可以在虚拟机的列表页面看到每台虚拟机的 CPU 架构，截图如下:&lt;/p>
-&lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item><item><title>Docs: 更换前端证书</title><link>https://www.cloudpods.org//v3.6/zh/docs/setup/config-ssl-certs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.6/zh/docs/setup/config-ssl-certs/</guid><description>
+&lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item><item><title>Docs: 更换前端证书</title><link>https://www.cloudpods.org/v3.6/zh/docs/setup/config-ssl-certs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/v3.6/zh/docs/setup/config-ssl-certs/</guid><description>
 &lt;p>默认部署完成后，访问前端界面，浏览器会提示不安全的 SSL 连接，原因是前端默认使用的是自签发的证书。本文介绍如何使用自定义证书替换掉前端默认的证书。&lt;/p>
 &lt;h2 id="操作步骤">操作步骤&lt;/h2>
 &lt;p>假设已经准备好的证书文件为：&lt;code>cert.pem&lt;/code> 和 &lt;code>cert.key&lt;/code>，域名为 &lt;code>foo.bar.com&lt;/code> 。&lt;/p>

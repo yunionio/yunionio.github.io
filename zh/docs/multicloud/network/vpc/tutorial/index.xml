@@ -1,0 +1,188 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+操作指南</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 04 Jan 2022 14:16:32 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建私有云VPC</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/create_private/</link><pubDate>Tue, 04 Jan 2022 14:48:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/create_private/</guid><description>
+&lt;p>请确保已添加私有云平台的账号，如OpenStack。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击顶部“私有云”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建私有云平台VPC页面。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>指定域：选择VPC的所属域。&lt;/li>
+&lt;li>名称：设置VPC的名称。&lt;/li>
+&lt;li>备注：设置VPC的备注信息。&lt;/li>
+&lt;li>区域：选择VPC所属的区域。可通过区域确定私有云所属平台以及创建硬盘使用的私有云云账号。&lt;/li>
+&lt;li>目标网段：设置VPC网络的专用网段，VPC下的IP子网必须使用该网段下的地址，支持使用192.168.0.0/16、172.16.0.0/12、10.0.0.0/8及其子网作为VPC目标网段。&lt;/li>
+&lt;li>标签：支持为新建的VPC绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 新建公有云VPC</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/create_public/</link><pubDate>Tue, 04 Jan 2022 14:48:51 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/create_public/</guid><description>
+&lt;p>请确保已添加对应公有云平台的云账号。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>Cloudpods平台上全局VPC对应Google平台的VPC；VPC对应Google平台的IP子网。因此在Cloudpods平台新建Google平台VPC即在Google平台VPC下新建IP子网。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击顶部“公有云”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建公有云平台VPC页面。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>指定域：选择VPC的所属域。&lt;/li>
+&lt;li>名称：设置VPC的名称。&lt;/li>
+&lt;li>备注：设置VPC的备注信息。&lt;/li>
+&lt;li>区域：选择VPC所属的区域。可通过城市、平台快速过滤筛选出合适区域。&lt;/li>
+&lt;li>目标网段：设置VPC网络的专用网段，VPC下的IP子网必须使用该网段下的地址。不同公有云支持的目标网段范围不同。详情请参考&lt;a href="#%E5%85%AC%E6%9C%89%E4%BA%91%E5%B9%B3%E5%8F%B0vpc%E5%92%8Cip%E5%AD%90%E7%BD%91%E7%9A%84%E6%94%AF%E6%8C%81%E8%8C%83%E5%9B%B4">公有云平台VPC和IP子网的支持范围&lt;/a>。&lt;/li>
+&lt;li>允许外网访问：当VPC启用外网访问后，VPC下的IP子网都可以通过绑定EIP的方式访问外网。除AWS平台外的公有云平台默认都允许，且不允许修改。当AWS平台VPC不允许外网访问时，使用VPC下IP子网创建的虚拟机不支持绑定EIP，当AWS平台VPC允许外网访问时，将会在AWS平台同步创建互联网网关以及到互联网网关的路由表，使用VPC下IP子网创建的虚拟机可以通过绑定EIP访问外网。&lt;/li>
+&lt;li>指定云订阅：选择具体创建VPC的云订阅。&lt;/li>
+&lt;li>全局VPC：仅选择Google平台时需设置该项，即选择Google平台的VPC中创建IP子网。&lt;/li>
+&lt;li>标签：支持为新建的VPC绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="公有云平台vpc和ip子网的支持范围">公有云平台VPC和IP子网的支持范围&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>平台&lt;/th>
+&lt;th>VPC 目标网段掩码范围&lt;/th>
+&lt;th>IP 子网网段范围&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>阿里云&lt;/td>
+&lt;td>10.0.0.0/8~24 &lt;br> 172.16.0.0/12~24 &lt;br> 192.168.0.0/16~24&lt;/td>
+&lt;td>10.0.0.0/16~29 &lt;br> 172.16.0.0/16~29 &lt;br> 192.168.0.0/17~29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>腾讯云&lt;/td>
+&lt;td>10.0.0.0/16~28 &lt;br> 172.16.0.0/16~28 &lt;br> 192.168.0.0/16~28&lt;/td>
+&lt;td>10.0.0.0/16~29 &lt;br> 172.16.0.0/16~29 &lt;br> 192.168.0.0/17~29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>华为云&lt;/td>
+&lt;td>10.0.0.0/8~24 &lt;br> 172.16.0.0/12~24 &lt;br> 192.168.0.0/16~24&lt;/td>
+&lt;td>10.0.0.0/9~29 &lt;br> 172.16.0.0/13~29 &lt;br> 192.168.0.0/17~29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>UCloud&lt;/td>
+&lt;td>10.0.0.0/8~29 &lt;br> 172.16.0.0/12~29 &lt;br> 192.168.0.0/16~29&lt;/td>
+&lt;td>10.0.0.0/9~29 &lt;br> 172.16.0.0/13~29 &lt;br> 192.168.0.0/17~29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>AWS&lt;/td>
+&lt;td>掩码范围：16~28 &lt;br> 支持公网私用，但不推荐&lt;/td>
+&lt;td>子网掩码范围： 16~28&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Azure&lt;/td>
+&lt;td>掩码范围：8~29 &lt;br> 支持公网私用，但不推荐&lt;/td>
+&lt;td>子网掩码范围： 8~29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Google&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>子网掩码范围： 8~29&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>云管平台默认不支持公网私用，会将这类网段判断为公网IP，并占用公网IP的配额。如用户有公网私用的需求，可以通过修改配置文件，兼容公网私用的网段。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc service-config-edit common
+default:
+api_server: https://10.127.190.254
+&lt;span style="color:#8f5902;font-style:italic"># 在配置文件中添加公网私用的网段&lt;/span>
+customized_private_prefixes:
+- 52.0.0.0/16
+- 54.0.0.0/16
+enable_quota_check: &lt;span style="color:#204a87">true&lt;/span>
+non_default_domain_projects: &lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 同步状态</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/sync/</link><pubDate>Tue, 04 Jan 2022 14:48:59 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/sync/</guid><description>
+&lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC右侧操作列 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 按钮，同步VPC状态。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在VPC列表中选择一个或多个VPC，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，批量同步状态。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除VPC</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/delete/</link><pubDate>Tue, 04 Jan 2022 14:49:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/delete/</guid><description>
+&lt;p>该功能用于删除VPC，支持单个或批量删除VPC。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>当VPC下有IP子网时不支持删除。&lt;/li>
+&lt;li>AWS平台的VPC删除时将会同步删除VPC下的路由表、安全组以及互联网网关。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在VPC列表中选择一个或多个VPC，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看VPC详情</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/show/</link><pubDate>Tue, 04 Jan 2022 14:49:10 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/show/</guid><description>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC名称项，进入VPC详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对VPC进行删除操作。&lt;/li>
+&lt;li>查看VPC的云上ID、ID、名称、状态、域、项目、共享范围、平台、目标网段、二层网络数量、路由表数量、IP子网数量、nat网关数量、允许外网访问、区域、可用区、云账号、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看IP子网信息</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/ipsubnet/</link><pubDate>Tue, 04 Jan 2022 14:49:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/ipsubnet/</guid><description>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC名称项，进入VPC详情页面。&lt;/li>
+&lt;li>单击“IP子网”页签，进入IP子网页面。&lt;/li>
+&lt;li>查看VPC网络下IP子网信息，包括名称、IP地址、VLAN、是否共享、类型、使用情况（总量与使用量）。&lt;/li>
+&lt;li>右侧操作列支持对IP子网进行管理操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看路由表信息</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/routetable/</link><pubDate>Tue, 04 Jan 2022 14:49:35 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/routetable/</guid><description>
+&lt;p>路由表用于控制网络中的路由走向。目前仅支持同步阿里云、华为云、OpenStack平台的路由表。&lt;/p>
+&lt;ul>
+&lt;li>在公有云平台创建专有网络后，系统会自动创建一张默认路由表并为其添加系统路由来管理专有网络的流量，&lt;/li>
+&lt;li>OpenStack的路由表实际为路由器的路由表，当用户在OpenStack平台的路由器下创建了路由表将会同步到对应VPC下。&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC名称项，进入VPC详情页面。&lt;/li>
+&lt;li>单击“路由表”页签，进入路由表页面。&lt;/li>
+&lt;li>查看路由表的名称、所属专有网络、区域、云账号、条目（路由表类型 目标网段 下一跳）等信息。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看拓扑</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/topology/</link><pubDate>Tue, 04 Jan 2022 14:50:02 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/topology/</guid><description>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC名称项，进入VPC详情页面。&lt;/li>
+&lt;li>单击“拓扑”页签，进入拓扑页面。&lt;/li>
+&lt;li>查看VPC下的网络拓扑信息，直观为用户展示当前VPC下的IP子网，以及使用IP子网的虚拟机、LB、RDS等资源。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看操作日志</title><link>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/log/</link><pubDate>Tue, 04 Jan 2022 14:49:12 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/network/vpc/tutorial/log/</guid><description>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/基础网络/VPC&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入VPC页面。&lt;/li>
+&lt;li>单击VPC名称项，进入VPC详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的操作日志：如需要用时间过滤操作日志，在搜索框中，选择操作时间，并设置“在此日期之前”、“在此日期之后”、“范围选择”。
+&lt;ul>
+&lt;li>在此日期之前：配置具体时间，过滤在配置时间之前的操作日志信息。&lt;/li>
+&lt;li>在此日期之后：配置具体时间，过滤在配置时间之后的操作日志信息。&lt;/li>
+&lt;li>范围选择：配置开始时间和结束时间，过滤在开始时间和结束时间之间的操作日志信息。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../../images/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

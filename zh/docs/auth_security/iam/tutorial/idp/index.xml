@@ -1,0 +1,668 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+认证源</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/</link><description>Recent content in 认证源 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 06 Dec 2021 15:34:26 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建LDAP认证源</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/create_ldap/</link><pubDate>Mon, 06 Dec 2021 15:34:43 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/create_ldap/</guid><description>
+&lt;p>请确保用户环境中存在LDAP服务器。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建认证源页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>认证源归属：设置认证源的归属范围，当认证源归属于系统时，即系统中所有用户都可以使用该认证源登录平台。当认证源归属于域时，只有该域中的用户可以使用该认证源登录平台。域管理后台下，认证源归属于域管理员所属域。&lt;/li>
+&lt;li>名称：设置认证源的名称。&lt;/li>
+&lt;li>备注：设置认证源的备注信息。&lt;/li>
+&lt;li>认证协议：选择“LDAP”。&lt;/li>
+&lt;li>认证类型：支持从Microsoft Active Diretory导入单域、Microsoft Active Diretory导入多个域、OpenLDAP/FreeIPA导入单域。不同认证类型配置参数略有不同。&lt;/li>
+&lt;li>当认证类型是Microsoft Active Diretory导入单域时：
+&lt;ul>
+&lt;li>用户归属目标域：可选项，选择LDAP服务器上用户在云管平台的所属域。&lt;/li>
+&lt;li>服务器地址：搭建AD域控服务器的URL地址，格式为ldap(s)://服务器IP地址，必须以ldap://或者ldaps://开头。&lt;/li>
+&lt;li>基本DN：DN即Distinguished Name，基本DN是条目在整个目录树的唯一名称标识。格式为”DC=xx,DC=com“&lt;/li>
+&lt;li>用户名：连接AD域控服务器的用户名。&lt;/li>
+&lt;li>密码：连接AD域控服务器的用户对应密码。&lt;/li>
+&lt;li>用户DN：用户DN为LDAP目录中查找用户的根路径，将会在该根路径下递归查找用户，格式为”CN=users,OU=xx,DC=xx,DC=com“。&lt;/li>
+&lt;li>组DN：组DN为LDAP目录中查找组的根路径，将会在该根路径下递归查找组，格式”CN=groups,OU=xx,DC=xx,DC=com“。&lt;/li>
+&lt;li>用户启用状态：设置从认证源导入的用户的状态，当设置为启用时，则用户可以登录本系统，禁用则无法登录系统。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当认证类型是Microsoft Active Diretory导入多个域时（当认证源归属于域时，不支持设置该项）：
+&lt;ul>
+&lt;li>服务器地址、基本DN、用户名、密码同导入单域。&lt;/li>
+&lt;li>域DN：域对应LDAP中的OU（organization，组织单位），域DN为LDAP查找域的根路径，将会在该路径下查找所有域。格式为”OU=xx,DC=xx,DC=com“.&lt;/li>
+&lt;li>用户启用状态：设置从认证源导入的用户的状态，当设置为启用时，则用户可以登录本系统，禁用则无法登录系统。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当认证类型是OpenLDAP/FreeIPA导入单域时：
+&lt;ul>
+&lt;li>目标域：可选项，选择LDAP服务器上用户在云管平台的所属域。&lt;/li>
+&lt;li>服务器地址：搭建OpenLDAP或FreeIPA服务器的URL地址，格式为ldap(s)://服务器IP地址，必须以ldap://或者ldaps://开头。&lt;/li>
+&lt;li>基本DN：DN即Distinguished Name，基本DN是条目在整个目录树的唯一名称标识。格式为”DC=ocdc,DC=com“&lt;/li>
+&lt;li>用户名：连接服务器的用户UID，格式为”UID=admin,CN=users,CN=xx,DC=xx,DC=com“。&lt;/li>
+&lt;li>密码：对应用户密码。&lt;/li>
+&lt;li>用户DN：用户DN为LDAP目录中查找用户的根路径，将会在该根路径下递归查找用户，格式为”CN=users,OU=xx,DC=xx,DC=com“&lt;/li>
+&lt;li>组DN：组DN为LDAP目录中查找组的根路径，将会在该根路径下递归查找组，格式”CN=groups,OU=xx,DC=xx,DC=com“&lt;/li>
+&lt;li>用户启用状态：设置从认证源导入的用户的状态，当设置为启用时，则用户可以登录本系统，禁用则无法登录系统。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建认证源。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 修改配置</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/modify/</link><pubDate>Tue, 07 Dec 2021 11:35:24 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/modify/</guid><description>
+&lt;p>该功能用于修改认证源的配置信息，只有禁用状态的认证源支持修改配置。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>SQL认证协议的认证源不支持修改配置。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的认证源右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改配置&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入修改配置页面。&lt;/li>
+&lt;li>修改不同认证类型的认证源的参数，修改完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 启用/禁用认证源</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/enable/</link><pubDate>Tue, 07 Dec 2021 11:35:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/enable/</guid><description>
+&lt;h3 id="启用认证源">启用认证源&lt;/h3>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的认证源。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>SQL认证协议的认证源不支持启用。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的认证源右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用认证源。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在认证源列表中勾选一个或多个认证源，单击列表上方的 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用认证源。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用认证源">禁用认证源&lt;/h3>
+&lt;p>该功能用于禁用”启用“状态的认证源。
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>SQL认证协议的认证源不支持禁用。&lt;/li>
+&lt;li>认证源禁用后，认证源下的用户不可以登录系统。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击”启用“状态的认证源右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用认证源。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在认证源列表中勾选一个或多个认证源，单击列表上方的 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用认证源。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 同步认证源</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/sync/</link><pubDate>Tue, 07 Dec 2021 11:35:45 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/sync/</guid><description>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>SQL认证协议的认证源不支持同步。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击指定认证源右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步认证源上信息。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除认证源</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/delete/</link><pubDate>Tue, 07 Dec 2021 11:35:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/delete/</guid><description>
+&lt;p>该功能用于删除认证源。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>SQL认证协议的认证源不支持删除。&lt;/li>
+&lt;li>当认证源不支持自动创建用户，作为辅助认证源使用时，只要认证源禁用即可删除。&lt;/li>
+&lt;li>当认证源支持自动创建用户，分为两种情况：
+&lt;ul>
+&lt;li>用户归属域为系统已有域时，只要认证源禁用即可删除认证源及认证源下的用户和组。&lt;/li>
+&lt;li>用户归属域为空即自动创建域时，需要认证源自动创建的域下没有项目，且认证源禁用才可以删除认证源即认证源自动创建的域、用户、组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的认证源右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在认证源列表中勾选一个或多个认证源，单击列表上方的 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看认证源详情</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/show/</link><pubDate>Tue, 07 Dec 2021 11:35:55 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/show/</guid><description>
+&lt;p>该功能用于查看认证源的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击认证源名称项，进入认证源详情页面。&lt;/li>
+&lt;li>详情页面的顶部菜单项支持对认证源进行管理操作。&lt;/li>
+&lt;li>查看以下信息。
+&lt;ul>
+&lt;li>基本信息：包括云上ID、ID、名称、状态、项目、认证源归属、启用状态、同步状态、自动创建用户、用户归属域、认证协议、认证类型、同步时间、创建时间、更新时间、备注。&lt;/li>
+&lt;li>配置信息：不同认证类型显示的配置信息不同。&lt;/li>
+&lt;li>IDP源数据：仅通用SAML支持，支持下载IDP源数据。&lt;/li>
+&lt;li>资源统计：包括认证源下组、用户、项目、角色、权限数量。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看认证源操作日志</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/log/</link><pubDate>Tue, 07 Dec 2021 11:35:59 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/log/</guid><description>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/认证体系/认证源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入认证源页面。&lt;/li>
+&lt;li>单击认证源名称项，进入认证源详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的操作日志：如需要用时间过滤操作日志，在搜索框中，选择操作时间，并设置“在此日期之前”、“在此日期之后”、“范围选择”。
+&lt;ul>
+&lt;li>在此日期之前：配置具体时间，过滤在配置时间之前的操作日志信息。&lt;/li>
+&lt;li>在此日期之后：配置具体时间，过滤在配置时间之后的操作日志信息。&lt;/li>
+&lt;li>范围选择：配置开始时间和结束时间，过滤在开始时间和结束时间之间的操作日志信息。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: OIDC认证对接</title><link>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/oidc_idp/</link><pubDate>Wed, 08 Dec 2021 16:42:17 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/iam/tutorial/idp/oidc_idp/</guid><description>
+&lt;p>Cloudpods具备强大的企业级的认证体系。一方面可以作为各类认证源的客户端，实现和各类认证体系的对接。同时，也可以作为一个认证源，作为第三方应用的认证提供方（Identity Provider, IDP）。目前，Cloudpods能够基于OpenID Connect (简称：OIDC) 标准协议作为第三方应用的认证服务提供方。&lt;/p>
+&lt;h2 id="基本原理">基本原理&lt;/h2>
+&lt;p>OIDC为标准的SSO认证协议，协议标准参见：https://openid.net/specs/openid-connect-basic-1_0.html。&lt;/p>
+&lt;p>OIDC主要定义了用户浏览器，认证提供方（IDP）和服务提供方（SP）之间基于web/http交换的标准接口协议，实现用户基于浏览器，以IDP为统一登录入口，实现用户以在IDP注册的身份实现对SP提供的内容的认证访问。&lt;/p>
+&lt;p>OIDC定义的用户认证登录流程如下图所示，该流程从未登录的用户浏览器访问SP内容开始，以用户浏览器登录并获得请求的内容结束。&lt;/p>
+&lt;p>&lt;img src="../../../images/oidc_procedures.png" alt="OIDC认证流程">&lt;/p>
+&lt;h2 id="接口定义">接口定义&lt;/h2>
+&lt;p>该流程中，IDP和SP需要提供如下接口：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>接口&lt;/th>
+&lt;th>提供者&lt;/th>
+&lt;th>访问者&lt;/th>
+&lt;th>实现功能&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Auth接口&lt;/td>
+&lt;td>IDP&lt;/td>
+&lt;td>用户浏览器&lt;/td>
+&lt;td>用户浏览器携带SP的redirect_uri, client_id等信息访问IDP的auth URL，开始用户在IDP的认证流程&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Redirect接口&lt;/td>
+&lt;td>SP&lt;/td>
+&lt;td>用户浏览器&lt;/td>
+&lt;td>用户浏览器在IDP完成认证后，被IDP重定向到SP的Redirect接口，通过该接口，浏览器将从IDP获得的临时token提交给SP&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Token接口&lt;/td>
+&lt;td>IDP&lt;/td>
+&lt;td>SP后端&lt;/td>
+&lt;td>SP后端获得用户浏览器从IDP携带的token后，调用IDP的token接口，获得访问userinfo的AccessToken&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Userinfo接口&lt;/td>
+&lt;td>IDP&lt;/td>
+&lt;td>SP后端&lt;/td>
+&lt;td>SP后端获得AccessToken后，调用IDP的userinfo接口，获得登录用户的认证信息，包括用户ID，名称等&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="auth接口">Auth接口&lt;/h3>
+&lt;p>Auth接口由IDP提供给用户浏览器访问，触发用户在IDP的认证流程。该接口的访问形式如下：&lt;/p>
+&lt;pre>&lt;code> GET /authorize?
+response_type=code
+&amp;amp;client_id=s6BhdRkqt3
+&amp;amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+&amp;amp;scope=openid%20profile
+&amp;amp;state=af0ifjsldkj HTTP/1.1
+Host: server.example.com
+&lt;/code>&lt;/pre>&lt;p>该接口的参数含义解释如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>参数&lt;/th>
+&lt;th>含义&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>response_type&lt;/td>
+&lt;td>总是为code&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>client_id&lt;/td>
+&lt;td>SP在IDP注册的client_id&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>redirect_uri&lt;/td>
+&lt;td>SP在IDP注册的回调URL，认证成功后，IDP将重定向用户浏览器到该URL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>scope&lt;/td>
+&lt;td>认证获取信息的访问，由IDP定义，一般为user profile等&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>state&lt;/td>
+&lt;td>认证之前的状态信息，例如用户访问的页面URL等&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="redirect接口">Redirect接口&lt;/h3>
+&lt;p>该接口由SP提供，用户浏览器访问IDP Auth接口并认证成功后，将被重定向到该接口，以想SP通知认证的token。该接口的访问形式如下：&lt;/p>
+&lt;pre>&lt;code>GET /cb?
+code=SplxlOBeZQQYbYS6WxSbIA
+&amp;amp;state=af0ifjsldkj
+Host: client.example.org
+&lt;/code>&lt;/pre>&lt;p>该接口的参数含义解释如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>参数&lt;/th>
+&lt;th>含义&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>code&lt;/td>
+&lt;td>用户在IDP认证成功后，获得的临时认证code&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>state&lt;/td>
+&lt;td>用户访问IDP Auth接口时携带的state参数内容，用于SP恢复用户认证前的状态&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="token接口">Token接口&lt;/h3>
+&lt;p>该接口由IDP提供，被SP访问，用于获取访问userinfo的token，该接口的访问形式如下：&lt;/p>
+&lt;pre>&lt;code>POST /token HTTP/1.1
+Host: server.example.com
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
+grant_type=authorization_code&amp;amp;code=SplxlOBeZQQYbYS6WxSbIA
+&amp;amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+&lt;/code>&lt;/pre>&lt;p>请求参数含义解释如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>参数&lt;/th>
+&lt;th>含义&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>grant_type&lt;/td>
+&lt;td>总是为authorization_code&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>code&lt;/td>
+&lt;td>用户浏览器提交给SP的从IDP获得的code&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>redirect_uri&lt;/td>
+&lt;td>SP在IDP注册的回调URL&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>请求该接口需要认证，认证参数为：&lt;/p>
+&lt;pre>&lt;code>Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+&lt;/code>&lt;/pre>&lt;p>其中，认证信息有SP在IDP注册的client_id和secret编码组成，按如下方式编码：&lt;/p>
+&lt;pre>&lt;code>Base64Encode(URLEncode(client_id)+”:”+URLEncode(secret))
+&lt;/code>&lt;/pre>&lt;p>该接口响应形式如下：&lt;/p>
+&lt;pre>&lt;code> HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+{
+&amp;quot;access_token&amp;quot;:&amp;quot;SlAV32hkKG&amp;quot;,
+&amp;quot;token_type&amp;quot;:&amp;quot;Bearer&amp;quot;,
+&amp;quot;expires_in&amp;quot;:3600,
+&amp;quot;refresh_token&amp;quot;:&amp;quot;tGzv3JOkF0XG5Qx2TlKWIA&amp;quot;,
+&amp;quot;id_token&amp;quot;:&amp;quot;eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>各个参数含义解释如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>参数&lt;/th>
+&lt;th>含义&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>access_token&lt;/td>
+&lt;td>用户在IDP认证成功后，获得的临时认证code&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>token_type&lt;/td>
+&lt;td>总是为bear&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>expires_in&lt;/td>
+&lt;td>改access_token的超时时间&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>refresh_token&lt;/td>
+&lt;td>刷新access_token的token，没有用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>id_token&lt;/td>
+&lt;td>用户信息的JWT token，没有用&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="userinfo接口">Userinfo接口&lt;/h3>
+&lt;p>该接口由IDP提供，向SP提供用户的信息。该接口的访问形式如下：&lt;/p>
+&lt;pre>&lt;code> GET /userinfo HTTP/1.1
+Host: server.example.com
+Authorization: Bearer SlAV32hkKG
+&lt;/code>&lt;/pre>&lt;p>其中，请求Header的Authorization的Bearer为上一步获得的access_token。&lt;/p>
+&lt;p>该接口返回数据格式在协议中未定义。在国资云场景中，该接口返回数据为包含用户信息的json，包含字段以及字段含义如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>字段名称&lt;/th>
+&lt;th>类型&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>data&lt;/td>
+&lt;td>object&lt;/td>
+&lt;td>用户信息的json object&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+allow_web_console&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>是否支持web控制台登录&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+created_at&lt;/td>
+&lt;td>datetime&lt;/td>
+&lt;td>用户的创建时间&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+displayname&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>用户的显示名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+domain&lt;/td>
+&lt;td>object&lt;/td>
+&lt;td>用户所在的域&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>域id&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++name&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>域的名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+domain_policies&lt;/td>
+&lt;td>[string]&lt;/td>
+&lt;td>当前用户的域级别权限&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+email&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>用户的邮箱&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+enable_mfa&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>是否启用MFA&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+enable_quota_check&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>是否启用配额&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+enabled&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>是否启用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+failed_auth_count&lt;/td>
+&lt;td>integer&lt;/td>
+&lt;td>改用连续认证失败的次数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>用户的ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+idps&lt;/td>
+&lt;td>[object]&lt;/td>
+&lt;td>用户关联的外部认证源的用户信息&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++idp&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>认证源名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++idp_dirver&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>认证源的类型，如oidc&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++idp_entity_id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>用户在该认证源对应的用户的外部ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++idp_id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>认证源的ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++template&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>认证源的模板&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+is_local&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>该用户是否为本地SQL维护的用户&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+is_system_account&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>该用户是否为系统账号（服务账号）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+last_active_at&lt;/td>
+&lt;td>datetime&lt;/td>
+&lt;td>上次用户登录时间&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+last_login_ip&lt;/td>
+&lt;td>ipaddr&lt;/td>
+&lt;td>上次用户登录IP&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+last_login_source&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>上次用户登录来源&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+mobile&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>手机号&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+name&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>用户名&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+need_reset_password&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>该用户是否需要重置密码&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+non_default_domain_projects&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>是否开启三级权限&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+projectDomain&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>该用户当前所在项目的归属域名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+projectDomainId&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>该用户当前所在项目的归属域ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+projectId&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>该用户当前所在项目ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+projectName&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>该用户当前所在项目名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+project_meta&lt;/td>
+&lt;td>object&lt;/td>
+&lt;td>该用户当前所在项目的标签&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+project_policies&lt;/td>
+&lt;td>[string]&lt;/td>
+&lt;td>该用户的项目级别权限&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+projects&lt;/td>
+&lt;td>[object]&lt;/td>
+&lt;td>该用户加入的所有项目的列表&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++domain&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>此项目的归属域&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++domain_id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>此项目的归属域ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>此项目的ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++name&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>此项目的名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++roles&lt;/td>
+&lt;td>object&lt;/td>
+&lt;td>该用户在此项目的角色列表&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+++id&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>角色ID&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+++name&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>角色名称&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++system_capable&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>该用户在此项目是否具备系统级别权限&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++system_policies&lt;/td>
+&lt;td>[string]&lt;/td>
+&lt;td>该用户在此项目的系统级别权限列表&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++domain_capable&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>该用户在此项目是否具备域级别权限&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++domain_policies&lt;/td>
+&lt;td>[string]&lt;/td>
+&lt;td>该用户在此项目的域级别权限列表&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++project_capable&lt;/td>
+&lt;td>boolean&lt;/td>
+&lt;td>该用户在此项目是否具备项目级别权限&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>++project_policies&lt;/td>
+&lt;td>[string]&lt;/td>
+&lt;td>该用户在此项目的项目级别权限列表&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+roles&lt;/td>
+&lt;td>string&lt;/td>
+&lt;td>该用户在当前项目的角色列表&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>+system_policies&lt;/td>
+&lt;td>[string]&lt;/td>
+&lt;td>该用户的系统级别权限&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="对接步骤">对接步骤&lt;/h2>
+&lt;p>和CloudpodsOIDC对接一般需要如下步骤：&lt;/p>
+&lt;h3 id="1-在hahahugoshortcode-s3-hbhb申请oidc对接的认证信息主要为client_id和secret">1. 在Cloudpods申请OIDC对接的认证信息，主要为client_id和secret。&lt;/h3>
+&lt;p>可以通过如下climc命令申请用户的OIDC对接凭据，其中 &amp;lt;oidc_redirect_url&amp;gt; 是需要对接的应用的回调URL。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc credential-create-oidc --redirect-uri &amp;lt;oidc_redirect_url&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外，企业版支持通过web控制台申请OIDC的对接凭据。申请位置在用户登入的右上角用户此单的“访问凭证”，选择“OpenID Connect/OAuth2”页签，点击“创建”。输入当前OIDC应用的回调URL。创建成功后，可以在该页签的列表查看所有的OIDC认证信息。其中，和Cloudpods对接的OIDC的认证接口的信息可以在该页签查看：&lt;/p>
+&lt;pre>&lt;code>OpenID Connect连接信息：
+* Endpoint/Issuer: https://&amp;lt;domain_name_of_server&amp;gt;/api/v1/auth/oidc
+* AuthURL: https://&amp;lt;domain_name_of_server&amp;gt;/api/v1/auth/oidc/auth
+* TokenURL: https://&amp;lt;domain_name_of_server&amp;gt;/api/v1/auth/oidc/token
+* UserInfoURL: https://&amp;lt;domain_name_of_server&amp;gt;/api/v1/auth/oidc/user
+* Scopes: user profile
+&lt;/code>&lt;/pre>&lt;h3 id="2配置第三方应用使用oidc认证如果第三方应用还未实现和oidc对接的请参考标准协议和本文档实现对接">2. 配置第三方应用使用OIDC认证。如果第三方应用还未实现和OIDC对接的，请参考标准协议和本文档实现对接。&lt;/h3>
+&lt;h2 id="应用举例grafana">应用举例（Grafana）&lt;/h2>
+&lt;p>Grafana支持以OIDC认证源实现SSO登录，Cloudpods可以作为Grafana的OIDC认证源，Grafana需要做如下配置：&lt;/p>
+&lt;h3 id="配置文件">配置文件:&lt;/h3>
+&lt;p>下面仅列出了认证需要的配置项。其中，Grafana会在认证响应中查找用户的email字段，当且仅当用户email的域名在allowed_domains中，该用户才认为是有效的。allow_sign_up需要为true，这样才会自动会用户新建一个本地用户。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#000">auth&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">anonymous&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">enabled&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;span style="color:#000">org_role&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Viewer&lt;/span>
+&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#000">auth&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">generic_oauth&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">enabled&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;span style="color:#000">client_id&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">fcc98ad5a22a4de5831cf806980ffb75&lt;/span>
+&lt;span style="color:#000">client_secret&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">SzQyVEtaelZFMkZFbmJOeDRTWmh3Y0JKNFNzTlhtekM&lt;/span>&lt;span style="color:#000;font-weight:bold">=&lt;/span>
+&lt;span style="color:#000">scopes&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">user&lt;/span>
+&lt;span style="color:#000">auth_url&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">https&lt;/span>&lt;span style="color:#a40000">://&lt;/span>&lt;span style="color:#000">www&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">gzgzyun&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">com&lt;/span>&lt;span style="color:#a40000">:&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">8888&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">api&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">v1&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">auth&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">oidc&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">auth&lt;/span>
+&lt;span style="color:#000">token_url&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">https&lt;/span>&lt;span style="color:#a40000">://&lt;/span>&lt;span style="color:#000">www&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">gzgzyun&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">com&lt;/span>&lt;span style="color:#a40000">:&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">8888&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">api&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">v1&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">auth&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">oidc&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">token&lt;/span>
+&lt;span style="color:#000">api_url&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">https&lt;/span>&lt;span style="color:#a40000">://&lt;/span>&lt;span style="color:#000">www&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">gzgzyun&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">com&lt;/span>&lt;span style="color:#a40000">:&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">8888&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">api&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">v1&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">auth&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">oidc&lt;/span>&lt;span style="color:#a40000">/&lt;/span>&lt;span style="color:#000">user&lt;/span>
+&lt;span style="color:#000">allowed_domains&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">gzgzyun&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">com&lt;/span>
+&lt;span style="color:#000">allow_sign_up&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;span style="color:#000">role_attribute_path&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">projectName&lt;/span> &lt;span style="color:#000;font-weight:bold">==&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;system&amp;#39;&lt;/span> &lt;span style="color:#a40000">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000">contains&lt;/span>&lt;span style="color:#a40000">(&lt;/span>&lt;span style="color:#000">roles&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;admin&amp;#39;&lt;/span>&lt;span style="color:#a40000">)&lt;/span> &lt;span style="color:#a40000">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;Admin&amp;#39;&lt;/span> &lt;span style="color:#a40000">||&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;Editor&amp;#39;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#000">server&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">root_url&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">https&lt;/span>&lt;span style="color:#a40000">://&lt;/span>&lt;span style="color:#000">grafana&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">gzgzyun&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">com&lt;/span>
+&lt;span style="color:#000">domain&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">grafana&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">gzgzyun&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">com&lt;/span>
+&lt;span style="color:#000">enforce_domain&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="环境变量">环境变量：&lt;/h3>
+&lt;p>grafana容器启动环境变量：&lt;/p>
+&lt;p>设置这个变量GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE为true之后，才会忽略验证token时的TLS错误。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">- &lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">value&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#39;true&amp;#39;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="要求">要求&lt;/h3>
+&lt;p>user必须有email的属性&lt;/p></description></item></channel></rss>

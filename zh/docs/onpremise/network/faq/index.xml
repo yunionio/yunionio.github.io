@@ -1,0 +1,132 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+常见问题</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/network/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 典型网络配置</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/faq/examples/</guid><description>
+&lt;h2 id="单网口经典网络计算节点单个网口虚拟机使用多vlan经典网络">（单网口经典网络）计算节点单个网口，虚拟机使用多VLAN经典网络&lt;/h2>
+&lt;p>这种场景下，每个计算节点只有一个网口(可以为Bonding)，既做管理口，也做业务口。虚拟机之间的业务流量是由宿主机对接的三层交换机转发。&lt;/p>
+&lt;h3 id="vpc配置">VPC配置&lt;/h3>
+&lt;p>采用&lt;em>Default&lt;/em> VPC&lt;/p>
+&lt;h3 id="二层网络配置">二层网络配置&lt;/h3>
+&lt;p>在&lt;em>Default&lt;/em> VPC新建一个二层网络&lt;em>bcast0&lt;/em>&lt;/p>
+&lt;h3 id="ip子网配置">IP子网配置&lt;/h3>
+&lt;p>在二层网络&lt;em>bcast0&lt;/em>创建至少2个IP子网，其中一个IP子网给宿主机管理口使用，需要包含宿主机的管理口IP。另外一个子网给虚拟机用。可以配置更多的IP子网给虚拟机使用，并且这些虚拟机用IP子网可以配置不同的VLAN ID（非1的VLAN ID）。这些IP子网的网关以及对应的VLAN都需要配置在物理机连接的三层交换机上。&lt;/p>
+&lt;h3 id="宿主机配置">宿主机配置&lt;/h3>
+&lt;p>宿主机的网口在交换机上需要配置为trunk模式，宿主机管理口采用VLAN 1（缺省VLAN）。&lt;/p>
+&lt;p>宿主机host.conf的networks配置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">&amp;lt;host_ifname&amp;gt;/br0/&amp;lt;host_management_ip&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例如:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.168.20.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="eip配置">EIP配置&lt;/h3>
+&lt;p>经典网络模式下，外部能直接访问虚拟机IP，无需配置EIP&lt;/p>
+&lt;h2 id="单网口vpc网络-计算节点单个网口虚拟机使用vpc网络">(单网口VPC网络) 计算节点单个网口，虚拟机使用VPC网络&lt;/h2>
+&lt;p>这种场景下，每个计算节点宿主机只有一个网口做管理口。管理口也承载业务流量，但是虚拟机之间的业务流量经过ovn的geneve隧道封装。&lt;/p>
+&lt;h3 id="宿主机网络配置">宿主机网络配置&lt;/h3>
+&lt;p>宿主机的管理口依然接入经典网络。&lt;/p>
+&lt;p>需要在&lt;em>Default&lt;/em> VPC下配置二层网络&lt;em>bcast0&lt;/em>，并在该二层网络下配置宿主机管理口IP所用的IP子网。&lt;/p>
+&lt;p>宿主机的 host.conf networks配置同&lt;em>单网口经典网络&lt;/em>模式&lt;/p>
+&lt;p>例如，宿主机IP子网为 10.128.26.2。则宿主机的配置也是：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.128.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="虚拟机网络配置">虚拟机网络配置&lt;/h3>
+&lt;p>虚拟机的网络为VPC管理，用户可以任意创建VPC，并在VPC内分配任意的IP子网。不同VPC之间的IP子网之间相互隔离，无法访问。相同VPC内的IP子网之间无隔离。&lt;/p>
+&lt;h3 id="eip配置-1">EIP配置&lt;/h3>
+&lt;p>这种模式下，需要配置EIP，用于云平台外访问VPC内部的虚拟机。&lt;/p>
+&lt;p>最简单的EIP配置是选择一台宿主机，修改/etc/yunion/host.conf，将 sdn_enable_eip_man 设置true。更具体配置方式请参见文档。使用ALL IN ONE模式安装的第一台宿主机自动开启了 sdn_enable_eip_man。&lt;/p>
+&lt;h4 id="eip网关的路由配置">EIP网关的路由配置&lt;/h4>
+&lt;p>为了使用EIP，还需要在平台bcast0下增加一条用于EIP分配的IP网段（注意EIP网段应该避免和宿主机的管理IP在同一个网段，也就是网络地址需要不一样，例如宿主机的管理网口是 10.168.22.2/24，则EIP网段是 10.168.23.0/24），在交换机上添加EIP网段的静态路由，NextHop设置为 ALL IN ONE 部署的第一台宿主机的管理口IP。&lt;/p>
+&lt;h2 id="双网卡经典网络-计算节点两个网口虚拟机使用多vlan经典网络">(双网卡经典网络) 计算节点两个网口，虚拟机使用多VLAN经典网络&lt;/h2>
+&lt;p>这种场景下，每个计算节点有两个网口，一个做管理口，另外一个做业务口。虚拟机之间的业务流量是由宿主机业务口对接的三层交换机转发。&lt;/p>
+&lt;h3 id="vpc配置-1">VPC配置&lt;/h3>
+&lt;p>采用Default VPC&lt;/p>
+&lt;h3 id="二层网络配置-1">二层网络配置&lt;/h3>
+&lt;p>在Default VPC新建两个二层网络：bcast0（管理）和bcast1（业务）&lt;/p>
+&lt;h3 id="ip子网配置-1">IP子网配置&lt;/h3>
+&lt;p>在bcast0上创建至少两个IP子网，其中一个IP子网给宿主机管理口使用，需要包含宿主机的管理口IP。另外一个子网给有对接管理网需求的虚拟机使用。&lt;/p>
+&lt;p>在bcast1上创建1个或者多个IP子网给虚拟机使用，并且这些虚拟机用IP子网可以配置不同的VLAN ID（非1的VLAN ID）。这些IP子网的网关和对应VLAN都需要配置在物理机连接的对应三层交换机上。&lt;/p>
+&lt;h3 id="宿主机配置-1">宿主机配置&lt;/h3>
+&lt;p>宿主机的管理口需配置管理IP，该管理口在交换机上为Access模式。&lt;/p>
+&lt;p>宿主机的业务口不需要配置IP，但业务网口在交换机上需要配置为trunk模式。&lt;/p>
+&lt;p>宿主机 /etc/yunion/host.conf 中需要有两条记录，一条给管理口，一条给业务口&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">&amp;lt;host_ifname0&amp;gt;/br0/&amp;lt;host_management_ip&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">&amp;lt;host_ifname1&amp;gt;/br1/bcast1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例如:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.168.20.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth1/br1/bcast1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="eip配置-2">EIP配置&lt;/h3>
+&lt;p>这种模式下，外部能直接访问虚拟机IP，无需配置EIP&lt;/p>
+&lt;h2 id="双网口vpc网络-计算节点两个网口虚拟机使用vpc网络">(双网口VPC网络) 计算节点两个网口，虚拟机使用VPC网络&lt;/h2>
+&lt;p>这种场景下，每个计算节点宿主机有两个网口，其中一个管理口，承载管理流量。另外一个是业务口，承载业务流量。虚拟机之间的业务流量经过ovn的geneve隧道封装，通过宿主机的业务口转发。&lt;/p>
+&lt;h3 id="宿主机网络配置-1">宿主机网络配置&lt;/h3>
+&lt;p>同理，宿主机的管理口采用经典网络。&lt;/p>
+&lt;p>需要在&lt;em>Default&lt;/em> VPC下配置二层网络&lt;em>bcast0&lt;/em>，并在该二层网络下配置宿主机管理口所用的IP子网。&lt;/p>
+&lt;p>例如，宿主机IP子网为 10.128.26.2。则宿主机 /etc/yunion/host.conf 的配置是：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.128.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>同时，宿主机的业务口也需要配置IP，且该业务口IP和管理口IP不应该在一个二层网络。&lt;/p>
+&lt;p>为了确保虚拟机之前的ovn流量经过业务口，需要配置 /etc/yunion/host.conf 的 ovn_encap_ip 为宿主机业务口的IP。&lt;/p>
+&lt;p>例如，宿主机的管理口IP为 10.128.26.2/24，业务口IP为 10.129.26.2/24，则 /etc/yunion/host.conf 配置为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">ovn_encap_ip&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10.129.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.128.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth1/br1/bcast1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置后，虚拟机之前的VPC网络流量都会封装为源和目的IP地址为业务网段的geneve流量。网络上只需要确保业务口之前网络互通，宿主机的业务口的VLAN模式无论是TRUNK还是Access都不影响。&lt;/p>
+&lt;h3 id="虚拟机网络配置-1">虚拟机网络配置&lt;/h3>
+&lt;p>同理，这种模式下，虚拟机的网络为VPC管理，用户可以任意创建VPC，并在VPC内分配任意的IP子网。不同VPC之间的IP子网之间相互隔离，无法访问。相同VPC内的IP子网之间无隔离。由于宿主机配置了 ovn_encap_ip 为宿主机的业务口IP，所以虚拟机之前的ovn流量都是通过宿主机的业务口转发。&lt;/p>
+&lt;h3 id="eip配置-3">EIP配置&lt;/h3>
+&lt;p>VPC网络模式下，需要配置EIP，用于外部访问指定的内部虚拟机。同理，也需要配置EIP网关和EIP网段。&lt;/p>
+&lt;h4 id="eip网关的路由配置-1">EIP网关的路由配置&lt;/h4>
+&lt;p>和&lt;em>单网口VPC网络&lt;/em>不同的地方是，为了确保EIP流量也要经过业务口，需要确保如下两个配置：&lt;/p>
+&lt;ul>
+&lt;li>在交换机上配置EIP网段的NextHop时，需要将EIP网关所在节点的业务网口IP作为NextHop IP。(确保进入EIP的流量走业务口)&lt;/li>
+&lt;li>在EIP网关所在节点，需要将业务口设置为缺省路由出口。(确保流出EIP的流量走业务口)&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 如何在平台添加宿主机网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/addnetwork/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/faq/addnetwork/</guid><description>
+&lt;p>当用户部署环境时使用了千兆网络，后续扩展环境部署了万兆网络绑定等，下面介绍如何将该万兆网络加入到平台。&lt;/p>
+&lt;h2 id="新建万兆的二层网络">新建万兆的二层网络&lt;/h2>
+&lt;ol>
+&lt;li>在网络-二层网络页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建新建对话框。&lt;/li>
+&lt;li>设置以下信息：
+&lt;ul>
+&lt;li>指定域：选择二层网络的所属域。&lt;/li>
+&lt;li>专有网络：选择本地区域以及本地VDC。&lt;/li>
+&lt;li>可用区：选择二层网络属于的可用区。&lt;/li>
+&lt;li>名称：设置二层网络的名称，例如wire10g。&lt;/li>
+&lt;li>带宽：设置二层网络支持的网络带宽，包括百兆（100M）、千兆（1G）、双千兆（2x1G）、万兆（10G）、双万兆（2x10G）、25G、40G、100G。二层网络带宽主要为了统计网络利用率，来确定虚拟机的网络负载情况。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改宿主机配置">修改宿主机配置&lt;/h2>
+&lt;p>默认宿主机以网卡对应二层网络，所以需要在宿主机上配置网卡与二层网络的对应关系。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在宿主机上操作&lt;/span>
+$ vi /etc/yunion/host.conf
+&lt;span style="color:#8f5902;font-style:italic"># 在networks下添加&lt;/span>
+networks
+- eth0/br0/192.168.1.1
+- bond1/br1/wire10g
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后，需要重启host服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 找到该宿主机对应的host服务&lt;/span>
+$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep host
+&lt;span style="color:#8f5902;font-style:italic"># 如pod名称为default-host-zgrkg&lt;/span>
+$ kubectl delete pods -n onecloud default-host-zgrkg
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="创建ip子网">创建IP子网&lt;/h2>
+&lt;p>在上面创建的二层网络wire10g下创建IP子网，后续创建虚拟机使用这些IP子网，则将自动接入万兆网络。&lt;/p></description></item><item><title>Docs: 如何更改宿主机网卡接入的二层网络</title><link>https://www.cloudpods.org/zh/docs/onpremise/network/faq/replacewire/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/network/faq/replacewire/</guid><description>
+&lt;p>在对Cloudpods网络概念不太清晰的情况下，新接入宿主机时，经常发生无法判断是否需要新增二层网络，导致宿主机接入错误的二层网络的情况。&lt;/p>
+&lt;p>本文介绍在宿主机接入二层网络配置错误的情况下，如果通过命令修正，更改宿主机接入的二层网络。&lt;/p>
+&lt;p>首先需要确认宿主机上没有虚拟机。&lt;/p>
+&lt;p>查看宿主机的接入参数，执行如下命令：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-wire-list --host &amp;lt;host_id&amp;gt; --details
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>一般输出参数如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第一步把宿主机对接二层网络的记录删除">第一步：把宿主机对接二层网络的记录删除&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-remove-netif localhost &lt;span style="color:#4e9a06">&amp;#39;0c:c4:7a:0e:fa:f5&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第二步把对应的ip子网删除">第二步：把对应的IP子网删除&lt;/h2>
+&lt;p>此时，宿主机接入的IP子网也配置在了错误的二层网络之上。目前，不支持更改IP子网的二层网络。因此，需要先把对应的IP子网删除，再在新的二层网络上重建该IP子网。&lt;/p>
+&lt;p>删除旧的宿主机IP子网&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-delete adm4
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在新的二层网络重新建宿主机IP子网&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-create --gateway 10.2.53.254 --server-type baremetal &amp;lt;name_of_new_wire&amp;gt; adm4 10.2.53.55 10.2.53.55 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第三步重建宿主机的对接网络记录">第三步：重建宿主机的对接网络记录&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-add-netif --ip-addr 192.168.3.201 --bridge br0 --interface bond0 --type admin localhost 73710abe-a0cf-48de-8fcd0-0b7b0492f4ef &lt;span style="color:#4e9a06">&amp;#39;0c:c4:7a:0e:fa:f4&amp;#39;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

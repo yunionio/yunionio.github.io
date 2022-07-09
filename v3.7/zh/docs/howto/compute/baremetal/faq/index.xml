@@ -1,0 +1,21 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – 常见问题</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/compute/baremetal/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 09 Jun 2021 22:25:05 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.7/zh/docs/howto/compute/baremetal/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 如何手动更改安装了操作系统的裸金属服务器RAID配置</title><link>https://www.cloudpods.org//v3.7/zh/docs/howto/compute/baremetal/faq/manual_change_raid/</link><pubDate>Wed, 09 Jun 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org//v3.7/zh/docs/howto/compute/baremetal/faq/manual_change_raid/</guid><description>
+&lt;h2 id="手动更改安装了操作系统的裸金属服务器的raid配置">手动更改安装了操作系统的裸金属服务器的RAID配置&lt;/h2>
+&lt;p>Cloudpods裸金属管理可以实现在安装操作系统的过程中，自动化地配置RAID配置，支持MegaRaid，HPSmart Array等RAID卡。但是安装完操作系统后，在不重装系统的情况下，无法重新自动配置RAID，例如，给RAID增加磁盘或者更改RAID级别等。这时候就必须通过手动方式进行。本文介绍如何手动更改安装了操作系统的裸金属服务器的RAID配置。&lt;/p>
+&lt;ol>
+&lt;li>将该裸金属服务器重启进入维护模式&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-maintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令将重启物理机，并启动进入网络PXE引导的内存操作系统&lt;/p>
+&lt;ol start="2">
+&lt;li>等引导启动进入内存操作系统后，ssh登入该系统&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-ssh &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>更改RAID配置&lt;/li>
+&lt;/ol>
+&lt;p>RAID的工具软件位于内存操作系统的/opt目录下，包含MegaRaid, HPSA, SAS, Marvel等RAID的控制工具软件&lt;/p>
+&lt;ol start="4">
+&lt;li>更改RAID配置完成后，重启恢复已安装的操作系统&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-unmaintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

@@ -1,0 +1,1061 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods – Cloudpods 博客</title><link>https://www.cloudpods.org//v3.7/zh/blog/</link><description>Recent content in Cloudpods 博客 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 05 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.7/zh/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: 监控 Agent</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/08/05/monitoragent/</link><pubDate>Thu, 05 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/08/05/monitoragent/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 郑雨&lt;/p>
+&lt;p>监控 Agent 是运行在虚拟机上的 daemon，采集监控数据，并把数据传回云联壹云的 InfluxDB。&lt;/p>
+&lt;p>由此，可以衍生出三个问题：如何安装 Agent，如何采集数据，以及如何传输监控数据。&lt;/p>
+&lt;h2 id="如何安装-agent">如何安装 Agent&lt;/h2>
+&lt;p>云联壹云使用 Ansible 将 Agent 安装到虚拟机上，为了能够做到这一点，我们需要保证
+云联壹云能够连接到虚拟机并且能够登录到虚拟机；这里我们先假设云联壹云能够过连接到
+虚拟机，故而来优先讨论解决登录问题。&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805163249.png" alt="host_install">&lt;/p>
+&lt;h3 id="如何登录虚拟机">如何登录虚拟机&lt;/h3>
+&lt;p>假设云联壹云已经能够连接到 VPC 内部的虚拟机，比如说通过 NAT网关或者虚拟机已经绑
+定了 EIP 等。&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805163416.png" alt="connect_direct">&lt;/p>
+&lt;h4 id="直接免密登录">直接免密登录&lt;/h4>
+&lt;p>如果虚拟机是通过云联壹云平台创建出来的，那么云联壹云是可以直接免密登录到虚拟机，
+它是通过在虚拟机上自动创建一个可以通过公钥登录的 cloudroot 用户而实现的，对应的
+私钥存储在云联壹云的本地数据库。&lt;/p>
+&lt;h4 id="用户协助配置免密登录">用户协助配置免密登录&lt;/h4>
+&lt;p>如果虚拟机并非通过云联壹云平台创建出来的，那么就需要用户协助配置免密登录了。&lt;/p>
+&lt;p>用户需要在前段相关界面输入虚拟机的用户名和密钥/密码，以使云联壹云能够暂时登录到
+目标虚拟机，然后借助 Ansible 在目标虚拟机上创建 cloudroot 用户并配置公钥登录。&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805164138.png" alt="set_root">&lt;/p>
+&lt;p>同理，其实也可以直接让用户在虚拟机上执行脚本，以达到创建 cloudroot 用户以及配置
+公钥登录的目的。&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805164239.png" alt="exec_script">&lt;/p>
+&lt;h3 id="如何连接虚拟机">如何连接虚拟机&lt;/h3>
+&lt;p>云联壹云不能直接连接到虚拟机，是一种最广泛的情况。比如公有云 VPC 内部且没有配置
+Nat 以及 EIP 的虚拟机。对于此种情况，我们使用 SSH 代理，具体来说是 Local Port
+Forwarding。&lt;/p>
+&lt;h4 id="ssh-local-port-forwarding">SSH Local Port Forwarding&lt;/h4>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805165213.png" alt="question1">&lt;/p>
+&lt;p>假设网络 A 和网络 B 是两个隔离的网络，如果想让 VMA 能够访问 VMB 上监听在 80 端口
+的 web 服务应该怎么办呢？&lt;/p>
+&lt;p>在 proxyA 上执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ssh –NfL 10.127.30.251:12345:172.31.25.194:80 cloudroot@140.179.54.109
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令会在 proxyA 和 proxyB 之间建立 SSH隧道，并在 proxyA 上创建一个 port forwarding，
+它将监听&lt;code>10.127.30.251:12345&lt;/code>，一旦有请求发来，就会通过 SSH 隧道转发到 proxyB，
+proxyB 会把请求转发到&lt;code>172.31.25.194:80&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805165029.png" alt="answer1">&lt;/p>
+&lt;p>然后 VMA 只要访问&lt;code>10.127.30.251:12345&lt;/code>就能够访问 VMB 上的 web 服务。&lt;/p>
+&lt;h2 id="如何收集数据">如何收集数据&lt;/h2>
+&lt;p>我们的监控数据存储在 InfluxDB 中，所以采集数据的 Agent 优先选择了 Telegraf，在其
+基础上修改了一些代码并定制了配置文件以满足云联壹云采集数据的要求。&lt;/p>
+&lt;p>配置主要描述了需要什么样的监控数据，数据的标签以及数据存储的地址。&lt;/p>
+&lt;h2 id="如何传输监控数据">如何传输监控数据&lt;/h2>
+&lt;p>最简单的，如果虚拟机可以直接连接到云联壹云中的 InfluxDB，那么数据就可以直接传输
+回来。&lt;/p>
+&lt;p>在安装 Agent 的过程中，云联壹云回去检测是否可以从虚拟机直接访问 InfluxDB，如何不
+可以，就要使用 SSH 代理，具体来说是 Remote Port Forwarding。&lt;/p>
+&lt;h3 id="ssh-remote-port-forwarding">SSH Remote Port Forwarding&lt;/h3>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805165957.png" alt="question2">&lt;/p>
+&lt;p>网络 A 和网络 B 是两个隔离的网络，proxyB 具有公网 IP，所以 proxyA 可以访问到 proxyB，
+如何让 VMB 访问 DB？&lt;/p>
+&lt;p>在 proxyA 上执行:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ssh –NfR 172.31.25.194:12345:10.127.40.251:30086 cloudroot@140.179.54.109
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令会在 proxyA 和 proxyB 之间建立 SSH 隧道，并在 proxyB 上创建一个 port
+forwarding，它将监听&lt;code>172.31.25.194:12345&lt;/code>，一旦有请求发来，就会通过 SSH 隧道转
+发到 proxyA，proxyA 会把请求转发到&lt;code>10.172.40.251:80&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805170059.png" alt="answer2">&lt;/p>
+&lt;p>通过上面的方式，网络B 内部的 VMB 只要访问&lt;code>172.31.25.194:12345&lt;/code>就可以访问到 DB。&lt;/p>
+&lt;p>总结来说，Local Port Forwarding 和 Remote Port Forwarding 的区别在于，Port
+Forwarding 建立的位置对于执行命令的一方来说是 Local 还是 Remote。&lt;/p>
+&lt;h3 id="传输数据">传输数据&lt;/h3>
+&lt;p>在 proxy 和 proxyVM 之间建立 SSH 隧道，并在 proxy 执行命令以在 proxyVM 上建立
+port fowarding，对 proxy 来说就是 remote port forwarding。&lt;/p>
+&lt;p>VPC 内部的虚拟机就可以通过访问 proxyVM 的 port，访问云联壹云的 DB 以把数据传输
+回来。&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805170450.png" alt="tarnsfer">&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>总结来说，对于大多数情况，云联壹云通过 SSH 代理连接到目标虚拟机，借助 Ansible 将
+监控 Agent 安装到目标虚拟机上，并做好 Agent 的配置，而监控数据数据也将通过 SSH
+代理传回到云联壹云中的 InfluxDB 中。&lt;/p>
+&lt;p>&lt;img src="https://rainzm-1258344290.cos.ap-beijing.myqcloud.com/20210805170928.png" alt="summarize">&lt;/p></description></item><item><title>Blog: QEMU+OCFS2: 使用OCFS2作为虚拟机磁盘文件的SAN存储文件系统</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</link><pubDate>Fri, 02 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/07/02/ocfs2-as-san-filesystem/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 小助手&lt;/p>
+&lt;p>本文介绍OCFS2共享集群文件系统，如何配置以及如何在线扩容。&lt;/p>
+&lt;h2 id="什么是ocfs2文件系统">什么是OCFS2文件系统？&lt;/h2>
+&lt;p>OCFS2是 Oracle Cluster File System Version 2 的缩写，是Oracle公司内部开发的共享磁盘文件系统，于2011年开源，使用GNU GPL协议。&lt;/p>
+&lt;p>什么是共享磁盘文件系统呢？我们下面通过解释三个概念的对比来说明：&lt;/p>
+&lt;ul>
+&lt;li>磁盘文件系统&lt;/li>
+&lt;/ul>
+&lt;p>这是最常见的文件系统，构建在&lt;strong>本地&lt;/strong>的磁盘（块存储，Block Storage）之上。通过磁盘文件系统，磁盘上的内容以文件目录的形式进行组织，方便了用户有效使用磁盘上的存储空间。磁盘文件系统的例子有：ext4, xfs等。&lt;/p>
+&lt;ul>
+&lt;li>共享文件系统&lt;/li>
+&lt;/ul>
+&lt;p>共享文件系统通过远端服务器上运行的服务程序访问挂载在远端服务器上的文件系统。例子为：NFS（Network File System），Samba（CIFS）。&lt;/p>
+&lt;ul>
+&lt;li>共享磁盘文件系统&lt;/li>
+&lt;/ul>
+&lt;p>共享磁盘文件系统又叫集群文件系统（Cluster File System），是专门构建在网络共享的磁盘上的文件系统。网络共享磁盘通过SAN（Storage Area Network）被多台主机共同访问，和磁盘文件系统相比，共享磁盘文件系统除了要解决磁盘空间的有效管理问题之外，还要解决文件系统被多台主机同时访问的并发修改问题。因此分布式锁机制是共享磁盘文件系统共有的机制。&lt;/p>
+&lt;p>从使用场景来看，三种文件系统的差别很明显：磁盘文件系统直接访问本地磁盘，共享文件系统需要通过共享文件服务访问挂载在服务器上的文件系统，而共享磁盘文件系统则直接访问共享磁盘。&lt;/p>
+&lt;p>因此，在网络共享的场景下，通过共享磁盘文件系统访问SAN存储，可以直接访问共享存储设备。访问路径短，效率高，并且能解决多主机并发访问共享存储的问题。&lt;/p>
+&lt;h2 id="qemu通过ocfs2使用共享san存储">QEMU通过OCFS2使用共享SAN存储&lt;/h2>
+&lt;p>QEMU使用共享SAN存储有多种方案。常见方案是在需要新建虚拟机磁盘时，使用SAN存储的管理API，分配出卷（LUN）之后，直接将卷挂载给QEMU虚拟机使用。这种方案的优点是QEMU虚拟机直接访问LUN，损耗低，性能好。而缺点是需要使用存储设备特定的API，和设备绑定，不够通用。&lt;/p>
+&lt;p>本文介绍通过OCFS2共享磁盘文件系统，将一个大容量的SAN存储卷作为存储QEMU虚拟机虚拟磁盘文件的存储，达到QEMU使用共享储存的目的。&lt;/p>
+&lt;h2 id="ocfs2文件系统的配置">OCFS2文件系统的配置&lt;/h2>
+&lt;h3 id="准备环境">准备环境&lt;/h3>
+&lt;p>这一步安装和配置软件&lt;/p>
+&lt;h4 id="下载和安装ocfs2-tools的rpm包安装也依赖net-tools">下载和安装ocfs2-tools的rpm包安装（也依赖net-tools）&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
+$ rpm --import http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7
+$ yum install yum-plugin-downloadonly -y
+$ mkdir /tmp/ocfs2 &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> /tmp/ocfs2/
+$ yum install --downloadonly --downloaddir&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/tmp/ocfs2/ ocfs2-tools net-tools -y
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>具体操作步骤见官方文档：https://docs.oracle.com/cd/E52668_01/E54669/E54669.pdf, Chapter 23 Oracle Cluster File System Version 2&lt;/p>
+&lt;h4 id="安装cloudpods内核自带编译了ocfs2文件系统的内核模块">安装Cloudpods内核，自带编译了ocfs2文件系统的内核模块&lt;/h4>
+&lt;p>由于OCFS2使用场景较少，在常见发行版的内核中都不会启用OCFS2的内核模块。我们提供了预先编译好的启用了OCFS2的内核安装包：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y yum-utils
+&lt;span style="color:#8f5902;font-style:italic"># 添加 yunion Cloudpods rpm 源&lt;/span>
+$ yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.6/yunion.repo
+$ yum install -y kernel-3.10.0-1062.4.3.el7.yn20191203
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>同时，部署时写配置文件到/etc/modules-load.d/ocfs2.conf，确保内核的ocfs2模块自动加载&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Load ocfs2.ko at boot&lt;/span>
+ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装内核后需要重启生效，重启后检查新的内核已经生效&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ uname -r
+3.10.0-1062.4.3.el7.yn20191203.x86_64
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="ocfs2配置文件">OCFS2配置文件&lt;/h4>
+&lt;p>OCFS2配置简单，只需要在每个要挂载OCFS2的节点上都配置相同的配置文件，申明成员节点即可。&lt;/p>
+&lt;p>以下为示例配置文件:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /etc/ocfs2/cluster.conf
+cluster:
+&lt;span style="color:#000">node_count&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 集群节点数目
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2 &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 集群名字
+node:
+&lt;span style="color:#000">ip_port&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7777&lt;/span>
+&lt;span style="color:#000">ip_address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 192.168.7.10
+&lt;span style="color:#000">number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 节点编号
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> client01 &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> 节点名字
+&lt;span style="color:#000">cluster&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2
+node:
+&lt;span style="color:#000">ip_port&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7777&lt;/span>
+&lt;span style="color:#000">ip_address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 192.168.7.11
+&lt;span style="color:#000">number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> client02
+&lt;span style="color:#000">cluster&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2
+node:
+&lt;span style="color:#000">ip_port&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7777&lt;/span>
+&lt;span style="color:#000">ip_address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> 192.168.7.12
+&lt;span style="color:#000">number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span>
+&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> client03
+&lt;span style="color:#000">cluster&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="初始化ocfs2的配置">初始化ocfs2的配置&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ o2cb.init configure 第一项选yes，集群名称填上面配置文件里的，默认是ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="确保o2cb-ocfs2服务启动并设置为开机自启">确保o2cb ocfs2服务启动并设置为开机自启&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl &lt;span style="color:#204a87">enable&lt;/span> o2cb ocfs2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，OCFS2的软件和配置完成，下一步将格式化磁盘，挂载OCFS2文件系统&lt;/p>
+&lt;h3 id="挂载ocfs2文件系统">挂载OCFS2文件系统&lt;/h3>
+&lt;p>这一步使用OCFS2格式化网络共享磁盘，并且挂载到各台宿主机上&lt;/p>
+&lt;p>在此之前可能要配置SAN存储的多路径multipath(由于行文原因，细节在此省略)，在此之后使用parted分区，格式化成ocfs2（只在一台机器分区格式化，其他机器partprobe就能看到格式化后的分区）并挂载到多台机器&lt;/p>
+&lt;p>以下命令在第一个节点执行：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看多路径multipath磁盘情况&lt;/span>
+$ multipath -l
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用mkfs.ocfs2格式化分区&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ parted /dev/dm-0
+$ mkfs.ocfs2 /dev/dm-1
+$ mount /dev/dm-1 /data
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>持久化磁盘挂载到/etc/fstab&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># /etc/fstab&lt;/span>
+/dev/dm-1 /opt/cloud/workspace/disks ocfs2 _netdev,defaults &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在其他节点，则只需要执行partprobe探测分区变化，并且挂载分区。也应该修改/etc/fstab，持久化分区的挂载。&lt;/p>
+&lt;h2 id="cloudpods使用ocfs2文件系统">Cloudpods使用OCFS2文件系统&lt;/h2>
+&lt;p>在Cloudpods中，通过OCFS2挂载的共享文件系统可以作为GPFS类型的共享存储类型进行管理。通过以下步骤将OCFS2的共享存储注册到Cloudpods，并且用来存储虚拟机用的虚拟磁盘文件。&lt;/p>
+&lt;h3 id="注册ocfs2块存储">注册OCFS2块存储&lt;/h3>
+&lt;p>在【存储-块存储】界面，新建一个GPFS类型的共享存储。&lt;/p>
+&lt;p>&lt;img src="ocfs2-create.png" alt="" width="800" />&lt;/p>
+&lt;p>存储记录创建成功后，选择该存储的“管理宿主机”菜单按钮，在关联存储的宿主机列表，选择“关联宿主机”，将挂载该存储的宿主机节点都注册关联，让Cloudpods平台知道这个共享存储挂载到哪些宿主机的哪个目录下。&lt;/p>
+&lt;h3 id="使用ocfs2创建主机虚拟磁盘">使用OCFS2创建主机虚拟磁盘&lt;/h3>
+&lt;p>以上配置完成后，在新建虚拟机时，就可以选择新建的OCFS2存储作为虚拟磁盘的存储。&lt;/p>
+&lt;h2 id="ocfs2文件系统的扩容">OCFS2文件系统的扩容&lt;/h2>
+&lt;p>首先需要将OCFS2只挂载在第一个节点，将其他节点都卸载。以下操作都只在第一个节点上执行。&lt;/p>
+&lt;p>首先，需要在SAN存储扩容该物理卷，这一步在SAN设备上操作，在此不详叙述。&lt;/p>
+&lt;p>其次，针对multipath设备，需要rescan该设备下的每个磁盘，让操作系统感知到设备的扩容。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先执行 multipath -l 查看multipath设备底层的磁盘设备&lt;/span>
+$ multipath -ll
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ignoring extra data starting with &lt;span style="color:#4e9a06">&amp;#39;}&amp;#39;&lt;/span> on line &lt;span style="color:#0000cf;font-weight:bold">16&lt;/span> of /etc/multipath.conf
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdi: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdb: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdc: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdd: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sde: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdf: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdg: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdh: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdq: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdj: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdm: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdn: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdo: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdp: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdk: alua not supported
+Jun &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> 15:09:16 &lt;span style="color:#000;font-weight:bold">|&lt;/span> sdl: alua not supported
+36488eef100d71ed122ace06c00000001 dm-0 HUAWEI ,XSG1
+&lt;span style="color:#000">size&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>15T &lt;span style="color:#000">features&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;1 queue_if_no_path&amp;#39;&lt;/span> &lt;span style="color:#000">hwhandler&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;0&amp;#39;&lt;/span> &lt;span style="color:#000">wp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>rw
+&lt;span style="color:#4e9a06">`&lt;/span>-+- &lt;span style="color:#000">policy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;service-time 0&amp;#39;&lt;/span> &lt;span style="color:#000">prio&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>-1 &lt;span style="color:#000">status&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>active
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:7:1 sdi 8:128 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:0:1 sdb 8:16 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:1:1 sdc 8:32 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:2:1 sdd 8:48 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:3:1 sde 8:64 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:4:1 sdf 8:80 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:5:1 sdg 8:96 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 1:0:6:1 sdh 8:112 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:7:1 sdq 65:0 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:3:1 sdj 8:144 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:6:1 sdm 8:192 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:0:1 sdn 8:208 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:2:1 sdo 8:224 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:5:1 sdp 8:240 active ready running
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>- 2:0:1:1 sdk 8:160 active ready running
+&lt;span style="color:#4e9a06">`&lt;/span>- 2:0:4:1 sdl 8:176 active ready running
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>对每个设备执行：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &amp;gt; /sys/class/block/sdi/device/rescan
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>再执行下面的命令，让操作系统感知到multipath设备的容量变化：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ multipathd -k
+&lt;span style="color:#8f5902;font-style:italic"># multipathd&amp;gt; resize map 36488eef100d71ed122ace06c00000001&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># ok&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># multipathd&amp;gt; exit&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过上面步骤，操作系统已经感知到设备的容量变化，这时候需要使用parted扩大分区表，方法是使用parted删除分区再重建分区&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ parted /dev/dm-0
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> unit s
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> p
+Model: Linux device-mapper &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>multipath&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>dm&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Disk /dev/dm-0: 32212254720s
+Sector size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>logical/physical&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: 512B/512B
+Partition Table: gpt
+Disk Flags:
+Number Start End Size File system Name Flags
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2048s 10737416191s 10737414144s disks
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> rm &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> mkpart
+Partition name? &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>?
+File system type? &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>ext2&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>?
+Start? &lt;span style="color:#0000cf;font-weight:bold">2048&lt;/span>
+End? 100%
+device-mapper: create ioctl on 36488eef100d71ed122ace06c00000001p1 part1-mpath-36488eef100d71ed122ace06c00000001 failed: Device or resource busy
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> p
+Model: Linux device-mapper &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>multipath&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>dm&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Disk /dev/dm-0: 32212254720s
+Sector size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>logical/physical&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: 512B/512B
+Partition Table: gpt
+Disk Flags:
+Number Start End Size File system Name Flags
+&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2048s 32212252671s 32212250624s
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>parted&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> quit
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>扩容分区表之后，再使用 tunefs.ocfs2 扩容文件系统&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 扩容文件系统&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># tunefs.ocfs2 -S /dev/dm-1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过以上步骤后，文件系统扩容完毕。最后，在其余节点执行partprobe感知设备的容量变化，再重新挂载分区就可以了。&lt;/p></description></item><item><title>Blog: 问题分析：为什么keystone的本地用户认证接口压测性能很差？</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/07/01/cloudpods-lb-application-intro/</link><pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/07/01/cloudpods-lb-application-intro/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 邱剑&lt;/p>
+&lt;p>有用户反馈keystone认证本地用户的接口性能很差，因此做了调研。&lt;/p>
+&lt;p>首先使用ab（apache benchmark）模拟用户认证，调用命令行如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ab -n &lt;span style="color:#0000cf;font-weight:bold">2000&lt;/span> -c &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> -p ~/auth_body.json -T &lt;span style="color:#4e9a06">&amp;#39;application/json&amp;#39;&lt;/span> http://192.168.1.248:5000/v3/auth/tokens
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行以上脚本过程中，采集keystone的pprof的profile数据：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget http://192.168.1.248:5000/debug/pprof/profile
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后把profile数据文件拷贝到本地，用本地go tool打开一个http服务，查看profile的内容。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">go tool pprof -http&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0.0.0.0:8081 ~/profile
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>用浏览打开看，得到如下的调用图：&lt;/p>
+&lt;img src="goprofile.png" alt="" width="1024">
+&lt;p>发现整个profile时间约130秒，调用blowfish encryptBlock的时间花了约101秒。查看代码发现这个是密码校验调用的方法bcrypt.CompareHashAndPassword。也就是说，70%的时间都花在验证本地用户的密码上了。&lt;/p>
+&lt;p>为什么这个bcrypt.CompareHashAndPassword方法这么慢呢？搜索google发现这个问答：&lt;/p>
+&lt;p>&lt;a href="https://stackoverflow.com/questions/49437359/why-bcrypt-library-comparehashandpassword-method-is-slow">https://stackoverflow.com/questions/49437359/why-bcrypt-library-comparehashandpassword-method-is-slow&lt;/a>&lt;/p>
+&lt;p>其中有一段文字：&lt;/p>
+&lt;pre>&lt;code>Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.
+&lt;/code>&lt;/pre>
+&lt;p>因此，采用bcrypt加密用户密码后，为了防止密码被暴力破解，用户认证接口的校验速度是故意地越压越慢的，性能必然不会好。&lt;/p></description></item><item><title>Blog: 使用 Cgroups 限制 Kubernetes Pod 进程数</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/06/25/cgroups-kubernetes-pid-limits/</link><pubDate>Fri, 25 Jun 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/06/25/cgroups-kubernetes-pid-limits/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
+&lt;p>Kubernetes 里面的 Pod 资源是最小的计算单元，抽象了一组（一个或多个）容器。容器也是 Linux 系统上的进程，但基于 Namespace 和 Cgroups(Control groups) 等技术实现了不同程度的隔离。
+简单来说 Namespace 可以让每个进程有独立的 PID, IPC 和网络空间。Cgroups 可以控制进程的资源占用，比如 CPU ，内存和允许的最大进程数等等。&lt;/p>
+&lt;p>今天主要介绍如何通过 Cgroups 里面的 pids 控制器限制 Kubernetes Pod 容器的最大进程数量。&lt;/p>
+&lt;h2 id="场景介绍">场景介绍&lt;/h2>
+&lt;p>之前遇到过这样一个问题，我们的服务会调用执行外部的命令，每调用一次外部命令就会 fork 产生子进程。但是由于代码上的 bug ，没有及时对子进程回收，然后这个容器不断 fork 产生子进程，耗尽了宿主机的进程表空间，最终导致整个系统不响应，影响了其它的服务。&lt;/p>
+&lt;p>这种问题除了让开发人员修复 bug 外，也需要在系统层面对进程数量进行限制。所以，如果一个容器里面运行的服务会 fork 产生子进程，就很有必要使用 Cgroups 的 pids 控制器限制这个容器能运行的最大进程数量。&lt;/p>
+&lt;h2 id="解决方法">解决方法&lt;/h2>
+&lt;h3 id="kubelet-开启-podpidslimit-功能">Kubelet 开启 PodPidsLimit 功能&lt;/h3>
+&lt;p>Kubernetes 里面的每个节点都会运行一个叫做 Kubelet 的服务，负责节点上容器的状态和生命周期，比如创建和删除容器。根据 Kubernetes 的官方文档 &lt;a href="https://kubernetes.io/docs/concepts/policy/pid-limiting/">Process ID Limits And Reservations&lt;/a> 内容，可以设置 Kubelet 服务的 &lt;strong>&amp;ndash;pod-max-pids&lt;/strong> 配置选项，之后在该节点上创建的容器，最终都会使用 Cgroups pid 控制器限制容器的进程数量。&lt;/p>
+&lt;p>我们 Kubernetes 是在 CentOS 7 上使用 kubeadm 部署的 v1.15.9 版本，需要额外设置 &lt;strong>SupportPodPidsLimit&lt;/strong> 的 feature-gate，对应操作如下（其它发行版应该也类似）：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># kubelet 使用 systemd 启动的，可以通过编辑 /etc/sysconfig/kubelet&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 添加额外的启动参数，设置 pod 最大进程数为 1024&lt;/span>
+$ vim /etc/sysconfig/kubelet
+&lt;span style="color:#000">KUBELET_EXTRA_ARGS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;--pod-max-pids=1024 --feature-gates=\&amp;#34;SupportPodPidsLimit=true\&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 重启 kubelet 服务&lt;/span>
+$ systemctl restart kubelet
+&lt;span style="color:#8f5902;font-style:italic"># 查看参数是否生效&lt;/span>
+$ ps faux &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep kubelet &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep pod-max-pids
+root &lt;span style="color:#0000cf;font-weight:bold">104865&lt;/span> 10.5 0.6 &lt;span style="color:#0000cf;font-weight:bold">1731392&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">107368&lt;/span> ? Ssl 11:56 0:30 /usr/bin/kubelet ... --pod-max-pids&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10&lt;/span> --feature-gates&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">SupportPodPidsLimit&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="验证-podpidslimit">验证 PodPidsLimit&lt;/h3>
+&lt;p>通过配置 Kubelet 的 &lt;strong>&amp;ndash;pod-max-pids=1024&lt;/strong> 选项，限制了一个容器内允许的最大进程数为 1024 个。现在来测试下如果容器内不断 fork 子进程，数目到达 1024 个时会触发什么行为。&lt;/p>
+&lt;p>参考 &lt;a href="https://en.wikipedia.org/wiki/Fork_bomb">Fork bomb&lt;/a> 的内容，可以创建一个 pod，不断 fork 子进程。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建普通的 nginx pod yaml&lt;/span>
+$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; test-nginx.yaml
+&lt;/span>&lt;span style="color:#4e9a06">apiVersion: v1
+&lt;/span>&lt;span style="color:#4e9a06">kind: Pod
+&lt;/span>&lt;span style="color:#4e9a06">metadata:
+&lt;/span>&lt;span style="color:#4e9a06"> name: test-nginx
+&lt;/span>&lt;span style="color:#4e9a06">spec:
+&lt;/span>&lt;span style="color:#4e9a06"> containers:
+&lt;/span>&lt;span style="color:#4e9a06"> - name: nginx
+&lt;/span>&lt;span style="color:#4e9a06"> image: nginx
+&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 创建到 Kubernetes 集群&lt;/span>
+$ kubectl apply -f test-nginx.yaml
+&lt;span style="color:#8f5902;font-style:italic"># 进入 nginx 容器模拟 fork bomb &lt;/span>
+$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti test-nginx bash
+root@test-nginx:/# bash -c &lt;span style="color:#4e9a06">&amp;#34;fork() { fork | fork &amp;amp; }; fork&amp;#34;&lt;/span>
+environment: fork: retry: Resource temporarily unavailable
+environment: fork: retry: Resource temporarily unavailable
+environment: fork: retry: Resource temporarily unavailable
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过进入一个 nginx 容器里面使用 bash 运行 fork bomb 命令，我们会发现当 fork 的子进程达到限制的上限数目后，会报 &lt;strong>retry: Resource temporarily unavailable&lt;/strong> 的错误，这个时候再看下宿主机的 fork 进程数目。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 通过在外部宿主机执行下面的命令，会发现 fork 的进程数目接近 1024 个&lt;/span>
+$ ps faux &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep fork &lt;span style="color:#000;font-weight:bold">|&lt;/span> wc -l
+&lt;span style="color:#0000cf;font-weight:bold">1019&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过以上的实验，发现能够通过设置 Kubelet 的 &lt;strong>&amp;ndash;pod-max-pids&lt;/strong> 选项，限制容器类的进程数，避免容器进程数不断上升最终耗尽宿主机资源，拖垮整个宿主机系统。&lt;/p>
+&lt;h2 id="原理实现">原理实现&lt;/h2>
+&lt;p>通过之前描述的解决方法，已经能够限制容器的进程数了。&lt;/p>
+&lt;p>现在从代码的层面看下 Kubelet 如何设置 Cgroups pids 控制器。&lt;/p>
+&lt;h3 id="kubelet-代码调用">Kubelet 代码调用&lt;/h3>
+&lt;p>首先来看下 Kubelet 代码里面 &lt;strong>&amp;ndash;pod-max-pids&lt;/strong> 是怎么生效的，Kubernetes 的版本为 v1.15.9。&lt;/p>
+&lt;p>&lt;strong>&amp;ndash;pid-max-pids&lt;/strong> 选项是在 &lt;code>cmd/kubelet/app/options/options.go&lt;/code> 里面的 &lt;code>AddKubeletConfigFlags&lt;/code> 函数设置的，对应代码如下。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8f5902;font-style:italic">// cmd/kubelet/app/options/options.go
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">AddKubeletConfigFlags&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mainfs&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">pflag&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">FlagSet&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">c&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">kubeletconfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">KubeletConfiguration&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里定义了 &amp;#39;--pod-max-pids&amp;#39; 的选项
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 对应参数的值通过命令行解析到 kubeletconfig.KubeletConfiguration.PodPidsLimit 里面
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">fs&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Int64Var&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;pod-max-pids&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Set the maximum number of processes per pod. If -1, the kubelet defaults to the node allocatable pid capacity.&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>PodPidsLimit&lt;/code> 配置参数解析完成后，kubelet 会在启动的时候把值设置到 ContainerManager 里面，对应代码在 &lt;code>cmd/kubelet/app/server.go&lt;/code> 里面的 &lt;code>run&lt;/code> 函数，注释如下。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8f5902;font-style:italic">// cmd/kubelet/app/server.go
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">s&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">options&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">KubeletServer&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">kubeDeps&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">kubelet&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Dependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">stopCh&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;-&lt;/span>&lt;span style="color:#204a87;font-weight:bold">chan&lt;/span> &lt;span style="color:#204a87;font-weight:bold">struct&lt;/span>&lt;span style="color:#000;font-weight:bold">{})&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">err&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000">kubeDeps&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ContainerManager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewContainerManager&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NodeConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 容器 runtime，默认使用 docker
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">ContainerRuntime&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ContainerRuntime&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 使用 Cgroups 控制 pod 的服务质量
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">CgroupsPerQOS&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CgroupsPerQOS&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 操作 Cgroups 的驱动，有 cgroupfs 和 systemd 两种
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 我们默认配置使用 systemd 来控制 Cgroups
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">CgroupDriver&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CgroupDriver&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里就是 PodPidsLimit 的设置了，通过刚才 options 的解析
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 赋值到了 ContainerManager.ExperimentalPodPidsLimit 属性
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">ExperimentalPodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 限制容器 CPU 使用率的参数
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">EnforceCPULimits&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CPUCFSQuota&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">CPUCFSQuotaPeriod&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CPUCFSQuotaPeriod&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Duration&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000;font-weight:bold">},&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>初始化 ContainerManager 后，会在 &lt;code>pkg/kubelet/cm/container_manager_linux.go&lt;/code> 里面调用 &lt;code>NewPodContainerManager&lt;/code> 创建 PodContainerManager，代码如下。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8f5902;font-style:italic">// pkg/kubelet/cm/container_manager_linux.go
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">cm&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">containerManagerImpl&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">NewPodContainerManager&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#000">PodContainerManager&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 默认情况下已经打开了 CgroupsPerQOS 的选项
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NodeConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CgroupsPerQOS&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里返回 PodContainerManager 接口的实现
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">podContainerManagerImpl&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">qosContainersInfo&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetQOSContainersInfo&lt;/span>&lt;span style="color:#000;font-weight:bold">(),&lt;/span>
+&lt;span style="color:#000">subsystems&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">subsystems&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">cgroupManager&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">cgroupManager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里设置 podPidsLimit
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">podPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ExperimentalPodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">enforceCPULimits&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">EnforceCPULimits&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">cpuCFSQuotaPeriod&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87">uint64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CPUCFSQuotaPeriod&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">/&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Microsecond&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">podContainerManagerNoop&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">cgroupRoot&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">cm&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">cgroupRoot&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从之前的代码能发现 PodContainerManager 是一个接口，对应的实现在 &lt;code>pkg/kubelet/cm/pod_container_manager_linux.go&lt;/code> 里面，与 Cgroup 相关的函数则是 &lt;code>podContainerManagerImpl.EnsureExists&lt;/code> 函数。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8f5902;font-style:italic">// pkg/kubelet/cm/pod_container_manager_linux.go
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// podContainerManagerImpl 就是实现 PodContainerManager 接口的结构体
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">// EnsureExists 会根据 api 里面 Pod 的定义，在当前系统创建对应容器的 cgroup 配置
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">m&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">podContainerManagerImpl&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">EnsureExists&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">pod&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">v1&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Pod&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// podContainerName 也会作为 cgroup name，根据 pod 的 QOS 级别和 UUID 生成
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 查看容器是否存在
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">alreadyExists&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Exists&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">pod&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000;font-weight:bold">!&lt;/span>&lt;span style="color:#000">alreadyExists&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 创建 pod 对应容器的 cgroup
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">containerConfig&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">CgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">Name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">podContainerName&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">ResourceParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">ResourceConfigForPod&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">pod&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">enforceCPULimits&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">cpuCFSQuotaPeriod&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 如果启用了 SupportPodPidsLimit feature-gate ，并且 podPidsLimit 大于 0
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">utilfeature&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DefaultFeatureGate&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Enabled&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">kubefeatures&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SupportPodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">podPidsLimit&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里就会配置 PidsLimit
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">containerConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ResourceParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PidsLimit&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">podPidsLimit&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 调用 cgroupManager 根据 containerConfig 创建对应的 cgroup
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">cgroupManager&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Create&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">containerConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">fmt&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Errorf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;failed to create container for %v : %v&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">podContainerName&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>接下来看 cgroupManager.Create 函数的实现，对应代码实现在 &lt;code>pkg/kubelet/cm/cgroup_manager_linux.go&lt;/code> 里面的 &lt;code>cgroupManagerImpl.Create&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">m&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">cgroupManagerImpl&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">Create&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">cgroupConfig&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">CgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000">resources&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">toResources&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">cgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ResourceParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">libcontainerCgroupConfig&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">libcontainerconfigs&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Cgroup&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">resources&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// libcontainer consumes a different field and expects a different syntax
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// depending on the cgroup driver in use, so we need this conditional here.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">adapter&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">cgroupManagerType&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#000">libcontainerSystemd&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 我们使用 systemd 管理 cgroup ，所以这里会更新下 systemd 对应 cgroup 的配置
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">updateSystemdCgroupInfo&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">libcontainerCgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">cgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Name&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span> &lt;span style="color:#204a87;font-weight:bold">else&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">libcontainerCgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Path&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">cgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Name&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ToCgroupfs&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">utilfeature&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DefaultFeatureGate&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Enabled&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">kubefeatures&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SupportPodPidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000">cgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ResourceParameters&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000">cgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ResourceParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PidsLimit&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 设置 libcontainerCgroupConfig 里面的 PidsLimit
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 这里 PidsLimit 就是一开始参数指定的 --pod-max-pids 的值
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">libcontainerCgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PidsLimit&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">cgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ResourceParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PidsLimit&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里根据 cgroup 的配置返回 libcontainercgroups.Manager 接口的实现
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 这里的实现是 systemd 的实现
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">manager&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">adapter&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">newManager&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">libcontainerCgroupConfig&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 调用 libcontainer 里面的 cgroups manager Apply 接口把 pod 的 cgroup 配置应用到系统
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 在我们的环境中，这个 Apply 函数会由 libcontainer/cgroupfs/systemd.Manager 实现
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">manager&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Apply&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在看下最后的 &lt;code>Apply&lt;/code> 函数，该函数会调用到 &lt;code>vendor/github.com/opencontainers/runc/libcontainer/cgroups/systemd/apply_systemd.go&lt;/code> 里面的 systemd 实现。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8f5902;font-style:italic">// vendor/github.com/opencontainers/runc/libcontainer/cgroups/systemd/apply_systemd.go
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">m&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">Manager&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">Apply&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">pid&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 初始化 systemd cgroup 需要的一些变量
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#000">c&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">m&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Cgroups&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// systemd unit name
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">unitName&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">getUnitName&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">slice&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;system.slice&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// systemd unit 里面的配置属性
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">properties&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#000">systemdDbus&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Property&lt;/span>
+&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// Always enable accounting, this gets us the same behaviour as the fs implementation,
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// plus the kernel has some problems with joining the memory cgroup at a later time.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">properties&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">append&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">properties&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;MemoryAccounting&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;CPUAccounting&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;BlockIOAccounting&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">))&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Memory&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 设置 cgroup memory limit
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">properties&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">append&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">properties&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;MemoryLimit&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">uint64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Memory&lt;/span>&lt;span style="color:#000;font-weight:bold">)))&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CpuShares&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 设置 cgroup cpu shares
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">properties&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">append&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">properties&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;CPUShares&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CpuShares&lt;/span>&lt;span style="color:#000;font-weight:bold">))&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">BlkioWeight&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 设置 cgroup block io weight
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">properties&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">append&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">properties&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;BlockIOWeight&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">uint64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">BlkioWeight&lt;/span>&lt;span style="color:#000;font-weight:bold">)))&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PidsLimit&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 这里设置了本文关注的 PidsLimit 参数
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 发现会对应 systemd 里面的 TasksAccounting 和 TasksMax 属性
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">properties&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">append&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">properties&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;TasksAccounting&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;span style="color:#000">newProp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;TasksMax&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">uint64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Resources&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">PidsLimit&lt;/span>&lt;span style="color:#000;font-weight:bold">)))&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 通过 systemdDbus 根据之前的 cgroup 设置创建对应的 unit
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">_&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">theConn&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">StartTransientUnit&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">unitName&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;replace&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">properties&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">statusChan&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 最后加入 Cgroups
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">joinCgroups&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">pid&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="systemd-cgroup-slice">Systemd Cgroup slice&lt;/h3>
+&lt;p>通过对 Kubelet 调用 libcontainer，最后由 systemd 创建 pod 容器对应 cgroup unit 的代码调用分析，在这里看下对应 pod 的 systemd unit 配置。&lt;/p>
+&lt;p>从之前代码看，最终生成的 systemd unit 和 cgroup 和 pod 的 &lt;code>uid&lt;/code> 和 &lt;code>qosClass&lt;/code> 有关系，所以先通过以下的命令拿到 pod 的 &lt;code>uid&lt;/code> 和 &lt;code>qosClass&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods test-nginx -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -E &lt;span style="color:#4e9a06">&amp;#39;uid|qos&amp;#39;&lt;/span>
+uid: 2ac1e32c-d8d6-4533-8eab-d04d60465065
+qosClass: BestEffort
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后找到对应的 systemd unit .slice 文件。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># uid 取前 8 位，qosClass 小写&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 找到对应的 kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice&lt;/span>
+$ systemctl &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 2ac1e32c &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep besteffort
+kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice loaded active active libcontainer container kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice
+&lt;span style="color:#8f5902;font-style:italic"># 查看对应 slice 的配置&lt;/span>
+$ systemctl status kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice
+● kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice - libcontainer container kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice
+Loaded: loaded &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>/run/systemd/system/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice&lt;span style="color:#000;font-weight:bold">;&lt;/span> static&lt;span style="color:#000;font-weight:bold">;&lt;/span> vendor preset: disabled&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Drop-In: /run/systemd/system/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice.d
+└─50-BlockIOAccounting.conf, 50-CPUAccounting.conf, 50-CPUShares.conf, 50-DefaultDependencies.conf, 50-Delegate.conf, 50-Description.conf, 50-MemoryAccounting.conf, 50-TasksAccounting.conf, 50-TasksMax.conf, 50-Wants-kubepods-besteffort&lt;span style="color:#4e9a06">\x&lt;/span>2eslice.conf
+Active: active since Fri 2021-06-25 16:21:25 CST&lt;span style="color:#000;font-weight:bold">;&lt;/span> 7min ago
+Tasks: &lt;span style="color:#0000cf;font-weight:bold">6&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>limit: 1024&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Memory: 6.8M
+CGroup: /kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice
+├─docker-2d151786c9985db74632c09412207fa99755473fde93d09920604e097f25a2b7.scope
+│ ├─32662 nginx: master process nginx -g daemon off&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+│ ├─32703 nginx: worker process
+│ ├─32704 nginx: worker process
+│ ├─32705 nginx: worker process
+│ └─32706 nginx: worker process
+└─docker-966047566d9e90d9ef64126b605101c174d750ec0cde3d3a83c5b313c7af9a21.scope
+└─32544 /pause
+Jun &lt;span style="color:#0000cf;font-weight:bold">25&lt;/span> 16:21:25 centos7-oc-dev systemd&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>1&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>: Created slice libcontainer container kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice.
+&lt;span style="color:#8f5902;font-style:italic"># 通过 systemctl status 能发现 50-TasksMax.conf 的文件&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 从之前的代码分析，发现 PodPidsLimit 会对应到 systemd 的 TasksMax 属性&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 现在在看下这个文件的内容&lt;/span>
+$ cat /run/systemd/system/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice.d/50-TasksMax.conf
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>Slice&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">TasksMax&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1024&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># TasksMax 设置为了 1024 ，限制了这个进程最大子进程（Task）数量&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="cgroup-fs">Cgroup FS&lt;/h3>
+&lt;p>查看之前的 &lt;code>vendor/github.com/opencontainers/runc/libcontainer/cgroups/systemd/apply_systemd.go&lt;/code> 代码，发现在创建完 pod 容器对应的 systemd cgroup slice 后，还会调用一次 &lt;code>joinCgroups&lt;/code> 这个函数。这个函数会使用 Cgroup FS 原生的方法，在 &lt;code>/sys/fs/cgroup&lt;/code> 里面创建对应 pod 容器的 group 。&lt;/p>
+&lt;p>所以再看下 Cgroup FS 里面 pod 设置 pid limit 的配置。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 找到 Cgroup FS pids 控制器的挂载点&lt;/span>
+$ cgroup on /sys/fs/cgroup/pids &lt;span style="color:#204a87">type&lt;/span> cgroup &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rw,nosuid,nodev,noexec,relatime,pids&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 看下 /sys/fs/cgroup/pids 目录下的文件&lt;/span>
+$ ls -alh /sys/fs/cgroup/pids
+...
+&lt;span style="color:#8f5902;font-style:italic"># 发现有一个由 Kubelet 创建的 kubepods.slice&lt;/span>
+drwxr-xr-x &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Jun &lt;span style="color:#0000cf;font-weight:bold">25&lt;/span> 04:49 kubepods.slice
+...
+&lt;span style="color:#8f5902;font-style:italic"># 再通过查看 /sys/fs/cgroup/pids/kubepods.slice 目录&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 会发现 kubepods-besteffort.slice 和 kubepods-burstable.slice 两个目录&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 分别对应 pod 容器的 QOS 级别&lt;/span>
+$ ls -alh /sys/fs/cgroup/pids/kubepods.slice
+...
+drwxr-xr-x &lt;span style="color:#0000cf;font-weight:bold">42&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Jun &lt;span style="color:#0000cf;font-weight:bold">25&lt;/span> 16:21 kubepods-besteffort.slice
+drwxr-xr-x &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Jun &lt;span style="color:#0000cf;font-weight:bold">25&lt;/span> 04:49 kubepods-burstable.slice
+...
+&lt;span style="color:#8f5902;font-style:italic"># 结合刚才的代码片段，也可以想到原生 Cgroup FS 的目录和 systemd 的应该是差不多的层级&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 现在直接用 find 命令查看 pids 控制器下面的 cgroup 设置&lt;/span>
+$ find /sys/fs/cgroup/pids/kubepods.slice -type f &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep pod2ac1e32c
+...
+&lt;span style="color:#8f5902;font-style:italic"># 能发现 pids.current 和 pids.max 两个 cgroup 的配置&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># pids.current 表示当前 pod 里面的进程（Task）数量&lt;/span>
+/sys/fs/cgroup/pids/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice/pids.current
+&lt;span style="color:#8f5902;font-style:italic"># pids.max 则表示 pod 里面能运行的进程（Task）上限&lt;/span>
+/sys/fs/cgroup/pids/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice/pids.max
+...
+&lt;span style="color:#8f5902;font-style:italic"># 查看 pod pids.max 设置，结果为 1024&lt;/span>
+$ cat /sys/fs/cgroup/pids/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod2ac1e32c_d8d6_4533_8eab_d04d60465065.slice/pids.max
+&lt;span style="color:#0000cf;font-weight:bold">1024&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外这篇内核文档 &lt;a href="https://www.kernel.org/doc/Documentation/cgroup-v1/pids.txt">Process Number Controller&lt;/a> 对 cgroup pids 控制器的使用进行了介绍，可以了解下。&lt;/p></description></item><item><title>Blog: 使用Linux vfio将Nvidia GPU透传给QEMU虚拟机</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/06/07/nvidia-gpu-passthrough-record/</link><pubDate>Mon, 07 Jun 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/06/07/nvidia-gpu-passthrough-record/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 李泽玺&lt;/p>
+&lt;p>Linux 上虚拟机 GPU 透传需要使用 vfio 的方式。主要是因为在 vfio 方式下对虚拟设备的权限和 DMA 隔离上做的更好。但是这么做也有个缺点，这个物理设备在主机和其他虚拟机都不能使用了。&lt;/p>
+&lt;p>qemu 直接使用物理设备本身命令行是很简单的，关键在于事先在主机上对系统、内核和物理设备的一些配置。&lt;/p>
+&lt;p>单纯从 qemu 的命令行来看，其实和普通虚拟机启动就差了最后那个 &lt;code>-device&lt;/code> 的选项。这个选项也比较容易理解，就是把主机上的设备 0000:00:01.0 传给了虚拟机使用。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ qemu-system-x86_64 -m &lt;span style="color:#0000cf;font-weight:bold">4096&lt;/span> -smp &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> --enable-kvm &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> -drive &lt;span style="color:#000">file&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>~/guest/fedora.img &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> -device vfio-pci,host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0000:00:01.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="系统及硬件准备">系统及硬件准备&lt;/h2>
+&lt;h3 id="bios中打开iommu">BIOS中打开IOMMU&lt;/h3>
+&lt;p>设备直通在 x86 平台上需要打开 iommu 功能。这是 Intel 虚拟技术 VT-d(Virtualization Technology for Device IO) 中的一个部分。有时候这部分的功能没有被打开。&lt;/p>
+&lt;p>打开的方式在 BIOS 设置中 Security-&amp;gt;Virtualization-&amp;gt;VT-d 这个位置。当然不同的 BIOS 位置可能会略有不同。记得在使用直通设备前要将这个选项打开。&lt;/p>
+&lt;h3 id="内核配置勾选iommu">内核配置勾选IOMMU&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">INTEL_IOMMU
+│ Location: │
+│ -&amp;gt; Device Drivers │
+│ &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>2&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> -&amp;gt; IOMMU Hardware Support &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>IOMMU_SUPPORT &lt;span style="color:#ce5c00;font-weight:bold">[=&lt;/span>y&lt;span style="color:#ce5c00;font-weight:bold">])&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="内核启动参数enable-iommu">内核启动参数enable IOMMU&lt;/h3>
+&lt;p>BIOS 中打开，内核编译选项勾选还不够。还需要在引导程序中添加上内核启动参数&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 对应编辑 /etc/default/grub, 设置 GRUB_CMDLINE_LINUX=&lt;/span>
+$ cat /etc/default/grub
+...
+&lt;span style="color:#000">GRUB_CMDLINE_LINUX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;intel_iommu=on iommu=pt vfio_iommu_type1.allow_unsafe_interrupts=1 rdblacklist=nouveau nouveau.modeset=0&amp;#34;&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 重新生成 grub 引导配置文件&lt;/span>
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+&lt;span style="color:#8f5902;font-style:italic"># 将vfio相关 module 设置为开机load&lt;/span>
+$ cat /etc/modules-load.d/vfio.conf
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF#Setting_up_IOMMU">Setting up IOMMU&lt;/a>
+&lt;a href="https://wiki.archlinux.org/index.php/Kernel_parameters">Kernel parameters&lt;/a>&lt;/p>
+&lt;h3 id="找到-nvidia-gpu-busid">找到 nvidia GPU BusID&lt;/h3>
+&lt;p>record PCI addresses and hardware IDs of the GPU&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+41:00.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: vfio-pci
+Kernel modules: nouveau
+41:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: snd_hda_intel
+Kernel modules: snd_hda_intel
+&lt;span style="color:#8f5902;font-style:italic"># pci address =&amp;gt; 41:00.0,41:00.1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># device id =&amp;gt; 1b4c:11bf&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里找到了两张 nvidia 卡，它们的 device id 都是 1b4c:11bf, 一张是 Audio device&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这样是不能 passthrough 进去的，因为:&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># vfio-pci use your vendor and device id pair to identify which device they need to bind to at boot,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># if you have two GPUs sharing such an ID pair you will not be able to get your passthough driver to bind with just one of them&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 使用下面的脚本解决这种情况：&lt;/span>
+$ cat /usr/bin/vfio-pci-override.sh
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/sh&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> i in &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>find /sys/devices/pci* -name boot_vga&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>cat &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$i&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -eq &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;span style="color:#000">GPU&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">i&lt;/span>&lt;span style="color:#000;font-weight:bold">%/boot_vga&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#000">AUDIO&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$GPU&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sed -e &lt;span style="color:#4e9a06">&amp;#34;s/0&lt;/span>$&lt;span style="color:#4e9a06">/1/&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;vfio-pci&amp;#34;&lt;/span> &amp;gt; &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$GPU&lt;/span>&lt;span style="color:#4e9a06">/driver_override&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> -d &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$AUDIO&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;vfio-pci&amp;#34;&lt;/span> &amp;gt; &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$AUDIO&lt;/span>&lt;span style="color:#4e9a06">/driver_override&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
+modprobe -i vfio-pci
+&lt;span style="color:#8f5902;font-style:italic"># 把脚本传入 /etc/modprobe.d/vfio.conf&lt;/span>
+$ cat /etc/modprobe.d/vfio.conf
+install vfio-pci /usr/bin/vfio-pci-override.sh
+options vfio-pci &lt;span style="color:#000">ids&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10de:1c82 &lt;span style="color:#000">disable_vga&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用-vfio-管理-gpu">使用 vfio 管理 GPU&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># /etc/modprobe.d/vfio.conf, ids 为 lspci 找到的 hardware id, 多个设备的话用&amp;#39;,&amp;#39;分割&lt;/span>
+$ cat /etc/modprobe.d/vfio.conf
+options vfio-pci &lt;span style="color:#000">ids&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10de:134d &lt;span style="color:#000">disable_vga&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 禁用NVIDIA nouveau 开源驱动, /etc/modprobe.d/blacklist.conf&lt;/span>
+$ cat /etc/modprobe.d/blacklist.conf
+blacklist nouveau
+&lt;span style="color:#8f5902;font-style:italic"># kvm 模块配置, /etc/modprobe.d/kvm.conf&lt;/span>
+$ cat /etc/modprobe.d/kvm.conf
+options kvm &lt;span style="color:#000">ignore_msrs&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>重启系统，启动完成后查看当前的 nvidia GPU 是否被 vfio-pci 模块使用, 确认IOMMU功能确实打开。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ dmesg &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -e DMAR -e IOMMU &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep enabled
+&lt;span style="color:#8f5902;font-style:italic"># 如果能搜索到&lt;/span>
+DMAR: IOMMU enabled
+&lt;span style="color:#8f5902;font-style:italic"># 表示上述配置成功。&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看 GPU 是否被 vfio-pci 使用&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 另外注意检查看看 41:00.1 Audio device 是否也被 vfio-pci 使用&lt;/span>
+$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i -e nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+41:00.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: vfio-pci &lt;span style="color:#8f5902;font-style:italic"># GTX 1050 Ti GPU 被 vfio-pci 使用&lt;/span>
+Kernel modules: nouveau
+41:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: vfio-pci &lt;span style="color:#8f5902;font-style:italic"># 发现 Audio device 也被 vfio-pci 使用了&lt;/span>
+Kernel modules: snd_hda_intel
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># list GPU IOMMU group&lt;/span>
+$ find /sys/kernel/iommu_groups/ -type l &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 41:00
+/sys/kernel/iommu_groups/27/devices/0000:41:00.0
+/sys/kernel/iommu_groups/27/devices/0000:41:00.1
+&lt;span style="color:#8f5902;font-style:italic"># 找到IOMMU Group 管理的 PCI 设备&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/bash&lt;/span>
+&lt;span style="color:#204a87">shopt&lt;/span> -s nullglob
+&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> d in /sys/kernel/iommu_groups/*/devices/*&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span>
+&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">d&lt;/span>&lt;span style="color:#000;font-weight:bold">#*/iommu_groups/*&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">%%/*&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>
+&lt;span style="color:#204a87">printf&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;IOMMU Group %s &amp;#39;&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$n&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+lspci -nns &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">d&lt;/span>&lt;span style="color:#000;font-weight:bold">##*/&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用-qemu-透传-nvidia-gpu">使用 qemu 透传 nvidia GPU&lt;/h3>
+&lt;p>准备好centos7镜像，然后在虚拟机里面安装 nvidia 官方闭源驱动和 cuda SDK&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 我从服务器上拷贝过来的是 vmdk 的镜像，先把它转换成 qcow2 的格式&lt;/span>
+$ /usr/local/qemu-2.9.0/bin/qemu-img convert -f vmdk -O qcow2 centos-7.3.1611-20180104.vmdk centos-7.3.1611-20180104.qcow2
+&lt;span style="color:#8f5902;font-style:italic"># 使用 qemu 启动，注意-cpu 需要 kvm=off 参数&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># kvm=off will hide the kvm hypervisor signature, this is required for NVIDIA cards&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># since its driver will refuse to work on an hypervisor and result in Code 43 on windows&lt;/span>
+$ cat startvm.sh
+&lt;span style="color:#8f5902;font-style:italic">#!/bin/sh&lt;/span>
+/usr/local/qemu-2.9.0/bin/qemu-system-x86_64 -enable-kvm &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-m &lt;span style="color:#0000cf;font-weight:bold">4096&lt;/span> -cpu host,kvm&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>off -smp 4,sockets&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>1,cores&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>4,threads&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-drive &lt;span style="color:#000">file&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>./centos-7.3.1611-20180104.qcow2 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-device vfio-pci,host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>41:00.0,multifunction&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>on,addr&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0x16 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-device vfio-pci,host&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>41:00.1 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-net nic,model&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>e1000 -net user,hostfwd&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>tcp::5022-:22 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span>-vnc :1
+&lt;span style="color:#8f5902;font-style:italic"># 这台虚拟机开了vnc和ssh 端口转发，可以使用vnc或者ssh访问&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 从host进入虚拟机&lt;/span>
+$ ssh 127.0.0.1 -p &lt;span style="color:#0000cf;font-weight:bold">5022&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机透传进来的显卡&lt;/span>
+$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+00:04.0 Audio device: NVIDIA Corporation Device 0fb9 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel driver in use: snd_hda_intel
+Kernel modules: snd_hda_intel
+00:16.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Subsystem: Device 1b4c:11bf
+Kernel modules: nouveau
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="安装nvidia-驱动和-cuda">安装nvidia 驱动和 Cuda&lt;/h2>
+&lt;p>nvidia 驱动需要从官方下载，如果先安装 cuda 的话会一同安装 nvidia 驱动。
+接下来采用虚拟机先安装驱动再安装 cuda 的步骤。&lt;/p>
+&lt;p>参考：
+&lt;a href="http://www.advancedclustering.com/act_kb/installing-nvidia-drivers-rhel-centos-7/">installing-nvidia-drivers-centos-7&lt;/a>
+&lt;a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">NVIDIA CUDA GETTINGS STARTED GUIDE FOR LINUX&lt;/a>&lt;/p>
+&lt;h3 id="安装-nvidia-驱动">安装 nvidia 驱动&lt;/h3>
+&lt;p>下载地址：http://www.nvidia.com/object/unix.html&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># update 后如果更新内核，需要重启&lt;/span>
+$ yum -y update
+&lt;span style="color:#8f5902;font-style:italic"># 安装 gcc、make、glibc等工具和库&lt;/span>
+$ yum -y groupinstall &lt;span style="color:#4e9a06">&amp;#34;Development Tools&amp;#34;&lt;/span>
+$ yum -y install kernel-devel
+&lt;span style="color:#8f5902;font-style:italic"># Download the latest NVIDIA driver for unix.&lt;/span>
+$ wget http://us.download.nvidia.com/XFree86/Linux-x86_64/390.42/NVIDIA-Linux-x86_64-390.42.run
+$ yum -y install epel-release
+$ yum -y install dkms
+&lt;span style="color:#8f5902;font-style:italic"># Edit /etc/default/grub. Append the following to “GRUB_CMDLINE_LINUX”&lt;/span>
+rd.driver.blacklist&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>nouveau nouveau.modeset&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Generate a new grub configuration to include the above changes.&lt;/span>
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+&lt;span style="color:#8f5902;font-style:italic"># Edit/create /etc/modprobe.d/blacklist.conf and append:&lt;/span>
+blacklist nouveau
+&lt;span style="color:#8f5902;font-style:italic"># Backup your old initramfs and then build a new one&lt;/span>
+$ mv /boot/initramfs-&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>.img /boot/initramfs-&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>-nouveau.img
+$ dracut /boot/initramfs-&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>.img &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>uname -r&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 重启again&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Run the NVIDIA driver installer and enter yes to all options.&lt;/span>
+$ sh NVIDIA-Linux-x86_64-*.run
+&lt;span style="color:#8f5902;font-style:italic"># 装好后再一次重启，lspci -k 看下gpu使用的驱动是否是nvidia&lt;/span>
+$ lspci -k &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i nvidia -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+00:04.0 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+00:16.0 VGA compatible controller: NVIDIA Corporation GP107 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>rev a1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Kernel driver in use: nvidia &lt;span style="color:#8f5902;font-style:italic"># 发现已经使用nvidia驱动&lt;/span>
+Kernel modules: nouveau, nvidia_drm, nvidia
+&lt;span style="color:#8f5902;font-style:italic"># 执行 nvidia-smi 看下输出和温度&lt;/span>
+$ nvidia-smi
+Thu Mar &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> 01:31:09 &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span>
++-----------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> NVIDIA-SMI 390.42 Driver Version: 390.42 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>-------------------------------+----------------------+----------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU Name Persistence-M&lt;span style="color:#000;font-weight:bold">|&lt;/span> Bus-Id Disp.A &lt;span style="color:#000;font-weight:bold">|&lt;/span> Volatile Uncorr. ECC &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Fan Temp Perf Pwr:Usage/Cap&lt;span style="color:#000;font-weight:bold">|&lt;/span> Memory-Usage &lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU-Util Compute M. &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">===============================&lt;/span>+&lt;span style="color:#ce5c00;font-weight:bold">======================&lt;/span>+&lt;span style="color:#ce5c00;font-weight:bold">======================&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> GeForce GTX 105... Off &lt;span style="color:#000;font-weight:bold">|&lt;/span> 00000000:00:16.0 Off &lt;span style="color:#000;font-weight:bold">|&lt;/span> N/A &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 40% 32C P0 N/A / 100W &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0MiB / 4040MiB &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0% Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------------------------------+----------------------+----------------------+
++-----------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Processes: GPU Memory &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> GPU PID Type Process name Usage &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=============================================================================&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> No running processes found &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-----------------------------------------------------------------------------+
+$ nvidia-smi -q -d &lt;span style="color:#000">TEMPERATURE&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">==============&lt;/span>NVSMI &lt;span style="color:#000">LOG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==============&lt;/span>
+Timestamp : Thu Mar &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> 01:32:42 &lt;span style="color:#0000cf;font-weight:bold">2018&lt;/span>
+Driver Version : 390.42
+Attached GPUs : &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+GPU 00000000:00:16.0
+Temperature
+GPU Current Temp : &lt;span style="color:#0000cf;font-weight:bold">32&lt;/span> C
+GPU Shutdown Temp : &lt;span style="color:#0000cf;font-weight:bold">102&lt;/span> C
+GPU Slowdown Temp : &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> C
+GPU Max Operating Temp : N/A
+Memory Current Temp : N/A
+Memory Max Operating Temp : N/A
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-cuda">安装 cuda&lt;/h3>
+&lt;p>下载地址： &lt;a href="https://developer.nvidia.com/cuda-downloads">https://developer.nvidia.com/cuda-downloads&lt;/a>
+这里选择 runfile，以后为了方便也可以选择 rpm(network)的方式，会自动帮我们安装 nvidia 驱动&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ wget https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/cuda_9.1.85_387.26_linux
+&lt;span style="color:#8f5902;font-style:italic"># Say no to installing the NVIDIA driver.&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># The standalone driver you already installed is typically newer than what is packaged with CUDA.&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Use the default option for all other choices.&lt;/span>
+$ sh cuda_*.run
+&lt;span style="color:#8f5902;font-style:italic"># 添加 CUDA 相关的环境变量&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">PATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$PATH&lt;/span>:/usr/local/cuda/bin
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">LD_LIBRARY_PATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/usr/local/cuda/lib64:&lt;span style="color:#000">$LD_LIBRARY_PATH&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># make samples&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ~/NVIDIA_CUDA-9.1_Samples&lt;span style="color:#000;font-weight:bold">;&lt;/span> make -j &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> bin/x86_64/linux/release
+$ ./deviceQuery &lt;span style="color:#8f5902;font-style:italic"># 查询gpu信息&lt;/span>
+./deviceQuery Starting...
+CUDA Device Query &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Runtime API&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> version &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>CUDART static linking&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Detected &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> CUDA Capable device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Device 0: &lt;span style="color:#4e9a06">&amp;#34;GeForce GTX 1050 Ti&amp;#34;&lt;/span>
+CUDA Driver Version / Runtime Version 9.1 / 9.1
+CUDA Capability Major/Minor version number: 6.1
+Total amount of global memory: &lt;span style="color:#0000cf;font-weight:bold">4040&lt;/span> MBytes &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">4236312576&lt;/span> bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span> 6&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Multiprocessors, &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>128&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> CUDA Cores/MP: &lt;span style="color:#0000cf;font-weight:bold">768&lt;/span> CUDA Cores
+GPU Max Clock rate: &lt;span style="color:#0000cf;font-weight:bold">1481&lt;/span> MHz &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>1.48 GHz&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Memory Clock rate: &lt;span style="color:#0000cf;font-weight:bold">3504&lt;/span> Mhz
+Memory Bus Width: 128-bit
+L2 Cache Size: &lt;span style="color:#0000cf;font-weight:bold">1048576&lt;/span> bytes
+...
+$ ./bandwidtTest &lt;span style="color:#8f5902;font-style:italic"># 使用 cuda 测试gpu bandwidth&lt;/span>
+Running on...
+Device 0: GeForce GTX &lt;span style="color:#0000cf;font-weight:bold">1050&lt;/span> Ti
+Quick Mode
+Host to Device Bandwidth, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+PINNED Memory Transfers
+Transfer Size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Bandwidth&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>MB/s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#0000cf;font-weight:bold">33554432&lt;/span> 9719.0
+Device to Host Bandwidth, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+PINNED Memory Transfers
+Transfer Size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Bandwidth&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>MB/s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#0000cf;font-weight:bold">33554432&lt;/span> 9215.8
+Device to Device Bandwidth, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Device&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+PINNED Memory Transfers
+Transfer Size &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Bytes&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Bandwidth&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>MB/s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#0000cf;font-weight:bold">33554432&lt;/span> 95525.1
+&lt;span style="color:#000">Result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> PASS
+NOTE: The CUDA Samples are not meant &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> performance measurements. Results may vary when GPU Boost is enabled.
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Blog: 直播回顾：Cloudpods 3.7版本新功能介绍</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/05/31/cloudpods-3.7-new-feature-introduction/</link><pubDate>Mon, 31 May 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/05/31/cloudpods-3.7-new-feature-introduction/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 高现起&lt;/p>
+&lt;p>大家好，我是高现起，目前在负责云联壹云融合云管理平台的产品工作，今天很高兴由我给大家介绍一下最新发布的3.7版本的新功能。&lt;/p>
+&lt;p>我将围绕以下目录展开我今天的内容：&lt;/p>
+&lt;ul>
+&lt;li>产品简介&lt;/li>
+&lt;li>3.7版本新功能介绍&lt;/li>
+&lt;li>功能规划&lt;/li>
+&lt;/ul>
+&lt;h2 id="一产品简介">一、产品简介&lt;/h2>
+&lt;p>目前，企业的IT资源属于无处不在的状态，根据 Flexera 2020 云状态（原 RightScale 云状态报告）报告，93%的企业实施了多云战略。虽然这一调查的依据是全球750家企业的云决策者，但是从国内的实际情况来说，数字可能没有那么大，趋势还是有的，就是多云已经是更多企业的选择了。&lt;/p>
+&lt;p>多云环境，我们又统称为异构IT基础设施，那么这种异构IT基础设施在给客户带来更优性能更优成本的同时，也会带来一些新的问题，例如我下边列举的5种不同角色的用户所遇到的问题：&lt;/p>
+&lt;ul>
+&lt;li>运维工程师/开发工程师-如何统一管理所有的云计算资源？&lt;/li>
+&lt;li>财务专员-如何获取统一易读的公有云账单？&lt;/li>
+&lt;li>运维主管/开发主管-如何及时获取资源整体的使用情况？&lt;/li>
+&lt;li>财务主管-如何及时获取IT资源成本的使用结构？&lt;/li>
+&lt;li>CTO/CIO-如何提高IT资源的ROI（投资回报率）？&lt;/li>
+&lt;/ul>
+&lt;p>我们早在2017年就关注到多云带来客户的问题，开始做云联壹云这款产品，希望能够帮助企业很好的解决这些问题。&lt;/p>
+&lt;p>&lt;img src="./01.png" alt="">&lt;/p>
+&lt;p>云联壹云是一站式管理云计算资源的解决方案，希望帮助客户在一个地方管理本地IDC、私有云、公有云等IT资源，整体提高企业IT基础设施的管理效率。&lt;/p>
+&lt;p>从产品架构图上，我们可以看出，底层是一些异构资源，上层是一些应用或服务，云联壹云处于承上启下的作用，向下屏蔽异构的差异，向上提供一致的资源管理能力。&lt;/p>
+&lt;p>&lt;img src="./02.png" alt="">&lt;/p>
+&lt;p>以上是我们最新版本也就是3.7版本的功能概览。&lt;/p>
+&lt;p>最底层是异构资源，中层就是我们云管理平台的功能概览，上层应用和服务。云管理平台的底层是多云的适配层，往上是基础的资源管理，包括计算、存储、网络、PaaS服务等，再往上是针对企业客户做的三大块的功能，依次是权限管理、统一监控和报警、成本管理包括私有云的计量计费公有云的账单分析和成本优化等等，面向用户层，我们针对不同的用户有不同的用户界面，包括管理员的系统管理视图，租户的租户管理视图，普通用户的项目视图，针对运维人员的climc命令行工具，针对开发人员，我们也有丰富的REST API以及各个开发语言的SDK。&lt;/p>
+&lt;p>这款产品能够带给客户3种价值：&lt;/p>
+&lt;ul>
+&lt;li>省人省事-一站式采买、批量操作、一次配置，全网生效、统一获取易读账单&lt;/li>
+&lt;li>省钱-算好账、摊好钱、节成本&lt;/li>
+&lt;li>安全-统一认证、统一授权、免密登录&lt;/li>
+&lt;/ul>
+&lt;p>总而言之，云联壹云希望帮助用户解决异构IT基础设施带来的问题，充分发挥异构IT基础设施的优势。&lt;/p>
+&lt;h2 id="二37版本新功能介绍">二、3.7版本新功能介绍&lt;/h2>
+&lt;p>3.7版本增加了不下30多项功能或更新，由于时间关系，今天我主要给大家介绍这5个方面的功能：&lt;/p>
+&lt;ul>
+&lt;li>多云资源对接&lt;/li>
+&lt;li>多云账单管理&lt;/li>
+&lt;li>多云监控告警&lt;/li>
+&lt;li>多云权限管理&lt;/li>
+&lt;li>标签管理&lt;/li>
+&lt;/ul>
+&lt;h3 id="1-多云资源对接">1. 多云资源对接&lt;/h3>
+&lt;p>在3.7版本，我们不断围绕客户需求，支持更多公有云资源的纳管：&lt;/p>
+&lt;ul>
+&lt;li>AWS平台对接Redis&lt;/li>
+&lt;li>Azure平台对接RDS&lt;/li>
+&lt;li>阿里云和华为云NAS文件存储对接&lt;/li>
+&lt;li>移动云对接&lt;/li>
+&lt;li>阿里云、华为云NAT网关支持&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-多云账单管理">2. 多云账单管理&lt;/h3>
+&lt;p>2.1 支持AWS的预留实例分析，包括RI推荐及RI覆盖率，帮助客户用好RI，节约成本&lt;/p>
+&lt;p>&lt;img src="./03.png" alt="">&lt;/p>
+&lt;p>&lt;img src="./04.png" alt="">&lt;/p>
+&lt;p>2.2 支持价格对比功能，同配置全网比价，帮助客户发现便宜资源&lt;/p>
+&lt;p>&lt;img src="./05.png" alt="">&lt;/p>
+&lt;p>2.3 支持所有平台费用报告及定期发送&lt;/p>
+&lt;p>&lt;img src="./06.png" alt="">&lt;/p>
+&lt;p>2.4 支持预算管理功能，并且可以配置预算告警，防止费用超支&lt;/p>
+&lt;p>&lt;img src="./07.png" alt="">&lt;/p>
+&lt;p>2.5 费用优化迭代，更多纬度节省费用，帮助用户发现更多可以优化成本的途径&lt;/p>
+&lt;p>&lt;img src="./08.png" alt="">&lt;/p>
+&lt;h3 id="3-多云监控告警">3. 多云监控告警&lt;/h3>
+&lt;p>3.1 支持自定义监控面板，一次定义，随时查看&lt;/p>
+&lt;p>&lt;img src="./09.png" alt="">&lt;/p>
+&lt;p>3.2 报警策略支持函数及静默期设置，有效避免毛刺、报警泛滥等问题&lt;/p>
+&lt;p>&lt;img src="./10.png" alt="">&lt;/p>
+&lt;p>3.3 支持自动化安装监控插件，可显示内存使用率等更多监控指标&lt;/p>
+&lt;p>&lt;img src="./11.png" alt="">&lt;/p>
+&lt;p>3.4 大屏增加地图，可根据资源城市进行分布&lt;/p>
+&lt;p>&lt;img src="./12.png" alt="">&lt;/p>
+&lt;p>3.5 增加监控总览，可以查看告警情况及平台各纬度使用情况&lt;/p>
+&lt;p>&lt;img src="./13.png" alt="">&lt;/p>
+&lt;h3 id="4-多云权限管理">4. 多云权限管理&lt;/h3>
+&lt;ul>
+&lt;li>在一个地方创建及管理所有云平台的子账号，并分配权限&lt;/li>
+&lt;li>通过云管壹云控制台可一键跳转免密登录公有云控制台&lt;/li>
+&lt;li>员工离职，自动注销对应的公有云账号&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="./14.png" alt="">&lt;/p>
+&lt;h3 id="5-标签管理">5. 标签管理&lt;/h3>
+&lt;ul>
+&lt;li>标签支持CMP与公有云平台双向同步&lt;/li>
+&lt;li>标签搜索增强，支持特殊符号复杂搜索&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="./15.png" alt="">&lt;/p>
+&lt;p>除以上5大功能的更新外，我们其实还有很多细节更新，在这里就不在展开给大家介绍，感兴趣的同学可以看一下以下总结&lt;/p>
+&lt;p>&lt;img src="./16.png" alt="">&lt;/p>
+&lt;h2 id="三功能规划">三、功能规划&lt;/h2>
+&lt;p>我们近期的功能规划主要是以下6个方面&lt;/p>
+&lt;ul>
+&lt;li>京东云对接，我们有客户对京东云资源的纳管有需求&lt;/li>
+&lt;li>Azure RI&amp;amp;CPP使用率、覆盖率以及推荐&lt;/li>
+&lt;li>产品内置负载均衡支持VPC网络（这个是我们私有云的功能）&lt;/li>
+&lt;li>公有云账单的二次定价，我们很多MSP厂商的需求&lt;/li>
+&lt;li>公有云WAF产品对接&lt;/li>
+&lt;li>监控报警的迭代，后期也会增加监控数据报表的功能&lt;/li>
+&lt;/ul>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>好的，今天直播咱们就到这里，咱们简单的总结一下今天的内容：&lt;/p>
+&lt;p>产品简介，在多云趋势的背景下，云联壹云产品希望帮助用户解决异构资源管理问题，提升企业IT基础设施管理效率，以及云联壹云带给客户省人省事、省钱、安全三大产品价值；&lt;/p>
+&lt;p>3.7版本新功能介绍，主要给大家介绍了多云对接、多云账单管理、多云监控告警、多云权限管理以及标签管理5大模块的功能或更新；&lt;/p>
+&lt;p>功能规划，我们近期将会围绕京东云对接、AzureCPP、内置负载均衡支持VPC、公有云账单二次定价、公有云WAF对接、监控迭代5大方面展开产品的功能设计与实现。&lt;/p>
+&lt;p>感谢大家百忙之中参加我们的Meetup，下次直播再见。&lt;/p></description></item><item><title>Blog: 直播回顾：Cloudpods负载均衡的功能介绍</title><link>https://www.cloudpods.org//v3.7/zh/blog/2021/05/31/cloudpods-lb-application-intro/</link><pubDate>Mon, 31 May 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2021/05/31/cloudpods-lb-application-intro/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 周有松&lt;/p>
+&lt;p>各位朋友大家好，欢迎大家在周三的晚上参加我们的线上Meetup分享。我是周有松，目前负责云联壹云网络相关功能的开发工作，今天分享的题目是“云上负载均衡产品的应用”。&lt;/p>
+&lt;p>今天的内容会从以下几个方面展开：&lt;/p>
+&lt;ul>
+&lt;li>负载均衡产品简介。主要介绍负载均衡作为一个云上产品，它的功能模型是怎样的，日常使用中会遇到的业务词汇&lt;/li>
+&lt;li>负载均衡的功能与典型应用场景。这部分主要结合业务词汇，对负载均衡服务中常见的一些功能选项进行介绍，并举例介绍一些典型的应用场景&lt;/li>
+&lt;li>最后，我们做一下总结，讨论一下负载均衡产品相比传统方式的优点&lt;/li>
+&lt;/ul>
+&lt;h2 id="一产品简介">一、产品简介&lt;/h2>
+&lt;h3 id="1-以nginx为例">1. 以NGINX为例&lt;/h3>
+&lt;p>提到负载均衡，我们以前一般先会想到NGINX，或者淘宝的分支Tengine。我们先来看看&lt;/p>
+&lt;ul>
+&lt;li>它是怎样工作的&lt;/li>
+&lt;li>它解决了什么样的问题&lt;/li>
+&lt;li>它适合什么样的应用场景&lt;/li>
+&lt;/ul>
+&lt;img alt="Nginx example" src="01.png">
+&lt;p>在加入了NGINX之后，客户端（Client IP）首先与NGINX建立连接（Virtual IP+Virtual Port），请求也先发给NGINX，再由NGINX从多个后端服务器中选择一台，建立连接后把请求转发给后端服务器（Real IP）。&lt;/p>
+&lt;p>NGINX作为网络转发节点，不参与后端服务的业务逻辑处理。而相比客户端直连后端，多个后端服务器可同时处理业务请求，应用的服务能力得到水平扩展。同时，转发节点上可以对后端做健康检查，自动屏蔽掉不健康的后端服务器，保障业务的高可用，使得单个后端服务器在故障、升级、过载时依然对用户连续可用。&lt;/p>
+&lt;p>因此，我们说水平扩展、高可用是负载均衡解决的最基本的两个问题。从另外一方面来说，使用负载均衡的业务，在架构设计上应该是能够水平扩展的。比如，一个应用的多个实例之间不需要通信，相互之间没有复杂的状态维护。&lt;/p>
+&lt;h3 id="2-业务词汇">2. 业务词汇&lt;/h3>
+&lt;p>在使用云上负载均衡的时候，不管哪个厂商的产品，我们会遇到一些常用的业务词汇。我们围绕一张图来简要介绍。&lt;/p>
+&lt;p>&lt;img src="./02.png" alt="">&lt;/p>
+&lt;p>负载均衡实例，除了区域、可用区之外，每个实例至少有一个IP地址。同一个负载均衡实例下可以有多个监听，每个监听一般至少有协议、端口两个属性。后面还会介绍监听的其它属性，比如调度算法、健康检查、转发策略等。&lt;/p>
+&lt;p>实例和监听对应到NGINX上，其实是Virtual IP和Virtual Port的组合。每个监听有一个后端服务器组，组内可以有多个后端服务器，监听将来自客户端的请求转发给后端服务器（Real IP、Real Port）。&lt;/p>
+&lt;p>对于HTTPS协议的监听，我们还会遇到TLS证书的概念。&lt;/p>
+&lt;p>通常每个监听还可以绑定一个访问控制列表，用来设置黑名单、白名单，限定业务的服务范围。&lt;/p>
+&lt;p>将业务词汇放到转发模型上，我们可以得到这样一张图。在壹云的负载均衡实现中，转发节点使用HAProxy负责具体的流量转发。实例和监听的配置被转换为HAProxy的配置应用到转发节点上。HAProxy据此将流量转发到后端服务器组。&lt;/p>
+&lt;p>&lt;img src="./03-1.png" alt="">&lt;/p>
+&lt;h2 id="二功能与应用场景">二、功能与应用场景&lt;/h2>
+&lt;h3 id="1-监听协议">1. 监听协议&lt;/h3>
+&lt;p>一般来说，负载均衡监听支持的传输层协议为TCP、UDP，应用层一般支持HTTP、HTTPS。其中对HTTP协议的支持一般包括HTTP/1.0，HTTP/1.1，HTTP/2，以及WS（WebSocket），WSS（WebSocket Secure）等。&lt;/p>
+&lt;p>除此之外，许多厂商的负载均衡产品也陆续开始了QUIC协议的支持。QUIC有时也被称作HTTP/3，它的传输层协议类型为UDP。壹云的负载均衡产品基于HAProxy，它将会随着HAProxy 2.5的发版实现对QUIC协议的支持。&lt;/p>
+&lt;p>同实例下的多个监听，传输层协议相同时，端口必须不能冲突。比如，同一实例下，无法TCP/80和HTTP/80的两个监听只能选其一。但是TCP/53和UDP/53的两个监听可以同时存在。&lt;/p>
+&lt;p>从开销来说，HTTPS因为涉及到TLS协商和传输加解密，开销最大。HTTP其次，相比TCP协议转发节点需要对传输的数据做内容解析。TCP作为有状态的连接，相比UDP开销又要大一些。&lt;/p>
+&lt;p>图中展示的是壹云控制台中负载均衡监听创建的第1步。其中，端口对所有协议类型都是必选的项。创建HTTPS监听时，要求必须关联相应的TLS证书。对于WS、WSS的支持是默认就有的。&lt;/p>
+&lt;p>主流的浏览器要求HTTP/2必须运行在加密信道上，一般来说，负载均衡产品对于HTTPS监听默认开启HTTP/2的支持。极个别情况下，某些应用的客户端遇到HTTP/2时会有兼容性问题，所以负载均衡产品通常也会提供开关，允许显式将HTTP/2支持关闭。&lt;/p>
+&lt;p>&lt;img src="./03.png" alt="">&lt;/p>
+&lt;h3 id="2-调度算法">2. 调度算法&lt;/h3>
+&lt;p>监听收到客户端的请求后，从后端服务器组中选出一个后端做转发。这个算法通常就叫“调度算法”。一般来说我们常用的有3种：&lt;/p>
+&lt;p>&lt;img src="./04.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>轮询，round robin。这种策略比较适用于短连接、短生命周期的业务，比如网页浏览。每打开一个网页，通常需要下载HTML、CSS、JS、字体等文档，每个请求大约秒级、毫秒级即可完成。这种场景下，轮询作为一种简单的算法，能够实现较好的均衡效果。&lt;/li>
+&lt;li>最小连接数，least connected。转发节点会记录它与每个监听的后端服务器的当前活跃的连接数，在转发请求时，从中选择一个活跃连接数最少的后端。这种算法较适合长连接、生命周期较长的业务，比如大文件上传下载、长时的交互会话如SSH等。&lt;/li>
+&lt;li>源一致性哈希。在这类算法中，转发节点通常会对请求来源标记一个身份，比如源IP地址、请求中的某个HTTP cookie值等。对于来自同一个标记的请求，将其转发到上次选择的后端服务器。这种算法较适合需要维护会话缓存、关联状态的业务。例如，某些业务后端收到请求后，需要从别处获取并缓存该请求相关的信息，比如订单详情、关联的用户详情等等，如果来自同一个用户的请求依然送到同一个后端，使得缓存使中率提高。这种对Locality的利用对应用的体验提升较好。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="./05.png" alt="">&lt;/p>
+&lt;h3 id="3健康检查">3.健康检查&lt;/h3>
+&lt;p>健康检查是一种负载均衡服务实现高可用，保障业务连续性的机制。通过健康检查结果，转发节点将不健康的后端向用户屏蔽，实现故障、升级等行为对用户的无感知。&lt;/p>
+&lt;p>云上负载均衡的健康检查通常有以下几种：&lt;/p>
+&lt;ul>
+&lt;li>TCP检查。即通过TCP连接是否能够成功建立判断后端的健康与否，连接建立成功后会立即发出RST报文中断连接，减少后端资源占用。使用这种健康检查时，在后端的日志中可能会周期出现“connection reset”字样的信息，是预期中的效果。&lt;/li>
+&lt;li>UDP检查。一般的机制是，向后端服务器发送指定内容的请求，在约定时间内若能收到来自后端的响应，并且响应内容匹配，则认为此次检查结果为健康。由于UDP是无状态连接协议，因此配置的参数里除了指定请求、响应的内容，还需指定响应超时时间。&lt;/li>
+&lt;li>HTTP检查。通常通过向后端发送HEAD请求，对响应的状态码做检查来判断健康与否。默认的配置一般是2xx、3xx的响应判定为健康，4xx、5xx判定为故障。对状态码的归类一般也是可配置的。&lt;/li>
+&lt;/ul>
+&lt;p>云上负载均衡产品一般会某个后端的检查结果，作为一个初步诊断。一般会有连接超时、连接错误、响应错误等。当所有后端都被判定为不可用时，对于HTTP/HTTPS类型的监听，转发节点通常会直接返回503 Service Unavailable。&lt;/p>
+&lt;p>&lt;img src="./06.png" alt="">&lt;/p>
+&lt;h3 id="4-http转发策略">4. HTTP转发策略&lt;/h3>
+&lt;p>转发策略是针对HTTP/HTTPS监听为言的。简单来说，它通过匹配用户请求中的Host、Path字段来决定将请求转发到哪个后端服务器组。&lt;/p>
+&lt;p>首先，同一监听下的多个转发策略共用一个IP、端口组合，实现了复用，并且业务的域名和路径统一管理，无需配置到每一台后端服务器上。例如，我们可以将wiki.example.com, task.example.com解析到同负载均衡实例的IP地址，然后创建一个HTTPS监听，再创建2个转发策略，分别匹配这两个域名，实现不同的转发路径。也可以通过共用域名解析，分配不同URL路径（/wiki，/task）的方式实现相同的效果。&lt;/p>
+&lt;p>另外，同一监听下的转发策略可以共用监听自身的ACL规则，共享监听的带单和速率控制，因此管理、配置会明晰简单。&lt;/p>
+&lt;p>&lt;img src="./07.png" alt="">&lt;/p>
+&lt;h3 id="5-会话保持">5. 会话保持&lt;/h3>
+&lt;p>&lt;img src="./08.png" alt="">&lt;/p>
+&lt;p>会话保持也叫Sticky Session，适用于HTTP/HTTPS类型的监听。它是一种通过在HTTP cookie中嵌入后端标识的方式指定请求的转发路径。根据Set-Cookie的时间不同，通常有两个选项：&lt;/p>
+&lt;p>Server模式。后端服务器知道自己的标识，在返回响应的时候给出Set-Cookie，经过转发节点交给浏览器后，记录在浏览器。转发请求下次收到该浏览器的请求时会看到相应的Cookie值，将其转发到上次的后端服务器。&lt;/p>
+&lt;p>Insert模式。转发节点收到后端服务器的响应后，再转发给浏览器前会加入Set-Cookie头部，这个值之后会记录在浏览器中。转发节点下次收到浏览器的请求时，若其中包含此cookie，它会将其去除之后再转发给后端服务器。因此，在Insert模式下，后端服务器感知不到此cookie的存在。&lt;/p>
+&lt;h3 id="6-跳转">6. 跳转&lt;/h3>
+&lt;p>&lt;img src="./09.png" alt="">&lt;/p>
+&lt;p>HTTP/HTTPS协议的监听可以指定跳转目标。这种情况下，监听无需绑定后端服务器组。&lt;/p>
+&lt;p>跳转类型的监听通常用来实现HTTP到HTTPS的跳转，实现全站加密访问。例如，在明文HTTP协议下，有些宽带运营商可能会篡改应用的响应，在其中插入广告等信息，某些情况下还可能导致信息安全问题。强制HTTPS跳转作为一种应对措施，可以帮助实现用户到站点的端到端保密信道。&lt;/p>
+&lt;p>另外，跳转还可以用来实现站点的迁移、应用的升级场景里。当迁移、升级完成后，通过跳转将用户请求转移到新站点，旧的URL依然可用，迁移升级过程对用户无感知，回滚也非常便捷。&lt;/p>
+&lt;h3 id="7-访问控制">7. 访问控制&lt;/h3>
+&lt;p>&lt;img src="./10.png" alt="">&lt;/p>
+&lt;p>监听可以指定访问控制列表（ACL），并指定该列表的类型是黑名单还是白名单。&lt;/p>
+&lt;p>有时我们有一些内部接口、服务需要只能够有限开放，比如同公司另外一个机房，或者不同公司的合作伙伴等。此时通过访问控制列表实现就非常方便，在界面上统一管理、备注。&lt;/p>
+&lt;p>另外一种情况下，有些应用我们需要限定服务区域，比如版权、监管的原因等。此时我们可以将服务区域的来源地址做成白名单，仅开放应用给这些区域。网络控制在负载均衡一处完成，整个过程应用本身无需配置变更。&lt;/p>
+&lt;p>&lt;img src="./11.png" alt="">&lt;/p>
+&lt;h3 id="8-获取客户端真实ip">8. 获取客户端真实IP&lt;/h3>
+&lt;p>&lt;img src="./12.png" alt="">&lt;/p>
+&lt;p>从产品简介中我们可以看到，客户端的连接和请求终结在转发节点上，后端服务器看到的连接都来自转发节点。此时，后端看到的网络层源IP也都是转发节点的地址。负载均衡产品一般提供提供了以下几种方式让后端服务器能够获取客户端的源IP地址：&lt;/p>
+&lt;p>对于HTTP/HTTPS协议，转发节点可以通过HTTP头部来传递客户端的源地址，头部的名称一般为X-Forwarded-For。&lt;/p>
+&lt;p>对于其它协议，一般通过PROXY协议来向后端服务器传递此信息。PROXY协议由HAProxy项目制订，AWS的负载均衡即支持此规范，另外还有NGINX、LightHTTPd也是支持此协议的。举例来说，对于TCP连接，PROXY协议会在连接建立后先进行连接信息传递，之后才是正常的数据交换。因此，如果PROXY协议直接对接应用服务，需要对应用服务的连接入口进行微小的修改。&lt;/p>
+&lt;p>一部分云厂商在整个负载均衡转发面实施会话记录、地址转换，使得虚机作为后端服务器时看到源地址即为客户请求的源地址，此时无需额外机制获得客户端的真实IP地址。需要注意的是，对于内网负载均衡，服务器在访问自身作为后端监听时，会出现因为源、目的IP地址都是自己而造成路径不通，这是这种机制的一个小限制。&lt;/p>
+&lt;h3 id="9-请求速率控制">9. 请求速率控制&lt;/h3>
+&lt;p>&lt;img src="./13.png" alt="">&lt;/p>
+&lt;p>壹云的负载均衡对于HTTP/HTTPS类型的监听可以实施请求速率控制。分为两个方面：&lt;/p>
+&lt;p>一是对监听整体进行速率控制。例如，某个应用现在的服务能力是每秒3000个请求，为了保护后端服务器，避免过载造成雪崩效应等，我们可以设定整体的速率控制。&lt;/p>
+&lt;p>二是对每个来源IP地址进行控制。这个可以用于阻止来自单个客户的高频异常请求，比如刷单、爬虫类请求等&lt;/p>
+&lt;h3 id="10-tls证书">10. TLS证书&lt;/h3>
+&lt;p>最后，我们简单介绍一下TLS证书。用户在使用负载均衡时，经常反馈在证书上传这一步产生困惑。&lt;/p>
+&lt;p>首先，从非对称加密算法的类型来说，证书一般分别为RSA、EC证书两类。其中EC证书也叫椭圆曲线证书，相对较新一些，大部分平台也是支持的。&lt;/p>
+&lt;p>上传证书时，一般要求同时上传证书、私钥两个文件或文件的内容。这两者是成对出现的。云平台一般支持PEM格式的证书和私钥，为base64编码带标识头的文本格式。与之对应通常叫DER格式，它是ASN.1编码的二进制格式。如果用文本编辑器打开证书和私钥文件，看到的是规整的ASCII字符串，那么应该是PEM格式，如果是乱码状态，很可能就是DER格式了。&lt;/p>
+&lt;p>图中是常见的3种私钥PEM文件头。PKCS是RSA Laboratory制定的一系列标准。其中PKCS#8支持封装多种加密算法的私钥，因此此种格式的PEM私钥有可能是RSA或者EC格式的私钥。&lt;/p>
+&lt;p>&lt;img src="./14.png" alt="">&lt;/p>
+&lt;p>图中展示了壹云控制台中证书列表的菜单位置。从中可以看到证书上传后，可以直接看到证书的CN（Common Name）。SAN（Subject Alternative Name），以及过期时间。在“操作”列中，若“删除”操作为灰色禁用状态，一般表示该证书正被HTTPS监听关联使用&lt;/p>
+&lt;p>&lt;img src="./15.png" alt="">&lt;/p>
+&lt;p>我们可以从证书的详情中，找到与它关联的监听列表，实现对所有监听批量更新证书。&lt;/p>
+&lt;p>&lt;img src="./16.png" alt="">&lt;/p>
+&lt;h2 id="三总结">三、总结&lt;/h2>
+&lt;p>以上结合实际的场景对负载均衡产品做了一个简略的介绍，我们经常被问到，这些功能特性都可以通过自己搭建NGINX一步一步配置出来，为什么还要花钱用云上的产品呢？&lt;/p>
+&lt;p>首先，作为一种模块化封装的产品，负载均衡的主要优势在于简便、高效。自建NGINX时，我们需要自己配置集群高可用，考虑集群的水平扩展和扩容。在生产环境时还需要配置自己的监控、告警策略。在管理层面，权限管理和操作过程审计也必不可少，然而NGINX作为基础组件与这些上层概念距离较远，需要较复杂的过程才可实现相等效果。&lt;/p>
+&lt;p>其次，云上负载均衡通常都有开放的API，可通过编程与周边系统对接，灵活应对需求。&lt;/p>
+&lt;p>从企业IT资产管理的角度来说，负载均衡代表着更先进的生产力。壹云控制台上的信息呈现相比命令行中单字符控制来说，更加一目了然，操作也更加简便，使得对于操作结果的可预期性更强。&lt;/p></description></item><item><title>Blog: 面向未来的 IT 基础设施管理架构——融合云（Unified IaaS）</title><link>https://www.cloudpods.org//v3.7/zh/blog/2019/06/13/unified-iaas-for-future/</link><pubDate>Thu, 13 Jun 2019 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.7/zh/blog/2019/06/13/unified-iaas-for-future/</guid><description>
+&lt;p>&lt;strong>作者:&lt;/strong> 邱剑&lt;/p>
+&lt;p>随着数字化时代的到来，IT系统已成为人类社会正常运转不可或缺的组成部分。不远的未来，智能制造，5G和人工智能等技术将成为推动生产力发展的重要引擎，人类社会将面临前所未有的全面彻底的数字化浪潮。IT基础设施作为IT系统运行的平台和载体，是实现数字化的基石。在这场数字化浪潮中，企业必须积极拥抱云计算技术，采用符合技术发展趋势、面向未来的IT基础构架，才能在未来的竞争中赢得先机。&lt;/p>
+&lt;h2 id="一云计算历经十余年发展的趋势判断">一、云计算历经十余年发展的趋势判断&lt;/h2>
+&lt;p>云计算技术自2006年AWS推出第一个公有云服务S3开始，发展到2019年的今天，一些格局和趋势开始逐步清晰：&lt;/p>
+&lt;p>首先，私有云依然是大中型企业以及一些细分行业，例如政务、金融、医疗、教育、能源和制造等的首选IT基础设施。随着各大公有云厂商陆续推出其公有云在政企客户私有化部署的扩展方案，例如AWS Outposts、Azure Stack，Google Anthos，以及国内阿里云、腾讯云等的私有云／专有云部署方案，“私有云是否会随着公有云的发展逐步消亡”的命题已被公有云厂商自己否定。事实证明，私有云将长期持续存在，将和公有云共生，成为企业IT基础设施的一个重要组成部分。&lt;/p>
+&lt;p>其次，公有云持续迅猛发展，逐步成为企业IT基础设施的主要提供者。2018年Q3云硬件支出占IT总收入的50.9%。2018年中国私有云基础架构支出38.0亿美元，公有云基础架构支出达到82亿美元（来源：IDC）。因此，公有云已经成为IT基础设施的最主要提供者。尤其对于中小企业而言，其IT基础设施可能完全构建在公有云之上。同时，一些处于技术领先行业的大型企业，例如互联网，金融，制造等，也已经开始使用公有云，探索结合公有云和私有云优势的混合云架构。&lt;/p>
+&lt;p>与此同时，公有云市场竞争异常激烈，最后将只剩下少数技术和资本都十分雄厚的玩家，进入寡头垄断市场阶段。一方面，公有云厂商提供的产品和服务本质相同，都是IT基础设施资源以及其上的软件服务，另一方面，各家厂商都极力完善自身产品，丰富产品线，做出特色，以获得竞争优势，吸引增量用户，避免存量用户的流失。因此，最终公有云提供的产品功能矩阵都基本趋同，但是在特色功能、区域覆盖、用户体验方面则各有千秋，差异很大。随着用户对公有云产品服务依赖的加深，公有云之间的服务切换和迁移将变得越来越难，云和云之间存在隐形的鸿沟。当然，公有云进入寡头垄断阶段也意味着公有云供应商列表将长期保持相对稳定，这意味着针对所有公有云API的适配成本将变得可控可行。&lt;/p>
+&lt;p>还有一个不容忽视的趋势是Kubernetes已成为容器编排的事实标准，逐步成为云原生时代应用部署和运行的标准环境。随着Kubernetes对存储、网络支持的逐步完善，不仅无状态服务可以在Kubernetes上部署运行，有状态的数据存储服务也可以在Kubernetes上运行。同时，基于Kubernetes之上已经发展出了一个繁荣并且强大的开源软件生态和完整的工具链，例如Helm实现软件套件的自动部署，Operator实现软件的自动化运维，lstio提供微服务RPC通信治理架构，Knative提供Serverless的运行框架等等。可以预见，Kubernetes将成为未来分布式应用的标准运行时环境，成为分布式应用时代的“Linux”。Kubernetes之上将构建出一个完全由开源软件主导的软件生态，不仅仅包含应用软件，还包含各种PaaS中间件，例如消息中间件，各类开源数据库，开发框架，AI训练框架等，真正实现&amp;quot;开源统治世界&amp;quot;的愿景。正是基于这个趋势判断，各大公有云厂商都相继推出了自己的Kubernetes解决方案，允许原生Kubernetes在自己的云平台上更高效运行。&lt;/p>
+&lt;h2 id="二企业未来it基础设施的确定和不确定">二、企业未来IT基础设施的确定和不确定&lt;/h2>
+&lt;p>基于这些事实和趋势，我们可以想象未来的企业IT基础设施将是这样：&lt;/p>
+&lt;p>首先，混合云架构是企业的最佳选择。&lt;/p>
+&lt;p>将来企业的IT基础设施方案，公有云和私有云不再是二选一的选项，而是一个完整的IT基础设施的两个必然组成部分。一方面，企业可能会有自己的私有云，但也存在一些完全运行在公有云的企业。另一方面，企业必然会使用公有云，其购买的公有云资源将成为其私有IT基础设施的一部分。&lt;/p>
+&lt;p>其次，Kubernetes将会成为企业云原生应用的标准运行环境。&lt;/p>
+&lt;p>就像企业今天企业应用都运行在Linux中一样，将来的企业服务将云原生化，分布化，运行在Kubernetes中。企业将会有若干Kubernetes集群，运行着不同的应用，分布在不同的基础设施之上，有的运行在本地IDC，有的运行在私有云，有的运行在公有云。&lt;/p>
+&lt;p>以上两点是公认比较确定的论断，但是还有其他很多问题目前没有确定性的结论，例如：&lt;/p>
+&lt;p>1、虽然使用公有云是企业必然的选择，但是企业会在使用多个公有云还是单一公有云进行抉择。采用多公有云方案的原因很多，收益也显而易见，例如避免供应商锁定，提高议价的能力，获得更丰富的功能特性和地域选择等。但同时，使用多个公有云资源的统一管理难度大，云间服务切换和迁移成本较高的问题则阻碍了用户选择多个公有云。&lt;/p>
+&lt;p>2、虽然云计算技术发展了十多年，但是依然有很大比例的企业的本地IT基础设施并未云化，既没有通过私有云管理，甚至都没有采用虚拟化技术。虽然未来的云原生应用将运行在Kubernetes的容器环境中，但是企业还有很多未容器化的传统应用。而且，实事求是地讲，对于大多数企业来讲，也许未来很长一段时间，依然是以非云原生的传统应用为主。因此，企业未来的IT基础设施并不能简单地假设为全部都归一化地运行Kubernetes，而是应该给这些传统应用提供运行所需的虚拟机或者裸机环境。这类企业云转型过程中是否还是需要经过私有云-混合云-多云的漫长路径，再部署一套私有云实现本地IT基础设施的云化？&lt;/p>
+&lt;p>3、一方面，随着业务发展和行业驱动，企业对IT基础设施的要求，无论是规模、效率还是稳定性都将越来越苛刻。敏捷开发和DevOps将成为企业的标配。另一方面，随着技术的发展，企业IT基础设施也将愈发复杂和难以驾驭。企业IT资源将不仅是物理服务器，还有虚拟机，容器，除了x86，还会有小型机、ARM，甚至还有GPU、FPGA、TPU等异构计算资源。网络和存储也有多种技术选择。同时，截止今日，仅主流公有云供应商在全球200多个区域500多个可用区提供上千种云产品和服务。只要企业愿意，一个全球规模的IT基础设施唾手可得。企业IT人员如何应对IT基础设施在规模、效率和复杂度方面的挑战？&lt;/p>
+&lt;p>4、即使未来的企业IT基础架构将收敛到完全运行在Kubernetes上，单个Kubernetes集群往往只用于一个单一特定目的，例如特定部门的测试或生产集群，企业内有多个Kubernetes集群是常态。管理多Kubernetes集群，尤其是部署在多云环境下的多Kubernetes集群依然是一个难题。虽然Kubernetes屏蔽了底层基础设施的差异，向上提供了一致的接口和运行环境，但是Kubernetes在各个公有云以及本地IDC的管理接口以及网络存储方案都没有统一，在新建、扩容和调整配置Kubernetes集群时候，依然面临对接多个供应商接口的问题。同时，分布在多个公有云上的Kubernetes集群之间没有打通，不仅控制信息无法同步，数据链路层面更是相互隔离，互为孤岛。因此无法实现多个集群的联动，更无法实现集群之间的切换和协同。多云环境下的Kubernetes集群方案依然有待探索。&lt;/p>
+&lt;p>5、随着Kubernetes生态的完善，用户在公有云上使用PaaS服务将有两个选择：使用公有云提供的PaaS服务还是基于Kubernetes的云原生开源PaaS服务。前者产品化程度高，更加易于使用，能得到商业支持。但也存在被商业产品锁定，切换困难，使用费用高昂的问题。使用后者则需要对开源软件有一定掌控力，但是价格便宜（云主机的使用费），基于开源技术，有强大社区支持，架构开放灵活且易于扩展。&lt;/p>
+&lt;h2 id="三融合云unified-iaas面向未来的it基础设施架构选择">三、融合云（Unified IaaS），面向未来的IT基础设施架构选择&lt;/h2>
+&lt;p>针对以上确定性结论和不确定问题，我们的答案是面向未来的IT基础设施架构管理的最佳选择是融合云（Unified IaaS）。顾名思义，所谓融合云就是融合管理分布在多云环境（本地IDC，私有云和公有云）中的所有IT基础设施，构建一个“云上之云”的融合IaaS平台。融合云本质上是私有云，但是管理的IT资源的范围不再局限于本地IDC，还包括企业在公有云购买的IaaS资源。对于纯公有云架构的企业，融合云管理的则完全是企业购买的公有云资源。融合云和传统云平台的区别不在于管理的资源范围的不同，而在于针对上述企业IT的发展趋势和问题，在设计理念上，融合云和传统的云平台有如下不同：&lt;/p>
+&lt;p>首先，融合云面向的是多云环境。&lt;/p>
+&lt;p>融合云的部署场景中，企业用户IT基础设施不仅包含部署在本地IDC的部分，还包含用户在公有云购买的部分。融合云通过一个平台管理企业所有的IT基础设施。首先是在管理平面的统一和融合，实现私有云和公有云资源的统一API访问，不仅实现资源的管理，还包括账单的统一，资源管理的统一。让用户跨云调用就像使用一个云平台一样的便利。其次是数据平面的打通，通过和跨云网络方案的整合，实现控制平面和数据平台的协同，达到整个平台的跨云内网的互通。另外，融合云还将提供跨云数据迁移的工具，方便用户实现跨云的应用迁移。总之，融合云的目标就是填补云和云之间的鸿沟，降低跨云切换和迁移的成本，让多云部署更简单。&lt;/p>
+&lt;p>其次，融合云实现企业整体异构IT基础设施的全面云化。&lt;/p>
+&lt;p>融合云不仅能管理已经云化的私有云和公有云资源，还需内置了管理裸机的裸金属云，KVM和VMware ESXi等虚拟化技术、以及ARM，GPU等计算资源的私有云技术。对于还没有部署私有云的企业，通过部署融合云，一步到位地实现企业私有IT基础设施的私有云化，实现裸金属、KVM、VMware ESXi、GPU等的云化管理，无需再引入额外的私有云方案，降低了企业上云的实施成本和管理复杂度。&lt;/p>
+&lt;p>第三，智能将是融合云的核心特征。&lt;/p>
+&lt;p>融合云一方面优化IT资源分配的调度策略，找出闲置浪费的IT资源，提升IT资源的利用率。另一方面提前预测资源需求和发现系统故障隐患，确保系统的平稳运行和扩展。通过数据和算法，使得IT基础设施更加智能，帮助企业IT人员驾驭未来的IT基础设施在规模、效率和复杂度方面的挑战。&lt;/p>
+&lt;p>第四，融合云面向的是Kubernetes。&lt;/p>
+&lt;p>融合云一方面实现多云环境下Kubernetes底层基础设施的统一和融合。一是通过统一的API为Kubernetes提供多云环境下统一的IaaS接口，为跨云部署Kubernetes环境提供便利。二是在数据平面打通跨云Kubernetes的内网，实现跨云通信。另一方面则直接提供统一的Kubernetes集群管理控制API以及集群信息的同步机制，实现跨集群Kubernetes的统一管控，实现跨Kubernetes集群的账号、权限、配置的同步和统一。&lt;/p>
+&lt;p>最后，融合云全面拥抱开源技术。&lt;/p>
+&lt;p>软件发展的历程表明PaaS的未来是开源。供应商都无法仅凭一己之力满足企业客户所有的PaaS需求。因此，融合云聚焦于企业分布在本地IDC和公有云的计算、网络和存储IaaS资源的统一管理，为多云Kubernetes提供可靠的底层基础设施，Kubernetes之上的软件和应用需求则依赖开源生态来提供解决方案。融合云用户对PaaS的需求通过Kubernetes应用市场，通过整合开源PaaS应用向用户提供服务。这一方面降低用户使用开源PaaS的技术门槛，另一方面则依赖强大的开源社区给用户提供开放灵活丰富的软件产品，避免私有PaaS软件对用户的锁定。&lt;/p>
+&lt;p>基于以上的设想，融合云的架构如下所示。&lt;/p>
+&lt;img src="unified_iaas.jpg" alt="Architecture of Unified IaaS">
+&lt;p>向下：融合云统一管理多云基础设施，主要实现多云环境下计算、网络、存储等IaaS资源的统一管理。对于本地IDC的未云化资源，主要是裸机，KVM虚拟机（Libvirt），VMware ESXi虚拟机（vSphere），通过内置的私有云方案实现云化管理。对于私有云和公有云资源，则通过API实现统一管理。&lt;/p>
+&lt;p>向上：融合云一方面通过虚拟机、裸机等形式为传统应用提供完整操作系统运行时环境，另一方面则给Kubernetes提供多云运行环境，统一管理多云Kubernetes。在Kubernetes之上则提供云原生应用的容器运行时环境。同时，基于Kubernetes和开源组件提供PaaS中间件服务。&lt;/p>
+&lt;p>总之，融合云向下统一管理多云IaaS资源；向上为Kubernetes提供多云支持，通过开源生态满足企业PaaS需求；用户其他需求则可以通过访问公有云的原生服务获得，从而全方位满足未来企业对IT基础设施的多层次需求。&lt;/p>
+&lt;p>随着大数据、人工智能技术的普及，5G时代的到来，IT基础设施变得愈加重要，成为企业数字化转型，全面拥抱数字时代的基石。基于企业IT架构多云趋势，融合云应运而生。融合云是面向未来的企业IT基础设施管理的云平台，针对企业在未来IT基础架构的问题而设计，将帮助企业迎接即将到来的数字化转型的挑战。&lt;/p></description></item></channel></rss>

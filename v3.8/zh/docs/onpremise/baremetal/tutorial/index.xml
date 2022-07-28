@@ -1,6 +1,6 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-操作指南</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 19 Jul 2019 20:25:05 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 纳管物理机</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/create_register_redirect/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/create_register_redirect/</guid><description>
-&lt;p>Cloudpods平台支持纳管物理服务器并基于物理服务器创建裸金属服务器。&lt;/p>
+操作指南</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 08 Feb 2022 16:22:13 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 纳管物理机</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/create_register_redirect/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/create_register_redirect/</guid><description>
+&lt;p>Cloudpods平台支持纳管Linux物理服务器并基于物理服务器创建裸金属服务器。&lt;/p>
 &lt;h2 id="启用baremetal服务">启用Baremetal服务&lt;/h2>
 &lt;p>请确保环境中已启用Baremetal服务，Baremetal服务提供PXE Server、DHCP、TFTP、http等功能，用于完成纳管物理机操作并管理物理机。Cloudpods安装完成后默认不启用Baremetal服务，需要用户按照下面命令在环境中的任意节点上启用Baremetal服务。&lt;/p>
 &lt;ol>
@@ -87,6 +87,16 @@ default-baremetal-agent-fb5d4b5f7-2ld8v 1/1 Running &lt;span style="color:#0000c
 &lt;td>否&lt;/td>
 &lt;td>&lt;/td>
 &lt;/tr>
+&lt;tr>
+&lt;td>托管&lt;/td>
+&lt;td>小规模&lt;/td>
+&lt;td>是&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
 &lt;/tbody>
 &lt;/table>
 &lt;h3 id="iso引导注册">ISO引导注册&lt;/h3>
@@ -94,9 +104,9 @@ default-baremetal-agent-fb5d4b5f7-2ld8v 1/1 Running &lt;span style="color:#0000c
 &lt;ol>
 &lt;li>在Cloudpods平台上配置物理服务器的BMC信息以及管理口IP地址。&lt;/li>
 &lt;li>Baremetal将会通过Redfish API验证物理服务器的BMC信息，进而获取物理服务器的配置信息，如服务器SN、厂商型号以及网卡信息等。&lt;/li>
-&lt;li>验证通过后，物理服务器上的Redfish API将会通过带外网加载Baremetal提供的YunionOS的ISO。&lt;/li>
-&lt;li>进入YunionOS系统后根据配置设置管理口的IP地址，从而使物理服务器可以通过管理网访问Baremetal，上报服务器的SSH登录信息。&lt;/li>
-&lt;li>Baremetal通过SSH调用YunionOS中的工具，收集服务器信息，并进行管理操作等。&lt;/li>
+&lt;li>验证通过后，物理服务器上的Redfish API将会通过带外网加载Baremetal提供的PXE引导系统的ISO。&lt;/li>
+&lt;li>进入PXE引导系统后根据配置设置管理口的IP地址，从而使物理服务器可以通过管理网访问Baremetal，上报服务器的SSH登录信息。&lt;/li>
+&lt;li>Baremetal通过SSH调用PXE引导系统中的工具，收集服务器信息，并进行管理操作等。&lt;/li>
 &lt;li>至此，物理服务器成功注册到Cloudpods平台。&lt;/li>
 &lt;/ol>
 &lt;h3 id="pxe引导注册">PXE引导注册：&lt;/h3>
@@ -105,28 +115,28 @@ default-baremetal-agent-fb5d4b5f7-2ld8v 1/1 Running &lt;span style="color:#0000c
 &lt;li>在Cloudpods平台上配置物理服务器的BMC信息并设置服务器PXE启动等。&lt;/li>
 &lt;li>Baremetal通过IPMI验证物理服务器的BMC信息。&lt;/li>
 &lt;li>验证通过后，收集少量的服务器信息，设置物理服务器为开机启动，物理服务器通过DHCP配置管理口IP地址、&lt;/li>
-&lt;li>通过管理网启动引导物理服务器进入YunionOS，上报SSH登录信息。&lt;/li>
-&lt;li>Baremetal通过SSH调用YunionOS中的工具，收集服务器信息，并进行管理操作等。&lt;/li>
+&lt;li>通过管理网启动引导物理服务器进入PXE引导系统，上报SSH登录信息。&lt;/li>
+&lt;li>Baremetal通过SSH调用PXE引导系统中的工具，收集服务器信息，并进行管理操作等。&lt;/li>
 &lt;li>至此，物理服务器成功注册到Cloudpods平台。&lt;/li>
 &lt;/ol>
 &lt;h3 id="自动注册">自动注册&lt;/h3>
 &lt;p>该方式适用于大规模的服务器自动注册到云管平台，仅要求用户环境存在DHCP Relay，引导注册过程中会重置BMC信息。&lt;/p>
 &lt;ol>
 &lt;li>新上架的物理服务器设置PXE启动上电后，物理服务器接入的三层网关上的DHCP Relay将转发物理服务器的PXE请求到Baremetal。&lt;/li>
-&lt;li>Baremetal服务收到请求后将会响应PXE请求，引导物理服务器从网络加载YunionOS系统并重启进入YunionOS系统，上报服务器的ssh信息，&lt;/li>
-&lt;li>Baremetal通过SSH调用YunionOS中的工具，收集服务器信息，重置服务器BMC信息（如不提供BMC信息，将按照默认的信息进行配置）。&lt;/li>
+&lt;li>Baremetal服务收到请求后将会响应PXE请求，引导物理服务器从网络加载PXE引导系统并重启进入PXE引导系统，上报服务器的ssh信息，&lt;/li>
+&lt;li>Baremetal通过SSH调用PXE引导系统中的工具，收集服务器信息，重置服务器BMC信息（如不提供BMC信息，将按照默认的信息进行配置）。&lt;/li>
 &lt;li>至此，物理服务器成功注册到Cloudpods平台。&lt;/li>
 &lt;/ol>
 &lt;h3 id="预注册">预注册&lt;/h3>
 &lt;p>该方式适用于小规模的服务器注册到云管平台，该方式要求用户环境存在DHCP Relay，且提供服务器的MAC地址，在引导过程中会重置BMC信息。&lt;/p>
 &lt;ol>
 &lt;li>新上架的物理服务器设置PXE启动上电后，物理服务器接入的三层网关上的DHCP Relay将转发物理服务器的PXE请求到Baremetal。&lt;/li>
-&lt;li>Baremetal服务收到请求后将会验证物理服务器的MAC地址是否匹配，匹配成功后将会记录物理服务器的基本信息并响应PXE请求，引导物理服务器从网络加载YunionOS系统并重启进入YunionOS系统，上报服务器的ssh信息，&lt;/li>
-&lt;li>Baremetal通过SSH调用YunionOS中的工具，收集服务器信息，重置服务器BMC信息（如不提供BMC信息，将按照默认的信息进行配置）。&lt;/li>
+&lt;li>Baremetal服务收到请求后将会验证物理服务器的MAC地址是否匹配，匹配成功后将会记录物理服务器的基本信息并响应PXE请求，引导物理服务器从网络加载PXE引导系统并重启进入PXE引导系统，上报服务器的ssh信息，&lt;/li>
+&lt;li>Baremetal通过SSH调用PXE引导系统中的工具，收集服务器信息，重置服务器BMC信息（如不提供BMC信息，将按照默认的信息进行配置）。&lt;/li>
 &lt;li>至此，物理服务器成功注册到Cloudpods平台。&lt;/li>
 &lt;/ol>
 &lt;h3 id="托管">托管&lt;/h3>
-&lt;p>该方式适用于已有操作系统的服务器，该方式对网络无要求。执行托管脚本后将使用容器技术在物理服务器中运行YunionOS收集服务器信息，而不会影响物理机的原有操作系统。&lt;/p>
+&lt;p>该方式适用于已有操作系统的服务器，该方式对网络无要求。执行托管脚本后将使用容器技术在物理服务器中运行PXE引导系统收集服务器信息，而不会影响物理机的原有操作系统。&lt;/p>
 &lt;h2 id="典型组网介绍">典型组网介绍&lt;/h2>
 &lt;p>&lt;img src="../../images/networking1.png" alt="">&lt;/p>
 &lt;h3 id="组网说明">组网说明&lt;/h3>
@@ -228,19 +238,26 @@ server 10.127.100.2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;li>物理服务器管理口IP地址、IP子网或二层网络等。&lt;/li>
 &lt;/ul>
 &lt;ol>
-&lt;li>在云管平台单击左上角&lt;img src="../../user/images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入添加物理机页面，选择添加方式为“ISO引导注册”。&lt;/li>
 &lt;li>配置以下信息：
 &lt;ul>
+&lt;li>指定域：选择物理机所属的域。&lt;/li>
 &lt;li>单条录入：配置以下参数。
 &lt;ul>
-&lt;li>指定域：选择物理机所属的域。&lt;/li>
 &lt;li>物理机名称：设置物理服务器的名称。&lt;/li>
+&lt;li>备注：设置物理机的备注信息。&lt;/li>
 &lt;li>IPMI地址：输入服务器上已配置好的IPMI地址。&lt;/li>
 &lt;li>IPMI用户名：输入服务器上已配置好的IPMI用户名。&lt;/li>
 &lt;li>IPMI密码：输入服务器上已配置好的IPMI密码信息。若输入的BMC信息不正确则无法正确完成引导注册。&lt;/li>
+&lt;li>标签：支持为新建的物理机绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>管理口IP：选择IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。由于ISO引导注册适用于没有DHCP Relay的环境，所以用户必须配置提供服务器管理口接入的IP子网或IP地址信息。&lt;/li>
-&lt;li>只注册不引导：不重启引导进入YunionOS系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
+&lt;li>只注册不引导：不重启引导进入PXE引导系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>模板导入：支持导入含有物理机注册信息的XLSX格式的模板文件。
@@ -248,7 +265,7 @@ server 10.127.100.2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;li>导入物理机信息需要按照预先设定的格式，请先下载模板。&lt;/li>
 &lt;li>在下载的host_template.xlsx文件中补充物理机的信息。所有物理机信息请都放在同一个sheet页面中。&lt;/li>
 &lt;li>单击虚线框或将模板文件拖拽到虚线框，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，上传模板文件。&lt;/li>
-&lt;li>只注册不引导：不重启引导进入YunionOS系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
+&lt;li>只注册不引导：不重启引导进入PXE引导系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
@@ -261,20 +278,27 @@ server 10.127.100.2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;li>物理服务器的BMC信息。&lt;/li>
 &lt;/ul>
 &lt;ol>
-&lt;li>在云管平台单击左上角&lt;img src="../../user/images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/li>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入添加物理机页面，选择添加方式为“PXE引导注册”。&lt;/li>
 &lt;li>配置以下信息：
 &lt;ul>
+&lt;li>指定域：选择物理机所属的域。&lt;/li>
 &lt;li>单条录入：配置以下参数。
 &lt;ul>
-&lt;li>指定域：选择物理机所属的域。&lt;/li>
 &lt;li>物理机名称：设置物理服务器的名称。&lt;/li>
+&lt;li>备注：设置物理机的备注信息。&lt;/li>
 &lt;li>IPMI地址：输入服务器上已配置好的IPMI地址。&lt;/li>
 &lt;li>IPMI用户名：输入服务器上已配置好的IPMI用户名。&lt;/li>
 &lt;li>IPMI密码：输入服务器上已配置好的IPMI密码信息。若输入的BMC信息不正确则无法正确完成引导注册。&lt;/li>
 &lt;li>管理口MAC地址：设置服务器的管理口MAC地址，支持Redfish的服务器无需填写该项。&lt;/li>
 &lt;li>管理口IP：选填。支持选择IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。留空则由DHCP自动分配IP。&lt;/li>
-&lt;li>只注册不引导：不重启引导进入YunionOS系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
+&lt;li>标签：支持为新建的物理机绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>只注册不引导：不重启引导进入PXE引导系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>模板导入：支持导入含有物理机注册信息的XLSX格式的模板文件。
@@ -282,7 +306,7 @@ server 10.127.100.2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;li>导入物理机信息需要按照预先设定的格式，请先下载模板。&lt;/li>
 &lt;li>在下载的host_template.xlsx文件中补充物理机的信息。所有物理机信息请都放在同一个sheet页面中。&lt;/li>
 &lt;li>单击虚线框或将模板文件拖拽到虚线框，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，上传模板文件。&lt;/li>
-&lt;li>只注册不引导：不重启引导进入YunionOS系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
+&lt;li>只注册不引导：不重启引导进入PXE引导系统，勾选该项后，仅收集到服务器的部分信息，此时的服务器无法用于创建裸金属，需要进行检测硬件配置操作使其正式投入生产使用。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
@@ -298,7 +322,7 @@ server 10.127.100.2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;/ul>
 &lt;ol>
 &lt;li>
-&lt;p>在云管平台单击左上角&lt;img src="../../user/images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/p>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入添加物理机页面，选择添加方式为“预注册”。&lt;/p>
@@ -306,14 +330,18 @@ server 10.127.100.2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;li>
 &lt;p>支持3种导入物理机信息的方式。其中单条录入适用于托管单台服务器的场景，批量导入和文件导入适用于一次性托管多台服务器的场景。&lt;/p>
 &lt;ul>
+&lt;li>指定域：选择物理机所属的域。&lt;/li>
 &lt;li>单条录入：配置以下参数。
 &lt;ul>
-&lt;li>指定域：选择物理机所属的域。&lt;/li>
 &lt;li>MAC地址：物理机设备的MAC地址。&lt;/li>
 &lt;li>物理机名称：物理机设备的名称。&lt;/li>
+&lt;li>备注：设置物理机的备注信息。&lt;/li>
 &lt;li>IPMI地址：设置物理机的IPMI地址，当不设置该参数时，若平台上存在IPMI的IP子网，系统将自动为其分配IP地址，一般建议新机器留空，旧机器设置之前的IP地址。&lt;/li>
 &lt;li>IPMI用户名：设置IPMI管理用户名。当不设置该参数时，系统默认使用root用户登录，一般建议新机器留空，旧机器设置之前的用户名。&lt;/li>
 &lt;li>IPMI密码：设置IPMI用户的密码。当不设置该参数时，系统默认密码为YunionDev@123。一般建议新机器留空，旧机器设置之前的密码。&lt;/li>
+&lt;li>标签：支持为新建的物理机绑定标签。支持选择已有标签和新建标签。
+- 新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。
+- 选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
 &lt;li>设置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -379,13 +407,13 @@ $ climc host-create &lt;span style="color:#4e9a06">\
 &lt;/li>
 &lt;/ol>
 &lt;p>&lt;strong>Climc启用自动注册&lt;/strong>&lt;/p>
-&lt;pre>&lt;code># 命令行开启自动注册
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 命令行开启自动注册&lt;/span>
 $ climc service-edit-config baremetal
 ...
-# 自动注册选项，默认为 false
-auto_register_baremetal: true
+&lt;span style="color:#8f5902;font-style:italic"># 自动注册选项，默认为 false&lt;/span>
+auto_register_baremetal: &lt;span style="color:#204a87">true&lt;/span>
 ...
-&lt;/code>&lt;/pre>&lt;h4 id="托管物理机">托管物理机&lt;/h4>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="托管物理机">托管物理机&lt;/h4>
 &lt;p>托管物理机操作可以纳管已安装操作系统的物理服务器，在纳管服务器之前，需要用户了解物理服务器的BMC（IPMI地址、用户名、密码）信息等。&lt;/p>
 &lt;p>在托管服务器之前，请确保以下条件：&lt;/p>
 &lt;ul>
@@ -399,7 +427,7 @@ auto_register_baremetal: true
 &lt;/div>
 &lt;ol>
 &lt;li>
-&lt;p>在云管平台单击左上角&lt;img src="../../user/images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/p>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入添加物理机页面，选择添加方式为“托管”。&lt;/p>
@@ -420,10 +448,11 @@ auto_register_baremetal: true
 &lt;li>在物理机页面安装操作系统即可基于当前物理机创建裸金属。&lt;/li>
 &lt;li>在裸金属页面新建裸金属，并通过规格筛选出对应的物理机新建裸金属。&lt;/li>
 &lt;/ul>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
+&lt;h2 id="界面操作">界面操作&lt;/h2>
 &lt;h3 id="安装操作系统">安装操作系统&lt;/h3>
 &lt;p>该功能用于基于当前物理机新建裸金属。&lt;/p>
 &lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/li>
 &lt;li>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;安装操作系统&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入新建裸金属页面。&lt;/li>
 &lt;li>设置以下参数：
 &lt;ul>
@@ -518,6 +547,9 @@ auto_register_baremetal: true
 &lt;/li>
 &lt;li>
 &lt;p>名称：裸金属服务器名称，当创建多个裸金属服务器时，除第一台服务器名称外，其他服务器名称都以名称-1~N表示，虚拟机和裸金属公用名称空间。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>备注：设置裸金属的备注信息。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>主机数量：设置创建的裸金属数量。&lt;/p>
@@ -618,11 +650,13 @@ auto_register_baremetal: true
 &lt;ol start="3">
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建裸金属设备。&lt;/li>
 &lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
+&lt;h2 id="climc操作">climc操作&lt;/h2>
 &lt;h3 id="安装操作系统-1">安装操作系统&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-create &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --hypervisor baremetal &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 指定 server 的类型为 baremetal&lt;/span>
 --ncpu &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 创建到 24 核 cpu 的物理机&lt;/span>
+--mem-spec 64g &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 创建到 64g 内存大小的物理机&lt;/span>
+--net &lt;span style="color:#4e9a06">&amp;#39;bms-net&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 创建到 bms-net 的网络下&lt;/span>
 --raid-config &lt;span style="color:#4e9a06">&amp;#39;raid1:2:MegaRaid&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 第1块盘，使用 MegaRaid 控制器上的(0-1)号两块物理盘做 raid1&lt;/span>
 --raid-config &lt;span style="color:#4e9a06">&amp;#39;none:1&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 第2块盘，使用 MegaRaid 控制器上的(2)号物理盘，不做 raid&lt;/span>
 --raid-config &lt;span style="color:#4e9a06">&amp;#39;raid10:4:MegaRaid&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 第3快盘, 使用 MegaRaid 控制器上的(3-6)号四块物理盘做raid10&lt;/span>
@@ -630,8 +664,8 @@ auto_register_baremetal: true
 --disk &lt;span style="color:#4e9a06">&amp;#39;autoextend:ext4:/opt&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 分区挂载到 /opt, 使用第1块 raid1 的盘，文件系统为 ext4, 大小为(第一块盘总大小 - 该盘其他分区的大小(100g))&lt;/span>
 --disk &lt;span style="color:#4e9a06">&amp;#39;autoextend:xfs:/data-nonraid&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-nonraid, 使用第2块没做 raid 的盘, 文件系统为 xfs，使用所有空间&lt;/span>
 --disk &lt;span style="color:#4e9a06">&amp;#39;autoextend:ext4:/data-raid10&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 分区挂载到 /data-raid10, 使用第3块 raid10 的盘，文件系统为 ext4, 使用所有空间&lt;/span>
-&amp;lt;server_name&amp;gt; &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 裸金属服务器名称&lt;/span>
-64g &lt;span style="color:#8f5902;font-style:italic"># 创建到 64g 内存大小的物理机&lt;/span>
+&amp;lt;server_name&amp;gt; &lt;span style="color:#8f5902;font-style:italic"># 裸金属服务器名称&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 另外可以通过参数 `--prefer-host $baremetal-hostname` 创建到指定的物理机&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="raid-配置和分区">raid 配置和分区&lt;/h4>
 &lt;p>调用 server-create 接口时通过 &amp;lsquo;&amp;ndash;raid-config&amp;rsquo; 传递参数来配置 raid，每个 raid-config 对应到操作系统可见的磁盘设备(/dev/sdx)。&lt;/p>
 &lt;p>&amp;lsquo;&amp;ndash;disk&amp;rsquo; 参数对应不同磁盘上的分区，分区对应到磁盘的逻辑为: 分区按照顺序创建到第1块磁盘上，当 disk 设置 autoextend 参数后，表示接下来的 disk 分区会创建到下一个磁盘，以此类推。&lt;/p>
@@ -805,8 +839,26 @@ $ climc server-network-list --server bms --details
 +--------------------------------------+-------+--------------------------------------+---------+-------------------+---------------+
 &lt;span style="color:#8f5902;font-style:italic"># 然后更新裸金属 bms 的 IP 地址，改为 pxe-net 子网里面的 10.168.26.70 地址&lt;/span>
 $ climc server-change-ipaddr bms 52:54:00:12:34:56 pxe-net:10.168.26.70
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 更换网卡</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/change_netif/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/change_netif/</guid><description>
+&lt;p>云平台会记录物理机的网卡信息，如果实际环境中替换了物理机的网卡，需要手动保持平台里面物理机的网卡信息和实际环境中的一致。&lt;/p>
+&lt;h2 id="删掉物理机网卡">删掉物理机网卡&lt;/h2>
+&lt;p>假设需要移除物理机 bm1 上 mac 为 52:54:00:12:34:56 的网卡，对应操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-remove-netif bm1 52:54:00:12:34:56
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="添加新的网卡">添加新的网卡&lt;/h2>
+&lt;p>手动给物理机添加网卡后，同步平台里面的信息有两种方式，一种是让物理机重新 PXE 启动一次，平台对应的硬件信息就会更新，这种方式适用于物理机上没有安装操作系统或者删除了操作系统的情况。&lt;/p>
+&lt;p>另外一种是使用命令 &lt;code>host-add-netif&lt;/code> 给物理机添加网卡：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 给物理机 bm2 添加 admin 类型的网卡，二层网络为 bcast0 ，MAC 地址为 52:54:00:12:34:56，手动配置 IP 地址为 10.10.10.10&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 网卡顺序为第一张(0)&lt;/span>
+$ climc host-add-netif --ip-addr 10.10.10.10 --type admin bm2 bcast0 52:54:00:12:34:56 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看物理机的网卡：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-network-list --details --host bm2
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Baremetal_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network &lt;span style="color:#000;font-weight:bold">|&lt;/span> IP_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mac_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Nic_Type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> pxe-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.10.10.10 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 52:54:00:12:34:56 &lt;span style="color:#000;font-weight:bold">|&lt;/span> admin &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.2.3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 30:4e:05:26:22:43 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机与宿主机互相转换</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/convert/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/convert/</guid><description>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
 &lt;h3 id="转换为宿主机">转换为宿主机&lt;/h3>
 &lt;p>该功能用于将物理机设备转换成宿主机。物理机用于创建裸金属服务器，宿主机用于创建虚拟机。&lt;/p>
 &lt;h4 id="准备工作">准备工作&lt;/h4>
@@ -821,9 +873,13 @@ $ climc service-config --config &lt;span style="color:#000">convert_hypervisor_d
 &lt;li>将物理机转换为宿主机时可直接选择磁盘RAID设置参数，进行转换宿主机操作。或通过自定义设置选择宿主机镜像，进行转换宿主机操作。&lt;/li>
 &lt;/ol>
 &lt;h4 id="操作步骤">操作步骤&lt;/h4>
+&lt;p>&lt;big>&lt;strong>界面操作&lt;/strong>&lt;/big>&lt;/p>
 &lt;ol>
 &lt;li>
-&lt;p>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;转换为宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出转换为宿主机对话框&lt;/p>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;转换为宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出转换为宿主机对话框&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>配置以下参数：&lt;/p>
@@ -929,8 +985,12 @@ $ climc service-config --config &lt;span style="color:#000">convert_hypervisor_d
 &lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将物理机转换为宿主机。&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;h3 id="回收为物理机">回收为物理机&lt;/h3>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 转换为宿主机&lt;/span>
+climc host-convert-hypervisor
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="回收为物理机">回收为物理机&lt;/h3>
 &lt;p>该功能用于将宿主机回收成物理机。当宿主机类型为KVM且包含IPMI信息时可转为宿主机。物理机用于创建裸金属服务器，宿主机用于创建虚拟机。&lt;/p>
+&lt;p>&lt;big>&lt;strong>界面操作&lt;/strong>&lt;/big>&lt;/p>
 &lt;p>&lt;strong>单个宿主机回收为物理机&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>单击宿主机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;回收为宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
@@ -941,405 +1001,70 @@ $ climc service-config --config &lt;span style="color:#000">convert_hypervisor_d
 &lt;li>在宿主机列表中勾选一个或多个宿主机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;回收为宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作，可在物理机列表查看到服务器信息。&lt;/li>
 &lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 转换为宿主机&lt;/span>
-climc host-convert-hypervisor
-&lt;span style="color:#8f5902;font-style:italic"># 回收为物理机&lt;/span>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 回收为物理机&lt;/span>
 climc host-undo-convert &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机其它操作</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/operator/</link><pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/operator/</guid><description>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
-&lt;h3 id="远程终端">远程终端&lt;/h3>
-&lt;p>该功能支持使用SOL（Serial over LAN）和ssh远程连接到物理机。SOL即通过串口进行远程连接。连接之后需要使用初始账号列中的用户名和密码进行登录。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机相关操作</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/machine/</link><pubDate>Mon, 07 Feb 2022 19:02:52 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/machine/</guid><description/></item><item><title>Docs: 裸金属相关操作</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/baremetal/</link><pubDate>Mon, 07 Feb 2022 19:01:54 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/baremetal/</guid><description/></item><item><title>Docs: 物理机测试方案</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/testcase/</link><pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/testcase/</guid><description>
+&lt;h2 id="1-环境要求">1. 环境要求&lt;/h2>
+&lt;h3 id="11-物理机设置">1.1 物理机设置&lt;/h3>
+&lt;p>物理机设置要求如下：&lt;/p>
 &lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SOL远程终端&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，通过SOL方式远程连接物理机。&lt;/li>
-&lt;li>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，与物理机建立web SSH连接。&lt;/li>
-&lt;li>若物理机上的22端口被其他应用占用，ssh服务端口为其他端口时，可选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址:自定义端口&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出的对话框框中设置端口号，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮与物理机建立web SSH连接。&lt;/li>
-&lt;li>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;Java控制台&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，下载并打开jnlp文件，连接物理机。&lt;/li>
-&lt;/ol>
-&lt;h3 id="启用">启用&lt;/h3>
-&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的物理机。启用状态的物理机用于创建裸金属服务器。&lt;/p>
-&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击&amp;quot;禁用&amp;quot;状态的物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用物理机。&lt;/li>
-&lt;/ol>
-&lt;p>**批量启用&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用物理机。&lt;/li>
-&lt;/ol>
-&lt;h3 id="禁用">禁用&lt;/h3>
-&lt;p>该功能用于禁用”启用“状态的物理机，禁用状态的物理机不能创建裸金属服务器。&lt;/p>
-&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表，单击”启用“状态的物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用物理机。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表中勾选一个或多个&amp;quot;启用&amp;quot;状态的物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用物理机。&lt;/li>
-&lt;/ol>
-&lt;h3 id="调整调度标签">调整调度标签&lt;/h3>
-&lt;p>该功能用于为物理机绑定调度标签，绑定调度标签的物理机将按照调度策略调度创建裸金属服务器。&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，根据需要绑定调度标签的物理机数量，选择调整调度标签的方式。当物理机需要绑定同一个标签时，推荐使用批量为物理机调整标签功能，若需要绑定不同标签，需要分别调整的调度标签。
-&lt;ul>
-&lt;li>调整调度标签：单击物理机右侧操作列 &lt;strong>&lt;em>更多&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整标签&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出调整调度标签对话框中选择调度标签，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;li>批量为物理机调整标签：在物理机列表中勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>批量操作&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整标签&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出调整调度标签对话框中选择调度标签，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ul>
+&lt;li>
+&lt;p>物理机的启动方式推荐采用legacy（BIOS）方式，UEFI方式不推荐。只有在必须采用UEFI时才选用UEFI。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>物理机的默认启动方式为网络PXE启动，硬盘启动为第二顺位的启动介质&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>需要允许物理机网卡的PXE启动（BIOS开启IPMI-over-LAN）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>需要允许网络访问物理机的BMC（BIOS开启网卡PXE）&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;h3 id="同步状态">同步状态&lt;/h3>
-&lt;p>该功能用于同步物理机操作系统的运行状态。处于关机状态的物理机不支持同步状态。&lt;/p>
+&lt;h3 id="12-测试网络设置">1.2 测试网络设置&lt;/h3>
+&lt;p>物理服务器的网络接口（NIC）分为BMC NIC和服务器NIC，BMC NIC用于通过网络访问物理机的BMC控制功能，BMC NIC可以配置为和服务器NIC共享物理机接口，也可以配置为独立的网络接口。&lt;/p>
+&lt;img src="../../images/baremetal_test.png" width="700">
+&lt;p>其中，交换机0为部署服务的节点接入的三层交换机，交换机1为待管理物理服务器的服务器NIC接入三层交换机，交换机2为待管理物理服务器的BMC NIC接入三层交换机。&lt;/p>
+&lt;p>此处，交换机0，1，2可以是同一个三层交换机，这是最简化的场景，也就是服务节点、待管理交换机的服务器NIC、以及BMC NIC都在一个二层网络内。&lt;/p>
+&lt;p>一般物理机服务器采用bonding需要配置双NIC接入。目前只支持802.3ad LACP模式，也就是mode为4的bond。如果要支持bond这种模式，需要物理机的两个NIC都接入交换机1，此处交换机1可能是一对堆叠交换机。&lt;/p>
+&lt;h3 id="13-ip子网设置">1.3 IP子网设置&lt;/h3>
+&lt;p>需要在平台做如下配置用于物理机的IP地址分配：新建物理机用二层网络（如：brbm），如果物理机BMC NIC和物理机 NIC的二层网络隔离，则需新建BMC NIC用二层网络 brbmc。在二层网络brbm上新建属性为baremetal或PXE的IP子网（vbm），用于分配物理机NIC的IP地址。在二层网络brbmc（或bmbm）上新建属性为IPMI的 IP子网，用于分配BMC NIC的IP地址（vbmc）。&lt;/p>
+&lt;p>连通性要求：要求baremetal agent能够直接访问vbm和vbmc的IP地址。&lt;/p>
+&lt;h3 id="14-交换机设置">1.4 交换机设置&lt;/h3>
+&lt;p>为了允许物理机能够网络PXE启动，需要设置交换机1的dhcp_relay为bareemetal_agent所在节点IP地址的UDP 67端口。&lt;/p>
+&lt;p>如果采用“预注册”方式注册物理机，则也需要设置交换机2的dhcp_relay为baremetal_agent所在节点IP地址的UDP 67端口。&lt;/p>
+&lt;p>在最简网络模式下，依旧是上文所说的服务和待管理物理机在同一个IP子网的网络配置下，如果不方便开启三层交换机的dhcp_relay，则可以借用Cloudpods的Host服务，开启其dhcp_relay功能，作为测试IP子网的dhcp relay服务器。具体开启方法为：修改该Host服务所在宿主机的配置文件 /etc/yunion/host.conf，增加 dhcp_relay 的配置项，内容为baremetal_agent部署节点IP的UDP 67端口。配置好后，记得重启该host服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">dhcp_relay&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#0000cf;font-weight:bold">192.168.222.101&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#0000cf;font-weight:bold">67&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>注意&lt;/strong> 待管理物理机所在网络内不能有其他DHCP服务器！&lt;/p>
+&lt;h3 id="15-物理机硬件信息要求">1.5 物理机硬件信息要求&lt;/h3>
+&lt;p>需要提前准备好物理机的如下信息：&lt;/p>
 &lt;ol>
-&lt;li>在物理机页面，根据需要同步状态的物理机数量，选择同步状态的方式。
-&lt;ul>
-&lt;li>同步一个物理机状态：单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步显示物理机运行状态。&lt;/li>
-&lt;li>批量同步物理机状态：在物理机列表中勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，批量同步物理机状态。&lt;/li>
-&lt;/ul>
-&lt;/li>
+&lt;li>如果采用PXE引导注册或预注册的物理服务器，需要第一个网络PXE启动的物理机 NIC的mac地址&lt;/li>
+&lt;li>如果采用PXE引导注册或ISO引导注册，需要物理机的BMC NIC的IP地址和BMC 账号，密码。&lt;/li>
 &lt;/ol>
-&lt;h3 id="验证ipmi信息">验证IPMI信息&lt;/h3>
-&lt;p>该功能用于验证物理机的IPMI信息配置是否正确以及是否已启用LAN上的IPMI信息。当物理机由于IPMI配置有问题而纳管失败后，用户修改IPMI配置后，可通过验证IPMI功能验证修改后的IPMI配置是否正确，正确后将会重新纳管物理机。&lt;/p>
-&lt;p>&lt;strong>验证IPMI信息&lt;/strong>&lt;/p>
+&lt;h2 id="2-测试流程">2. 测试流程&lt;/h2>
+&lt;h3 id="21-物理机注册">2.1 物理机注册&lt;/h3>
+&lt;p>物理机注册实现将一台物理机注册到云平台，云平台会引导物理机启动进入一个网络加载的内存Linux系统，通过该Linux接管物理机，实现自动采集物理机的配置信息，并注册到平台。&lt;/p>
+&lt;p>支持如下四种注册方式：&lt;/p>
+&lt;h4 id="211-pxe引导注册推荐方式">2.1.1 PXE引导注册(推荐方式)&lt;/h4>
+&lt;p>物理机已经配置BMC NIC的IP，通过BMC控制物理服务器通过PXE协议引导物理机网络启动进入内存Linux系统。这种方式依赖PXE网络启动，因此要求设置交换机1的dhcp_relay。&lt;/p>
+&lt;h4 id="212-iso引导注">2.1.2 ISO引导注&lt;/h4>
+&lt;p>物理机已经配置BMC NIC的IP，通过物理机的虚拟ISO介质引导物理机启动进入内存Linux系统。这种方式不依赖PXE启动，因此不要求设置交换机1的dhcp_relay。但是要求物理机支持设置BMC的虚拟机ISO介质，一般只有最新的少数物理服务器支持，例如HPE Gen10。&lt;/p>
+&lt;h4 id="213-预注册">2.1.3 预注册&lt;/h4>
+&lt;p>和PXE引导注册类似，但是物理机未配置BMC NIC的IP。这种方式会自动设置BMC NIC的IP，需要探测BMC NIC的连通性，因此需要设置交换机2的dhcp_relay。&lt;/p>
+&lt;h4 id="214-托管">2.1.4 托管&lt;/h4>
+&lt;p>这种方式适用于已经安装了操作系统，不适合进行开关机操作的物理服务器的注册。这种方式只支持物理服务器上已安装系统为Linux。这种方式要求管理员在物理服务器的操作系统内执行指定的脚本命令，并输入物理服务器的BMC NIC IP和密码，实现物理服务器的注册。&lt;/p>
+&lt;h3 id="22-物理机安装操作系统">2.2 物理机安装操作系统&lt;/h3>
+&lt;p>使用上述注册的物理机安装操作系统。我们将安装了操作系统的物理机成为“裸金属”服务器。&lt;/p>
+&lt;p>注意：&lt;/p>
 &lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;验证IPMI信息&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，开始验证配置的IPMI的正确性。&lt;/li>
+&lt;li>如果物理服务器采用双网卡接入，可以测试自动设置网卡的bonding模式，此时网卡需要勾选“bond”选项&lt;/li>
+&lt;li>新安装的操作系统的IP地址可以复用物理服务器PXE启动注册用的PXE IP地址，此时选择网络需要注册还是选择PXE IP子网。&lt;/li>
 &lt;/ol>
-&lt;p>&lt;strong>批量验证IPMI信息&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;验证IPMI信息&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，开始验证配置的IPMI的正确性。&lt;/li>
-&lt;/ol>
-&lt;h3 id="检测硬件配置">检测硬件配置&lt;/h3>
-&lt;p>该功能用于同步获取物理机的硬件配置信息等。当用户添加物理机时勾选只注册不引导后需要使用检测硬件配置功能，使物理机可以正常被使用。&lt;/p>
-&lt;p>&lt;strong>检测硬件配置&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;检测硬件配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步物理机的硬件配置信息。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量检测硬件配置&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;检测硬件配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步物理机的硬件配置信息。&lt;/li>
-&lt;/ol>
-&lt;h3 id="开机">开机&lt;/h3>
-&lt;p>该功能用于将关机状态的物理机开机。&lt;/p>
-&lt;p>&lt;strong>开机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;开机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将物理机开机。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量开机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;开机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将物理机开机。&lt;/li>
-&lt;/ol>
-&lt;h3 id="关机">关机&lt;/h3>
-&lt;p>该功能用于将运行状态的物理机关机，当物理机已分配给裸金属使用时，不支持关机操作。&lt;/p>
-&lt;p>&lt;strong>关机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;关机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将物理机关机。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量关机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;关机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，将物理机关机。&lt;/li>
-&lt;/ol>
-&lt;h3 id="进入维护模式">进入维护模式&lt;/h3>
-&lt;p>该功能用于将已分配裸金属设备的物理机进入离线系统（yunionos网络启动小系统），管理员在离线系统可以进行更改分区、重做RAID、更改密码等操作。未分配的物理机默认就处于离线系统。&lt;/p>
-&lt;p>&lt;strong>进入维护模式&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;进入维护模式&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入维护模式。&lt;/li>
-&lt;li>在维护模式下可以进行更改分区，重做RAID等操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量进入维护模式&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表中勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;进入维护模式&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入维护模式。&lt;/li>
-&lt;li>在维护模式下可以进行更改分区，重做RAID等操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="退出维护模式">退出维护模式&lt;/h3>
-&lt;p>该功能用于退出维护模式。&lt;/p>
-&lt;p>&lt;strong>退出维护模式&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;退出维护模式&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，退出维护模式。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量退出维护模式&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表中勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;退出维护模式&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，退出维护模式。&lt;/li>
-&lt;/ol>
-&lt;h3 id="删除">删除&lt;/h3>
-&lt;p>该功能用于删除物理机，未分配给裸金属设备且禁用状态的物理机才可以删除。&lt;/p>
-&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机页面，单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在物理机列表中勾选一个或多个物理机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="climc">Climc&lt;/h2>
-&lt;h3 id="查询物理机">查询物理机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># list baremetal 记录&lt;/span>
-climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># list 已经安装系统的物理机&lt;/span>
-climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span> --occupied
-&lt;span style="color:#8f5902;font-style:italic"># list 未安装系统的物理机&lt;/span>
-climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span> --empty
-&lt;span style="color:#8f5902;font-style:italic"># 查询物理机详情，包括硬件信息，机房信息&lt;/span>
-climc host-show &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="注册物理机">注册物理机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-create &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重新准备物理机">重新准备物理机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-prepare &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="获取物理机登录信息">获取物理机登录信息&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-logininfo &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="获取串口登录控制台">获取串口登录控制台&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc webconsole-baremetal &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开关机">开/关机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-start/host-stop &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="进入退出维护模式">进入/退出维护模式&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-maintenance/host-unmaintenance &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="删除物理机">删除物理机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-delete &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="转换回收宿主机">转换/回收宿主机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-convert-hypervisor
-climc host-undo-convert &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 裸金属操作</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/baremetal/</link><pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/baremetal/</guid><description>
-&lt;h2 id="web界面操作">Web界面操作&lt;/h2>
-&lt;h3 id="远程终端">远程终端&lt;/h3>
-&lt;p>该功能支持使用SOL（Serial over LAN）和ssh远程连接到裸金属服务器。SOL即通过串口进行远程连接。连接之后需要使用初始账号列中的用户名和密码进行登录。&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SOL远程终端&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，通过SOL方式与裸金属服务器建立连接。&lt;/li>
-&lt;li>单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，与裸金属服务器建立web SSH连接。&lt;/li>
-&lt;li>单击裸金属服务器右侧操作列 &lt;strong>&lt;em>远程终端&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址:任意端口&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出的对话框中设置端口号，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，与裸金属服务器建立web SSH连接。&lt;/li>
-&lt;li>单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;Java控制台&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，下载并打开jnlp文件，连接裸金属服务器。&lt;/li>
-&lt;/ol>
-&lt;h3 id="开机">开机&lt;/h3>
-&lt;p>该功能用于将处于关机状态的裸金属服务器开机。&lt;/p>
-&lt;p>&lt;strong>单个裸金属开机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击“关机”状态的裸金属右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;开机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，启动裸金属服务器。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量开机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属列表中选择一个或多个“关机”裸金属，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;开机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量启动多个裸金属设备。&lt;/li>
-&lt;/ol>
-&lt;h3 id="关机">关机&lt;/h3>
-&lt;p>该功能用于将处于开机状态的裸金属服务器关机。&lt;/p>
-&lt;p>&lt;strong>单个裸金属关机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击“开机”状态的裸金属右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;关机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量关机&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属列表中选择一个或多个“开机”裸金属，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;关机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="重启">重启&lt;/h3>
-&lt;p>该功能用于重启开机状态的裸金属服务器。&lt;/p>
-&lt;p>&lt;strong>单个裸金属重启&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击“开机”状态的裸金属右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;重启&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>选择是否勾选强制重启，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量重启&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属列表中选择一个或多个“开机”裸金属，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;重启&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
-&lt;li>选择是否勾选强制重启，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-若勾选“强制重启”，裸金属中未保存数据将会丢失。
-&lt;/div>
-&lt;h3 id="修改属性">修改属性&lt;/h3>
-&lt;p>该功能用于修改裸金属服务器的启动介质、引导方式以及是否启用删除保护。&lt;/p>
-&lt;p>&lt;strong>单个裸金属修改属性&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
-&lt;li>设置删除保护，禁用删除保护后，可删除裸金属服务器。启用删除保护后，无法删除裸金属服务器。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>多个裸金属批量修改属性&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属服务器列表中勾选一个或多个裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
-&lt;li>设置删除保护，禁用删除保护后，可删除裸金属服务器。启用删除保护后，无法删除裸金属服务器。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="重装系统">重装系统&lt;/h3>
-&lt;p>该功能用于为裸金属服务器更换系统。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-仅在裸金属服务器关机状态下支持重装系统操作。
-&lt;/div>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;重装系统&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出重装系统对话框。&lt;/li>
-&lt;li>选择系统镜像，可分别从公共镜像或自定义镜像中选择同操作系统的镜像。&lt;/li>
-&lt;li>设置管理员密码，在Linux系统中为root用户的密码，在Windows操作系统中为administrator用户的密码。
-&lt;ul>
-&lt;li>随机生成：随机生成管理员密码，用户可在裸金属列表密码列查看复制管理员密码。&lt;/li>
-&lt;li>关联密钥：在关联密钥之前需要先新建密钥。关联密钥后，用户需要使用私钥远程登录裸金属服务器。&lt;/li>
-&lt;li>保留镜像设置：管理员密码为镜像中已有的管理员密码。&lt;/li>
-&lt;li>手工输入：可手动设置管理员密码。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>默认勾选“重装系统后自动启动”，可根据需要取消勾选，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="同步状态">同步状态&lt;/h3>
-&lt;p>当虚拟机被恶意破坏或经非法暴力操作，导致服务状态异常（如系统死机），需要管理员后台修复，同步虚拟机环境状态，提供系统级服务修复措施。或者在资源超配情况下，同步运行状态。&lt;/p>
-&lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步裸金属状态。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量同步状态&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属服务器列表中勾选一个或多个裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步裸金属状态。&lt;/li>
-&lt;/ol>
-&lt;h3 id="更改项目">更改项目&lt;/h3>
-&lt;p>项目是资源的拥有者，当裸金属服务器属于某项目后，项目中的所有成员都有权限使用该裸金属服务器。可根据具体使用需求更改裸金属服务器所属的项目。&lt;/p>
-&lt;p>&lt;strong>单个裸金属更改项目&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
-&lt;li>选择域和域下的项目后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量更改项目&lt;/strong>&lt;/p>
-&lt;p>批量更改项目要求选择的裸金属服务器属于同一个域。&lt;/p>
-&lt;ol>
-&lt;li>在裸金属列表中勾选一个或多个裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
-&lt;li>选择域和域下的项目后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="创建相同配置">创建相同配置&lt;/h3>
-&lt;p>该功能用于创建相同配置的裸金属服务器。&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;创建相同配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出创建相同配置对话框。&lt;/li>
-&lt;li>输入名称，设置数量，其他参数可保持默认，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol>
-&lt;h3 id="重置密码">重置密码&lt;/h3>
-&lt;p>该功能用于更新裸金属服务器上的管理员用户的密码，管理员密码在Linux系统下为root用户的密码。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;ul>
-&lt;li>仅在裸金属服务器关机状态下支持重置密码操作。&lt;/li>
-&lt;li>绑定密钥的裸金属服务器无法进行重置密码操作。&lt;/li>
-&lt;li>通过ISO启动方式创建的裸金属不支持重置密码操作。&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;p>&lt;strong>单个裸金属重置密码&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;重置密码&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出重置密码对话框。&lt;/li>
-&lt;li>设置管理员密码。
-&lt;ul>
-&lt;li>随机生成：随机生成管理员密码，用户可在虚拟机列表密码列查看复制管理员密码。&lt;/li>
-&lt;li>手工输入：可手动设置管理员密码。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>默认勾选“重置密码后自动启动”，可根据需要取消勾选，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量重置密码&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属列表中勾选一个或多个关机状态的裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;重置密码&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出重置密码对话框。&lt;/li>
-&lt;li>设置管理员密码。
-&lt;ul>
-&lt;li>随机生成：随机生成管理员密码，用户可在虚拟机列表密码列查看复制管理员密码。&lt;/li>
-&lt;li>手工输入：可手动设置管理员密码。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>默认勾选“重置密码后自动启动”，可根据需要取消勾选，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="绑定密钥">绑定密钥&lt;/h3>
-&lt;p>该功能用于为裸金属服务器绑定密钥，密钥绑定后用户需要使用私钥登录裸金属服务器，或通过私钥在云管平台上获取裸金属服务器的密码。在绑定密钥之前请创建密钥。一个裸金属服务器只支持绑定一个密钥，当绑定密钥后，用户在裸金属列表的密码列无法直接看到密码信息，需要输入私钥内容获取密码。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;ul>
-&lt;li>仅在裸金属服务器关机状态下支持绑定密钥操作。&lt;/li>
-&lt;li>通过ISO启动方式创建的裸金属不支持绑定密钥操作。&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;绑定密钥&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出绑定密钥对话框。&lt;/li>
-&lt;li>选择密钥对，默认勾选“绑定密钥后自动启动”，可根据需要取消勾选，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，绑定密钥的裸金属需要使用SSH密钥对登录。&lt;/li>
-&lt;/ol>
-&lt;h3 id="解绑密钥">解绑密钥&lt;/h3>
-&lt;p>该功能用于将裸金属服务器与密钥解除绑定。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;ul>
-&lt;li>仅在裸金属服务器关机状态下支持解绑密钥操作。&lt;/li>
-&lt;li>通过ISO启动方式创建的裸金属不支持解绑密钥操作。&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;解绑密钥&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出绑定密钥对话框。&lt;/li>
-&lt;li>默认勾选“绑定密钥后自动启动”，可根据需要取消勾选，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="挂载iso">挂载ISO&lt;/h3>
-&lt;p>该功能用于为裸金属挂载ISO。仅物理机支持RedFish且可以挂载光驱的物理机支持挂载ISO操作。&lt;/p>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">说明&lt;/h4>
-目前Cloudpods平台不支持修改裸金属启动介质，已安装操作系统的裸金属挂载ISO镜像后无法直接使用ISO镜像重装系统。
-&lt;/div>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;挂载ISO&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出挂载ISO对话框。&lt;/li>
-&lt;li>选择ISO镜像，若如可用ISO镜像，请在系统镜像列表中上传ISO镜像或导入镜像市场中的ISO镜像。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成挂载ISO操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="卸载iso">卸载ISO&lt;/h3>
-&lt;p>该功能用于卸载物理机上已挂载的ISO镜像。&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;卸载ISO&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成卸载ISO操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="设置删除保护">设置删除保护&lt;/h3>
-&lt;p>该功能用于设置裸金属服务器的删除保护。当裸金属服务器启用删除保护后，裸金属服务器无法被删除；当裸金属服务器禁用删除保护后，裸金属服务器才可以被删除。&lt;/p>
-&lt;p>&lt;strong>单个裸金属设置删除保护&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>禁用删除保护：
-&lt;ul>
-&lt;li>单击裸金属服务器名称右侧带有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标时，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
-&lt;li>选择&amp;quot;禁用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>启用删除保护：
-&lt;ul>
-&lt;li>当裸金属服务器名称右侧不带&lt;img src="../../../images/computing/delprotect1.png" alt="">图标时，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
-&lt;li>选择&amp;quot;启用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量设置删除保护&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>禁用删除保护：
-&lt;ul>
-&lt;li>在裸金属列表中勾选一个或多个裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
-&lt;li>选择&amp;quot;禁用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为裸金属禁用删除保护。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>启用删除保护：
-&lt;ul>
-&lt;li>在裸金属列表中勾选一个或多个裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
-&lt;li>选择&amp;quot;启用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为裸金属启用删除保护。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="删除">删除&lt;/h3>
-&lt;p>当裸金属服务器名称项右侧有&lt;img src="../../../images/computing/delprotect1.png" alt="">图标，表示该裸金属服务器启用了删除保护，无法删除裸金属服务器。如需要删除裸金属服务器，则需要先禁用删除保护再删除裸金属服务器。&lt;/p>
-&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属页面，单击裸金属服务器右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在裸金属列表中勾选一个或多个裸金属服务器，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="climc命令行操作">Climc命令行操作&lt;/h2>
-&lt;h3 id="查询裸金属服务器">查询裸金属服务器&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-list --hypervisor baremetal
-climc server-show &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重装操作系统">重装操作系统&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-rebuild --image &amp;lt;image_id&amp;gt; &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开关机">开/关机&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-start &amp;lt;server_id&amp;gt;
-climc server-stop &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="删除裸金属服务器">删除裸金属服务器&lt;/h3>
-&lt;p>删除 server 裸金属服务器会销毁物理机上的操作系统和 raid 配置，对应的 baremetal 重新进入未分配状态&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-delete &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;h3 id="23-安装物理机监控agent">2.3 安装物理机监控agent&lt;/h3>
+&lt;p>在“裸金属”服务器的监控面板，安装监控agent，查看物理机是否有监控指标数据。&lt;/p>
+&lt;h3 id="24-删除操作系统">2.4 删除操作系统&lt;/h3>
+&lt;p>删除“裸金属”服务器上安装的操作系统，成为一台“闲置”的物理机&lt;/p></description></item></channel></rss>

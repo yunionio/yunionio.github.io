@@ -1,0 +1,295 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+记录</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/</link><description>Recent content in 记录 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 25 Nov 2021 16:07:53 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建记录</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/create/</link><pubDate>Thu, 25 Nov 2021 16:08:37 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/create/</guid><description>
+&lt;p>该功能用于新建解析记录。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+主机记录仅支持字符a-z、A-Z、0-9、短划线（-）、下划线（_）、句点（.）、@、*，且短划线和句点不能出现在开头和结尾。
+&lt;/div>
+&lt;h3 id="新建a记录">新建A记录&lt;/h3>
+&lt;p>A记录实现将域名指向IP地址。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“A：将域名指向一个IPv4的地址”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：设置IPv4的地址。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>标签：支持为新建的记录绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建aaaa记录">新建AAAA记录&lt;/h3>
+&lt;p>AAAA记录实现将域名指向IPv6的地址。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“AAAA：将域名指向一个IPv6的地址”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：设置IPv6的地址。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建cname记录">新建CNAME记录&lt;/h3>
+&lt;p>CNAME记录实现将域名指向另一个域名，再由另一个域名解析为IP地址等。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+当为某个子域名创建了CNAME记录，则不能为该域创建其他记录。
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“CNAME：将域名指向另外一个域名”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：只可以设置域名。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>标签：支持为新建的记录绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建mx记录">新建MX记录&lt;/h3>
+&lt;p>MX记录实现将域名指向邮件服务器地址，用于电子邮件系统根据收信人的邮件后缀定位邮件服务器，系统将根据MX记录的优先级将邮件转发到对应的邮件服务器上。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“MX：将域名指向邮件服务器地址”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，一般设置为@或mail。如主机记录设置为@，邮箱地址是xxx@example.com；如主机记录设置为mail，邮箱地址为xxx@mail.example.com。&lt;/li>
+&lt;li>记录值：可以设置域名和IP地址。&lt;/li>
+&lt;li>MX优先级：数值越低，优先级越高，将优先转发到优先级高的记录值对应的邮箱服务器。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>标签：支持为新建的记录绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建srv记录">新建SRV记录&lt;/h3>
+&lt;p>SRV记录用来标识某台服务器使用了某个服务，常见于微软系统的目录管理。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“SRV：记录提供特定服务的服务器”。&lt;/li>
+&lt;li>主机记录：格式为服务的名字.协议的类型，例如_sip._tcp。&lt;/li>
+&lt;li>记录值：格式为“优先级 权重 端口 目标地址”，每项以空格隔开。例如0 5 5060 sipserver.example.com。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>标签：支持为新建的记录绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建ptr记录">新建PTR记录&lt;/h3>
+&lt;p>PTR反向解析将IP地址映射到域名上。仅PrivateZone类型的DNS解析域名支持该类型。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“PTR：用于地址反解到域名”。&lt;/li>
+&lt;li>主机记录：填写反向解析记录的名称。将需要反解析的IP地址反向输入，如IP地址为1.2.3.4，则输入4.3.2.1。&lt;/li>
+&lt;li>记录值：设置私网IP地址对应的内网域名，只能填写一个域名。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>标签：支持为新建的记录绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建txt记录">新建TXT记录&lt;/h3>
+&lt;p>TXT记录用于对域名进行标识和说明，用于做SPF记录（反垃圾邮件）。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“TXT：通常做SPF记录（反垃圾邮件）”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：没有固定的格式。TXT记录通常是用来做SPF反垃圾邮件的。最典型的SPF格式的TXT记录例子为 “v=spf1 a mx ~all”，表示只有这个域名的A记录和MX记录中的IP地址有权限使用这个域名发送邮件。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>标签：支持为新建的记录绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 修改记录</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/modify/</link><pubDate>Thu, 25 Nov 2021 16:10:24 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/modify/</guid><description>
+&lt;p>该功能用于修改解析记录。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改菜单项。&lt;/li>
+&lt;li>修改相关信息，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 启用/禁用</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/enable/</link><pubDate>Thu, 25 Nov 2021 16:11:11 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/enable/</guid><description>
+&lt;h3 id="启用">启用&lt;/h3>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的解析记录，使其可以正常提供服务。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用解析记录。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用">禁用&lt;/h3>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的解析记录。禁用状态的解析记录无法使用。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击&amp;quot;启用&amp;quot;状态的记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用解析记录。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 克隆记录</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/clone/</link><pubDate>Thu, 25 Nov 2021 16:17:04 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/clone/</guid><description>
+&lt;p>该功能用于基于当前解析记录创建新的记录。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;克隆&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出克隆对话框。&lt;/li>
+&lt;li>配置相关信息，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建新的域名。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除记录</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/delete/</link><pubDate>Thu, 25 Nov 2021 16:17:44 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/dns/tutorial/recordset/delete/</guid><description>
+&lt;p>该功能用于删除解析记录。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/li>
+&lt;li>单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在记录列表选择一个或多个记录，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除记录&lt;/span>
+$ climc dns-recordset-delte &amp;lt;记录id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

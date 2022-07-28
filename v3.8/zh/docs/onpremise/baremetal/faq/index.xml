@@ -19,4 +19,72 @@
 &lt;li>更改RAID配置完成后，重启恢复已安装的操作系统&lt;/li>
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-unmaintenance &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 裸金属网卡命名</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/faq/nic_persistent_naming/</link><pubDate>Thu, 09 Sep 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/faq/nic_persistent_naming/</guid><description>
+&lt;h2 id="为什么物理机的网卡名称总是命名为en0-en1-">为什么物理机的网卡名称总是命名为en0, en1, &amp;hellip;?&lt;/h2>
+&lt;p>传统的Linux网卡命名规则为按照内核探测网卡的顺序，把网卡依次命名为eth0, eth1, &amp;hellip;。这种命名方式导致的问题时在添加/删除网卡设备后，导致网卡的名称发生变化（例如将eth0的网卡移除，重启之后，原来命名为eth1的网卡会变成eth0）。为了让网卡的名称和内核探测网卡的顺序无关，从systemd/udev v197开始引入了Predictable-Network-Interface-Names的机制，采用网卡的firmware/topology/location信息来命名网卡，例如 eno1， ens1，enp2s0等。具体参见 &lt;a href="https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/">https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/&lt;/a> 。&lt;/p>
+&lt;p>采用新机制避免了因为网卡的检测顺序、增删网卡等导致的网卡名称不持久，但却导致网卡的名称没有规律可循，而云平台初始化裸金属时需要能够明确地配置指定物理机网卡的IP配置。&lt;/p>
+&lt;p>为此，Cloudpods按照PXE引导系统探测网卡的顺序给网卡依次命名为en0, en1, &amp;hellip;&lt;/p>
+&lt;p>为了实现网卡的自定义命名，Cloudpods做了如下操作：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>关闭 Predictable-Network-Interface-Names 机制，需要修改 /etc/default/grub，在内核启动参数添加 &amp;ldquo;net.ifnames=0 biosdevnames=0&amp;rdquo;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>修改 /etc/udev/rules.d/70-persistent-net.rules ，一次写入网卡的mac和名称映射关系，udev将按照mac对网卡进行命名&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">KERNEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#000">SUBSYSTEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;net&amp;#34;&lt;/span>, &lt;span style="color:#000">ACTION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;add&amp;#34;&lt;/span>, &lt;span style="color:#000">DRIVERS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;?*&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>address&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;00:22:a6:48:39:10&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>type&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>, &lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;en0&amp;#34;&lt;/span>
+&lt;span style="color:#000">KERNEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#000">SUBSYSTEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;net&amp;#34;&lt;/span>, &lt;span style="color:#000">ACTION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;add&amp;#34;&lt;/span>, &lt;span style="color:#000">DRIVERS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;?*&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>address&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;00:22:a6:48:39:11&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>type&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>, &lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;en1&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="物理机更换网卡后的注意事项">物理机更换网卡后的注意事项&lt;/h2>
+&lt;p>物理机如果更换网卡，首先需要同时更新Cloudpods对应物理机的网卡数据，具体操作请参见https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/tutorial/change_netif/。&lt;/p>
+&lt;p>同时，由于采用了如上自定义命名网卡的机制，新加入的网卡的mac不在udev的规则中，会出现新网卡的命名不遵循enX的命名规律，导致网卡的IP配置不生效。因此需要采用如下措施修改udev的命名规则：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>手动修改 /etc/udev/rules.d/70-persistent-net.rules&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果允许物理机重启，可以执行如下命令，让物理机重启boot进入PXE引导系统，初始化一系列配置文件，包括udev的配置文件：&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-deploy &amp;lt;baremetal_server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Bonding模式共享BMC网口</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/faq/bonding_shared_bmc_nic/</link><pubDate>Mon, 20 Sep 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/faq/bonding_shared_bmc_nic/</guid><description>
+&lt;h2 id="双网卡bonding模式下共享bmc网口不工作怎么办">双网卡Bonding模式下共享BMC网口不工作怎么办？&lt;/h2>
+&lt;p>为了保证网卡的物理冗余，Bonding是常见的技术手段。Bonding将两个物理网口绑定为一个虚拟的网口，使得任意一个网口失效都不会影响该网口的通信。更多信息请参见 &lt;a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bonding">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bonding&lt;/a> 。开启Bonding后，当物理机通过Bonding网口发送报文时，会按照Bonding配置的模式，以主备或者负载均衡的方式，选择其中一个物理网口发送报文。反之，当交换机向物理机的Bonding网口发送报文时，也会按照规则选择其中一个网口作为实际的接收网口发送报文，接收到的报文在服务器的虚拟Bonding网口进行重组，就好像报文是通过一个网口接收的一样。&lt;/p>
+&lt;p>BMC网口是网络访问物理服务器BMC带外管理服务的网络接口，有两种模式：1）专用网口（dedicated），物理机主板上有一个专门的独立网口用于访问BMC。2）共享模式（shared）：可以通过物理机的板载通信网口（一般是第一个口）访问BMC，这个时候通过第一个口既可以访问物理机的第一个网口，也可以访问BMC，可以理解为第一个网口有两个mac地址，一个是BMC的网口mac，另一个是正常的网口的mac。为了便于部署，节约交换机网口和网线，很多时候会采用共享模式的BMC网口。BMC网口采用专用还是共享模式需要在BMC的控制面板进行设置。&lt;/p>
+&lt;p>当开启了BMC共享网口模式，使用第一个板载物理网口作为共享BMC口，同时又使用第一二个网口bonding的时候，往往会导致BMC网口访问失效。究其原因也比较容易理解：当外部访问BMC网口时，交换机会认为访问BMC的报文也是一个访问物理机的普通报文，会按照发送给物理机bonding网口的逻辑处理，选择其中一个网口发送。但是，由于BMC网口只监听在第一个网口，交换机通过第二个网口发送的报文就无法被BMC接收到。这样BMC无法正常接收报文，导致BMC网络功能无法正常访问。&lt;/p>
+&lt;p>要解决这个问题，原理也比较简单：需要在物理机上联的交换机上做路由策略，将访问BMC的报文必须从指定的第一个网口发送，这样BMC就能接收到完整的报文，从而能够正常通信。&lt;/p>
+&lt;p>然而，配置这样的路由策略比较复杂。&lt;/p>
+&lt;p>庆幸的是，目前一些新型交换机已经为此场景设计了专门的命令，用来解决这个问题。例如，H3C的交换机就增加配置聚合管理VLAN和聚合管理端口的专用命令，如下图所示。&lt;/p>
+&lt;img src="../link-aggregation-management.png">
+&lt;p>具体请参见：https://www.h3c.com/cn/d_201903/1157320_30005_0.htm#_Toc4502224&lt;/p></description></item><item><title>Docs: 物理机硬件规格要求</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/faq/hardware-requirements/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/baremetal/faq/hardware-requirements/</guid><description>
+&lt;h2 id="cpu-架构">CPU 架构&lt;/h2>
+&lt;p>x86&lt;/p>
+&lt;h2 id="bios-主板">BIOS 主板&lt;/h2>
+&lt;ul>
+&lt;li>支持 Legacy(传统模式) 的 PXE 引导网络启动&lt;/li>
+&lt;li>支持 BMC IPMI 带外控制 (开启IPMI-over-LAN)&lt;/li>
+&lt;li>如果设置了 PXE、硬盘启动的引导顺序，当 PXE 启动不成功的时候，会尝试磁盘启动&lt;/li>
+&lt;/ul>
+&lt;h2 id="硬盘">硬盘&lt;/h2>
+&lt;p>硬盘支持 HDD(机械硬盘)、SSD(固态硬盘) 和 NVME SSD。&lt;/p>
+&lt;p>支持以下 RAID 驱动：&lt;/p>
+&lt;ul>
+&lt;li>MegaRaid&lt;/li>
+&lt;li>HPSARaid&lt;/li>
+&lt;li>Mpt2/3SAS&lt;/li>
+&lt;li>AdaptecRaid&lt;/li>
+&lt;li>MarvelRaid&lt;/li>
+&lt;/ul>
+&lt;p>NVME SSD 需要内核中 &lt;strong>nvme&lt;/strong> 或者 &lt;strong>nvme_core&lt;/strong> 驱动的&lt;/p>
+&lt;h2 id="网卡">网卡&lt;/h2>
+&lt;p>支持以下内核网卡驱动：&lt;/p>
+&lt;ul>
+&lt;li>ixgbe&lt;/li>
+&lt;li>igb&lt;/li>
+&lt;li>e1000, e100e&lt;/li>
+&lt;li>tg3&lt;/li>
+&lt;li>bnx2&lt;/li>
+&lt;li>i40e&lt;/li>
+&lt;li>bnx2x&lt;/li>
+&lt;li>bnxt_en&lt;/li>
+&lt;/ul></description></item></channel></rss>

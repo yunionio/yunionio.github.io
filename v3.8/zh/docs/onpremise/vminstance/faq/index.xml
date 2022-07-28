@@ -1,0 +1,117 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+常见问题</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/vminstance/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 09 Jun 2021 22:25:05 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/onpremise/vminstance/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: libvirt 管理虚机导入</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/vminstance/faq/import/</link><pubDate>Tue, 26 Nov 2019 16:57:43 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/vminstance/faq/import/</guid><description>
+&lt;p>支持将libvirt管理的虚拟机导入到 Cloudpods平台。&lt;/p>
+&lt;h2 id="注意事项">注意事项&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>首先需要在libvirt管理的宿主机上安装我们的计算节点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>安装好计算节点后需要添加的虚拟机的网络到控制节点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>确保libvirt服务关闭&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="相关操作">相关操作&lt;/h2>
+&lt;ul>
+&lt;li>准备好需要导入虚拟机的信息文件&lt;code>servers.yaml&lt;/code>， 格式如下:&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>hosts:
+- host_ip: 10.168.222.137
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+- mac: 52:54:00:4A:19:AF
+ip: 10.168.222.53
+- mac: 52:54:00:4A:19:CC
+ip: 10.168.222.54
+- host_ip: 10.168.222.130
+xml_file_path: /etc/libvirt/qemu
+monitor_path: /var/lib/libvirt/qemu
+servers:
+- mac: 53:54:00:4A:19:EC
+ip: 11.168.222.50
+- mac: 53:54:00:4A:19:EE
+ip: 11.168.222.51
+&lt;/code>&lt;/pre>&lt;pre>&lt;code>- `host_ip` 是要导入的宿主机的ip
+- `xml_file_path`是libvirt存储虚拟机xml文件的路径，
+- `monitor_path`是libvirt存储虚拟机monitor socket文件的路径，
+- `servers`是需要导入的虚拟机，里面描述了虚拟机的ip和mac对应关系
+&lt;/code>&lt;/pre>
+&lt;hr>
+&lt;ul>
+&lt;li>执行 climc servers-import-from-libvirt 开始导入&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 导入前确认libvirt服务关闭&lt;/span>
+$ climc servers-import-from-libvirt servers.yaml
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 修改磁盘驱动</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/vminstance/faq/change_disk_driver/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/vminstance/faq/change_disk_driver/</guid><description>
+&lt;h2 id="介绍">介绍&lt;/h2>
+&lt;p>默认情况下，虚拟机的磁盘驱动是 scsi 的，这种驱动在 Linux 虚拟机内部看到的磁盘就是 &amp;lsquo;/dev/sd&amp;rsquo; 开头的块设备。可以通过一些命令设置磁盘的驱动，比如 Windows 虚拟机在没有安装 virtio 驱动的时候，只能使用 ide 驱动的方式启动。&lt;/p>
+&lt;h2 id="查看虚拟机磁盘驱动">查看虚拟机磁盘驱动&lt;/h2>
+&lt;p>首先通过 server-disk-list 命令查看虚拟机所有磁盘的驱动，比如虚拟机的名称是 vm1 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># server-disk-list 命令查看虚拟机和关联磁盘的关系&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --details: 显示详细信息&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --server: 指定对应的虚拟机名称或者 ID&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --scope system: 表示显示系统里面所有资源&lt;/span>
+$ climc server-disk-list --details --server vm1 --scope system
++--------------------------------------+-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 968d9285-6353-4bce-8a6f-bf540efad3f5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> data-disk &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">10240&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> data &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5448ea7d-5c64-47a2-847d-06060e187a47 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-vm1-1624970026002516731 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------+--------------------------------------+-------------------------------+-----------+--------+------------+-------+--------+-----------+--------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中 Index 为 0 表示虚拟机的第一块磁盘，对应到 Linux 系统里面的 &amp;lsquo;/dev/sda&amp;rsquo;，Driver 表示对应驱动为 scsi，Disk_type 为 sys 表示系统盘。&lt;/p>
+&lt;p>Index 为 1 表示第二块磁盘，对应 Linux 系统里面的 &amp;lsquo;/dev/sdb&amp;rsquo;，驱动也为 scsi ，Disk_type 为 data 表示数据盘。&lt;/p>
+&lt;h2 id="修改驱动">修改驱动&lt;/h2>
+&lt;p>通过 server-disk-update 命令更新虚拟机上的磁盘驱动。&lt;/p>
+&lt;p>先看下 server-disk-update 命令的帮助信息。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc &lt;span style="color:#204a87">help&lt;/span> server-disk-update
+Usage: climc server-disk-update &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--cache &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>writethrough,none,writeback&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--aio &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>native,threads&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--index INDEX&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--driver &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>virtio,ide,scsi,pvscsi&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &amp;lt;SERVER&amp;gt; &amp;lt;DISK&amp;gt;
+Update details of a virtual disk of a virtual server
+Positional arguments:
+&amp;lt;SERVER&amp;gt;
+ID or Name of server
+&amp;lt;DISK&amp;gt;
+ID or Name of Disk
+Optional arguments:
+&lt;span style="color:#8f5902;font-style:italic"># 对应 qemu/kvm 虚拟机磁盘 cache mode&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--cache &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>writethrough,none,writeback&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span>
+Cache mode of vDisk
+&lt;span style="color:#8f5902;font-style:italic"># 对应 qemu/kvm 虚拟机磁盘的 aio&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--aio &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>native,threads&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span>
+Asynchronous IO mode of vDisk
+&lt;span style="color:#8f5902;font-style:italic"># 磁盘索引顺序&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--index INDEX&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Index of vDisk
+&lt;span style="color:#8f5902;font-style:italic"># 对应 qemu/kvm 虚拟机磁盘 driver&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--driver &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>virtio,ide,scsi,pvscsi&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span>
+Driver of vDisk
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从帮助信息可以看到支持的 driver 为 virtio, ide, scsi 或者 pvscsi ，请根据自己的需要进行选择。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 把虚拟机 vm1 的系统盘 5448ea7d-5c64-47a2-847d-06060e187a47 驱动改为 virtio&lt;/span>
+$ climc server-disk-update --driver virtio vm1 5448ea7d-5c64-47a2-847d-06060e187a47
+&lt;span style="color:#8f5902;font-style:italic"># 查看记录，发现已经改成 virtio 了&lt;/span>
+$ climc server-disk-list --details --server vm1 --scope system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 5448ea7d-5c64-47a2-847d-06060e187a47
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5448ea7d-5c64-47a2-847d-06060e187a47 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vdisk-vm1-1624970026002516731 &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30720&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> virtio &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> sys &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改了磁盘驱动后，需要重启虚拟机才能生效，使用 server-stop 和 server-start 命令重启虚拟机 vm1 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 停止虚拟机&lt;/span>
+$ climc server-stop vm1
+&lt;span style="color:#8f5902;font-style:italic"># 调用 server-list 查看虚拟机状态，等到状态变为 ready&lt;/span>
+$ climc server-list --search vm1 --scope system
++--------------------------------------+------+--------------+---------+------------+-----------+-----------+-----------------------------+------------+---------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Billing_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> vcpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> vmem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> Secgrp_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> Hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span> os_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> is_system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------+---------+------------+-----------+-----------+-----------------------------+------------+---------+-----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 84090287-9dc5-4d6b-854d-24f99ad6f170 &lt;span style="color:#000;font-weight:bold">|&lt;/span> vm1 &lt;span style="color:#000;font-weight:bold">|&lt;/span> postpaid &lt;span style="color:#000;font-weight:bold">|&lt;/span> ready &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1024&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-29T12:33:45.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span> kvm &lt;span style="color:#000;font-weight:bold">|&lt;/span> Linux &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------+---------+------------+-----------+-----------+-----------------------------+------------+---------+-----------+
+&lt;span style="color:#8f5902;font-style:italic"># 启动虚拟机&lt;/span>
+$ climc server-start vm1
+&lt;span style="color:#8f5902;font-style:italic"># 之后再重复查看虚拟机状态，知道变为 running&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后通过前端的 vnc 或者 ssh 登录虚拟机，用 lsblk 之类的磁盘工具查看磁盘，发现里面的磁盘块设备名称已经从 &amp;lsquo;/dev/sda&amp;rsquo; 变成 &amp;lsquo;/dev/vda&amp;rsquo; 了。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>cloudroot@vm1 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ lsblk
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sr0 11:0 &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 1024M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> rom
+vda 253:0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 30G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> disk
+├─vda1 253:1 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 1M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part
+├─vda2 253:2 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 512M &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /boot
+└─vda3 253:3 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 29.5G &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> part /
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

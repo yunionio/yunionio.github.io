@@ -1,13 +1,50 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
 操作指南</title><link>https://www.cloudpods.org/zh/docs/auth_security/security/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 09 Feb 2022 10:55:36 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/auth_security/security/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 配置安全告警</title><link>https://www.cloudpods.org/zh/docs/auth_security/security/tutorial/config/</link><pubDate>Wed, 09 Feb 2022 11:00:01 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/security/tutorial/config/</guid><description>
-&lt;p>目前安全告警仅针对于用户异常登录，仅针对于本地Sql用户有效。&lt;/p>
-&lt;h3 id="配置安全告警">配置安全告警&lt;/h3>
+&lt;p>目前安全告警主要针对用户异常登录以及完整性校验两种消息订阅设置的安全消息生效。&lt;/p>
+&lt;h2 id="配置流程">配置流程&lt;/h2>
+&lt;ol>
+&lt;li>在消息订阅配置中，针对用户锁定通知和完整性校验两种消息配置接收人。&lt;/li>
+&lt;li>用户锁定通知还需要在全局配置中配置“连续登录失败次数”，当用户连续输入n次后将会锁定用户账号。&lt;/li>
+&lt;li>后续用户锁定或系统镜像、快照、组件、数据库记录等被修改时，将在安全告警中产生告警记录发送给对应的接收人。&lt;/li>
+&lt;/ol>
+&lt;h2 id="配置举例">配置举例&lt;/h2>
+&lt;p>下面以用户锁定通知介绍如何配置安全告警。用户锁定通知仅针对于本地Sql用户有效。&lt;/p>
+&lt;h3 id="全局配置">全局配置&lt;/h3>
 &lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;系统配置/全局配置/全局配置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入全局配置页面。&lt;/li>
 &lt;li>配置“连续登录失败次数”的上限值，如3次，配置完成后，保存配置。&lt;/li>
 &lt;/ol>
+&lt;h3 id="配置接收人">配置接收人&lt;/h3>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/消息中心/消息订阅设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入消息订阅设置页面。&lt;/li>
+&lt;li>单击“用户锁定通知”名称项，进入消息详情页面。&lt;/li>
+&lt;li>单击“接收管理”页签，进入接收管理页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建接收人对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>资源范围：限定发送消息通知的资源范围。
+&lt;ul>
+&lt;li>当资源范围为“系统”时，则系统内所有资源变化都将发送消息通知。&lt;/li>
+&lt;li>当资源范围为“域”并选择指定域时，仅指定域下的资源变化才会发送消息通知。&lt;/li>
+&lt;li>当资源范围为“项目”并选择指定项目时，仅指定项目下的资源变化才会发送消息通知。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>类型：选择接收消息通知的类型，包括接收人、角色、机器人。&lt;/li>
+&lt;li>接收人：当类型选择“接收人”时，需要选择接收资源消息通知的用户。&lt;/li>
+&lt;li>角色：当类型选择“角色”时，需要指定角色的范围和角色。
+&lt;ul>
+&lt;li>当范围为“全局”时，将会通知全系统中对应角色的用户。&lt;/li>
+&lt;li>当范围为“域”时，将会通知资源所在域下对应角色的用户。&lt;/li>
+&lt;li>当范围为“项目”时，将会通知资源所在项目下对应角色的用户。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>机器人：当类型选择“机器人”时，需要选择接收资源消息通知的机器人。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
 &lt;h3 id="触发安全告警">触发安全告警&lt;/h3>
-&lt;p>当用户连续3次登录平台失败时，将会触发安全告警，并锁定用户。&lt;/p>
+&lt;p>当用户连续3次登录平台失败时，将会触发安全告警并将告警消息发送给配置的接收人，并锁定用户。&lt;/p>
 &lt;h3 id="如何解锁用户">如何解锁用户&lt;/h3>
 &lt;p>&lt;big>&lt;strong>界面操作&lt;/strong>&lt;/big>&lt;/p>
 &lt;ol>
@@ -18,6 +55,7 @@
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用锁定用户&lt;/span>
 $ climc user-update --enable &amp;lt;user_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 查看安全告警记录</title><link>https://www.cloudpods.org/zh/docs/auth_security/security/tutorial/list/</link><pubDate>Wed, 09 Feb 2022 10:59:56 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/auth_security/security/tutorial/list/</guid><description>
+&lt;p>该功能用于查看消息订阅中安全类型的消息告警通知，包括异常登录和完整性校验失败等。&lt;/p>
 &lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;认证与安全/安全告警/安全告警&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入安全告警页面。&lt;/li>
 &lt;li>查看以下信息：

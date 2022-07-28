@@ -1713,4 +1713,70 @@ $ openssl pkcs12 -in pkcs12.pem -export -out pkcs12.p12
 &lt;p>选择刚才生成的 pkcs12.p12 证书：&lt;/p>
 &lt;p>&lt;img src="../images/chrome-import-pkcs12.png" alt="">&lt;/p>
 &lt;p>导入后再刷新访问前端，就可以成功访问界面。&lt;/p>
-&lt;p>&lt;img src="../images/chrome-web.png" alt="">&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="../images/chrome-web.png" alt="">&lt;/p></description></item><item><title>Docs: 数据库记录一致性校验</title><link>https://www.cloudpods.org/zh/docs/setup/db-record-consistency/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-record-consistency/</guid><description>
+&lt;p>数据库记录一致性校验的原理是计算表里面每条记录的 md5 值，如果人工修改字段，平台的服务在读取，更新或者删除的时候就会发现计算的 md5 checksum 不一致，禁止接下来的操作。&lt;/p>
+&lt;h2 id="配置">配置&lt;/h2>
+&lt;p>开启改选项会产生额外的计算量。默认开启以下服务的配置表：&lt;/p>
+&lt;ul>
+&lt;li>keystone 服务:
+&lt;ul>
+&lt;li>user 表: 保存用户信息的表&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>region 服务:
+&lt;ul>
+&lt;li>guests_tbl 表: 保存虚拟机信息&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>logger 服务:
+&lt;ul>
+&lt;li>actionlog_tbl 表: 保存操作日志&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>分别编辑这两个服务的配置 configmap default-keystone 和 default-region 里面的 enable_db_checksum_tables 这个参数：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 配置 keystone 服务配置&lt;/span>
+$ kubectl -n onecloud edit configmaps default-keystone
+...
+enable_db_checksum_tables: &lt;span style="color:#204a87">true&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 重启 keystone 服务&lt;/span>
+$ kubectl -n onecloud rollout restart deployment default-keystone
+&lt;span style="color:#8f5902;font-style:italic"># 配置 region 服务配置&lt;/span>
+$ kubectl -n onecloud edit configmaps default-region
+...
+enable_db_checksum_tables: &lt;span style="color:#204a87">true&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 重启 region 服务&lt;/span>
+$ kubectl -n onecloud rollout restart deployment default-region
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;p>当开启 enable_db_checksum_tables 的配置后，每条记录就会有一个 record_checksum 的字段，这里以 keystone 数据库的 user 表来测试，看看如果手动修改了记录会发生什么情况：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 cloudadmin 用户的 record_checksum, id 和 last_login_ip&lt;/span>
+$ climc user-show cloudadmin &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep -w &lt;span style="color:#4e9a06">&amp;#39;record_checksum|id|last_login_ip&amp;#39;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 475925c93c344a54837fe49f852c5086 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> last_login_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.121.1 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> record_checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> 3d953f46c400ba3bd9562be8ae2a9d9c &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 找到当前集群的数据库密码&lt;/span>
+$ kubectl get oc -n onecloud -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
+mysql:
+host: 192.168.121.21
+password: y4uzCV37gZEr
+port: &lt;span style="color:#0000cf;font-weight:bold">3306&lt;/span>
+username: root
+&lt;span style="color:#8f5902;font-style:italic"># 连上 keystone 数据库，把 cloudadmin 的 last_login_ip 字段改成 192.168.121.2&lt;/span>
+$ mysql -u root -py4uzCV37gZEr -h 192.168.121.21 keystone
+MariaDB &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>keystone&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&amp;gt; update user &lt;span style="color:#204a87">set&lt;/span> &lt;span style="color:#000">last_login_ip&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;192.168.121.2&amp;#39;&lt;/span> where &lt;span style="color:#000">id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;475925c93c344a54837fe49f852c5086&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+Query OK, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> row affected &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>0.00 sec&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Rows matched: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Changed: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Warnings: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 再次查看 cloudadmin user，会提示记录被修改，checksum 不一致的报错&lt;/span>
+$ climc user-show cloudadmin
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;error&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;class&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;UnclassifiedError&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;code&amp;#34;&lt;/span>:500,&lt;span style="color:#4e9a06">&amp;#34;details&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;Record user(475925c93c344a54837fe49f852c5086) checksum changed, expected(3d953f46c400ba3bd9562be8ae2a9d9c) != calculated(701f345054c8fee78cebb130730c8ba0)&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;request&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;headers&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;User-Agent&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;yunioncloud-go/201708&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;X-Auth-Token&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;method&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;GET&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;url&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;http://192.168.121.21:30500/v3/users/cloudadmin&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}}}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="注意事项">注意事项&lt;/h2>
+&lt;p>为了兼容性，这个 db_checksum_tables 里面配置的表每次服务启动都会计算，如果数据量很大，可能会导致服务启动很慢，当第一次服务初始完每条记录的 checksum 后，可以配置 &lt;code>db_checksum_skip_init: true&lt;/code> 参数跳过初始化 checksum 。比如关闭 keystone 服务第一次初始化 checksum 操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl -n onecloud edit configmaps default-keystone
+...
+db_checksum_skip_init: &lt;span style="color:#204a87">true&lt;/span>
+...
+&lt;span style="color:#8f5902;font-style:italic"># 重启 keystone 服务&lt;/span>
+$ kubectl -n onecloud rollout restart deployment default-keystone
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

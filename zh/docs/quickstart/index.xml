@@ -76,7 +76,7 @@ $ pip install ansible
 &lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
 &lt;p>部署的工具是 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 Cloudpods 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.8 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="快速部署">快速部署&lt;/h3>
 &lt;p>可以直接执行run.py来快速部署一个AllInOne的Cloudpods实例，其中&amp;lt;host_ip&amp;gt;为部署所在主机的主IP地址。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./run.py &amp;lt;host_ip&amp;gt;
@@ -110,7 +110,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的端口
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 版本
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.8.12
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.1
 &lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
 &lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户密码
@@ -273,7 +273,7 @@ cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EO
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: $PRIMARY_IP
 &lt;/span>&lt;span style="color:#4e9a06"> use_local: false
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.8.12&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.9.1&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: $DB_IP
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: &amp;#34;$DB_USER&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: &amp;#34;$DB_PSWD&amp;#34;
@@ -563,7 +563,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
 &lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.8.12
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.1
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156

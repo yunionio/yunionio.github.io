@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-操作指南</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 10 Mar 2022 11:44:52 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建本地IDC虚拟机</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/create/</link><pubDate>Fri, 19 Jul 2019 15:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/create/</guid><description>
+操作指南</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 06 Jan 2022 19:37:32 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建本地IDC虚拟机</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/create/</link><pubDate>Fri, 19 Jul 2019 15:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/create/</guid><description>
 &lt;h3 id="前提条件">前提条件&lt;/h3>
 &lt;ul>
 &lt;li>如需创建内置私有云虚拟机，请确保环境中存在启用状态的宿主机。&lt;/li>
@@ -138,7 +138,7 @@
 &lt;/div>
 &lt;ul>
 &lt;li>自动调度：当选择自动调度时，将从启用自动调度的IP子网中为虚拟机分配IP地址。&lt;/li>
-&lt;li>指定IP子网：选择VPC和IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，如需指定MAC地址，可可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置MAC地址&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置MAC地址。&lt;/li>
+&lt;li>指定IP子网：选择VPC和IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;li>指定调度标签：设置调度标签以及调度标签偏好。设置的调度标签偏好将会覆盖调度标签上的默认策略。根据调度标签及调度偏好选择最优的IP子网。
 &lt;ul>
 &lt;li>尽量使用（prefer）：调度时优先使用拥有这种标签的IP子网。&lt;/li>
@@ -242,7 +242,7 @@
 &lt;/ol>
 &lt;h3 id="climc操作">climc操作&lt;/h3>
 &lt;p>&lt;code>climc server-create&lt;/code> 命令提供创建云主机的操作。 Cloudpods 可以同时管理多个私有云和公有云，不同供应商有各自的认证方式，在创建云主机之前需要做一些不同的准备工作。&lt;/p>
-&lt;p>创建机器命令为 &lt;code>server-create&lt;/code>，可以使用 &lt;code>climc server-create --help&lt;/code> 查看创建 server 的所有参数，常用的参数如下：&lt;/p>
+&lt;p>创建机器命令为 &lt;code>server-create&lt;/code>，可以使用 &lt;code>climc help server-create&lt;/code> 查看创建 server 的所有参数，常用的参数如下：&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -495,13 +495,12 @@ $ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4
 &lt;li>在Cloudpods平台经典网络的虚拟机可以直接使用Web SSH和VNC远程终端；Cloudpods平台VPC网络的虚拟机可以直接使用Web SSH和VNC远程终端，也可以绑定EIP后使用EIP的Web SSH。请注意，未绑定EIP的VPC网络的虚拟机只能通过平台的Web SSH连接，无法使用SSH工具进行连接，如需使用SSH工具连接虚拟机，请为虚拟机绑定EIP。&lt;/li>
 &lt;li>当VMware的虚拟机所在EXSI低于6.5版本时，无法直接打开VNC远程终端，需要用户在本地下载vmrc（VMware Remote Console）客户端。&lt;/li>
 &lt;li>VNC长时间连接黑屏后，按空格键会恢复显示。&lt;/li>
-&lt;li>若用户启用了MFA，打开远程终端需要先进行MFA验证。&lt;/li>
 &lt;/ul>
 &lt;/div>
 &lt;/p>
 &lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
-&lt;li>单击虚拟机右侧操作列操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;远程连接&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，新建Web Console名称的浏览器标签页。
+&lt;li>单击虚拟机右侧操作列操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;VNC远程终端&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，新建Web Console名称的浏览器标签页。
 &lt;ul>
 &lt;li>发送远程命令：单击 &lt;strong>&lt;em>&amp;ldquo;发送远程命令&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;Ctrl-Alt-F1~F6&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，向虚拟机控制台发送具体的命令。&lt;/li>
 &lt;li>Ctrl-Alt-Delete：单击\ &lt;strong>&lt;em>Ctrl-Alt-Delete&lt;/em>&lt;/strong> 按钮，若虚拟机为Windows系统，则向虚拟机控制台发送Ctrl-Alt-Delete命令，若虚拟机为Linux系统，则将弹出重启服务器提示，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮后将重启虚拟机。&lt;/li>
@@ -513,10 +512,10 @@ $ climc server-create --hypervisor kvm --disk centos7.qcow2:60g --disk 100g:ext4
 &lt;/ol>
 &lt;h2 id="climc操作">climc操作&lt;/h2>
 &lt;p>针对以上的链接方式，我们提供以下接口链接云虚拟机：&lt;/p>
-&lt;h3 id="远程终端">远程终端&lt;/h3>
-&lt;p>&lt;code>climc webconsole-server&lt;/code> 命令提供通过 vnc或spice协议 连接虚拟机，该方式对裸金属服务器不可用。&lt;/p>
+&lt;h3 id="vnc-连接">vnc 连接&lt;/h3>
+&lt;p>&lt;code>climc webconsole-server&lt;/code> 命令提供通过 vnc 的方式链接虚拟机，该方式对裸金属服务器不可用。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc webconsole-server &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="ssh远程终端">SSH远程终端&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="ssh-连接">ssh 连接&lt;/h3>
 &lt;p>查询 server 的 ip&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 可通过 server-list --search --details 的方式找到虚拟机的 ip&lt;/span>
 $ climc server-list --search &amp;lt;server_name&amp;gt; --details
@@ -704,7 +703,7 @@ microcode : 0xca
 &lt;p>虚拟机在关机状态下，可以执行冷迁移操作。&lt;/p>
 &lt;h4 id="查看冷迁移帮助信息">查看冷迁移帮助信息&lt;/h4>
 &lt;p>冷迁移的命令为 &lt;code>climc server-migrate&lt;/code>，通过下面的命令可以查看参数的说明和帮助信息：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-migrate --help
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc &lt;span style="color:#204a87">help&lt;/span> server-migrate
 Usage: climc server-migrate &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-start&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--rescue-mode&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
 Migrate server
 Positional arguments:
@@ -752,7 +751,7 @@ $ climc server-migrate --auto-start --prefer-host xxx vm1
 &lt;p>虚拟机在运行状态进行的迁移叫做热迁移，热迁移的速度会比冷迁移慢，因为设计磁盘和内存等状态的同步，但好处是在不关机的状态下进行迁移，基本上对虚拟机上运行的业务没有影响。&lt;/p>
 &lt;h4 id="查看热迁移帮助信息">查看热迁移帮助信息&lt;/h4>
 &lt;p>热迁移的命令为 &lt;code>climc server-live-migrate&lt;/code>，通过下面的命令查看帮助信息：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate --help
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc &lt;span style="color:#204a87">help&lt;/span> server-live-migrate
 Usage: climc server-live-migrate &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-cpu-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
 Live-Migrate server
 Positional arguments:
@@ -769,7 +768,7 @@ Server migration prefer host id or name
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate vm1
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>热迁移默认要求目标宿主机和虚拟机当前所在的宿主机 CPU microcode 、内核版本等一致， 如果不一致该宿主机则会被调度器过滤掉，如果环境里面实在没有 CPU 一致的目标宿主机，可以使用 &lt;code>--skip-cpu-check&lt;/code> 绕过 CPU microcode 的检查&lt;/li>
+&lt;li>热迁移默认要求目标宿主机和虚拟机当前所在的宿主机 CPU microcode 一致， 如果不一致该宿主机则会被调度器过滤掉，如果环境里面实在没有 CPU 一致的目标宿主机，可以使用 &lt;code>--skip-cpu-check&lt;/code> 绕过 CPU microcode 的检查&lt;/li>
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate --skip-cpu-check vm1
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>

@@ -103,24 +103,7 @@
 &lt;ol>
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
 &lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-创建快照&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出新建快照对话框。&lt;/li>
-&lt;li>配置以下参数：
-&lt;ul>
-&lt;li>快照类别：包括硬盘快照和主机快照，硬盘快照即为单块磁盘创建快照；主机快照即为虚拟机整体创建快照。&lt;/li>
-&lt;li>当选择快照类别为“创建硬盘快照”，配置以下参数：
-&lt;ul>
-&lt;li>选择磁盘：选择需要备份的磁盘。&lt;/li>
-&lt;li>快照名称：设置硬盘快照名称。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>当选择快照类别为“创建主机快照”，配置以下参数：
-&lt;ul>
-&lt;li>快照名称：设置主机快照名称。&lt;/li>
-&lt;li>同时新建内存快照：仅虚拟机开机状态下支持勾选该项，即创建快照时同时为内存创建快照，后续可基于内存快照恢复内存。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建快照。&lt;/li>
+&lt;li>选择快照类别，默认为“创建硬盘快照”，选择需要备份的磁盘，设置快照名称，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建硬盘快照。&lt;/li>
 &lt;/ol></description></item><item><title>Docs: 创建相同配置</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/sameconfig/</link><pubDate>Thu, 06 Jan 2022 16:19:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/sameconfig/</guid><description>
 &lt;p>该功能用于创建相同配置的虚拟机。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -146,26 +129,7 @@
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 绑定物理CPU</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/bindcpu/</link><pubDate>Thu, 10 Mar 2022 11:44:52 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/bindcpu/</guid><description>
-&lt;p>该功能用于将虚拟机的CPU进程绑定等到指定的物理CPU上执行，每个物理核都可以绑定不同的虚拟机。&lt;/p>
-&lt;h3 id="操作步骤">操作步骤&lt;/h3>
-&lt;ol>
-&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/主机/虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入虚拟机页面。&lt;/li>
-&lt;li>单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-绑定物理CPU&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出绑定物理CPU对话框。&lt;/li>
-&lt;li>绑定物理CPU：选择开启绑定物理CPU，并选择具体的CPU核数，支持多选。&lt;/li>
-&lt;li>取消绑定物理CPU：关闭绑定物理CPU。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h3 id="验证">验证&lt;/h3>
-&lt;pre>&lt;code># 获取虚拟机的id，可通过web界面或climc命令行查看，以虚拟机id是19eb1038-5566-4e65-860d-47d57d268e3d为例
-$ server_id = 19eb1038-5566-4e65-860d-47d57d268e3d为例
-# 查看虚拟机对应的pid
-$ cat /opt/cloud/workspace/servers/$server_id/pid
-91137
-# 查看虚拟机绑定的CPU核数
-$ cat /sys/fs/cgroup/cpuset/91137/cpuset.cpus
-6-8
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 到期释放</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/release/</link><pubDate>Thu, 06 Jan 2022 16:19:19 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/release/</guid><description>
+&lt;/ol></description></item><item><title>Docs: 到期释放</title><link>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/release/</link><pubDate>Thu, 06 Jan 2022 16:19:19 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/vminstance/tutorial/setting/release/</guid><description>
 &lt;p>到期释放即设置虚拟机的使用时长，当超过设置期限时，虚拟机将会被自动删除，存放到回收站。&lt;/p>
 &lt;h3 id="注意事项">注意事项&lt;/h3>
 &lt;p>虚拟机到期释放到期后，默认不会删除虚拟机上对应的快照，若需将快照随虚拟机一起删除，需要按照下面的方式修改配置文件。&lt;/p>

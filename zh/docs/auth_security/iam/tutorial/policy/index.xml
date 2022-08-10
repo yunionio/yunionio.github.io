@@ -12,19 +12,9 @@
 &lt;li>域：选择权限所属的域。&lt;/li>
 &lt;li>名称：自定义权限的名称。&lt;/li>
 &lt;li>备注：对自定义权限进行备注。&lt;/li>
-&lt;li>权限配置方式：支持可视化视图和YAML编辑视图。
+&lt;li>权限范围：设置权限的生效范围，包括管理后台、域管理后台、无管理后台（项目视图）&lt;/li>
+&lt;li>编辑模式：支持可视化视图和YAML编辑视图。
 &lt;ul>
-&lt;li>可视化视图：配置以下参数。
-&lt;ul>
-&lt;li>管理权限：管理权限包括管理后台、域管理后台、无管理后台。管理权限对应列表中的权限范围系统、域、项目。并支持自定义不同视图下的节点权限。
-&lt;ul>
-&lt;li>管理后台：即用户以拥有管理后台权限的角色加入项目后，可以切换到管理后台视图，并设置自定义管理后台视图下用户拥有的权限，包括计算、镜像、容器、认证、通知、日志、其他、计费计量、告警、流程等模块权限，并支持展开设置具体功能权限包括列表、详情、更新、创建、删除、执行操作等具体操作权限。&lt;/li>
-&lt;li>域管理后台：即用户以拥有域管理后台权限的角色加入项目后，可以切换到域管理后台视图，并支持自定义域挂历后台视图系用户拥有的权限。包括计算、镜像、容器、认证、通知、日志、计费计量、告警等模块权限，并支持展开设置具体功能权限包括列表、详情、更新、创建、删除、执行操作等具体操作权限。&lt;/li>
-&lt;li>无管理后台：即绑定该权限的用户只拥有项目视图，并设置自定义项目视图下用户拥有的权限。包括计算、镜像、容器、通知、日志、计费计量、告警等模块权限，并支持展开设置具体功能权限包括列表、详情、更新、创建、删除、执行操作等具体操作权限。由于用户以任意角色加入项目都将拥有member权限，当用户以拥有自定义项目视图权限的角色加入项目时，用户的权限为自定义权限和member权限的并集。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
 &lt;li>YAML编辑视图：
 &lt;ul>
 &lt;li>权限内容：格式如下。&lt;/li>
@@ -48,8 +38,17 @@
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#39;*&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">allow&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">scope&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">project&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>可视化视图：配置以下参数。
+&lt;ul>
+&lt;li>当权限范围选择管理后台时，当用户以拥有管理后台权限的角色加入项目后，可以切换到管理后台视图，并设置自定义管理后台视图下用户拥有的权限，包括计算、镜像、容器、认证、通知、日志、其他、计费计量、告警、流程等模块权限，并支持展开设置具体功能权限包括列表、详情、更新、创建、删除、执行操作等具体操作权限。&lt;/li>
+&lt;li>当权限范围选择域管理后台时，当用户以拥有域管理后台权限的角色加入项目后，可以切换到域管理后台视图，并支持自定义域挂历后台视图系用户拥有的权限。包括计算、镜像、容器、认证、通知、日志、计费计量、告警等模块权限，并支持展开设置具体功能权限包括列表、详情、更新、创建、删除、执行操作等具体操作权限。&lt;/li>
+&lt;li>当权限范围选择无管理后台时，当绑定该权限的用户只拥有项目视图，并设置自定义项目视图下用户拥有的权限。包括计算、镜像、容器、通知、日志、计费计量、告警等模块权限，并支持展开设置具体功能权限包括列表、详情、更新、创建、删除、执行操作等具体操作权限。由于用户以任意角色加入项目都将拥有member权限，当用户以拥有自定义项目视图权限的角色加入项目时，用户的权限为自定义权限和member权限的并集。&lt;/li>
 &lt;/ul>
 &lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>项目标签：设置权限匹配的层级项目，当设置该项后，拥有该权限的用户仅可以管理对应层级项目下的资源。&lt;/li>
+&lt;li>资源标签：设置权限匹配的资源标签，当设置该项后，拥有该权限的用户仅可以管理带有对应资源标签的资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>

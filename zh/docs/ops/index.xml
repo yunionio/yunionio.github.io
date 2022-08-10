@@ -205,16 +205,17 @@ $ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
 &lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
 $ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">
-&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
-$ kubectl rollout restart deployment -n onecloud default-web
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
 $ kubectl -n onecloud delete pods default-host-xxxxx
 $ kubectl rollout restart daemonset -n onecloud default-host
+&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
+$ kubectl rollout restart deployment -n onecloud default-web
+&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
+$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
 &lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，平台服务都以default开头&lt;/span>
 $ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
 &lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
-$ kubectl get ds -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout ds -n onecloud
+$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
 &lt;p>平台所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以region服务为例更新其configmaps配置信息&lt;/span>

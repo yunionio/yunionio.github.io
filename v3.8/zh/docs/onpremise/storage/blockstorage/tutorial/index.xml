@@ -1,0 +1,300 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+操作指南</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 15 Mar 2022 15:22:06 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 添加共享存储</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/create/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/create/</guid><description>
+&lt;p>该功能用于连接Ceph分布式存储、NFS网络文件系统以及GPFS共享存储，存储创建完成后处于“待挂载”状态，还需要&lt;a href="../associate">关联宿主机操作&lt;/a>使其状态变为“在线”后才能被用户使用。&lt;/p>
+&lt;ol>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建存储对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>指定域：选择块存储的所属域。&lt;/li>
+&lt;li>区域 ：设置区域和可用区。&lt;/li>
+&lt;li>名称：设置块存储的名称。&lt;/li>
+&lt;li>备注：设置存储的备注信息。&lt;/li>
+&lt;li>介质类型：存储设备的介质类型，包括机械盘、固态盘和混合盘。性能固态盘&amp;gt;混合盘&amp;gt;机械盘。&lt;/li>
+&lt;li>存储类型：包括Ceph、NFS、GPFS三种。
+&lt;ul>
+&lt;li>当选择存储类型为&amp;quot;Ceph“时，配置以下参数。Ceph类型存储要求本地数据中心存在Ceph存储集群。
+&lt;ul>
+&lt;li>
+&lt;p>Ceph Mon Host：Ceph存储的监控节点的IP地址。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Ceph Key：Ceph存储集群默认启用密钥认证，Ceph Key即用户的密钥，格式为为“AQDsBh5b1CtoHxAA9atFhYn1cPBJvPCpoRVo/g==”形式的字符串。可通过以下命令获取Ceph存储的用户密钥。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat ceph.client.admin.keyring &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep key
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Ceph Pool：Ceph存储的存储池。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当选择存储类型为&amp;quot;NFS“时，配置以下参数。NFS类型存储要求本地数据中心存储NFS网络存储服务器。
+&lt;ul>
+&lt;li>NFS Host：NFS服务器的IP地址。&lt;/li>
+&lt;li>NFS Shared Dir：NFS服务器设置的共享目录。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当选择存储类型为”GPFS“时，无需配置任何参数。GPFS类型存储要求本地数据中心存在共享存储，并且需挂载存储的宿主机已关联该存储。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>标签：支持为新建的块存储绑定标签。支持选择已有标签和新建标签。
+&lt;ul>
+&lt;li>新建标签：单击列表上方 &lt;strong>&lt;em>新建&lt;/em>&lt;/strong> 按钮，设置标签键和标签值，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建标签并绑定到资源上。&lt;/li>
+&lt;li>选择已有标签：单击 &lt;strong>&lt;em>&amp;ldquo;已有标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择标签键和值。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 关联宿主机</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/associate/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/associate/</guid><description>
+&lt;p>该功能用于将Ceph、GPFS、NFS类型的存储关联或取消关联宿主机。&lt;/p>
+&lt;h2 id="关联宿主机">关联宿主机&lt;/h2>
+&lt;p>该功能用于将Ceph、GPFS、NFS类型的存储关联到宿主机上，供宿主机使用。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>关联宿主机有如下要求：&lt;/p>
+&lt;ul>
+&lt;li>Ceph存储关联宿主机时，不需要挂载点，支持批量关联多个宿主机。&lt;/li>
+&lt;li>NFS存储关联宿主机时，如果多个宿主机挂载点一样，可以批量关联多个宿主机，宿主机上可以不存在挂载点。&lt;/li>
+&lt;li>GPFS存储关联宿主机时，实际宿主机上已关联了GPFS存储，平台上的关联操作仅为了可以创建虚拟机时可以使用GPFS存储，不影响实际挂载操作。其中GPFS存储关联宿主机时的挂载点必须与实际挂载点一致，需要由用户环境的运维人员提供。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击“待挂载”状态的块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;管理宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入详情-宿主机页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;关联宿主机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联宿主机对话框。&lt;/li>
+&lt;li>选择宿主机以及宿主机上的挂载点，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，为宿主机关联存储。&lt;/li>
+&lt;/ol>
+&lt;h2 id="取消关联宿主机">取消关联宿主机&lt;/h2>
+&lt;p>该功能用于将块存储取消关联到宿主机。&lt;/p>
+&lt;p>&lt;strong>取消关联&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;管理宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入详情-宿主机页面。&lt;/li>
+&lt;li>单击宿主机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;取消关联宿主机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量取消关联宿主机&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;管理宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入详情-宿主机页面。&lt;/li>
+&lt;li>在列表中选择一个或多个宿主机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;取消关联宿主机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 调整超售比</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/outbound/</link><pubDate>Tue, 15 Mar 2022 14:47:50 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/outbound/</guid><description>
+&lt;p>该功能用于设置存储的超售比。超售即存储提供超过自身拥有的容量大小。存储实际可分配资源为实际资源*超售比。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+ZStack平台的存储暂不支持调整超售比。
+&lt;/div>
+&lt;p>&lt;strong>单块存储调整超售比&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整超售比&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>设置超售比，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量调整超售比&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在列表中勾选一个或多个块存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整超售比&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>分别设置CPU超售比和内存超售比，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 启用/禁用</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/enable/</link><pubDate>Tue, 15 Mar 2022 14:47:37 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/enable/</guid><description>
+&lt;h3 id="启用">启用&lt;/h3>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的块存储，禁用状态的存储无法提供存储服务。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用存储。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用存储。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用">禁用&lt;/h3>
+&lt;p>该功能用于禁用”启用“状态的块存储。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击”启用“状态的块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用存储。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储列表中勾选一个或多个”启用“状态的存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用存储。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 调整容量</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/capacity/</link><pubDate>Tue, 15 Mar 2022 15:21:15 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/capacity/</guid><description>
+&lt;p>仅OpenStack平台支持，由于云管平台获取不到OpenStack平台上存储的真正容量，所以云管平台支持设置OpenStack存储容量，请尽量将存储容量设置为存储的真实容量以尽可能的使用存储，避免由于设置的容量超出存储的真实容量而导致磁盘创建失败。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击OpenStack平台上指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整容量&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出调整容量对话框。&lt;/li>
+&lt;li>设置容量大小，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 修改属性</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/modify/</link><pubDate>Tue, 15 Mar 2022 15:21:37 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/modify/</guid><description>
+&lt;p>该功能用于调整块存储的参数信息。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>支持修改以下参数：
+&lt;ul>
+&lt;li>当选择Ceph类型存储时，支持修改Ceph Key（Ceph用户的密钥）、介质类型；&lt;/li>
+&lt;li>当选择NFS类型存储时，支持修改NFS Host（NFS服务器IP地址）、NFS Shared Dir（NFS的共享目录）、介质类型；&lt;/li>
+&lt;li>当选择其它类型存储时，仅支持修改介质类型。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 调整调度标签</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/adjusttag/</link><pubDate>Tue, 15 Mar 2022 15:21:49 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/adjusttag/</guid><description>
+&lt;p>该功能用于为块存储绑定调度标签，绑定调度标签的块存储将会按照调度标签为虚拟机提供存储。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整调度标签&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出调整调度标签对话框。&lt;/li>
+&lt;li>选择调度标签，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 设置共享&amp;更改域</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/share/</link><pubDate>Tue, 15 Mar 2022 15:21:58 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/share/</guid><description>
+&lt;h3 id="更改域">更改域&lt;/h3>
+&lt;p>该功能用于更改块存储的所属域。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>更改域的条件：需同时满足&lt;/p>
+&lt;ul>
+&lt;li>当前用户在管理后台。&lt;/li>
+&lt;li>在Cloudpods已开启三级权限。&lt;/li>
+&lt;li>存储的共享范围为私有。&lt;/li>
+&lt;li>存储类型不为本地存储。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个块存储更改域&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改域&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改域对话框。&lt;/li>
+&lt;li>选择块存储所属的域，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量更改域&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面中勾选一个或多个块存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改域&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改域对话框。&lt;/li>
+&lt;li>选择块存储所属的域，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h3 id="设置共享">设置共享&lt;/h3>
+&lt;p>该功能用于设置块存储的共享范围。&lt;/p>
+&lt;p>域资源的共享范围有三种：&lt;/p>
+&lt;ul>
+&lt;li>不共享（私有）：即域资源只能本域的用户可以使用。&lt;/li>
+&lt;li>域共享-部分（多域共享）：即域资源可以共享到指定域（一个或多个），只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>域共享-全部（全局共享）：即域资源可以共享给全部域使用，即系统中所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置共享的条件：需同时满足&lt;/p>
+&lt;ul>
+&lt;li>当前用户在管理后台。&lt;/li>
+&lt;li>在Cloudpods已开启三级权限。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+本地存储的共享范围要始终要与宿主机的共享范围保持一致。
+&lt;/div>
+&lt;p>&lt;strong>单个块存储设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即域资源的共享范围为私有，仅本域的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即域资源的共享范围为域共享-部分，只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即域资源的共享范围为域共享-全部，系统中的所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面中选择一个或多个块存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即域资源的共享范围为私有，仅本域的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即域资源的共享范围为域共享-部分，只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即域资源的共享范围为域共享-全部，系统中的所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/delete/</link><pubDate>Tue, 15 Mar 2022 15:22:06 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/delete/</guid><description>
+&lt;p>该功能用于删除块存储。当块存储未关联宿主机、且存储下没有硬盘文件和缓存文件时可删除。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>本地存储不支持删除。&lt;/li>
+&lt;li>若块存储未关联宿主机、且存储下没有硬盘文件和缓存文件，仍删除不了存储，可能是硬盘文件未彻底删除存放在回收站中，请在回收站中清除硬盘。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>根据需要删除块存储的数量，选择删除方式。
+&lt;ul>
+&lt;li>删除单个块存储：单击指定块存储右侧操作列 &lt;strong>&lt;em>更多&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出操作确认对话框中单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>删除多个块存储：在存储列表中勾选一个或多个存储，单击列表上方 &lt;strong>&lt;em>删除&lt;/em>&lt;/strong> 按钮，在弹出操作确认对话框中单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看块存储信息</title><link>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/viewstorage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/onpremise/storage/blockstorage/tutorial/viewstorage/</guid><description>
+&lt;h2 id="查看块存储详情">查看块存储详情&lt;/h2>
+&lt;p>该功能用于查看块存储详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储名称项，进入块存储详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对块存储进行启用、禁用、关联宿主机、调整容量、修改属性、调整标签以及删除操作。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：查看块存储的云上ID、ID、名称、状态、域、项目、共享范围、平台、启用状态、存储类型、介质类型、区域、可用区、云账号、创建时间、更新时间、备注等。&lt;/li>
+&lt;li>用量统计：查看块存储的物理容量（已分配/总量）、超售比、虚拟容量（虚拟容量=实际容量*超售比）、分配率、分配、预留、浪费容量。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看块存储挂载的宿主机信息">查看块存储挂载的宿主机信息&lt;/h2>
+&lt;p>该功能用于查看块存储管理的宿主机的信息，支持关联宿主机和取消关联宿主机操作。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>本地存储不支持取消关联宿主机。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储名称项，进入块存储详情页面。&lt;/li>
+&lt;li>单击”宿主机“页签，进入宿主机页面。&lt;/li>
+&lt;li>查看宿主机的名称、启用、状态、IP、服务、#VM（虚拟机数量）、CPU（数量和使用率）、内存（数量和使用率）、存储、SN（序列号）信息。&lt;/li>
+&lt;li>根据需要取消关联块存储的主机数量，选择取消关联宿主机方式。
+&lt;ul>
+&lt;li>取消关联单个宿主机：单击指定宿主机右侧操作列 &lt;strong>&lt;em>取消关联宿主机&lt;/em>&lt;/strong> 按钮，在弹出的操作确认对话框中，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>批量取消关联宿主机：在宿主机列表选择一个或多个宿主机，单击列表上方 &lt;strong>&lt;em>取消关联宿主机&lt;/em>&lt;/strong> 按钮，在弹出的操作确认对话框中，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>除取消关联操作外，支持对宿主机进行管理操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看硬盘信息">查看硬盘信息&lt;/h2>
+&lt;p>该功能用于查看使用块存储创建的虚拟机硬盘信息，并支持删除硬盘。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储名称项，进入块存储详情页面。&lt;/li>
+&lt;li>单击”硬盘“页签，进入硬盘页面。&lt;/li>
+&lt;li>查看硬盘信息，包括名称、容量、格式、磁盘类型、虚拟机、是否挂载、状态信息等。&lt;/li>
+&lt;li>支持对硬盘进行管理操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看回收站信息">查看回收站信息&lt;/h2>
+&lt;p>该功能用于查看目前处于回收站中的使用块存储创建的虚拟机硬盘信息。并支持清除和恢复操作。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储名称项，进入块存储详情页面。&lt;/li>
+&lt;li>单击“回收站”页签，进入回收站页面。&lt;/li>
+&lt;li>查看目前处于回收站的硬盘信息，包括名称、类型、虚拟机、状态等。&lt;/li>
+&lt;li>支持对回收站中的硬盘进行清除和恢复操作，。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看镜像缓存">查看镜像缓存&lt;/h2>
+&lt;p>镜像缓存即在存储上创建的虚拟机使用的镜像缓存信息，当关联镜像的虚拟机删除后可以释放镜像缓存，清理存储空间。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/li>
+&lt;li>单击指定块存储名称项，进入块存储详情页面。&lt;/li>
+&lt;li>单击”镜像缓存“页签，进入镜像缓存页面。&lt;/li>
+&lt;li>查看镜像缓存信息，包括名称、文件大小、状态、路径、引用（使用该镜像缓存的虚拟机数量）等信息&lt;/li>
+&lt;li>释放缓存：单击镜像缓存指定操作列 &lt;strong>&lt;em>释放缓存&lt;/em>&lt;/strong> 按钮，在弹出的操作确认对话框中单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item></channel></rss>

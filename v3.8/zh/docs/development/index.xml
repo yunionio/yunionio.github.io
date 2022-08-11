@@ -21,7 +21,7 @@
 &lt;p>下面是不同操作系统和 Linux 发行版的安装方式，这里还是建议开发环境是 Linux 。&lt;/p>
 &lt;h3 id="安装-docker">安装 Docker&lt;/h3>
 &lt;ul class="nav nav-tabs" id="docker_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#docker_install-0" role="tab" aria-controls="docker_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
-&lt;/ul>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#docker_install-1" role="tab" aria-controls="docker_install-1">MAC&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="docker_install">&lt;div id="docker_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="docker_install-0">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 1. 安装必要的一些系统工具&lt;/span>
 sudo yum install -y yum-utils
@@ -29,6 +29,14 @@ sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 &lt;span style="color:#8f5902;font-style:italic"># 3. 更新并安装 Docker CE&lt;/span>
 sudo yum -y install docker-ce
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="docker_install-1" class="tab-pane" role="tabpanel" aria-labelledby="docker_install-1">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 1. 安装brew 参考[brew官网](https://brew.sh/index_zh-cn)&lt;/span>
+/bin/bash -c &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 2. 安装 Docker CE&lt;/span>
+brew install docker
+&lt;span style="color:#8f5902;font-style:italic"># 3. 查看版本&lt;/span>
+docker --version
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h3 id="配置-docker">配置 Docker&lt;/h3>
 &lt;p>后续的代码编译和打包使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 的功能，需要做在让 docker daemon 开启 experimental 特性。&lt;/p>

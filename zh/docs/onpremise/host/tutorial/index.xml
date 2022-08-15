@@ -264,7 +264,26 @@ $ climc host-disable &amp;lt;host_id&amp;gt;
 &lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入宿主机页面。&lt;/li>
 &lt;li>单击宿主机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置GPU卡预留资源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置GPU卡预留资源。&lt;/li>
 &lt;li>设置每个GPU预留资源，分别设置CPU、内存、硬盘大小，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 删除</title><link>https://www.cloudpods.org/zh/docs/onpremise/host/tutorial/delete/</link><pubDate>Mon, 07 Feb 2022 18:26:35 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/host/tutorial/delete/</guid><description>
+&lt;/ol></description></item><item><title>Docs: 宿主机 CPU 预留</title><link>https://www.cloudpods.org/zh/docs/onpremise/host/tutorial/reservecpus/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/host/tutorial/reservecpus/</guid><description>
+&lt;h2 id="功能介绍">功能介绍&lt;/h2>
+&lt;p>宿主机 CPU 预留功能支持将部分 CPU 预留给其他进程使用，不再分配给虚拟机使用。&lt;/p>
+&lt;h2 id="使用介绍">使用介绍&lt;/h2>
+&lt;p>确保这台宿主机上没有运行中的虚机，然后选择合适的 CPU 作为预留 CPU。宿主机 hostagent 初始化时会创建 cloudpods.hostagent.reserved 的 cgroup。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-reserve-cpus --help
+Usage: climc host-reserve-cpus &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--mems MEMS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--disable-sched-load-balance&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--cpus CPUS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt; ...
+&lt;span style="color:#8f5902;font-style:italic"># 三个参数&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --cpus 对应的是 cpuset.cpus: 限制进程组使用的 CPU。&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --mems 对应的是 cpuset.mems, 限制可以使用的memory节点。&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># --disable-sched-load-balance 对应 cpuset.sched_load_balance flag，关闭预留 cpuset 内的 cpu balance。&lt;/span>
+$ climc host-reserve-cpus --mems 0-1 --disable-sched-load-balance --cpus &lt;span style="color:#4e9a06">&amp;#34;1-2,38-39&amp;#34;&lt;/span> 3bce9607-2597-469f-8d9b-977345456739
+&lt;span style="color:#8f5902;font-style:italic"># 宿主机上查看&lt;/span>
+$ cat /sys/fs/cgroup/cpuset/cloudpods.hostagent.reserved/cpuset.cpus
+1-2,38-39
+$ cat /sys/fs/cgroup/cpuset/cloudpods.hostagent.reserved/cpuset.mems
+0-1
+$ cat /sys/fs/cgroup/cpuset/cloudpods.hostagent.reserved/cpuset.sched_load_balance
+&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 删除</title><link>https://www.cloudpods.org/zh/docs/onpremise/host/tutorial/delete/</link><pubDate>Mon, 07 Feb 2022 18:26:35 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/host/tutorial/delete/</guid><description>
 &lt;p>该功能用于删除宿主机。当宿主机上虚拟机数量为0，且处于禁用状态下才可以删除。&lt;/p>
 &lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
 &lt;ol>

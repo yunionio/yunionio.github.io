@@ -1223,7 +1223,52 @@ $ climc user-join-project --role admin --project system admin
 &lt;h2 id="资源层">资源层&lt;/h2>
 &lt;ul>
 &lt;li>资源层实现对KVM虚拟机，裸机，VMWare虚拟机等计算资源的管理和控制功能。云管平台目前主要支持对KVM虚拟机，裸机，VMWare虚拟机，常用私有云openstack, zstack 以及公有云阿里云，Azure，腾讯云，AWS等公有云资源的管理。&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 后端服务框架</title><link>https://www.cloudpods.org/zh/docs/development/framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/framework/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 添加选项支持外表查询</title><link>https://www.cloudpods.org/zh/docs/development/extra-order/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/extra-order/</guid><description>
+&lt;h2 id="确定资源">确定资源&lt;/h2>
+&lt;p>首先确定所需添加关联的资源，例如本次为disk资源，因此在climc调用中即对应disk-list,而在climc，与region中所需修改添加的文件有cmd/climc/shell/compute/disks.go、pkg/apis/compute/disks.go、pkg/compute/models/disks.go&lt;/p>
+&lt;h2 id="climc内容">climc内容&lt;/h2>
+&lt;p>在climc中主要用于命令行输入，确定传入参数，&amp;ndash;order-by-guest-count asc|desc&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># vim cmd/climc/shell/compute/disks.go，在init()中的ListOptions中添加命令&lt;/span>
+&lt;span style="color:#204a87">type&lt;/span> DiskListOptions struct &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+options.BaseListOptions
+...
+OrderByGuestCount string &lt;span style="color:#4e9a06">`&lt;/span>help:&lt;span style="color:#4e9a06">&amp;#34;Order By Guest Count&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>
+...
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="region内容">region内容&lt;/h2>
+&lt;p>在climc中主要用于逻辑处理，确定所需添加list的命令的region服务字段&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic">#vim pkg/apis/compute/disks.go，在ListInput中添加字段&lt;/span>
+&lt;span style="color:#204a87">type&lt;/span> DiskListInput struct &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+...
+OrderByGuestCount sting &lt;span style="color:#4e9a06">`&lt;/span>json:&lt;span style="color:#4e9a06">&amp;#34;order_by_guest_count&amp;#34;&lt;/span> choices:&lt;span style="color:#4e9a06">&amp;#34;asc|desc&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>
+...
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic">#vim pkg/compute/models/disks.go,在OrderByExtraFields函数中添加排序逻辑&lt;/span>
+func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>manager *SDiskManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> OrderByExtraFields&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>
+ctx context.Context,
+q *sqlchemy.SQuery,
+userCred mcclient.TokenCredential,
+query api.DiskListInput,
+&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>*sqlchemy.SQuery, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+...
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> db.NeedOrderQuery&lt;span style="color:#ce5c00;font-weight:bold">([]&lt;/span>string&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>query.OrderByGuestCount&lt;span style="color:#ce5c00;font-weight:bold">})&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+guestdisks :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> GuestdiskManager.Query&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>.SubQuery&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>
+disks :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> DiskManager.Query&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>.SubQuery&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>
+guestdiskQ :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> guestdisks.Query&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>
+guestdisks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+guestdisks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+sqlchemy.COUNT&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_count&amp;#34;&lt;/span>, guestdisks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>,
+&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">guestdiskQ&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> guestdiskQ.LeftJoin&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>disks, sqlchemy.Equals&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, disks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)))&lt;/span>
+guestdiskSQ :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> guestdiskQ.GroupBy&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>.SubQuery&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>
+q.AppendField&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>q.QueryFields&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>...&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+q.AppendField&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskSQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_count&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+&lt;span style="color:#000">q&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> q.LeftJoin&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskSQ, sqlchemy.Equals&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>q.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, guestdiskSQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)))&lt;/span>
+db.OrderByFields&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>q, &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>string&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>query.OrderByGuestCount&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>, &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>sqlchemy.IQueryField&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>guestdiskQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_count&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)})&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+...
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 后端服务框架</title><link>https://www.cloudpods.org/zh/docs/development/framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/framework/</guid><description>
 &lt;p>介绍云平台后端服务所用的框架和相关库的使用方法，建议先阅读 &lt;a href="../../development/services/">&amp;ldquo;开发相关/服务组件介绍&amp;rdquo;&lt;/a> 了解各个服务大概的功能。&lt;/p>
 &lt;h2 id="后端服务框架">后端服务框架&lt;/h2>
 &lt;p>keystone, region, glance 等后端服务，都是用的同一套后端服务框架，这个框架是我们自己定义实现的，核心模块如下:&lt;/p>

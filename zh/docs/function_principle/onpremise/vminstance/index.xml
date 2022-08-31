@@ -595,6 +595,7 @@ kubectl -n onecloud rollout restart deployment default-region
 &lt;p>如果云主机关联了 gpu，可以通过 &lt;code>server-detach-isolated-device&lt;/code> 卸载主机的某一 gpu。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-detach-isolated-device &amp;lt;server_id&amp;gt; &amp;lt;device_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: USB 透传</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/usb-passthrough/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/usb-passthrough/</guid><description>
+&lt;p>支持版本：&amp;gt;=3.8&lt;/p>
 &lt;p>目前只有内置私有云平台的虚拟机可以使用宿主机上的 USB 设备。前提条件是宿主机需要有 &lt;code>lsusb&lt;/code> 这个工具，如果没有请安装 &lt;code>usbutils&lt;/code> 这个包。&lt;/p>
 &lt;h2 id="配置宿主机">配置宿主机&lt;/h2>
 &lt;p>查看宿主机上的 USB 设备，命令如下：&lt;/p>
@@ -727,7 +728,10 @@ $ climc isolated-device-list --host oc-node-1-192-168-121-21
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> fa3cdbbd-7c54-4d2a-87cd-9362aa590a7d &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Adomax Technology Co., Ltd &lt;span style="color:#000;font-weight:bold">|&lt;/span> 001:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0627:0001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+----------+----------------------------+---------+------------------+--------------------------------------+
 *** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 串口COM透传</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/com-passthrough/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/com-passthrough/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="指定usb控制器">指定USB控制器&lt;/h2>
+&lt;p>默认采用qemu-xhci的USB控制器，该控制器支持版本为USB 3.0，向下兼容2.0。对于老版本的操作系统，例如 Windows Server 2008 R2，不识别USB 3.0的控制器，此时需要改为USB 2.0的控制器 usb-ehci。可以通过一下climc命令行更改虚拟机使用的USB控制器：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-set-qemu-params &amp;lt;sid&amp;gt; --usb-controller-type &amp;lt;usb-ehci&lt;span style="color:#000;font-weight:bold">|&lt;/span>qemu-xhci&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>更改后，请请重启虚拟机。&lt;/p></description></item><item><title>Docs: 串口COM透传</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/com-passthrough/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/com-passthrough/</guid><description>
 &lt;p>本文介绍如何将宿主机的串口（COM）透传到虚拟机内使用。&lt;/p>
 &lt;h2 id="配置宿主机">配置宿主机&lt;/h2>
 &lt;p>查看宿主机上的 COM 设备，采用命令 setserial 查看：&lt;/p>

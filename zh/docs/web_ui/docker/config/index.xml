@@ -1,0 +1,252 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+应用配置</title><link>https://www.cloudpods.org/zh/docs/web_ui/docker/config/</link><description>Recent content in 应用配置 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/web_ui/docker/config/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 配置项</title><link>https://www.cloudpods.org/zh/docs/web_ui/docker/config/k8s-configmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/docker/config/k8s-configmap/</guid><description>
+&lt;p>配置项（Configmap）支持将配置文件和镜像文件分离，使容器化的应用程序具有可移植性。配置项以键值对的形式保存配置信息。&lt;/p>
+&lt;p>配置项的详细介绍内容，请参考&lt;a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/">kubernets官方文档-Configmap&lt;/a>。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+目前Cloudpods平台不支持在界面上使用已创建的配置项。需要通过修改yaml文件使用配置项。
+&lt;/div>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;容器/应用配置/配置项&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入配置项页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/configmap1.png" alt="">&lt;/p>
+&lt;h2 id="查看配置项">查看配置项&lt;/h2>
+&lt;p>该功能用于基于集群、命名空间筛选配置项信息。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在配置项页面，默认查看一个集群下所有命名空间的配置项信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当环境中存在多个集群时，单击列表上方集群右侧输入框，选择其他集群，查看其他集群下的所有命名空间的配置项信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当集群下存在多个命名空间时，单击列表上方命名空间右侧输入框，选择命名空间，查看指定命名空间下的配置项信息。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/switchcluster&amp;amp;namespace.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="新建配置项">新建配置项&lt;/h2>
+&lt;p>该功能用于创建配置项。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建配置项页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：配置项的名称。&lt;/li>
+&lt;li>集群：选择配置项所属集群。&lt;/li>
+&lt;li>命名空间：选择配置项所属命名空间。命名空间用于逻辑划分集群，deployment、pod、service等都属于某一命名空间。在云管平台中命名空间对应项目。Kubernetes集群创建完成后默认将生成default、kube-system、kube-public等命名空间。&lt;/li>
+&lt;li>配置项：以键值对的形式设置配置项，支持添加多个键值对。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建配置项。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看编辑">查看/编辑&lt;/h2>
+&lt;p>该功能用于查看或者编辑配置项的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑配置项的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除配置项">删除配置项&lt;/h2>
+&lt;p>该功能用于删除配置项。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除配置项以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在配置项列表中选择一个或多个配置项，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除配置项以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看配置项详情">查看配置项详情&lt;/h2>
+&lt;p>该功能用于查看配置项相关信息。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>查看以下信息：包括云上ID、ID、名称、状态、集群、命名空间、容器组、镜像、初始化镜像、标签、创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看容器组">查看容器组&lt;/h2>
+&lt;p>该功能用于查看配置项关联的容器组，并支持管理容器组。&lt;/p>
+&lt;h3 id="查看编辑-1">查看/编辑&lt;/h3>
+&lt;p>该功能用于查看容器组的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>单击“容器组”页签，进入容器组页面。&lt;/li>
+&lt;li>单击容器组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑配置项的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除">删除&lt;/h3>
+&lt;p>该功能用于删除容器组。容器组删除后将会根据yaml文件设置重新部署新的容器组。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>单击“容器组”页签，进入容器组页面。&lt;/li>
+&lt;li>单击容器组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除-1">删除&lt;/h3>
+&lt;p>该功能用于删除服务。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>单击“服务”页签，进入服务页面。&lt;/li>
+&lt;li>单击服务右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看事件">查看事件&lt;/h2>
+&lt;p>该功能用于记录资源对象事件发生的记录，包括内容、来源、原因、创建时间，用于排除故障。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>单击“事件”页签，进入事件页面。&lt;/li>
+&lt;li>查看事件的内容、来源、原因以及创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看源信息">查看源信息&lt;/h2>
+&lt;p>该功能用于查看并编辑配置项的yaml信息。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>单击“源信息”页签，进入源信息页面。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;复制内容&amp;rdquo;&lt;/em>&lt;/strong> 按钮，复制节点的yaml文件信息。&lt;/li>
+&lt;li>更新yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;更新&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看配置项相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在配置项页面，单击配置项名称项，进入配置项详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 保密字典</title><link>https://www.cloudpods.org/zh/docs/web_ui/docker/config/k8s-secret/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/docker/config/k8s-secret/</guid><description>
+&lt;p>保密字典（Secret）以键值对的形式保存密码、令牌、密钥等敏感数据。目前仅支持创建私有仓库的的密钥以及Ceph CSI相关信息。&lt;/p>
+&lt;p>保密字典的详细介绍内容，请参考&lt;a href="https://kubernetes.io/docs/concepts/configuration/secret/">kubernets官方文档-Secrets&lt;/a>。&lt;/p>
+&lt;p>&lt;strong>镜像密钥的使用方法&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>用户在保密字典中创建密钥。&lt;/li>
+&lt;li>用户在创建deployment、Statefulset、job、cronjob时使用私有镜像仓库中镜像时，可在镜像密钥选择已有密钥。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;容器/应用配置/保密字典&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入保密字典页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/secret1.png" alt="">&lt;/p>
+&lt;h2 id="查看保密字典">查看保密字典&lt;/h2>
+&lt;p>该功能用于基于集群、命名空间筛选保密字典信息。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在保密字典页面，默认查看一个集群下所有命名空间的保密字典信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当环境中存在多个集群时，单击列表上方集群右侧输入框，选择其他集群，查看其他集群下的所有命名空间的保密字典信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当集群下存在多个命名空间时，单击列表上方命名空间右侧输入框，选择命名空间，查看指定命名空间下的保密字典信息。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/switchcluster&amp;amp;namespace.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="新建保密字典">新建保密字典&lt;/h2>
+&lt;p>该功能用于创建镜像仓库密钥以及Ceph CSI类型的保密字典。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建保密字典页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>类型：目前支持创建镜像仓库密钥和Ceph CSI。&lt;/li>
+&lt;li>当类型设置为“镜像仓库密钥”时，设置以下参数：
+&lt;ul>
+&lt;li>名称：保密字典的名称。&lt;/li>
+&lt;li>集群：选择保密字典所属集群。&lt;/li>
+&lt;li>命名空间：选择保密字典所属命名空间。命名空间用于逻辑划分集群，deployment、pod、service等都属于某一命名空间。在云管平台中命名空间对应项目。Kubernetes集群创建完成后默认将生成default、kube-system、kube-public等命名空间。&lt;/li>
+&lt;li>镜像仓库地址：设置镜像私有仓库的地址。请根据需求输入域名、IP。&lt;/li>
+&lt;li>用户名：请根据需求输入镜像私有仓库的实际用户名。&lt;/li>
+&lt;li>密码：请根据需求输入镜像私有仓库的实际登录密码。&lt;/li>
+&lt;li>邮箱：请根据需求设置用户邮箱。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当类型设置为“Ceph CSI”时，设置以下参数：
+&lt;ul>
+&lt;li>名称：保密字典的名称。&lt;/li>
+&lt;li>集群：选择保密字典所属集群。&lt;/li>
+&lt;li>命名空间：选择保密字典所属命名空间。命名空间用于逻辑划分集群，deployment、pod、service等都属于某一命名空间。在云管平台中命名空间对应项目。Kubernetes集群创建完成后默认将生成default、kube-system、kube-public等命名空间。&lt;/li>
+&lt;li>UserId：请根据需求设置Ceph CSI的UserId。&lt;/li>
+&lt;li>UserKey：请根据需求设置Ceph CSI的UserKey。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建保密字典。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看编辑">查看/编辑&lt;/h2>
+&lt;p>该功能用于查看或者编辑保密字典的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑保密字典的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除保密字典">删除保密字典&lt;/h2>
+&lt;p>该功能用于删除保密字典。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除保密字典以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在保密字典列表中选择一个或多个保密字典，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除保密字典以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看保密字典详情">查看保密字典详情&lt;/h2>
+&lt;p>该功能用于查看保密字典相关信息。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>查看以下信息：包括ID、状态、名称、状态、集群、命名空间、注释、创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看容器组">查看容器组&lt;/h2>
+&lt;p>该功能用于查看保密字典关联的容器组，并支持管理容器组。&lt;/p>
+&lt;h3 id="查看编辑-1">查看/编辑&lt;/h3>
+&lt;p>该功能用于查看容器组的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>单击“容器组”页签，进入容器组页面。&lt;/li>
+&lt;li>单击容器组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑保密字典的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除">删除&lt;/h3>
+&lt;p>该功能用于删除容器组。容器组删除后将会根据yaml文件设置重新部署新的容器组。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>单击“容器组”页签，进入容器组页面。&lt;/li>
+&lt;li>单击容器组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除-1">删除&lt;/h3>
+&lt;p>该功能用于删除服务。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>单击“服务”页签，进入服务页面。&lt;/li>
+&lt;li>单击服务右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看事件">查看事件&lt;/h2>
+&lt;p>该功能用于记录资源对象事件发生的记录，包括内容、来源、原因、创建时间，用于排除故障。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>单击“事件”页签，进入事件页面。&lt;/li>
+&lt;li>查看事件的内容、来源、原因以及创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看源信息">查看源信息&lt;/h2>
+&lt;p>该功能用于查看并编辑保密字典的yaml信息。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>单击“源信息”页签，进入源信息页面。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;复制内容&amp;rdquo;&lt;/em>&lt;/strong> 按钮，复制节点的yaml文件信息。&lt;/li>
+&lt;li>更新yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;更新&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看保密字典相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在保密字典页面，单击保密字典名称项，进入保密字典详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

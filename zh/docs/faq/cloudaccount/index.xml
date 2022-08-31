@@ -1,0 +1,1142 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+多云管理</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/</link><description>Recent content in 多云管理 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/faq/cloudaccount/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 阿里云</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/aliyun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/aliyun/</guid><description>
+&lt;h2 id="什么是access-key">什么是Access Key&lt;/h2>
+&lt;p>为了保障虚拟机的安全性，阿里云在API调用时均需要验证访问者的身份，以确保访问者具有相关权限。这种验证方式通过Access Key来实现，Access Key由阿里云颁发给虚拟机的所有者，它由Access Key ID和Access Key Secret构成。&lt;/p>
+&lt;h3 id="如何获取阿里云的access-key">如何获取阿里云的Access Key&lt;/h3>
+&lt;p>请注意，这里是以阿里云主账号为例来介绍如何获取Access Key，如果您使用RAM子账号，请参考&lt;a href="#ram%E5%AD%90%E8%B4%A6%E5%8F%B7%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96access-key">RAM子账号如何获取Access Key&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>使用主账号登录阿里云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &lt;strong>_&amp;ldquo;accesskeys&lt;/strong> &amp;ldquo;_** 菜单项进入安全信息管理页面。
+&lt;img src="../../image/aliyun-accesskeys.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在安全信息管理页面，可以查看已存在的AccessKey信息，也可以单击 &lt;strong>&lt;em>&amp;ldquo;创建AccessKey&amp;rdquo;&lt;/em>&lt;/strong> 按钮新建用户AccessKey，新建AccessKey时阿里云会向账号联系人手机发送验证码，验证通过后才可以创建AccessKey。
+&lt;img src="../../image/aliyun-get_acceesskey_list.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Access Key Secret默认不显示，单击&amp;rdquo;&lt;strong>显示&lt;/strong> &amp;ldquo;链接，阿里云将向账号所属的联系人手机发送一个验证码，验证通过后，才会显示Access Key Secret。
+&lt;img src="../../image/aliyun-get_access_key_secret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="ram子账号如何获取access-key">RAM子账号如何获取Access Key&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>使用子账号登录阿里云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &amp;ldquo;&lt;strong>accesskey&amp;hellip;&lt;/strong>&amp;rdquo; 进入安全信息管理页面。
+&lt;img src="../../image/aliyun_ram_get_access_key.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在安全信息管理页面，单击 &lt;strong>&lt;em>&amp;ldquo;创建AccessKey&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建AccessKey。
+&lt;img src="../../image/aliyun_get_ram_access_key_create.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>创建成功后，AccessKeySecret信息只会展示一次，请及时保存。
+&lt;img src="../../image/aliyun_ram_access_key_get.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+已创建的AccessKey，无法再查看AccessKeySecret。
+&lt;/div>
+&lt;h3 id="通过平台管理阿里云资源账号需要拥有哪些权限">通过平台管理阿里云资源，账号需要拥有哪些权限&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">只读权限&lt;/th>
+&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AdministratorAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">虚拟机, 安全组, 镜像, 磁盘, 快照&lt;/td>
+&lt;td style="text-align:left">AliyunECSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunECSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表&lt;/td>
+&lt;td style="text-align:left">AliyunVPCReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunVPCFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Eip&lt;/td>
+&lt;td style="text-align:left">AliyunEIPReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunEIPFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性网卡&lt;/td>
+&lt;td style="text-align:left">AliyunVPCNetworkIntelligenceReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunECSNetworkInterfaceManagementAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">AliyunOSSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunOSSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAT&lt;/td>
+&lt;td style="text-align:left">AliyunNATGatewayReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunNATGatewayFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">AliyunSLBReadOnlyAccess&lt;br>AliyunALBFullAccess&lt;/td>
+&lt;td style="text-align:left">AliyunSLBFullAccess&lt;br>AliyunALBFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">AliyunRDSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunRDSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">AliyunKvstoreReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunKvstoreFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">AliyunActionTrailFullAccess&lt;/td>
+&lt;td style="text-align:left">AliyunActionTrailFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">AliyunNASReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunNASFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">AliyunYundunWAFReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunYundunWAFFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">AliyunRAMReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunRAMFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">AliyunDNSReadOnlyAccess&lt;br>AliyunPubDNSFullAccess&lt;/td>
+&lt;td style="text-align:left">AliyunDNSFullAccess&lt;br>AliyunPubDNSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">账单,余额,费用&lt;/td>
+&lt;td style="text-align:left">AliyunFinanceConsoleReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunFinanceConsoleFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">AliyunCloudMonitorReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunCloudMonitorFullAccess&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="如何给子账号授权">如何给子账号授权&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>使用主账号登录阿里云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &lt;strong>&lt;em>&amp;ldquo;访问控制&amp;rdquo;&lt;/em>&lt;/strong> 菜单项 ，进入访问控制页面。
+&lt;img src="../../image/aliyun_access_control.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单栏 &lt;strong>&lt;em>&amp;ldquo;用户管理&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入用户管理页面。
+&lt;img src="../../image/aliyun_access_control_all.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在用户管理页面，单击指定用户操作列 &lt;strong>&lt;em>&amp;ldquo;授权&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进行授权操作。使用Cloudpods管理阿里云资源的账户所必须拥有的权限请查看&lt;a href="#%E4%BD%BF%E7%94%A8Cloudpods%E7%AE%A1%E7%90%86%E9%98%BF%E9%87%8C%E4%BA%91%E8%B5%84%E6%BA%90-%E5%AD%90%E8%B4%A6%E5%8F%B7%E9%9C%80%E8%A6%81%E6%8B%A5%E6%9C%89%E5%93%AA%E4%BA%9B%E6%9D%83%E9%99%90">使用Cloudpods管理云资源，子账号需要拥有哪些权限&lt;/a> 。
+&lt;img src="../../image/aliyun_ram_user_access_control.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="如何在阿里云平台获取账单存储桶url和文件前缀">如何在阿里云平台获取账单存储桶URL和文件前缀？&lt;/h2>
+&lt;h3 id="如何获取账单存储桶url">如何获取账单存储桶URL？&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>以阿里云主账号为例，以主账号登录阿里云控制台，单击顶部[费用]菜单的下拉菜单 &lt;strong>&lt;em>&amp;ldquo;用户中心&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入费用用户中心页面。
+&lt;img src="../../image/aliyunusercenter.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;账单数据存储&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入账单数据存储页面。
+&lt;img src="../../image/aliyunusercenterhome.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看并记录计费项消费明细和分账账单按天汇总的bucket名称，如未设置，需要在该页面添加存储文件的订阅上述两个账单到同一bucket，设置完成后，每天的增量账单数据将同步存储到对应的OSS上。建议该bucket中仅存放账单文件。
+&lt;img src="../../image/aliyunossbucket1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+由于阿里云OSS等类型资源的标签在计费项消费明细中账单中没有，仅在分账账单里显示，因此如需用费用上的标签分析费用，请配置分账账单按天汇总到存储桶。
+&lt;/div>
+&lt;ol start="4">
+&lt;li>在阿里云控制台的对象存储页面中，查看对应bucket的概览信息，bucket域名即为存储桶URL。
+&lt;img src="../../image/aliyunbucketurl.png" alt="">&lt;/li>
+&lt;/ol>
+&lt;h3 id="如何获取文件前缀">如何获取文件前缀？&lt;/h3>
+&lt;p>阿里云的账单文件前缀为账号ID，可在账号管理-安全设置中查看账号ID。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+当账单bucket中除账单文件外还存放了其他文件时，需要配置文件前缀仅获取bucket中的账单文件等。
+&lt;/div></description></item><item><title>Docs: AWS</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/aws/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/aws/</guid><description>
+&lt;h2 id="获取aws的访问密钥">获取AWS的访问密钥&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>使用AWS主账号（或拥有AdministratorAccess管理权限的子账号）登录AWS管理控制台，单击 &lt;strong>&lt;em>&amp;ldquo;IAM&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入IAM控制面板页面。
+&lt;img src="../../image/faq_account_aws_1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单栏 &lt;strong>&lt;em>&amp;ldquo;用户&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入用户管理列表，单击用户名名称项，进入指定用户详情页面。注意需要选择有足够管理权限的用户。
+&lt;img src="../../image/faq_account_aws_2.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“&lt;strong>安全证书&lt;/strong>”页签。
+&lt;img src="../../image/faq_account_aws_3.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;创建访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮，在弹出的创建访问密钥对话框中即可看到密钥信息，即密钥ID（Access Key ID）、密码（Access Key Secret）。
+&lt;img src="../../image/faq_account_aws_4.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+私有访问密钥仅创建时可见，请复制另存，如果不慎丢失，重新创建即可。
+&lt;/div>
+&lt;h2 id="通过平台管理aws资源需要云账号具备哪些权限">通过平台管理AWS资源，需要云账号具备哪些权限？&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">只读权限&lt;/th>
+&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AdministratorAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">虚拟机, 磁盘, 安全组, 镜像, 快照, 磁盘, 镜像&lt;/td>
+&lt;td style="text-align:left">AmazonEC2ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonEC2FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">项目&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡,EIP, NAT&lt;/td>
+&lt;td style="text-align:left">AmazonVPCReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonVPCFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">AmazonS3ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonS3FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">ElasticLoadBalancingReadOnly&lt;/td>
+&lt;td style="text-align:left">ElasticLoadBalancingFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">AmazonRDSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonRDSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">AmazonElastiCacheReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonElastiCacheFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">AWSCloudTrailReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AWSCloudTrail_FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">AmazonElasticFileSystemReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonElasticFileSystemFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">AWSWAFReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AWSWAFFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">IAMReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">IAMFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">AmazonRoute53DomainsReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonRoute53DomainsFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">账单,费用&lt;/td>
+&lt;td style="text-align:left">AWSBillingReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">Billing&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">CloudWatchReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">CloudWatchFullAccess&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="如何在aws平台获取账单存储桶url和文件前缀">如何在AWS平台获取账单存储桶URL和文件前缀？&lt;/h2>
+&lt;p>&lt;strong>新版&lt;/strong>&lt;/p>
+&lt;p>2019/08/07日期之后创建的AWS账号必须采用该方式配置并获取存储桶的URL和文件前缀。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>使用AWS主账号登录AWS管理控制台，单击右上角[用户名]的下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的账单控制面板&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入账单和成本管理控制面板页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awsbilling.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单 &lt;strong>&lt;em>&amp;ldquo;Cost &amp;amp; Usage Reoports&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在AWS成本和使用率报告页面，单击 &lt;strong>&lt;em>&amp;ldquo;创建报告&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建报告页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awscostreport.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>配置报告名称、勾选“包括资源ID”，单击 &lt;strong>&lt;em>&amp;ldquo;下一步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入交付选项页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awscreatecostreport.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>配置S3存储桶，支持选择已有的存储桶或创建新的存储桶。&lt;/p>
+&lt;p>&lt;img src="../../image/awscosts3.png" alt="">
+&lt;img src="../../image/awscosts3policy.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>配置报告路径前缀、时间粒度选择“每小时”、报告版本为“创建新报告版本”、压缩类型选择“ZIP”，单击 &lt;strong>&lt;em>&amp;ldquo;下一步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入审核页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awscostreportconfig.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>确认配置无误后，记录红框中的S3存储桶和报告路径前缀，单击 &lt;strong>&lt;em>&amp;ldquo;查看和完成&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成配置，创建报告。&lt;/p>
+&lt;p>&lt;img src="../../image/awscostreportfinish.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在AWS控制台的S3存储管理页面中查看对应存储桶中任意账单文件的概述信息，并记录对象URL，存储桶URL即为去掉后面文件名称的URL，如红框所示。&lt;/p>
+&lt;p>&lt;img src="../../image/awscosts3bucketurl.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>文件前缀即为步骤6中红框中的报告路径前缀。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>旧版&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>使用AWS主账号登录AWS管理控制台，单击右上角[用户名]的下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的账单控制面板&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入账单和成本管理控制面板页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awsbilling.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单 &lt;strong>&lt;em>&amp;ldquo;账单首选项&amp;rdquo;&lt;/em>&lt;/strong> ，在首选项页面的“成本管理首选项”中查看并记录“接收账单报告”的S3存储桶，如未配置，需要勾选“接收账单报告”并配置S3存储桶并验证，设置完成后，将根据设置的粒度将增量账单数据将同步存储到对应的OSS上。建议该bucket中仅存放账单文件。&lt;/p>
+&lt;p>&lt;img src="../../image/awsbillingbucket.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在AWS控制台的S3存储管理页面中查看对应存储桶中任意账单文件的概述信息，并记录对象URL，存储桶URL即为去掉后面文件名称的URL，如红框所示。&lt;/p>
+&lt;p>&lt;img src="../../image/awsbillingbucketurl.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>AWS的文件前缀为AWS账号ID。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+当账单bucket中除账单文件外还存放了其他文件时，需要配置文件前缀仅获取bucket中的账单文件等。
+&lt;/div>
+&lt;h2 id="如何纳管aws-organizations组织账户">如何纳管AWS Organizations组织账户?&lt;/h2>
+&lt;ol>
+&lt;li>配置AWS Organizations：使用AWS组织账号关联AWS账户，支持创建新的AWS账户和邀请现有的AWS账户；被邀请的AWS账户上需要存在“OrganizationAccountAccessRole”角色。&lt;/li>
+&lt;li>获取访问密钥：在AWS组织账号上的管理账号的IAM用户创建访问密钥，建议使用具有AdministratorAccess权限的用户。&lt;/li>
+&lt;/ol>
+&lt;h3 id="配置aws-organizations">配置AWS Organizations&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>使用AWS主账号（或拥有AdministratorAccess管理权限的子账号）登录AWS管理控制台，单击右上角[用户名]的下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的账单控制面板&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入账单和成本管理控制面板页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awsbilling.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击右侧 &lt;strong>&lt;em>&amp;ldquo;整合账单&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入AWS Organizations页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awsorgmenu.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在AWS Organizations - AWS 账户页面，添加AWS账户，目前支持两种将AWS账号添加到Organization的方式。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>创建AWS账户：设置AWS账户名、账户拥有者的电子邮件地址以及IAM角色名称（OrganizationAccountAccessRole），单击 &lt;strong>&lt;em>&amp;ldquo;创建AWS账户&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建AWS账户。&lt;/p>
+&lt;p>&lt;img src="../../image/awscreateorgaccount.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>邀请现有AWS账户：设置要邀请的AWS账户的电子邮件地址或账户ID，单击 &lt;strong>&lt;em>&amp;ldquo;发送邀请&amp;rdquo;&lt;/em>&lt;/strong> 按钮，等待账户拥有者接收请求，加入Organizations，此外还需要现有的AWS账号存在OrganizationAccountAccessRole的角色，如不存在请参考&lt;a href="#%E5%A6%82%E4%BD%95%E5%9C%A8aws%E8%B4%A6%E6%88%B7%E4%B8%AD%E6%B7%BB%E5%8A%A0organizationaccountaccessrole%E7%9A%84%E8%A7%92%E8%89%B2">如何在AWS账户中添加OrganizationAccountAccessRole的角色?&lt;/a>。&lt;/p>
+&lt;p>&lt;img src="../../image/awsorginviteaccount.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="获取访问密钥">获取访问密钥&lt;/h3>
+&lt;ol>
+&lt;li>在AWS Organizations的管理账户上获取访问密钥，建议使用具有AdministratorAccess权限的IAM用户，创建访问密钥。&lt;/li>
+&lt;li>获取访问密钥的具体步骤，请参考&lt;a href="#%E8%8E%B7%E5%8F%96aws%E7%9A%84%E8%AE%BF%E9%97%AE%E5%AF%86%E9%92%A5">获取AWS的访问密钥&lt;/a>。&lt;/li>
+&lt;/ol>
+&lt;h3 id="如何在aws账户中添加organizationaccountaccessrole的角色">如何在AWS账户中添加OrganizationAccountAccessRole的角色?&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>使用AWS主账号（或拥有AdministratorAccess管理权限的子账号）登录AWS管理控制台，单击 &lt;strong>&lt;em>&amp;ldquo;IAM&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入IAM控制面板页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击右侧 &lt;strong>&lt;em>&amp;ldquo;角色&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在角色页面，单击 &lt;strong>&lt;em>&amp;ldquo;创建角色&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建角色页面。&lt;/p>
+&lt;p>&lt;img src="../../image/awscreaterole.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择受信任实体的类型为“其他AWS账户”,并填入管理AWS组织的账号ID，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：权限&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../image/awsroleconfig.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Attach 权限策略选择“AdministratorAccess”，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：标签&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../image/awsroleconfigpolicy.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>请根据需求配置标签，配置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：审核&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>配置角色名称为“OrganizationAccountAccessRole”，单击 &lt;strong>&lt;em>&amp;ldquo;创建角色&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../image/awsroleconfigconfirm.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: Azure</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/azure/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/azure/</guid><description>
+&lt;h2 id="获取azure的租户tenantid和client信息">获取Azure的租户（Tenant）ID和Client信息&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录Azure控制台，单击左侧导航栏 &lt;strong>&lt;em>&amp;ldquo;Azure Active Directory/应用注册&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入应用注册页面。建议新建一个专门的应用程序供云管平台调用Azure API。
+&lt;img src="../../image/azureregisterapp.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>新注册&lt;/em>&lt;/strong> 按钮，在进入的注册应用程序页面，设置名称为任意值、设置受支持的账户类型为“仅此目录中的账户”，重定向URI设置为web，并输入以&amp;quot;&lt;a href="https://">https://&lt;/a>&amp;ldquo;或&amp;rdquo;&lt;a href="http://localhost">http://localhost&lt;/a>&amp;ldquo;开头的URL地址，单击 &lt;strong>&lt;em>&amp;ldquo;注册&amp;rdquo;&lt;/em>&lt;/strong> 按钮。
+&lt;img src="../../image/azureregisteredapp.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>创建成功后，系统自动显示刚创建的应用程序详情页面。该页面的应用程序（客户端）ID即为所需的客户端ID、目录（租户）ID即为所需的租户ID。
+&lt;img src="../../image/azureclientid.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在应用程序详情页面单击 &lt;strong>&lt;em>&amp;ldquo;证书和密码&amp;rdquo;&lt;/em>&lt;/strong> 菜单项。进入证书和密码页面。单击 &lt;strong>&lt;em>&amp;ldquo;新客户端密码&amp;rdquo;&lt;/em>&lt;/strong> 按钮。
+&lt;img src="../../image/azureclientsecretlist.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在弹出的添加客户端对话框输入密码说明、截止日期为“从不”，单击 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮新建客户端密码。
+&lt;img src="../../image/azurecreatesecret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>保存成功后，页面密码的值即为需要的客户端密码信息。
+&lt;img src="../../image/azureclientsecret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="如何把订阅的权限授权给应用程序">如何把订阅的权限授权给应用程序&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录Azure控制台，单击左侧导航栏 &lt;strong>&lt;em>&amp;ldquo;所有服务&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在所有服务列表中选择并单击 &lt;strong>&lt;em>&amp;ldquo;订阅&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入订阅列表。
+&lt;img src="../../image/azuresub.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击需要被授权的订阅，进入订阅的详情页面；
+&lt;img src="../../image/azuresublist.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击[访问控制(标识和访问管理)]，在进入的访问控制页面中单击 &lt;strong>&lt;em>&amp;ldquo;添加角色分配&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入添加角色分配页面。
+&lt;img src="../../image/azuresubrole.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>角色为“所有者”，将访问权限分配到对话框为“用户、组或服务主体”、在选择搜索框中搜索上一步骤创建的应用程序的名称，并选中应用程序，单击 &lt;strong>&lt;em>&amp;ldquo;保存&amp;rdquo;&lt;/em>&lt;/strong> 按钮。
+&lt;img src="../../image/azuresubaddrole.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在角色分配页面，查看订阅的权限已授权给应用程序。
+&lt;img src="../../image/azuresubapprole.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="应用程序api权限设置">应用程序API权限设置&lt;/h2>
+&lt;p>请确保应用程序拥有Azure Active Directory API下的以下权限。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>区域&lt;/th>
+&lt;th>API权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Azure中国&lt;/td>
+&lt;td>Directory: Directory.Read.All, Directory.ReadWrite.All&lt;/br> Domain: Domain.Read.All&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Azure国际区&lt;/td>
+&lt;td>Directory: Directory.Read.All, Directory.ReadWrite.All&lt;/br> Domain: Domain.Read.All, Domain.ReadWrite.All; &lt;/br>Member: Member.Read.Hidden; &lt;/br>Policy: Policy.Read.All;&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;strong>查看及设置步骤&lt;/strong>&lt;/p>
+&lt;p>以Azure国内区为例。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在Azure控制台，单击左侧导航栏 &lt;strong>&lt;em>&amp;ldquo;Azure Active Directory/应用注册&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入应用注册页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在新注册的应用程序详情页面，单击 &lt;strong>&lt;em>&amp;ldquo;API权限&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入API权限页面，查看API权限。&lt;/p>
+&lt;p>&lt;img src="../../image/azureapilist.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>检查应用程序的API权限是否满足上面的要求，如不满足，单击 &lt;strong>&lt;em>&amp;ldquo;添加权限&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出请求获取API权限对话框。&lt;/p>
+&lt;p>&lt;img src="../../image/azurerequestapi1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择“Microsoft Graph”，应用程序选择“应用程序权限”，并勾选Directory和Domian下的所有权限，单击 &lt;strong>&lt;em>&amp;ldquo;添加权限&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成配置。&lt;/p>
+&lt;p>&lt;img src="../../image/azurecreateapi1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理azure云资源需要云账号具备哪些权限">管理Azure云资源，需要云账号具备哪些权限&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">只读权限&lt;/th>
+&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">Reader&lt;/td>
+&lt;td style="text-align:left">Owner&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">虚拟机, 磁盘, 安全组, 镜像, 快照, 磁盘, 镜像, 负载均衡&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">Virtual Machine Contributor&lt;br>Classic Virtual Machine Contributor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">项目&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡,EIP, NAT, WAF&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">Network Contributor,&lt;br>Classic Network Contributor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">Storage Blob Data Reader&lt;/td>
+&lt;td style="text-align:left">Storage Blob Data Owner&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">Cloud SQL Viewer&lt;/td>
+&lt;td style="text-align:left">Cloud SQL Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">Redis Enterprise Cloud Viewer&lt;/td>
+&lt;td style="text-align:left">Redis Enterprise Cloud Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">Storage File Data SMB Share Reader&lt;/td>
+&lt;td style="text-align:left">Storage File Data SMB Share Contributor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">Graph Owner&lt;br>Resource Policy Contributor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">DNS Zone Contributor&lt;br>Private DNS Zone Contributor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">账单,费用&lt;/td>
+&lt;td style="text-align:left">Billing Reader&lt;br>Cost Management Reader&lt;/td>
+&lt;td style="text-align:left">Cost Management Contributor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">监控,操作日志&lt;/td>
+&lt;td style="text-align:left">Monitoring Reader&lt;/td>
+&lt;td style="text-align:left">Monitoring Contributor&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="如何获取azure合约编号和密钥">如何获取Azure合约编号和密钥？&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录&lt;a href="https://ea.azure.cn/">Azure中国EA Portal&lt;/a>or&lt;a href="https://ea.azure.com/">Azure EA Portal&lt;/a>，登录系统后，左上角数字即为合约编号。
+&lt;img src="../../image/azure_number.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧导航栏 &lt;strong>&lt;em>&amp;ldquo;报表&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，选择“下载使用量&amp;gt;API访问密钥”页签，该页面的主密钥即为密钥。
+&lt;img src="../../image/azure_apikey.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 华为云</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/huaweiyun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/huaweiyun/</guid><description>
+&lt;h2 id="如何获取华为云的api密钥">如何获取华为云的API密钥&lt;/h2>
+&lt;h3 id="新版">新版&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>登录华为云控制台，鼠标悬停在右上角用户名处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的凭证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入我的凭证页面。&lt;/p>
+&lt;p>&lt;img src="../../image/huaweinewaccount.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧[访问密钥]菜单，在访问密钥页面单击 &lt;strong>&lt;em>&amp;ldquo;新增访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../image/huaweinewak.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>通过验证后，会下载credentials名称的Excel表格，打开表格后即可获取密钥ID（Access Key ID）和密码（Secret Access Key）。
+&lt;img src="../../image/faq_account_huawei_3.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="旧版">旧版&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>登录华为云控制台，鼠标悬停在右上角用户名处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的凭证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入我的凭证页面。
+&lt;img src="../../image/faq_account_huawei_1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“&lt;strong>管理访问密钥&lt;/strong>”页签，在管理访问密钥页面单击 &lt;strong>&lt;em>&amp;ldquo;新增访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮。
+&lt;img src="../../image/faq_account_huawei_2.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>通过验证后，会下载credentials名称的Excel表格，打开表格后即可获取密钥ID（Access Key ID）和密码（Secret Access Key）。
+&lt;img src="../../image/faq_account_huawei_3.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理华为云资源需要云账号具备哪些权限">管理华为云资源，需要云账号具备哪些权限&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">只读权限&lt;/th>
+&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">Tenant Guest&lt;br>IAM ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">Tenant Administrator&lt;br>Security Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">虚拟机&lt;/td>
+&lt;td style="text-align:left">ECS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">ECS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">磁盘, 快照&lt;/td>
+&lt;td style="text-align:left">EVS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">EVS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">项目&lt;/td>
+&lt;td style="text-align:left">EPS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">EPS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">镜像&lt;/td>
+&lt;td style="text-align:left">IMS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">IMS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, 弹性网卡,EIP,安全组&lt;/td>
+&lt;td style="text-align:left">VPC ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">VPC FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAT&lt;/td>
+&lt;td style="text-align:left">NAT ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">NAT FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">OBS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">OBS Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">ELB ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">ELB FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">RDS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">RDS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">DCS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">DCS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">CTS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">CTS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">SFS ReadOnlyAccess&lt;br>SFS Turbo ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">SFS FullAccess&lt;br>SFS Turbo FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">WAF ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">WAF FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">IAM ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">Security Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">DNS ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">DNS FullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">账单,余额,费用&lt;/td>
+&lt;td style="text-align:left">BSS Operator&lt;/td>
+&lt;td style="text-align:left">BSS Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">CES ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">CES FullAccess&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="如何在华为云平台获取账单存储桶的url">如何在华为云平台获取账单存储桶的URL？&lt;/h2>
+&lt;h3 id="新版-1">新版&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>登录华为云平台，单击顶部 &lt;strong>&lt;em>&amp;ldquo;费用中心-费用账单&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入费用中心页面。
+&lt;img src="../../image/huaweinewconsum.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧[总览]菜单，在总览页面的右侧部分“账单数据存储”中查看并记录对象存储名称，如未配置，需要在该页面启用账单数据存储，并配置存储的OBS桶并进行授权验证操作等，设置完成后，每天的增量账单数据将同步存储到对应的OBS上。建议该bucket中仅存放账单文件。&lt;/p>
+&lt;p>&lt;img src="../../image/huaweinewbillingbucket.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在华为云控制台的对象存储服务(OBS)中查看对应存储桶的概览信息，获取访问域名即为存储桶URL。&lt;/p>
+&lt;p>&lt;img src="../../image/huaweibillingbucketurl.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="旧版-1">旧版&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>登录华为云平台，单击顶部[更多]菜单的下拉菜单 &lt;strong>&lt;em>&amp;ldquo;费用-消费总览&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入费用中心页面。
+&lt;img src="../../image/huaweiconsum.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧[消费数据存储]菜单，在进入的消费数据存储中查看并记录对象存储桶名称，如未配置，需要在该页面设置存储的OBS桶并进行授权验证操作等，设置完成后，每天的增量账单数据将同步存储到对应的OBS上。建议该bucket中仅存放账单文件。
+&lt;img src="../../image/huaweibillingbucket.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在华为云控制台的对象存储服务(OBS)中查看对应存储桶的概览信息，获取访问域名即为存储桶URL。
+&lt;img src="../../image/huaweibillingbucketurl.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 腾讯云</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/tencentyun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/tencentyun/</guid><description>
+&lt;h2 id="如何获取腾讯云api密钥">如何获取腾讯云API密钥&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录腾讯云控制台，单击右上角 &lt;strong>&lt;em>&amp;ldquo;云产品&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在展开的菜单中搜索 &lt;strong>&lt;em>&amp;ldquo;云API密钥&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，单击进入API密钥管理页面。
+&lt;img src="../../image/faq_account_qcloud_1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在API密钥管理页面获取APP ID、密钥ID（SecretId）、密码（SecretKey）对应的值。
+&lt;img src="../../image/faq_account_qcloud_2.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理腾讯云资源需要云账号具备哪些权限">管理腾讯云资源，需要云账号具备哪些权限&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">只读权限&lt;/th>
+&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AdministratorAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">虚拟机, 安全组, 镜像, 磁盘, 快照&lt;/td>
+&lt;td style="text-align:left">QcloudCVMReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudCVMFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡&lt;/td>
+&lt;td style="text-align:left">QcloudVPCReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudVPCFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Eip&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">QcloudEIPFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">QcloudCOSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudCOSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">QcloudCLBReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudCLBFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">QcloudMariaDBReadOnlyAccess&lt;br>QcloudCDBReadOnlyAccess&lt;br>QcloudSQLServerReadOnlyAccess&lt;br>QcloudPostgreSQLReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudMariaDBFullAccess&lt;br>QcloudCDBFullAccess&lt;br>QcloudSQLServerFullAccess&lt;br>QcloudPostgreSQLFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">QcloudRedisReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudRedisFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">QcloudAuditReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudAuditFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">QcloudCamReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudCamFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">QcloudDNSPodReadOnlyAccess&lt;br>QcloudPrivateDNSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudPrivateDNSFullAccess&lt;br>QcloudDNSPodFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">账单,余额,费用&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">QCloudFinanceFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">QcloudMonitorReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudMonitorFullAccess&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: UCloud</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/ucloud/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/ucloud/</guid><description>
+&lt;h2 id="如何获取-ucloud-api-密钥">如何获取 UCloud API 密钥&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录 UCloud 控制台，单击顶部 &lt;strong>&lt;em>&amp;ldquo;全部产品&amp;rdquo;&lt;/em>&lt;/strong> ，搜索或选择 &lt;strong>&lt;em>&amp;ldquo;开放API UAPI&amp;rdquo;&lt;/em>&lt;/strong> 菜单项 ，进入 API 产品页面；&lt;/p>
+&lt;p>&lt;img src="../../image/ucloudapi.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“API密钥”页签，进入API 密钥页面。单击 &lt;strong>&lt;em>&amp;ldquo;显示&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进行手机短信二次验证；&lt;/p>
+&lt;p>&lt;img src="../../image/ucloudapikeyshow.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>通过手机验证后获取公钥和私钥值。&lt;/p>
+&lt;p>&lt;img src="../../image/ucloudapikeypair.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>若使用子账号，除获取公钥或私钥外，还需要获取project_id，在“访问控制-用户管理-子账户详情”中获取project_id为个人权限中的应用项目的项目ID。&lt;/p>
+&lt;p>&lt;img src="../../image/ucloudprojectid.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理ucloud资源需要云账号具备哪些权限">管理UCloud资源，需要云账号具备哪些权限&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">权限策略&lt;/th>
+&lt;th style="text-align:left">策略说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">AdministratorAccess&lt;/td>
+&lt;td style="text-align:left">超级管理员权限&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: 谷歌云</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/googlecloud/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/googlecloud/</guid><description>
+&lt;h2 id="如何获取谷歌云服务帐号密钥信息">如何获取谷歌云服务帐号密钥信息？&lt;/h2>
+&lt;h3 id="纳管指定项目">纳管指定项目&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>打开“&lt;a href="https://console.cloud.google.com/project/_/iam-admin">GCP Console中的IAM和管理-IAM页面&lt;/a>”页面并登录。&lt;/p>
+&lt;p>&lt;img src="../../image/google_iam.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击顶部“选择项目”，选择需要授权的项目。&lt;/p>
+&lt;p>&lt;img src="../../image/google_project.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在左侧导航栏中选择“服务账号”，进入指定项目的服务账号页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;创建服务账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建服务账号页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>配置服务账号名称、服务账号ID、服务账号说明等，单击 &lt;strong>&lt;em>&amp;ldquo;创建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建服务账号并向此服务帐号授予对项目的访问权限。&lt;/p>
+&lt;p>&lt;img src="../../image/google_createserviceaccount.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择Project-Owner或Project-Viewer角色，Owner代表对项目的管理权限，Viewer代表对项目的只读权限，如需云管平台对Google云账号资源进行管理操作，请选择Project-Owner角色，单击 &lt;strong>&lt;em>&amp;ldquo;继续&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../image/google_serviceaccountpolicy.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>向用户授予访问此服务帐号的权限 (可选)步骤对云管平台无影响，请用户根据需求设置，配置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;继续&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在服务账号页面，单击新创建的服务账号右侧操作列&lt;img src="../../image/colum.png" alt="colum">按钮，单击 &lt;strong>&lt;em>&amp;ldquo;创建密钥&amp;rdquo;&lt;/em>&lt;/strong> 菜单项。&lt;/p>
+&lt;p>&lt;img src="../../image/google_serviceaccount1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择密钥类型为“JSON”，单击 &lt;strong>&lt;em>&amp;ldquo;创建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，下载json格式的密钥文件，内容如下，分别获取project_id、private_key_id、private_key、client_email等内容。&lt;/p>
+&lt;p>&lt;img src="../../image/google_create.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;service_account&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;[PROJECT-ID]&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;private_key_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;[KEY-ID]&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;private_key&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;-----BEGIN PRIVATE KEY-----\n[PRIVATE-KEY]\n-----END PRIVATE KEY-----\n&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;client_email&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;[SERVICE-ACCOUNT-EMAIL]&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;client_id&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;[CLIENT-ID]&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;auth_uri&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;https://accounts.google.com/o/oauth2/auth&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;token_uri&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;https://accounts.google.com/o/oauth2/token&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;auth_provider_x509_cert_url&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;https://www.googleapis.com/oauth2/v1/certs&amp;#34;&lt;/span>,
+&lt;span style="color:#4e9a06">&amp;#34;client_x509_cert_url&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;https://www.googleapis.com/robot/v1/metadata/x509/[SERVICE-ACCOUNT-EMAIL]&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h3 id="纳管多个项目">纳管多个项目&lt;/h3>
+&lt;p>如需要使用上面获取的服务账户的密钥纳管多个项目，可按照以下步骤进行设置。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>打开“&lt;a href="https://console.cloud.google.com/project/_/iam-admin">GCP Console中的IAM和管理-IAM页面&lt;/a>”页面，选择其他需要纳管的项目。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击顶部 &lt;strong>&lt;em>&amp;ldquo;添加&amp;rdquo;&lt;/em>&lt;/strong> 按钮，在新成员中添加上面步骤创建的服务账号，并设置角色为Project-Owner或Project-Viewer，Owner代表对项目的管理权限，Viewer代表对项目的只读权限，如需云管平台对Google云账号资源进行管理操作，请选择Project-Owner角色，单击 &lt;strong>&lt;em>&amp;ldquo;保存&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../image/google_serviceaccount_otherproject.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重复上面的步骤，纳管更多项目。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用相关api">启用相关API&lt;/h2>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+谷歌云的API具有项目属性，当需要纳管谷歌云上多个项目时，需要分别在每个项目中启用相关API。
+&lt;/div>
+&lt;p>&lt;strong>Cloudpods管理谷歌云需要启用API&lt;/strong>：&lt;/p>
+&lt;p>获取密钥文件后，还需要在Google API库中启用授权项目中的项目资源管理API（Cloud Resource Manager API）和自定义镜像创建机器API（Cloud Build API）。启用API后，用户可在Cloudpods平台管理使用谷歌云。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在API库的&lt;a href="https://console.developers.google.com/apis/library/cloudresourcemanager.googleapis.com">Cloud Resource Manager API&lt;/a>页面中启用授权项目的Cloud Resource Manager API。可通过顶部切换授权项目。
+&lt;img src="../../image/cloudresourcemanagerapi.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在API库的&lt;a href="https://console.developers.google.com/apis/library/cloudbuild.googleapis.com">Cloud Build API&lt;/a>页面中启用授权项目的Cloud Build API。可通过顶部切换授权项目。
+&lt;img src="../../image/cloudbuildapi.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Cloudpods管理谷歌云RDS需要启用API&lt;/strong>：&lt;/p>
+&lt;ol>
+&lt;li>如需在Cloudpods上管理谷歌云的RDS，需要在API库的&lt;a href="https://console.developers.google.com/apis/library/sqladmin.googleapis.com">Cloud SQL Admin API&lt;/a>页面中启用Cloud SQL Admin API。可通过顶部切换授权项目。
+&lt;img src="../../image/cloudsqladminapi.png" alt="">&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理谷歌云资源需要云账号具备哪些权限">管理谷歌云资源，需要云账号具备哪些权限&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">只读权限&lt;/th>
+&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">Viewer&lt;/td>
+&lt;td style="text-align:left">Editor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">虚拟机, 磁盘, 安全组, 镜像, 快照, 磁盘, 镜像, 负载均衡&lt;/td>
+&lt;td style="text-align:left">Compute Viewer&lt;/td>
+&lt;td style="text-align:left">Compute Editor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">项目&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡,EIP, NAT&lt;/td>
+&lt;td style="text-align:left">Compute Network Viewer&lt;/td>
+&lt;td style="text-align:left">Compute Network Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">Storage Legacy Bucket Reader&lt;br>Storage Object Viewer&lt;/td>
+&lt;td style="text-align:left">Storage Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">Cloud SQL Viewer&lt;/td>
+&lt;td style="text-align:left">Cloud SQL Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">Redis Enterprise Cloud Viewer&lt;/td>
+&lt;td style="text-align:left">Redis Enterprise Cloud Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">Logs Viewer&lt;/td>
+&lt;td style="text-align:left">Logging Admin&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">Cloud Filestore Viewer&lt;/td>
+&lt;td style="text-align:left">Cloud Filestore Editor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">Role Viewer&lt;/td>
+&lt;td style="text-align:left">Role Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">DNS Reader&lt;/td>
+&lt;td style="text-align:left">DNS Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">账单,费用&lt;/td>
+&lt;td style="text-align:left">Billing Account Viewer&lt;/td>
+&lt;td style="text-align:left">Billing Account Administrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">Monitoring Viewer&lt;/td>
+&lt;td style="text-align:left">Monitoring Admin&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="如何在谷歌云平台配置并获取bigquery配置信息">如何在谷歌云平台配置并获取Bigquery配置信息?&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录谷歌云控制台，单击左侧菜单 &lt;strong>&lt;em>&amp;ldquo;结算&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入结算页面。
+&lt;img src="../../image/googlebilling.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单[结算导出]，在BIGQUERY EXPORT页签下，启用详细使用费，并配置项目和数据集名称。&lt;/p>
+&lt;p>&lt;img src="../../image/googlebigqueryconfig.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击数据集名称，跳转到Bigquery，展开右侧节点，选中数据集名称下的分区表，在进入的页面中单击顶部“详情”页签，获取表ID信息。&lt;/p>
+&lt;p>&lt;img src="../../image/gcpbigquerytableid.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在表详情页面，单击右上角 &lt;strong>&lt;em>&amp;ldquo;修改详情&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将有效期设置为None。若设置有效期则会从bigquery中清理过期的数据，请谨慎设置。&lt;/p>
+&lt;p>&lt;img src="../../image/gcomodifytable.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="如何在谷歌云平台获取账单文件以及使用量文件的存储桶url和文件前缀">如何在谷歌云平台获取账单文件以及使用量文件的存储桶URL和文件前缀？&lt;/h2>
+&lt;h3 id="如何获取账单文件的存储桶url以及文件前缀">如何获取账单文件的存储桶URL以及文件前缀？&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>登录谷歌云控制台，单击左侧菜单 &lt;strong>&lt;em>&amp;ldquo;结算&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入结算页面。
+&lt;img src="../../image/googlebilling.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单[结算导出]，在进入的账单页面中单击“文件导出”页签，查看并记录存储分区名称以及报告前缀的信息。其中报告前缀即文件前缀。如果未设置，需要在该页面配置存储分区名称和报告前缀信息等，设置完成后，每天的增量账单数据将同步存储到对应的存储上。建议该bucket中仅存放账单文件。
+&lt;img src="../../image/googlebillingbucket.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单[Storage/浏览器]，在进入的存储页面中单击对应存储分区名称，并单击“概览”页签，查看存储分区的概览信息，其中链接网址为存储桶URL。
+&lt;img src="../../image/googlebillingbucketurl.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当账单bucket中除账单文件外还存放了其他文件时，需要配置文件前缀仅获取bucket中的账单文件等。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="如何获取使用量文件存储桶url和文件前缀">如何获取使用量文件存储桶URL和文件前缀？&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>在谷歌云控制台中单击左侧菜单[Compute Engine/设置]，进入设置页面。&lt;/br>
+&lt;img src="../../image/googleusagesetting.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>请确保已勾选“启用使用情况导出功能”，并记录存储分区名称和报告前缀信息，其中报告前缀即文件前缀。如未配置，需要勾选“启用使用情况导出功能”，并配置存储分区等。
+&lt;img src="../../image/googleusagebucket.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧菜单[Storage/浏览器]，在进入的存储页面中单击对应存储分区名称，并单击“概览”页签，查看存储分区的概览信息，其中链接网址为存储桶URL。
+&lt;img src="../../image/googleusagebucketurl.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当使用量bucket中除使用量文件外还存放了其他文件时，需要配置文件前缀仅获取bucket中的使用量文件等。&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 移动云</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/ecloud/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/ecloud/</guid><description>
+&lt;h2 id="如何获取移动云的-api-密钥">如何获取移动云的 API 密钥？&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录移动云控制台，在所有产品中搜索“AK管理”，进入AccessKey管理页面。&lt;/p>
+&lt;p>&lt;img src="../../image/ecloud.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在AccessKey管理页面创建密钥或查看已有密钥的Access key和Secret key。&lt;/p>
+&lt;p>&lt;img src="../../image/ecloudaccesskey.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理移动云资源需要云账号具备哪些权限">管理移动云资源，需要云账号具备哪些权限&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:left">权限策略&lt;/th>
+&lt;th style="text-align:left">策略说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:left">Admin&lt;/td>
+&lt;td style="text-align:left">管理员角色&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: 京东云</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/jdcloud/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/jdcloud/</guid><description>
+&lt;h2 id="如何获取京东云的api密钥">如何获取京东云的API密钥&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>登录京东云控制台，鼠标悬停在右上角用户名处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;Access Key管理&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入Access Key管理页面。&lt;/p>
+&lt;p>&lt;img src="../../image/jdak.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看已有Access Key信息，或单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建Access Key，单击 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取Access Key Secret信息。&lt;/p>
+&lt;p>&lt;img src="../../image/jdaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

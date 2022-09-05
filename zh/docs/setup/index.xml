@@ -1254,7 +1254,321 @@ $ /opt/yunion/bin/ocadm cluster update --version v3.8.13 --wait
 &lt;span style="color:#8f5902;font-style:italic"># 降级会重新拉取新的镜像，可以再开一个窗口&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 使用下面的命令查看每个 pod 的更新情况&lt;/span>
 $ kubectl -n onecloud get pods -w
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: RPM Repo</title><link>https://www.cloudpods.org/zh/docs/setup/repo/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/repo/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 修改OC更新集群状态</title><link>https://www.cloudpods.org/zh/docs/setup/oc-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/oc-update/</guid><description>
+&lt;p>cloudpods-operator会在Kubernetes集群中注入CRD资源oc，该CRD定义了一个服务集群的状态，可以通过修改oc来更改集群的状态，达到IaC的效果。&lt;/p>
+&lt;p>1、修改集群整体状态&lt;/p>
+&lt;p>主要几个参数：&lt;/p>
+&lt;ul>
+&lt;li>disableResourceManagement: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否关闭cgroup v1的资源限制，该选项默认关闭。对于一些较新操作系统，如CentOS 8等，只能支持cgroup v2 API，如果开启了资源限制，会导致容器无法启动。此时需要关闭cgroup v1资源限制。&lt;/p>
+&lt;ul>
+&lt;li>disableLocalVpc: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否关闭内置私有云的VPC功能，该选项默认关闭。&lt;/p>
+&lt;ul>
+&lt;li>enableCloudNet: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否开启Cloudnet组件，该选项默认关闭&lt;/p>
+&lt;ul>
+&lt;li>enableS3Gateway: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否开启S3网关服务，该选项默认关闭&lt;/p>
+&lt;ul>
+&lt;li>productVersion: CMP|Edge|FullStack&lt;/li>
+&lt;/ul>
+&lt;p>集群的部署模式，三个选项：CMP(只部署云管相关功能组件)，Edge（是部署内置私有云相关功能组件），FullStack（部署云管和内置私有云所有功能组件）&lt;/p>
+&lt;ul>
+&lt;li>imageRepository: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>指定集群的镜像repo地址，默认是 registry.cn-beijing.aliyuncs.com/yunion&lt;/p>
+&lt;ul>
+&lt;li>loadBalancerEndpoint: &lt;ip>&lt;/li>
+&lt;/ul>
+&lt;p>访问集群控制服务的虚拟IP地址或者域名&lt;/p>
+&lt;ul>
+&lt;li>version: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>集群的主版本号，如v3.8.15。当组件的tag未指定时，默认用version作为镜像的tag。可以通过修该属性实现集群镜像版本的整体切换。&lt;/p>
+&lt;ul>
+&lt;li>region: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>当前区域，默认为 region0&lt;/p>
+&lt;ul>
+&lt;li>zone: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>当前可用区，默认为 zone0&lt;/p>
+&lt;ol start="2">
+&lt;li>修改单个组件的属性&lt;/li>
+&lt;/ol>
+&lt;p>每个组件都可以设置如下属性：&lt;/p>
+&lt;ul>
+&lt;li>disable: true|false&lt;/li>
+&lt;/ul>
+&lt;p>该组件是否禁用，默认是false。如果设置为true，则operator不会更新对应的k8s资源（deployment或者daemonset)&lt;/p>
+&lt;ul>
+&lt;li>imageName: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>镜像的名称&lt;/p>
+&lt;ul>
+&lt;li>imagePullPolicy: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>镜像的拉取策略，默认为 IfNotPresent, 还可以设置为： Always&lt;/p>
+&lt;ul>
+&lt;li>repository: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>改组件的镜像地址，该属性override全局的 imageRepository 属性&lt;/p>
+&lt;ul>
+&lt;li>tag: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>镜像的tag，该属性override全局的 version 属性&lt;/p>
+&lt;p>支持的组件列表如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>组件名称&lt;/th>
+&lt;th>功能&lt;/th>
+&lt;th>开源版&lt;/th>
+&lt;th>商业版&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>ansibleserver&lt;/td>
+&lt;td>ansible管理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>apiGateway&lt;/td>
+&lt;td>API网关服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>autoupdate&lt;/td>
+&lt;td>更新服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>baremetalagent&lt;/td>
+&lt;td>裸金属代理，负责裸金属服务器的API和操作&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>climc&lt;/td>
+&lt;td>提供climc的容器&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudevent&lt;/td>
+&lt;td>cloudevent服务，提供公有云日志收集&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudid&lt;/td>
+&lt;td>负责CloudSSO功能组件&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudmon&lt;/td>
+&lt;td>监控数据采集服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudnet&lt;/td>
+&lt;td>云间网络服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudproxy&lt;/td>
+&lt;td>ssh代理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>devtool&lt;/td>
+&lt;td>应用部署服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>esxiagent&lt;/td>
+&lt;td>VMWare代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>glance&lt;/td>
+&lt;td>镜像服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>hostagent&lt;/td>
+&lt;td>宿主机代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>hostdeployer&lt;/td>
+&lt;td>磁盘数据部署服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>hostimage&lt;/td>
+&lt;td>磁盘数据下载服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>influxdb&lt;/td>
+&lt;td>开源监控数据库&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>itsm&lt;/td>
+&lt;td>工单流程服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>keystone&lt;/td>
+&lt;td>认证服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>kubeserver&lt;/td>
+&lt;td>Kubernetes集群管理代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>logger&lt;/td>
+&lt;td>操作日志服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>meter&lt;/td>
+&lt;td>计费计量服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>monitor&lt;/td>
+&lt;td>监控服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>notify&lt;/td>
+&lt;td>通知告警服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>onecloudServiceOperator&lt;/td>
+&lt;td>编排服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ovnNorth&lt;/td>
+&lt;td>OVN控制服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>regionDNS&lt;/td>
+&lt;td>DNS服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>regionServer&lt;/td>
+&lt;td>云资源管理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>report&lt;/td>
+&lt;td>报表服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>s3gateway&lt;/td>
+&lt;td>S3代理网关服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>scheduledtask&lt;/td>
+&lt;td>定时任务服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>scheduler&lt;/td>
+&lt;td>调度器&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>suggestion&lt;/td>
+&lt;td>费用优化服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>telegraf&lt;/td>
+&lt;td>监控Agent，开源telegraf&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>vpcAgent&lt;/td>
+&lt;td>VPC代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>web&lt;/td>
+&lt;td>前端nginx&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>webconsole&lt;/td>
+&lt;td>H5控制台服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>yunionagent&lt;/td>
+&lt;td>企业版授权服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>yunionconf&lt;/td>
+&lt;td>配置管理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: RPM Repo</title><link>https://www.cloudpods.org/zh/docs/setup/repo/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/repo/</guid><description>
 &lt;p>本文各个版本RPM REPO的地址&lt;/p>
 &lt;h2 id="39">3.9&lt;/h2>
 &lt;ul>

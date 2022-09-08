@@ -315,185 +315,183 @@ cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EO
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./ocboot.py install ./config-k8s-ha.yml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>等待部署完成后，就可以使用浏览器访问 https://10.127.190.10 (VIP), 输入用户名 &lt;code>admin&lt;/code> 和密码 &lt;code>admin@123&lt;/code>，进入前端。&lt;/p>
-&lt;p>另外部署完成后，可以给已有集群添加节点，参考文档：&lt;a href="../../setup/host">添加计算节点&lt;/a>。&lt;/p></description></item><item><title>Docs: Kubernetes 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
+&lt;p>另外部署完成后，可以给已有集群添加节点，参考文档：&lt;a href="../../setup/host">添加计算节点&lt;/a>。&lt;/p></description></item><item><title>Docs: Kubernetes Helm 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>通过在已有的 Kubernetes 集群上部署 Cloudpods 云管服务，无法验证内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)。&lt;/p>
+&lt;p>通过在已有的 Kubernetes 集群上部署 Cloudpods 多云管理版本，无法使用内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)。&lt;/p>
 &lt;p>目前该部署方法可能会因为不同 Kubernetes 集群的 CSI，CNI 和 Ingress controller 不同，在部署中出现不同的错误，如果部署失败，又想快速体验产品功能，建议还是使用 &lt;a href="../allinone">All in One 安装&lt;/a> 的方式部署。&lt;/p>
-&lt;p>仅适用于多云管理功能的体验，比如管理 VMware, 公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)。&lt;/p>
-&lt;p>另外 Kubernetes 集群的版本，目前只支持 v1.15 - v1.20 的版本，高版本的 CRD 定义发生了变化，目前还没有适配。&lt;/p>
+&lt;p>该部署方法仅适用于多云管理功能的使用，比如管理 VMware, 公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)。&lt;/p>
 &lt;/div>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;p>Cloudpods 相关的组件运行在 Kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
+&lt;li>安装 helm 工具请参考 &lt;a href="https://helm.sh/docs/intro/install/">https://helm.sh/docs/intro/install/&lt;/a>&lt;/li>
 &lt;li>Kubernetes 集群配置最低要求:
 &lt;ul>
-&lt;li>CPU 4核, 内存 8G, 节点有存储 100G&lt;/li>
-&lt;li>版本 v1.15 - v1.20&lt;/li>
+&lt;li>至少 CPU 4核, 内存 8G, 节点有存储 100G&lt;/li>
 &lt;li>节点需要能够访问公网&lt;/li>
-&lt;li>提供 nginx ingress controller&lt;/li>
+&lt;li>提供 ingress controller&lt;/li>
 &lt;li>内部 coredns 解析&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>提供 Mysql 数据库&lt;/li>
+&lt;li>提供 Mysql 数据库(可选): 可以选择使用连接的数据库是在部署在 Kubernetes 集群内还是使用外部的，生产环境建议使用外部单独管理的 Mysql&lt;/li>
 &lt;/ul>
 &lt;h2 id="部署">部署&lt;/h2>
-&lt;h3 id="查看-kubernetes-环境">查看 Kubernetes 环境&lt;/h3>
-&lt;p>以下部署在阿里云的 3 节点 Kubernetes v1.20.11 集群进行，查看节点信息：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get nodes
-NAME STATUS ROLES AGE VERSION
-cn-shanghai.10.71.69.80 Ready &amp;lt;none&amp;gt; 20h v1.20.11-aliyun.1
-cn-shanghai.10.71.69.81 Ready &amp;lt;none&amp;gt; 20h v1.20.11-aliyun.1
-cn-shanghai.10.71.69.82 Ready &amp;lt;none&amp;gt; 20h v1.20.11-aliyun.1
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-cloudpods-operator">部署 Cloudpods operator&lt;/h3>
-&lt;p>Cloudpods k8s operator地址： &lt;a href="https://github.com/yunionio/cloudpods-operator">https://github.com/yunionio/cloudpods-operator&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 onecloud-operator 的 yaml 文件&lt;/span>
-$ wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/onecloud-operator.yaml
-&lt;span style="color:#8f5902;font-style:italic"># 部署 onecloud-operator 到集群&lt;/span>
-$ kubectl apply -f onecloud-operator.yaml
-&lt;span style="color:#8f5902;font-style:italic"># 将 kubernetes node 打上 onecloud.yunion.io/controller=enable 标签&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果不打标签，operator 服务就不会把对应的后端服务调度到这个节点&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 另外如果没有 master role ，还需要加上标签 node-role.kubernetes.io/master=&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 这个 node 就可以运行 onecloud 相关服务&lt;/span>
-$ kubectl label nodes cn-shanghai.10.71.69.80 onecloud.yunion.io/controller&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">enable&lt;/span>
-$ kubectl label nodes cn-shanghai.10.71.69.80 node-role.kubernetes.io/master&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>
-$ kubectl label nodes cn-shanghai.10.71.69.81 onecloud.yunion.io/controller&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">enable&lt;/span>
-$ kubectl label nodes cn-shanghai.10.71.69.81 node-role.kubernetes.io/master&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>
-$ kubectl label nodes cn-shanghai.10.71.69.82 onecloud.yunion.io/controller&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">enable&lt;/span>
-$ kubectl label nodes cn-shanghai.10.71.69.82 node-role.kubernetes.io/master&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 这里需要等待 onecloud-operator 的 pod 状态变为 Running&lt;/span>
-$ kubectl get pods -n onecloud
-NAME READY STATUS RESTARTS AGE
-onecloud-operator-7fd65d6489-kwdkr 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5m2s
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-cloudpods-服务">部署 Cloudpods 服务&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 onecloud cluster 的 yaml 文件&lt;/span>
-$ wget https://raw.githubusercontent.com/yunionio/onecloud-operator/master/manifests/example-aliyun-onecloud-cluster.yaml -O onecloud-cluster.yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改下载的 onecloud-cluster.yaml 文件内容，主要是修改 spec.mysql 里面内容，比如下面是修改 mysql 对应的 host 为 test.mysql.rds.aliyuncs.com，用户为 db_admin，密码为 test@password；然后修改 spec.loadBalancerEndpoint 为访问集群的外部 ip (根据自己的环境决定，可以写成当前节点的 ip)，这里假设当前节点的 ip 为 10.127.0.2：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vim onecloud-cluster.yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面是修改的 diff：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff"> spec:
+&lt;h3 id="clone-chart">clone chart&lt;/h3>
+&lt;p>Cloudpods Helm Chart 位于 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 仓库，使用以下命令下载到本地：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git clone https://github.com/yunionio/ocboot
+$ &lt;span style="color:#204a87">cd&lt;/span> charts/cloudpods
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试环境安装">测试环境安装&lt;/h3>
+&lt;p>测试环境安装方法如下，改方法会在 Kubernetes 集群里部署 mysql ，local-path-provisioner CSI 依赖插件，不需要连接集群之外的 mysql 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm install --name-template default --namespace onecloud --debug . -f values-dev.yaml --create-namespace
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="生产环境安装">生产环境安装&lt;/h3>
+&lt;p>之前部署的方法仅限测试使用，因为依赖少，安装快，但如果用于生产环境，请根据需求修改 ./values-prod.yaml 里面的参数，然后使用该文件创建 Helm Release 。&lt;/p>
+&lt;p>建议需要修改的地方如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> localPathCSI:
+&lt;span style="color:#00a000">+ # 根据 k8s 集群的 CSI 部署情况，选择是否要部署默认的 local-path CSI
+&lt;/span>&lt;span style="color:#00a000">+ # 如果 k8s 集群已经有稳定的 CSI ，就可以设置这个值为 false ，不部署该组件
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> enabled: true
+helperPod:
+image: registry.cn-beijing.aliyuncs.com/yunionio/busybox:1.35.0
+&lt;span style="color:#800080;font-weight:bold">@@ -60,11 +62,16 @@ localPathCSI:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+cluster:
 mysql:
-&lt;span style="color:#a40000">- host: mysql.rds.aliyuncs.com
-&lt;/span>&lt;span style="color:#a40000">- username: &amp;#34;root&amp;#34;
-&lt;/span>&lt;span style="color:#a40000">- password: &amp;#34;password&amp;#34;
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ host: test.mysql.rds.aliyuncs.com
-&lt;/span>&lt;span style="color:#00a000">+ username: &amp;#34;db_admin&amp;#34;
-&lt;/span>&lt;span style="color:#00a000">+ password: &amp;#34;teste@password&amp;#34;
-&lt;/span>&lt;span style="color:#00a000">&lt;/span> region: &amp;#34;region0&amp;#34;
-&lt;span style="color:#a40000">- loadBalancerEndpoint: 192.168.121.21
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ loadBalancerEndpoint: 10.127.0.2
-&lt;/span>&lt;span style="color:#00a000">&lt;/span> imageRepository: &amp;#34;registry.cn-beijing.aliyuncs.com/yunionio&amp;#34;
-version: v3.8.12
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>还有一些服务的 storageClassName ，可以根据自己环境的 csi storageclass 设置，阿里云默认用的 alicloud-disk-ssd，还有以下的 storageclass 可以选择：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get storageclass
-NAME PROVISIONER RECLAIMPOLICY VOLUMEBINDINGMODE ALLOWVOLUMEEXPANSION AGE
-alibabacloud-cnfs-nas nasplugin.csi.alibabacloud.com Delete Immediate &lt;span style="color:#204a87">true&lt;/span> 8d
-alicloud-disk-available diskplugin.csi.alibabacloud.com Delete Immediate &lt;span style="color:#204a87">true&lt;/span> 8d
-alicloud-disk-efficiency diskplugin.csi.alibabacloud.com Delete Immediate &lt;span style="color:#204a87">true&lt;/span> 8d
-alicloud-disk-essd diskplugin.csi.alibabacloud.com Delete Immediate &lt;span style="color:#204a87">true&lt;/span> 8d
-alicloud-disk-ssd diskplugin.csi.alibabacloud.com Delete Immediate &lt;span style="color:#204a87">true&lt;/span> 8d
-alicloud-disk-topology diskplugin.csi.alibabacloud.com Delete WaitForFirstConsumer &lt;span style="color:#204a87">true&lt;/span> 8d
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>比如要使用 alicloud-disk-available 的 storageclass，修改 onecloud-cluster.yaml 的 diff 如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff"> baremetalagent:
-disable: true
-requests:
-storage: 100G
-&lt;span style="color:#a40000">- storageClassName: alicloud-disk-ssd
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ storageClassName: alicloud-disk-available
-&lt;/span>&lt;span style="color:#00a000">&lt;/span> glance:
+&lt;span style="color:#00a000">+ # 外部 mysql 地址
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> host: 1.2.3.4
+&lt;span style="color:#00a000">+ # 外部 mysql 端口
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> port: 3306
+&lt;span style="color:#00a000">+ # 外部 mysql 用户，需要用具备 root 权限的用户，因为 cloudpods operator 会为其他服务创建数据库用户
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> user: root
+&lt;span style="color:#00a000">+ # 外部 mysql 密码
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> password: your-db-password
+statefulset:
+&lt;span style="color:#00a000">+ # 生产环境部署这里需要设置成 false ，不然会在 k8s 集群里面部署一个 mysql ，然后连接使用这个 statefulset mysql
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> enabled: false
+image:
+repository: &amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/mysql&amp;#34;
+&lt;span style="color:#800080;font-weight:bold">@@ -91,15 +98,20 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # imageRepository defines default image registry
+imageRepository: registry.cn-beijing.aliyuncs.com/yunion
+# publicEndpoint is upstream ingress virtual ip address or DNS domain
+&lt;span style="color:#00a000">+ # 集群外部可访问的域名或者 ip 地址
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> publicEndpoint: foo.bar.com
+# edition choose from:
+# - ce: community edition
+# - ee: enterprise edition
+&lt;span style="color:#00a000">+ # 选择部署 ce(开源) 或者 ee(企业) 版本
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> edition: ce
+# storageClass for stateful component
+&lt;span style="color:#00a000">+ # 有状态服务使用的 storageClass，如果不设置就会使用 local-path CSI
+&lt;/span>&lt;span style="color:#00a000">+ # 这个可根据 k8s 集群情况自行调节
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> storageClass: &amp;#34;&amp;#34;
+ansibleserver:
+service:
+&lt;span style="color:#00a000">+ # 指定服务暴露的 nodePort，如果和集群已有服务冲突，可以修改
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> nodePort: 30890
+apiGateway:
+apiService:
+&lt;span style="color:#800080;font-weight:bold">@@ -193,6 +205,7 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> service:
+nodePort: 30889
+&lt;span style="color:#00a000">+# 设置 ingress
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> ingress:
+enabled: true
+className: &amp;#34;&amp;#34;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改完 values-prod.yaml 文件后，用以下命令部署：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm install --name-template default --namespace onecloud . -f values-prod.yaml --create-namespace
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="创建默认管理用户">创建默认管理用户&lt;/h2>
+&lt;h3 id="创建账号登录-web-ui">创建账号登录 Web UI&lt;/h3>
+&lt;p>如果是企业版，前端会提示注册，获取 license ，下面的操作适用于开源版本：&lt;/p>
+&lt;h3 id="进入-climc-命令行-pod">进入 climc 命令行 pod&lt;/h3>
+&lt;p>如果是部署的 ce(社区开源版本)，需要使用平台的命令行工具创建默认用户，进行相关操作，对应命令如下，首先是进入 climc pod 容器：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 进入 climc pod&lt;/span>
+$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> sh
+/ &lt;span style="color:#8f5902;font-style:italic">#&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建用户">创建用户&lt;/h3>
+&lt;p>在 climc pod 里面创建 admin 用户，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建 admin 用户，设置密码为 admin@123 ，根据需求自己调整&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>in-climc-pod&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ climc user-create --password &lt;span style="color:#4e9a06">&amp;#39;admin@123&amp;#39;&lt;/span> --enabled admin
+&lt;span style="color:#8f5902;font-style:italic"># 允许 web 登陆&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>in-climc-pod&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ climc user-update --allow-web-console admin
+&lt;span style="color:#8f5902;font-style:italic"># 将 admin 用户加入 system project 赋予管理员权限&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>in-climc-pod&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ climc project-add-user system admin admin
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="访问前端">访问前端&lt;/h2>
+&lt;p>根据创建的 ingress 访问平台暴露出来的前端，通过下面的命令查看 ingress ：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 我测试的集群 ingress 信息如下，不同的 k8s 集群根据 ingress 插件的实现各有不同&lt;/span>
+$ kubectl get ingresses -n onecloud
+NAME HOSTS ADDRESS PORTS AGE
+default-cloudpods-web * 10.127.100.207 80, &lt;span style="color:#0000cf;font-weight:bold">443&lt;/span> 7h52m
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用浏览器访问 https://10.127.100.207 即可访问平台前端，然后使用之前创建的 admin 用户登陆。&lt;/p>
+&lt;h2 id="升级">升级&lt;/h2>
+&lt;p>升级可以通过修改对应的 values yaml 文件，然后进行升级配置，比如发现 cluster.regionServer.service.nodePort 的 30888 端口出现了占用冲突，要修改成其它端口 30001，就修改 values-prod.yaml 里面对应的值：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -170,7 +170,7 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> nodePort: 30885
+regionServer:
+service:
+&lt;span style="color:#a40000">- nodePort: 30888
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ nodePort: 30001
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> report:
+service:
+nodePort: 30967
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用 helm upgrade 命令升级：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm upgrade -n onecloud default . -f values-prod.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>再查看 onecloudcluster 资源，会发现对应的 spec.regionServer.service.nodePort 变成了 30001，对应的 service nodePort 也会发生变化：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 regionServer 在 onecloudcluster 里面的属性&lt;/span>
+$ kubectl get oc -n onecloud default-cloudpods -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> regionServer
+regionServer:
+affinity: &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span>
+disable: &lt;span style="color:#204a87">false&lt;/span>
+dnsDomain: cloud.onecloud.io
+dnsServer: 10.127.100.207
+image: registry.cn-beijing.aliyuncs.com/yunion/region:v3.9.1
+imagePullPolicy: IfNotPresent
+limits:
+cpu: &lt;span style="color:#4e9a06">&amp;#34;1.333333&amp;#34;&lt;/span>
+memory: 2045Mi
+replicas: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
 requests:
 cpu: 10m
 memory: 10Mi
-storage: 100G
-&lt;span style="color:#a40000">- storageClassName: alicloud-disk-ssd
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ storageClassName: alicloud-disk-available
-&lt;/span>&lt;span style="color:#00a000">&lt;/span> influxdb:
-requests:
-cpu: 10m
-memory: 10Mi
-storage: 100G
-&lt;span style="color:#a40000">- storageClassName: alicloud-disk-ssd
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ storageClassName: alicloud-disk-available
-&lt;/span>&lt;span style="color:#00a000">&lt;/span> meter:
-requests:
-cpu: 10m
-memory: 10Mi
-storage: 25G
-&lt;span style="color:#a40000">- storageClassName: alicloud-disk-ssd
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ storageClassName: alicloud-disk-available
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改完 onecloud-cluster.yaml 的配置后，使用下面的命令部署：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 部署Cloudpods服务&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 将 onecloud-cluster.yaml 部署到 kubernetes 集群&lt;/span>
-$ kubectl apply -f onecloud-cluster.yaml
-&lt;span style="color:#8f5902;font-style:italic"># 等待 onecloud 相关服务启动，这个过程会拉取各个服务的镜像，配置服务&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 需要等待几分钟让所有服务状态变为 Running&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 可以多次使用下面的命令查看 pods 状态&lt;/span>
-$ kubectl get pods -n onecloud
-NAME READY STATUS RESTARTS AGE
-default-ansibleserver-6955fb8d66-gb8w7 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m57s
-default-apigateway-57f78c9cfb-8xvgw 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m54s
-default-autoupdate-5f8bf779dd-6drtb 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m41s
-default-climc-6c49f88df9-s4f5g 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m45s
-default-cloudevent-6775bf8d66-bppcv 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m39s
-default-cloudid-7798948bc8-blkxw 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m30s
-default-cloudnet-55fd8ff98b-2gnm4 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m36s
-default-devtool-7db6b87cf9-bvxsm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m32s
-default-esxi-agent-bb555858c-ft6dz 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m50s
-default-etcd-dvfcg6jfjp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 11m
-default-glance-86d99c66-7v4lg 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 9m1s
-&lt;span style="color:#8f5902;font-style:italic"># 这里注意下，如果 host-deployer 一直为 ContainerCreating 的状态，可以先忽略，不影响使用&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 因为是在 k8s 上部署的，没有注入一些默认的配置，这个问题现在不好解决&lt;/span>
-default-host-deployer-vmkxm 0/1 ContainerCreating &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m17s
-default-influxdb-69dcbdb4c-l4lp9 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m44s
-default-keystone-78f45cc8db-xstk2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 9m48s
-default-logger-5576dbc7f4-8mdl4 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m35s
-default-monitor-64d9c65b7b-4wf8t 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m33s
-default-notify-59cc65d479-hccs8 11/11 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m38s
-default-onecloud-service-operator-584989c746-8ndvf 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m31s
-default-ovn-north-866c9fbc6f-87wkg 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m49s
-default-region-5bc599845-nb882 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 9m36s
-default-region-dns-hdj5k 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m55s
-default-s3gateway-69b9c5b56c-hb64l 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m32s
-default-scheduler-57c66964b7-qh9f2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 9m1s
-default-telegraf-f7rvx 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m27s
-default-vpcagent-8ff58c47d-5b4j8 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m41s
-default-web-79df8f97b9-c6lgm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m52s
-default-webconsole-79cc5cfb9-xd9tk 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m36s
-default-yunionconf-5f79b9655f-trmls 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8m37s
-onecloud-operator-69bf9fb476-dsw6d 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 13m
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>因为阿里云的 k8s 集群开通了 nginx ingress controller 的 ingress 组件，可以查看 ingress 分配的地址：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get ingress -n onecloud
-NAME CLASS HOSTS ADDRESS PORTS AGE
-default-web &amp;lt;none&amp;gt; * 139.196.226.11 80, &lt;span style="color:#0000cf;font-weight:bold">443&lt;/span> 7d2h
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后就可以通过访问 https://139.196.226.11 访问平台前端了，公有云纳管操作请参考：&lt;a href="../allinone/#%E5%AF%BC%E5%85%A5%E5%85%AC%E6%9C%89%E4%BA%91%E6%88%96%E8%80%85%E5%85%B6%E5%AE%83%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B3%E5%8F%B0%E8%B5%84%E6%BA%90">导入公有云或者其它私有云平台资源&lt;/a>。&lt;/p>
-&lt;h2 id="其它问题">其它问题&lt;/h2>
-&lt;h3 id="切换成开源版本">切换成开源版本&lt;/h3>
+service:
+nodePort: &lt;span style="color:#0000cf;font-weight:bold">30001&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看 default-cloudpods-region service 的 nodePort&lt;/span>
+$ kubectl get svc -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep region
+default-cloudpods-region NodePort 10.110.105.228 &amp;lt;none&amp;gt; 30001:30001/TCP 7h30m
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看之前变更的 cluster.regionServer.service.nodePort 是否在平台的 endpoint 里面发生了变化：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 climc pod 指定 endpoint-list 命令查看&lt;/span>
+$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -- climc endpoint-list --search compute
++----------------------------------+-----------+----------------------------------+----------------------------------------+-----------+---------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Region_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Service_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> URL &lt;span style="color:#000;font-weight:bold">|&lt;/span> Interface &lt;span style="color:#000;font-weight:bold">|&lt;/span> Enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+-----------+----------------------------------+----------------------------------------+-----------+---------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> c88e03490c2543a987d86d733b918a2d &lt;span style="color:#000;font-weight:bold">|&lt;/span> region0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> a9abfdd204e9487c8c4d6d85defbfaef &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.127.100.207:30001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> public &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> a04e161ee71346ac88ddd04fcebfe5ce &lt;span style="color:#000;font-weight:bold">|&lt;/span> region0 &lt;span style="color:#000;font-weight:bold">|&lt;/span> a9abfdd204e9487c8c4d6d85defbfaef &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://default-cloudpods-region:30001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> internal &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++----------------------------------+-----------+----------------------------------+----------------------------------------+-----------+---------+
+*** Total: &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="删除">删除&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm delete -n onecloud default
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它问题">其它问题&lt;/h2>
+&lt;h3 id="切换成开源企业版本">切换成开源/企业版本&lt;/h3>
 &lt;p>现在默认 k8s 部署的集群是企业版本，可以通过下面的操作切换成开源版本：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 onecloud cluster 配置&lt;/span>
-$ kubectl edit oc -n onecloud default
-&lt;span style="color:#8f5902;font-style:italic"># 修改 metadata.annotations.onecloud.yunion.io/edition 为 ce&lt;/span>
-...
-onecloud.yunion.io/edition: ce
-...
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后对应的企业版本组件就会切换成开源组件，需要注意的是 default-web 的 configmap 和 deployment 需要手动删除下，等待 operator 重建，才能访问前端，操作如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl delete configmap -n onecloud default-web
-$ kubectl delete deployment -n onecloud default-web
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建账号登录-web-ui">创建账号登录 Web UI&lt;/h3>
-&lt;p>如果是企业版，前端会提示注册，获取 license ，下面的操作适用与开源版本：&lt;/p>
-&lt;ul>
-&lt;li>创建账号: 部署完成后，需要使用我们的命令行工具 climc 创建帐号&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 进入 climc 容器&lt;/span>
-$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -n onecloud &lt;span style="color:#4e9a06">`&lt;/span>kubectl -n onecloud get pods &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#34;default-climc&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">|&lt;/span> cut -f1 -d&lt;span style="color:#4e9a06">&amp;#34; &amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span> -c climc -i -t -- /bin/bash -il
-&lt;span style="color:#8f5902;font-style:italic"># 创建用户 demo , 密码为 demo123A 的管理员&lt;/span>
-$ /opt/yunion/bin/climc user-create demo --password demo123A --enabled
-&lt;span style="color:#8f5902;font-style:italic"># 将用户 demo 加入 system 项目，并且赋予 admin 权限&lt;/span>
-$ /opt/yunion/bin/climc project-add-user system demo admin
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="待解决的问题">待解决的问题&lt;/h3>
-&lt;ul>
-&lt;li>default-host-deployer pod 无法启动，会处于 ContainerCreating 状态，这个是没有用 ocadm 部署集群导致的。未来会想办法支持该服务在 minikube 的集群里面运行，目前启动不了，不影响体验Cloudpods。&lt;a href="https://github.com/yunionio/onecloud/issues/8910">issue #8910&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 多节点安装(已废弃)</title><link>https://www.cloudpods.org/zh/docs/quickstart/nodes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/nodes/</guid><description>
+&lt;p>通过修改对应的 values yaml 文件，修改里面的 cluster.edition 为 ce(开源) 或者 ee(企业) ，然后使用 helm upgrade 升级：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -104,7 +104,7 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # - ce: community edition
+# - ee: enterprise edition
+# 选择部署 ce(开源) 或者 ee(企业) 版本
+&lt;span style="color:#a40000">- edition: ce
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ edition: ee
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> # storageClass for stateful component
+# 有状态服务使用的 storageClass，如果不设置就会使用 local-path CSI
+# 这个可根据 k8s 集群情况自行调节
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm upgrade -n onecloud default . -f values-prod.yaml
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 多节点安装(已废弃)</title><link>https://www.cloudpods.org/zh/docs/quickstart/nodes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/nodes/</guid><description>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;p>多节点安装的内容已经废弃，不提倡使用这种方式，推荐用户先参考 &lt;a href="../allinone">All in One 安装&lt;/a> 或者 &lt;a href="../ha">高可用安装&lt;/a> 把集群搭建好，然后再使用 &lt;a href="../../setup/host">添加计算节点&lt;/a> 的方式添加计算节点到集群。&lt;/p>

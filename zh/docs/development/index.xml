@@ -168,107 +168,6 @@ $ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f --since 5m
 &lt;p>climc 的本地安装参考: &lt;a href="../../climc/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装&lt;/a>&lt;/p>
 &lt;p>climc 的本地配置参考: &lt;a href="../../climc/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE">非控制节点认证配置&lt;/a>&lt;/p>
 &lt;p>climc 的使用简介参考: &lt;a href="../../climc/#%E4%BD%BF%E7%94%A8">climc 使用&lt;/a>&lt;/p>
-&lt;h2 id="快速开发调试">快速开发调试&lt;/h2>
-&lt;p>我们的服务都已经容器化运行在 Kubernetes 集群中，使用上面说的 &lt;strong>&amp;ldquo;制作docker镜像-&amp;gt;发布到集群&amp;rdquo;&lt;/strong> 的开发流程有些长，对于快速开发调试并不方便。&lt;/p>
-&lt;p>通过 &lt;a href="https://www.telepresence.io">Telepresence&lt;/a> 提供远程 Kubernetes 连接信息上下文，可以在本地开发调试。下面介绍使用 Telepresence 进行本地快速开发。&lt;/p>
-&lt;h3 id="安装配置-kubectl">安装配置 kubectl&lt;/h3>
-&lt;p>需要在本地安装 &lt;a href="https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/">kubectl&lt;/a>。&lt;/p>
-&lt;p>需要在本地配置好集群信息，以通过 kubectl 访问；将 cloudpods 控制节点上的&lt;code>$KUBECONFIG&lt;/code>文件拷贝到本地&lt;code>~/.kube/config&lt;/code>;
-如果本地已经有此文件，参考 &lt;a href="https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">配置多集群访问&lt;/a> 进行合并。&lt;/p>
-&lt;h3 id="安装-telepresence">安装 telepresence&lt;/h3>
-&lt;p>这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href="https://www.telepresence.io/reference/install">Installing Telepresence&lt;/a>。&lt;/p>
-&lt;blockquote>
-&lt;p>不建议K8S集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p>
-&lt;/blockquote>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装依赖&lt;/span>
-$ yum install -y python3 sshfs conntrack iptables torsocks sshuttle sudo yum-utils
-&lt;span style="color:#8f5902;font-style:italic"># 安装 kubectl 用于连接 K8S 集群&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
-&lt;/span>&lt;span style="color:#4e9a06">[kubernetes]
-&lt;/span>&lt;span style="color:#4e9a06">name=Kubernetes
-&lt;/span>&lt;span style="color:#4e9a06">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
-&lt;/span>&lt;span style="color:#4e9a06">enabled=1
-&lt;/span>&lt;span style="color:#4e9a06">gpgcheck=0
-&lt;/span>&lt;span style="color:#4e9a06">repo_gpgcheck=0
-&lt;/span>&lt;span style="color:#4e9a06">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ yum install -y kubectl-1.15.12-0
-&lt;span style="color:#8f5902;font-style:italic"># 需要自行配置kubctl config&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 测试kubctl可以访问之前部署的K8S集群&lt;/span>
-$ kubctl version
-&lt;span style="color:#8f5902;font-style:italic"># 源码安装 telepresence 到 /usr/local/bin/telepresence&lt;/span>
-$ git clone https://github.com/telepresenceio/telepresence
-$ &lt;span style="color:#204a87">cd&lt;/span> telepresence
-$ git checkout 0.109
-$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/https:\/\/github.com\/datawire\/sshuttle.git/git@github.com:datawire\/sshuttle.git/g&amp;#39;&lt;/span> packaging/build-sshuttle.py
-$ sudo env &lt;span style="color:#000">PREFIX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/usr/local ./install.sh
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用">使用&lt;/h3>
-&lt;p>利用 telepresence 本地连通远端 K8S 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 K8S 其它服务的环境。&lt;/p>
-&lt;p>&lt;strong>macOS 或 linux 中本地编译运行 region 服务&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
-&lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
-$ make cmd/region
-&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span>
-$ telepresence --swap-deployment default-region --namespace onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
-接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ sudo chmod &lt;span style="color:#0000cf;font-weight:bold">777&lt;/span> /etc
-&lt;span style="color:#8f5902;font-style:italic"># 将 $TELEPRESENCE_ROOT/etc/yunion 链接到本地的 /etc&lt;/span>
-$ ln -s &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/etc/yunion /etc
-&lt;span style="color:#8f5902;font-style:italic"># 启动 region 服务&lt;/span>
-$ ./_output/bin/region --config /etc/yunion/region.conf
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>这个时候如果我们在外部调用 climc 就会发现相关的请求已经被转发到本地开发机启动 region 服务了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-list
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>调试完成后需要进行清理操作&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 退出 telepresence&lt;/span>
-$ &lt;span style="color:#204a87">exit&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 会看到类似下面的输出&lt;/span>
-T: Your process exited with &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> code 127.
-T: Exit cleanup in progress
-T: Cleaning up Pod
-&lt;span style="color:#8f5902;font-style:italic"># 删除链接文件&lt;/span>
-$ rm /etc/yunion
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Linux系统中本地编译运行 region 服务&lt;/strong>&lt;/p>
-&lt;p>这种方式相比上一种方式，更加干净；但是相对复杂&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
-&lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
-$ make cmd/region
-&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span>
-$ telepresence --swap-deployment default-region --namespace onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
-接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置 max_user_namespaces&lt;/span>
-$ cat /proc/sys/user/max_user_namespaces
-&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果 max_user_namespaces 为 0，需要设置下 user_namespaces&lt;/span>
-$ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">640&lt;/span> &amp;gt; /proc/sys/user/max_user_namespaces
-&lt;span style="color:#8f5902;font-style:italic"># 启动一个新的 namespace , 但不共享 mount namespace，这样接下来的 mount bind 操作就不会影响到宿主机&lt;/span>
-$ unshare --map-root-user --mount
-&lt;span style="color:#8f5902;font-style:italic"># bind K8S /var/run/secrets&lt;/span>
-$ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/var/run /var/run
-$ ls /var/run/
-secrets
-&lt;span style="color:#8f5902;font-style:italic"># bind cloudpods config&lt;/span>
-$ mkdir /etc/yunion
-$ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/etc/yunion /etc/yunion
-$ ls /etc/yunion/
-pki region.conf
-&lt;span style="color:#8f5902;font-style:italic"># 启动 region 服务&lt;/span>
-$ ./_output/bin/region --config /etc/yunion/region.conf
-&lt;span style="color:#8f5902;font-style:italic"># 这个时候如果我们在外部调用 climc&lt;/span>
-$ climc network-list
-&lt;span style="color:#8f5902;font-style:italic"># 就会发现相关的请求已经被转发到本地开发机启动 region 服务了&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多用法，以及 telepresence 的原理请参考&lt;a href="https://www.telepresence.io/discussion/overview">官方文档&lt;/a>。&lt;/p>
 &lt;h2 id="faq">FAQ&lt;/h2>
 &lt;h3 id="1-开发环境是-windows-或者-macos怎么开发">1. 开发环境是 windows 或者 macOS，怎么开发？&lt;/h3>
 &lt;p>因为我们的服务最后会运行在基于 CentOS 7 搭建的 K8S 集群里面，所以日常的开发和打包中一般都是在 CentOS 7 里面做的。&lt;/p>
@@ -282,18 +181,7 @@ $ climc network-list
 enable_host_health_check: false
 &lt;/code>&lt;/pre>
 &lt;/blockquote>
-&lt;h3 id="3-使用-telepresence-时上次未正常退出再次使用一直报错">3. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3>
-&lt;p>尝试手动清理:&lt;/p>
-&lt;ol>
-&lt;li>使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；&lt;/li>
-&lt;li>使用&lt;code>kubectl edit deployment default-region -n onecloud&lt;/code>，将 spec 下的 replicas 从0改为1.&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 可以编译cmd下制定的组件，比如：编译 region 和 host 组件&lt;/span>
-$ make cmd/region cmd/host
-&lt;span style="color:#8f5902;font-style:italic"># 查看编译好的二进制文件&lt;/span>
-$ ls _output/bin
-region host
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-本地直接运行-make-cmdhost-会出现-ceph-依赖的报错">4. 本地直接运行 &lt;code>make cmd/host&lt;/code> 会出现 ceph 依赖的报错&lt;/h3>
+&lt;h3 id="3-本地直接运行-make-cmdhost-会出现-ceph-依赖的报错">3. 本地直接运行 &lt;code>make cmd/host&lt;/code> 会出现 ceph 依赖的报错&lt;/h3>
 &lt;p>host 组件是私有云里面管理虚拟机的一个关键组件，依赖了 cephfs, rbd 和 rados 相关的库，如果是本地直接编译，则需要安装对应的依赖，操作如下：&lt;/p>
 &lt;ul class="nav nav-tabs" id="host_dep_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#host_dep_install-0" role="tab" aria-controls="host_dep_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#host_dep_install-1" role="tab" aria-controls="host_dep_install-1">Ubuntu 20.04&lt;/a>&lt;/li>&lt;/ul>

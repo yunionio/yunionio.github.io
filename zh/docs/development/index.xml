@@ -846,7 +846,50 @@ $ climc service-create --enabled identity keystone
 $ climc endpoint-create --enabled keystone Yunion public http://127.0.0.1:35357/v3
 $ climc endpoint-create --enabled keystone Yunion admin http://127.0.0.1:35357/v3
 $ climc endpoint-create --enabled keystone Yunion internal http://127.0.0.1:5000/v3
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="计算服务region初始化">计算服务（region）初始化&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置服务yunionconf初始化">配置服务（yunionconf）初始化&lt;/h2>
+&lt;p>yuninconf服务保存了前端页面的配置选项&lt;/p>
+&lt;ol>
+&lt;li>首先在keystone配置yunionconf服务的服务账号，并且注册yunionconf服务的服务端点（service endpoint）。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 创建 yunionconf 服务&lt;/span>
+$ climc service-create --enabled yunionconf yunionconf
+&lt;span style="color:#8f5902;font-style:italic"># 确定 yunionconf 服务监听端口，这里假定是8010，后面yunionconf服务配置时指定端口得是8010&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 创建 yunionconf 端点&lt;/span>
+$ climc endpoint-create --enabled yunionconf Yunion internal http://127.0.0.1:8010
+$ climc endpoint-create --enabled yunionconf Yunion public http://127.0.0.1:8010
+&lt;span style="color:#8f5902;font-style:italic"># 创建 yunionconf 服务的服务账号&lt;/span>
+$ climc user-create --enabled --system-account --no-web-console --password yunionconf@admin yunionconfadmin
+&lt;span style="color:#8f5902;font-style:italic"># 赋予 yunionconfadmin 用户 admin 角色&lt;/span>
+$ climc user-join-project --role admin --project system yunionconfadmin
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>其次配置yunionconf的数据库&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 为yunionconf服务创建数据库及数据库账号&lt;/span>
+$ mysql -uroot -e &lt;span style="color:#4e9a06">&amp;#39;create database yunionconf;&amp;#39;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里设置一个密码为cloudpods-yunionconf的yunionconf用户&lt;/span>
+$ mysql -uroot -e &lt;span style="color:#4e9a06">&amp;#39;grant all privileges on yunionconf.* to &amp;#34;yunionconf&amp;#34;@&amp;#34;%&amp;#34; identified by &amp;#34;cloudpods-yunionconf&amp;#34;; flush privileges;&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>下面配置并启动yunionconf服务&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 编译 yunionconf
+$ cd /root/cloudpods/ &amp;amp;&amp;amp; make cmd/yunionconf
+# 编写yunionconf服务的配置文件
+# 这里要注意使用刚创建的数据库及数据库账号密码, 及yunionconf服务认证的用户名密码
+$ cat&amp;lt;&amp;lt;EOF &amp;gt;/etc/yunion/yunionconf.conf
+region = 'Yunion'
+address = '127.0.0.1'
+port = 8010
+auth_uri = 'http://127.0.0.1:35357/v3'
+admin_user = 'yunionconfadmin'
+admin_password = 'yunionconf@admin'
+admin_tenant_name = 'system'
+sql_connection = 'mysql+pymysql://yunionconf:cloudpods-yunionconf@localhost:3306/yunionconf?charset=utf8'
+log_level = 'debug'
+auto_sync_table = true
+EOF
+# 启动 yunionconf 服务
+$ /root/cloudpods/_output/bin/yunionconf --conf /etc/yunion/yunionconf.conf
+&lt;/code>&lt;/pre>&lt;h2 id="计算服务region初始化">计算服务（region）初始化&lt;/h2>
 &lt;p>region服务是基础服务，也是控制节点。&lt;/p>
 &lt;ol>
 &lt;li>首先在keystone配置region服务的服务账号，并且注册region服务的服务端点（service endpoint）。&lt;/li>
@@ -895,7 +938,7 @@ $ /root/cloudpods/_output/bin/region --conf /etc/yunion/region.conf
 &lt;pre>&lt;code># 测试 region 服务接口
 $ climc server-list
 *** Total: 0 ***
-&lt;/code>&lt;/pre>&lt;p>其他使用数据库的服务的配置步骤和region类似。&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>其他使用数据库的服务的配置步骤和region类似, 这里注意调度器(scheduler)的配置文件同样是使用region服务的配置文件。&lt;/p>
 &lt;h2 id="api网关服务apigateway初始化">API网关服务（apigateway）初始化&lt;/h2>
 &lt;p>api网关是web到各个服务的中间层，web请求到达nginx再由nginx分发到api网关服务，最终由api网关去判断请求需要转发到哪个服务&lt;/p>
 &lt;p>首先为api网关创建服务账号&lt;/p>

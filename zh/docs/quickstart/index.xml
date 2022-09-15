@@ -3,7 +3,7 @@
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
-本章内容是通过部署工具快速搭建 Cloudpods 服务，如果想在生产环境部署高可用集群请参考: &lt;a href="../ha/">高可用安装&lt;/a> 。
+本章内容是通过部署工具快速搭建 Cloudpods 服务，如果想在生产环境部署高可用集群请参考: &lt;a href="../../setup/ha/">高可用安装&lt;/a> 。
 &lt;/div>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;h3 id="机器配置要求">机器配置要求&lt;/h3>
@@ -205,135 +205,29 @@ $ reboot
 &lt;li>第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li>
 &lt;/ol>
 &lt;h3 id="5-其它问题">5. 其它问题？&lt;/h3>
-&lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: 高可用安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/ha/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/ha/</guid><description>
-&lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>关于环境的准备和不同架构 CPU 操作系统的要求，请参考 &lt;a href="../allinone#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">All in One 安装/机器配置要求&lt;/a>。&lt;/p>
-&lt;p>假设准备好了 3 台 CentOS7 机器，以及 1 台 Mariadb/MySQL 的机器，规划如下：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>role&lt;/th>
-&lt;th>ip&lt;/th>
-&lt;th>interface&lt;/th>
-&lt;th>note&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>k8s primary&lt;/td>
-&lt;td>10.127.90.101&lt;/td>
-&lt;td>eth0&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s master 1&lt;/td>
-&lt;td>10.127.90.102&lt;/td>
-&lt;td>eth0&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s master 2&lt;/td>
-&lt;td>10.127.90.103&lt;/td>
-&lt;td>eth0&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s VIP&lt;/td>
-&lt;td>10.127.190.10&lt;/td>
-&lt;td>-&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>DB&lt;/td>
-&lt;td>10.127.190.11&lt;/td>
-&lt;td>-&lt;/td>
-&lt;td>pswd=&amp;ldquo;0neC1oudDB#&amp;rdquo;, port=3306&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>其中 DB 的部署目前是不归 ocboot 部署工具管理的，需要提前手动部署，高可用的数据库部署可以参考文档 &lt;a href="../../setup/db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
-&lt;h2 id="开始安装">开始安装&lt;/h2>
-&lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
-&lt;p>参考 &lt;a href="../allinone/#%E4%B8%8B%E8%BD%BD-ocboot">All in One 安装/下载 ocboot&lt;/a>。&lt;/p>
-&lt;h3 id="编写部署配置">编写部署配置&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 填充变量，生成配置&lt;/span>
-&lt;span style="color:#000">DB_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;10.127.190.11&amp;#34;&lt;/span>
-&lt;span style="color:#000">DB_PORT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3306&lt;/span>
-&lt;span style="color:#000">DB_PSWD&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0neC1oudDB#&amp;#34;&lt;/span>
-&lt;span style="color:#000">DB_USER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>root
-&lt;span style="color:#000">K8S_VIP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.190.10
-&lt;span style="color:#000">PRIMARY_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
-&lt;span style="color:#000">PRIMARY_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.101
-&lt;span style="color:#000">MASTER_1_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
-&lt;span style="color:#000">MASTER_1_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.102
-&lt;span style="color:#000">MASTER_2_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
-&lt;span style="color:#000">MASTER_2_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.103
-cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: $PRIMARY_IP
-&lt;/span>&lt;span style="color:#4e9a06"> use_local: false
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.9.2&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: $DB_IP
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: &amp;#34;$DB_USER&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: &amp;#34;$DB_PSWD&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> db_port: &amp;#34;$DB_PORT&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> skip_docker_config: true
-&lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunionio
-&lt;/span>&lt;span style="color:#4e9a06"> ha_using_local_registry: false
-&lt;/span>&lt;span style="color:#4e9a06"> node_ip: &amp;#34;$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> ip_autodetection_method: &amp;#34;can-reach=$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: $K8S_VIP
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
-&lt;/span>&lt;span style="color:#4e9a06"> high_availability: true
-&lt;/span>&lt;span style="color:#4e9a06"> use_ee: false
-&lt;/span>&lt;span style="color:#4e9a06"> enable_minio: true
-&lt;/span>&lt;span style="color:#4e9a06"> registry_mirrors:
-&lt;/span>&lt;span style="color:#4e9a06"> - https://lje6zxpk.mirror.aliyuncs.com
-&lt;/span>&lt;span style="color:#4e9a06"> insecure_registries:
-&lt;/span>&lt;span style="color:#4e9a06"> - $PRIMARY_IP:5000
-&lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$PRIMARY_INTERFACE/br0/$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">master_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: $K8S_VIP
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> as_controller: true
-&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
-&lt;/span>&lt;span style="color:#4e9a06"> ntpd_server: &amp;#34;$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> registry_mirrors:
-&lt;/span>&lt;span style="color:#4e9a06"> - https://lje6zxpk.mirror.aliyuncs.com
-&lt;/span>&lt;span style="color:#4e9a06"> high_availability: true
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - user: root
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: &amp;#34;$MASTER_1_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$MASTER_1_INTERFACE/br0/$MASTER_1_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> - user: root
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: &amp;#34;$MASTER_2_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$MASTER_2_INTERFACE/br0/$MASTER_2_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./ocboot.py install ./config-k8s-ha.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>等待部署完成后，就可以使用浏览器访问 https://10.127.190.10 (VIP), 输入用户名 &lt;code>admin&lt;/code> 和密码 &lt;code>admin@123&lt;/code>，进入前端。&lt;/p>
-&lt;p>另外部署完成后，可以给已有集群添加节点，参考文档：&lt;a href="../../setup/host">添加计算节点&lt;/a>。&lt;/p></description></item><item><title>Docs: Kubernetes Helm 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
+&lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: Kubernetes Helm 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>通过在已有的 Kubernetes 集群上部署 Cloudpods 多云管理版本，无法使用内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)。&lt;/p>
-&lt;p>目前该部署方法可能会因为不同 Kubernetes 集群的 CSI，CNI 和 Ingress controller 不同，在部署中出现不同的错误，如果部署失败，又想快速体验产品功能，建议还是使用 &lt;a href="../allinone">All in One 安装&lt;/a> 的方式部署。&lt;/p>
-&lt;p>该部署方法仅适用于多云管理功能的使用，比如管理公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)。&lt;/p>
+&lt;p>该方案通过 Helm 在已有的 Kubernetes 集群上自动部署 Cloudpods 多云管理版本。&lt;/p>
+&lt;p>该部署方法可能会因为不同 Kubernetes 发行版的 CSI，CNI 和 Ingress controller 配置不同出现兼容性错误，如果部署失败，又想快速体验产品功能，建议还是使用 &lt;a href="../allinone">All in One 安装&lt;/a> 的方式部署。&lt;/p>
+&lt;p>已经验证过的Kubernetes发行版本包括：&lt;/p>
+&lt;ul>
+&lt;li>阿里云 ACK&lt;/li>
+&lt;/ul>
+&lt;p>该部署方法仅适用于多云管理功能的使用，比如管理公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)，无法使用内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)&lt;/p>
 &lt;/div>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
 &lt;p>Cloudpods 相关的组件运行在 Kubernetes 之上，环境以及相关的软件依赖如下:&lt;/p>
 &lt;ul>
-&lt;li>安装 helm 工具请参考 &lt;a href="https://helm.sh/docs/intro/install/">https://helm.sh/docs/intro/install/&lt;/a>&lt;/li>
-&lt;li>Kubernetes 集群配置最低要求:
+&lt;li>Kubernetes 集群配置要求:
 &lt;ul>
-&lt;li>版本 1.15 ~ 1.24&lt;/li>
-&lt;li>至少 CPU 4核, 内存 8G, 节点有存储 100G&lt;/li>
+&lt;li>Kubernetes 版本: 1.15 ~ 1.24&lt;/li>
+&lt;li>系统配置：至少 CPU 4核, 内存 8G, 节点有存储 100G&lt;/li>
 &lt;li>节点需要能够访问公网&lt;/li>
 &lt;li>提供 ingress controller&lt;/li>
 &lt;li>内部 coredns 解析&lt;/li>
+&lt;li>支持 Helm，安装 helm 工具请参考 &lt;a href="https://helm.sh/docs/intro/install/">https://helm.sh/docs/intro/install/&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>提供 Mysql 数据库(可选): 可以选择使用连接的数据库是在部署在 Kubernetes 集群内还是使用外部的，生产环境建议使用外部单独管理的 Mysql&lt;/li>
@@ -492,144 +386,4 @@ $ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span
 # 有状态服务使用的 storageClass，如果不设置就会使用 local-path CSI
 # 这个可根据 k8s 集群情况自行调节
 &lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm upgrade -n onecloud default . -f values-prod.yaml
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 多节点安装(已废弃)</title><link>https://www.cloudpods.org/zh/docs/quickstart/nodes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/nodes/</guid><description>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>多节点安装的内容已经废弃，不提倡使用这种方式，推荐用户先参考 &lt;a href="../allinone">All in One 安装&lt;/a> 或者 &lt;a href="../ha">高可用安装&lt;/a> 把集群搭建好，然后再使用 &lt;a href="../../setup/host">添加计算节点&lt;/a> 的方式添加计算节点到集群。&lt;/p>
-&lt;p>以下内容只是作为保留作为参考。&lt;/p>
-&lt;/div>
-&lt;p>多节点安装和 &lt;a href="../allinone">All in One 安装&lt;/a> 一样，都使用 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 这个部署工具，根据配置执行 ansible playbook 部署节点。&lt;/p>
-&lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>关于环境的准备和不同架构 CPU 操作系统的要求，请参考 &lt;a href="../allinone#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">All in One 安装/机器配置要求&lt;/a>。&lt;/p>
-&lt;p>以下为待部署机器的环境，假设已经准备好了 5 台机器，IP 分别是 10.127.10.156-160 ，各个节点做出以下角色规划：&lt;/p>
-&lt;ul>
-&lt;li>mariadb_node: 这个角色表示该节点上部署并运行 mariadb 数据库服务，该角色不一定要写在配置中，如果环境中有准备好的数据库，也可以不部署
-&lt;ul>
-&lt;li>节点: 10.127.10.156&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>primary_master_node: 这个角色表示该节点是第一个部署并运行 k8s master 组件的节点，该角色必须存在于配置中，该角色运行 onecloud 控制服务
-&lt;ul>
-&lt;li>节点: 10.127.10.156&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>master_nodes: 这个角色表示这些节点运行控制服务，该角色可选，主要作用是和 primary_master_node 一起组成 Kubernetes 的 etcd 3 节点高可用
-&lt;ul>
-&lt;li>节点: 10.127.10.157-158&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>worker_nodes: 这个角色表示这些节点运行私有云计算服务，该角色可选，如果不需要内置的私有云功能，可以不配置
-&lt;ul>
-&lt;li>节点: 10.127.10.159-160&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">IP&lt;/th>
-&lt;th style="text-align:center">登录用户&lt;/th>
-&lt;th>角色&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">10.127.10.156&lt;/td>
-&lt;td style="text-align:center">root&lt;/td>
-&lt;td>mariadb_node &amp;amp; primary_master_node&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">10.127.10.157-158&lt;/td>
-&lt;td style="text-align:center">root&lt;/td>
-&lt;td>master_nodes&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">10.127.10.159-160&lt;/td>
-&lt;td style="text-align:center">root&lt;/td>
-&lt;td>worker_nodes&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="开始安装">开始安装&lt;/h2>
-&lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
-&lt;p>参考 &lt;a href="../allinone/#%E4%B8%8B%E8%BD%BD-ocboot">All in One 安装/下载 ocboot&lt;/a>。&lt;/p>
-&lt;h3 id="编写部署配置">编写部署配置&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编写 config-nodes.yml 文件&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.yml
-&lt;/span>&lt;span style="color:#4e9a06">mariadb_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.2
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">master_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.157
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.158
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">worker_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.159
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.160
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
-&lt;p>当填写完 config-nodes.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py ./config-nodes.yml&lt;/code> 部署集群了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开始部署&lt;/span>
-$ ./run.py ./config-nodes.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>等待部署完成后，就可以使用浏览器访问 https://10.168.26.216 (primary_master_node 的 IP), 输入用户名 &lt;code>admin&lt;/code> 和密码 &lt;code>admin@123&lt;/code>，进入前端。&lt;/p>
-&lt;p>然后就可以&lt;a href="../allinone/#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E5%8F%B0%E8%99%9A%E6%8B%9F%E6%9C%BA">创建私有云虚拟机&lt;/a>或者&lt;a href="../allinone/#%E5%AF%BC%E5%85%A5%E5%85%AC%E6%9C%89%E4%BA%91%E6%88%96%E8%80%85%E5%85%B6%E5%AE%83%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B3%E5%8F%B0%E8%B5%84%E6%BA%90">纳管公有云资源&lt;/a>。&lt;/p></description></item><item><title>Docs: 文档简介</title><link>https://www.cloudpods.org/zh/docs/quickstart/introduction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/introduction/</guid><description>
-&lt;p>欢迎查看 Cloudpods 文档，本文档会介绍 Cloudpods 服务安装部署、资源操作管理和开发贡献等内容。&lt;/p>
-&lt;h2 id="cloudpods-是什么">Cloudpods 是什么?&lt;/h2>
-&lt;p>Cloudpods 是一个开源的Golang实现的云原生的融合多云/混合云的云平台，也就是一个“云上之云”。Cloudpods 不仅可以管理本地的虚拟机和物理机资源，还可以管理多个云平台和云账号。Cloudpods 隐藏了这些异构基础设施资源的数据模型和API的差异，对外提供了一套统一的API，允许用户就像访问一个云一样地访问多云。从而大大降低了访问多云的复杂度，提升了管理多云的效率。&lt;/p>
-&lt;h2 id="谁需要-cloudpods">谁需要 Cloudpods?&lt;/h2>
-&lt;ul>
-&lt;li>将几台物理服务器虚拟化成一个私有云平台&lt;/li>
-&lt;li>需要一个紧凑而且功能相对完整的物理机全生命周期管理工具&lt;/li>
-&lt;li>将VMware vSphere虚拟化集群转换为一个可以自服务的私有云平台&lt;/li>
-&lt;li>在混合云的场景，能够在一个界面访问私有云和公有云&lt;/li>
-&lt;li>通过一个集中的入口访问分布在多个公有云平台上的多个账号&lt;/li>
-&lt;li>当前只使用一个云公有云账号但希望将来使用多云的用户&lt;/li>
-&lt;/ul>
-&lt;h2 id="功能">功能&lt;/h2>
-&lt;p>Cloudpods 提供了如下的功能：&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>内置私有云&lt;/strong>&lt;/p>
-&lt;p>Cloudpods 内置完备的私有云实现，可以管理海量KVM虚拟机，能进行物理机全生命周期管理，实现了VMware vSphere虚拟化集群的自助服务和自动化。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>多云资源统一管理&lt;/strong>&lt;/p>
-&lt;p>统一镜像、调度、账号体系、监控和计费等操作，能够全面管理 On premises、 私有云、公有云资源。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>多云Kubernetes&lt;/strong>&lt;/p>
-&lt;p>Cloudpods 自身为运行在Kubernetes的云原生应用，并且能在多云环境部署运行Kubernetes集群。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>多云统一认证&lt;/strong>&lt;/p>
-&lt;p>提供一套完整的多租户认证和访问控制体系，允许以统一的联邦身份SSO访问各个云平台的原生控制台。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>多云命令行工具&lt;/strong>&lt;/p>
-&lt;p>提供命令行工具climc访问所有的API。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>多云统一API&lt;/strong>&lt;/p>
-&lt;p>提供统一的API访问所有的私有云和多云资源。&lt;/p>
-&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

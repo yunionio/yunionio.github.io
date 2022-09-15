@@ -22,14 +22,17 @@
 $ ls -alh /opt/yunion/bin/climc
 -rwxr-xr-x &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root 24M Jul &lt;span style="color:#0000cf;font-weight:bold">18&lt;/span> 19:04 /opt/yunion/bin/climc
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="源码编译安装">源码编译安装&lt;/h3>
-&lt;p>首先需要搭建 go 的开发环境，然后 clone 代码，参考: &lt;a href="../../../development/contrib">开发贡献&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编译 climc&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/onecloud
+&lt;p>首先需要搭建 go 的开发环境，然后 clone 代码并编译:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 克隆代码&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/
+$ git clone https://github.com/yunionio/cloudpods.git
+&lt;span style="color:#8f5902;font-style:italic"># 编译 climc&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
 $ make cmd/climc
 &lt;span style="color:#8f5902;font-style:italic"># 等待编译完成后，climc 在 _output/bin 目录下&lt;/span>
 $ ls -alh _output/bin/climc
 -rwxr-xr-x &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> lzx lzx 25M Jul &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> 17:10 _output/bin/climc
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以根据自己的需要，将编译好的 climc 放到对应的目录，或者直接写 alias 对应到 $GOPATH/src/yunion.io/x/onecloud/_output/bin/climc 。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以根据自己的需要，将编译好的 climc 放到对应的目录，或者直接写 alias 对应到 $GOPATH/src/yunion.io/x/cloudpods/_output/bin/climc 。&lt;/p>
 &lt;h2 id="使用">使用&lt;/h2>
 &lt;p>安装好 climc 后，可以将对应的可执行目录加入到 PATH 环境变量，下面假设 climc 所在的目录是 /opt/yunion/bin 。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 根据自己的需要加到 bash 或者 zsh 配置文件里面&lt;/span>

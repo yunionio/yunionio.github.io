@@ -764,7 +764,7 @@ Cloudpods平台上安全组即使是从云账号同步下来的，但是安全�
 &lt;h2 id="查看弹性公网ip详情">查看弹性公网IP详情&lt;/h2>
 &lt;p>该功能用于查看弹性公网IP的详细信息。&lt;/p>
 &lt;ol>
-&lt;li>单击指定弹性公网IP名称项，进行弹性公网IP详情页面。&lt;/li>
+&lt;li>单击指定弹性公网IP名称项，进入弹性公网IP详情页面。&lt;/li>
 &lt;li>在详情页面顶部菜单项支持对弹性网卡进行绑定、解绑、修改带宽、更改项目、删除等操作。&lt;/li>
 &lt;li>查看弹性公网IP的云上ID、ID、名称、状态、域、项目、平台、绑定资源、IP地址、带宽、计费方式、区域、可用区、云账号、云订阅、创建时间、更新时间、备注等。&lt;/li>
 &lt;/ol>
@@ -772,6 +772,99 @@ Cloudpods平台上安全组即使是从云账号同步下来的，但是安全�
 &lt;p>该功能用于查看弹性公网IP相关操作的日志信息。&lt;/p>
 &lt;ol>
 &lt;li>在弹性公网IP详情页面，单击&amp;quot;操作日志&amp;quot;页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 流量镜像</title><link>https://www.cloudpods.org/zh/docs/web_ui/computing/network/trafficimages/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/computing/network/trafficimages/</guid><description>
+&lt;p>流量镜像是用来抓取任意虚拟机的网络流量送到指定的虚拟机的虚拟网卡或者物理机的物理网卡，无论该虚拟机在哪台宿主机，在哪个VPC，以及虚拟机的操作系统。可以采用第三方流量抓取软件从该虚拟或物理网卡获取流量，进行流量分析，流量回放测试等。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/网络/流量镜像&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入流量镜像页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/computing/trafficimages.png" alt="">&lt;/p>
+&lt;h2 id="新建流量镜像">新建流量镜像&lt;/h2>
+&lt;p>该功能用于创建流量镜像。&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建流量镜像页面。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>名称：设置流量镜像的名称。&lt;/li>
+&lt;li>备注：设置流量镜像的备注。&lt;/li>
+&lt;li>类型：支持选择宿主机端口或虚拟机端口。&lt;/li>
+&lt;li>目的主机：选择宿主机或虚拟机的目的主机。&lt;/li>
+&lt;li>目的MAC：类型选择宿主机端口，还需要指定采集流量的物理网卡的MAC地址。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="添加镜像源">添加镜像源&lt;/h2>
+&lt;p>该功能用于给已创建好的流量镜像添加镜像源。&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面，单击流量镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;添加镜像源&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出添加镜像源对话框。&lt;/li>
+&lt;li>配置一下信息：
+&lt;ul>
+&lt;li>名称：设置镜像源的名称。&lt;/li>
+&lt;li>备注：设置镜像源的备注。&lt;/li>
+&lt;li>镜像目的：默认为当前流量镜像，不支持修改。&lt;/li>
+&lt;li>采集流量方向：支持选择双向、入方向或出方向。&lt;/li>
+&lt;li>类型：支持选择虚拟机网卡或虚拟交换机。&lt;/li>
+&lt;li>虚拟机：类型选择虚拟机网卡后可以选择作为镜像源的虚拟机。&lt;/li>
+&lt;li>虚拟机mac地址：类型选择虚拟机网卡后选择作为镜像源的虚拟机mac地址。&lt;/li>
+&lt;li>宿主机：类型选择虚拟交换机后可以选择作为镜像源的宿主机。&lt;/li>
+&lt;li>二层网络：类型选择虚拟交换机后可以选择作为镜像源的二层网络。&lt;/li>
+&lt;li>VLANID：类型选择虚拟交换机后可以选择作为镜像源的VLANID。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用">启用&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的流量镜像。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面，单击&amp;quot;禁用&amp;quot;状态的流量镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用流量镜像。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面中勾选一个或多个&amp;quot;禁用&amp;quot;状态的流量镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量启用流量镜像。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用">禁用&lt;/h2>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的流量镜像。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面，单击&amp;quot;启用&amp;quot;状态的流量镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用流量镜像。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面中勾选一个或多个&amp;quot;启用&amp;quot;状态的流量镜像，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量禁用流量镜像。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除流量镜像">删除流量镜像&lt;/h2>
+&lt;p>该功能用于删除流量镜像，启用的流量镜像不支持删除，请禁用后再进行删除操作。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像页面，单击流量镜像右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像列表中选择一个或多个流量镜像，单击页面上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看流量镜像详情">查看流量镜像详情&lt;/h2>
+&lt;p>该功能用于查看流量镜像的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>单击指定流量镜像名称项，进入流量镜像详情页面。&lt;/li>
+&lt;li>在详情页面顶部菜单项支持对流量镜像进行添加镜像源、启用、禁用、删除等操作。&lt;/li>
+&lt;li>查看流量镜像的云上ID、ID、名称、状态、域、项目、启用状态、类型、目的名称、目的IP、目的MAC、镜像源数量、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看流量镜像相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在流量镜像详情页面，单击&amp;quot;操作日志&amp;quot;页签，进入操作日志页面。
 &lt;ul>
 &lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
 &lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>

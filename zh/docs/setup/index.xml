@@ -1922,8 +1922,21 @@ customZones:
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get deployments. -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep my-zone-1
 default-baremetal-agent-my-zone-1 0/0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m37s
 default-esxi-agent-my-zone-1 1/1 &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 3m42s
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中物理机服务(baremetal-agent)需要选择一个 k8s node 手动开启，请参考文档&lt;a href="../baremetal/">物理机管理服务&lt;/a>。&lt;/p>
-&lt;h2 id="宿主机服务">宿主机服务&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中物理机服务(baremetal-agent)需要选择一个 k8s node 手动开启。&lt;/p>
+&lt;h3 id="启用-baremetal-agent">启用 baremetal-agent&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># $listen_interface 指的是 baremetal-agent 监听的网卡名称&lt;/span>
+$ ocadm baremetal &lt;span style="color:#204a87">enable&lt;/span> --node &lt;span style="color:#000">$node_name&lt;/span> --listen-interface &lt;span style="color:#000">$listen_interface&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 观察 baremetal agent pod 状态查看是否启动成功&lt;/span>
+$ watch &lt;span style="color:#4e9a06">&amp;#34;kubectl get pods -n onecloud | grep baremetal&amp;#34;&lt;/span>
+default-baremetal-agent-7c84996c9b-hhllw 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m10s
+&lt;span style="color:#8f5902;font-style:italic"># 启动成功确认 baremetal-agent 注册到控制节点&lt;/span>
+$ climc agent-list
++--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Manager_URI &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> agent_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> version &lt;span style="color:#000;font-weight:bold">|&lt;/span> zone_id &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> f3c2c671-c41d-4f30-8d04-e022b49bb9b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal-10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.168.222.150:8879 &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal &lt;span style="color:#000;font-weight:bold">|&lt;/span> remotes/origin/master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>5e415506120011509&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6230b485-2e54-480e-8284-33360b8202a8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="宿主机服务">宿主机服务&lt;/h2>
 &lt;p>宿主机服务(host)管理一台宿主机上的虚拟机，默认情况下的宿主机属于可用区zone0，如果有其它机房的宿主机，需要新建可用区，然后创建一个属于这个可用区的二层网络(wire)，再基于这个二层网络(wire)创建包含注册宿主机IP的子网(network)，最后把宿主机添加进来就可以了。&lt;/p>
 &lt;h3 id="创建二层网络">创建二层网络&lt;/h3>
 &lt;p>直接基于之前创建的可用区 my-zone-1 创建二层网络 my-wire-1，命令如下：&lt;/p>

@@ -13,8 +13,69 @@ $ rm -f /var/run/dhclient-&amp;lt;nic&amp;gt;.pid
 &lt;p>使用我们的平台的 host 服务需要用我们的内核，如果你看到了这样的提示：&lt;/p>
 &lt;p>&lt;code>openvswitch: kernel module openvswitch paramters version not found, is kernel version correct ??&lt;/code>&lt;/p>
 &lt;p>或者 &lt;code>uname -r&lt;/code> 输出结果中字段不包含 yn. 正确的：&lt;code>3.10.0-514.26.2.el7.yn20180608.x86_64&lt;/code>&lt;/p>
-&lt;p>说明你的机器使用的不是我们的内核， 需要安装我们的内核然后重启。&lt;/p>
-&lt;p>如何安装我们的内核可以参考&lt;a href="https://www.cloudpods.org/zh/docs/setup/host/#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装部署流程&lt;/a>&lt;/p></description></item><item><title>Docs: 查看宿主机列表</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/list/</link><pubDate>Mon, 07 Feb 2022 18:24:15 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/list/</guid><description>
+&lt;p>说明你的机器使用的不是我们的内核，需要安装我们的内核然后重启，安装内核步骤如下。&lt;/p>
+&lt;h3 id="环境">环境&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>操作系统: CentOS 7.x&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>硬件要求:&lt;/p>
+&lt;ul>
+&lt;li>Virtualization: CPU 要支持虚拟化，用于虚拟机 KVM 加速&lt;/li>
+&lt;li>打开 iommu，VT-d: 用于 GPU 透传(不用GPU可以不开)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>网络:&lt;/p>
+&lt;ul>
+&lt;li>当前可用的网段: 虚拟机可以直接使用和计算节点所在的扁平网段，需要预先划分保留对应端给云平台虚拟机使用，防止被其它设备占用，最后 IP 冲突&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点&lt;/p>
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>备注:&lt;/p>
+&lt;ul>
+&lt;li>如果是以测试为目的，可以拿一台虚拟机部署计算节点的服务，但可能无法使用 KVM 加速和 GPU 透传&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="使用-ocboot-添加对应节点">使用 ocboot 添加对应节点&lt;/h3>
+&lt;p>以下操作在控制节点进行，在控制节点使用 &lt;code>ocboot add-node&lt;/code> 命令把对应计算节点添加进来。&lt;/p>
+&lt;p>假设要给控制节点 10.168.26.216 添加计算节点 10.168.222.140 首先需要 ssh root 免密码登录对应的计算节点以及控制节点自身。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将控制节点自己设置成免密登录&lt;/span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+&lt;span style="color:#8f5902;font-style:italic"># 尝试免密登录控制节点是否成功&lt;/span>
+$ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 将生成的 ~/.ssh/id_rsa.pub 公钥拷贝到待部署的计算机器&lt;/span>
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.222.140
+&lt;span style="color:#8f5902;font-style:italic"># 尝试免密登录待部署机器，应该不需要输入登录密码即可拿到部署机器的 hostname&lt;/span>
+$ ssh root@10.168.222.140 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>控制节点应该已经部署好了 docker，为了环境干净，可以直接在容器里面使用 ocboot 的添加计算节点，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 代码&lt;/span>
+$ git clone https://github.com/yunionio/ocboot
+$ &lt;span style="color:#204a87">cd&lt;/span> ocboot
+&lt;span style="color:#8f5902;font-style:italic"># 使用 run-in-docker.sh 添加节点&lt;/span>
+$ ./run-in-docker.sh add-node 10.168.26.216 10.168.222.140
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>等 ocboot 容器镜像拉取完后，就会调用 ansible-playbook 把对应的计算节点加入进来。&lt;/p>
+&lt;h3 id="启用计算节点宿主机">启用计算节点(宿主机)&lt;/h3>
+&lt;p>等计算节点添加完成后，需要启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 climc 查看注册的 host 列表&lt;/span>
+$ climc host-list
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_mac &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Manager_URI &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_status &lt;span style="color:#000;font-weight:bold">|&lt;/span> mem_size &lt;span style="color:#000;font-weight:bold">|&lt;/span> cpu_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> node_count &lt;span style="color:#000;font-weight:bold">|&lt;/span> sn &lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> host_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> version &lt;span style="color:#000;font-weight:bold">|&lt;/span> storage_size &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 3830870e-a499-459d-89df-bb6979b5e1ff &lt;span style="color:#000;font-weight:bold">|&lt;/span> lzx-allinone-standalone &lt;span style="color:#000;font-weight:bold">|&lt;/span> 00:22:39:4c:6c:e9 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.140 &lt;span style="color:#000;font-weight:bold">|&lt;/span> http://10.168.222.140:8885 &lt;span style="color:#000;font-weight:bold">|&lt;/span> running &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> online &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">8192&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> Not Specified &lt;span style="color:#000;font-weight:bold">|&lt;/span> rotate &lt;span style="color:#000;font-weight:bold">|&lt;/span> hypervisor &lt;span style="color:#000;font-weight:bold">|&lt;/span> master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>7ab047419092301&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">50141&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+-------------------------+-------------------+----------------+----------------------------+---------+---------+-------------+----------+-----------+------------+---------------+--------------+------------+-------------------------+--------------+
+*** Total: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
+&lt;span style="color:#8f5902;font-style:italic"># 启动 host&lt;/span>
+$ climc host-enable lzx-allinone-standalone
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 查看宿主机列表</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/list/</link><pubDate>Mon, 07 Feb 2022 18:24:15 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/list/</guid><description>
 &lt;h3 id="查询宿主机">查询宿主机&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询 kvm 这种类型的宿主机&lt;/span>
 $ climc host-list --hypervisor kvm

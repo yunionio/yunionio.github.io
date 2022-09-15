@@ -2593,13 +2593,13 @@ pkg/mcclient/modules/compute/mod_elasticcache.go:func &lt;span style="color:#ce5
 &lt;p>本文以DNS记录导出Zone格式文件为例，介绍如何添加一个API。&lt;/p>
 &lt;h2 id="原理">原理&lt;/h2>
 &lt;p>实现Zone格式文件导出DNS资源记录：将某个dns zone在数据库中的dns记录读出，按Zone文件的格式组织成字符串，并返回json格式的结果。&lt;/p>
-&lt;p>根据&lt;a href="https://www.cloudpods.org/zh/docs/development/framework/#">后端服务框架&lt;/a>：&lt;/p>
+&lt;p>根据&lt;a href="../../development/framework/#">后端服务框架&lt;/a>：&lt;/p>
 &lt;ul>
 &lt;li>REST API 负责解析客户端发送的 CRUD http 请求，将不同的请求对应到 Model Dispatcher 模块；&lt;/li>
 &lt;li>Model Dispatcher 将客户端的请求分发到对应资源的业务操作；&lt;/li>
 &lt;li>Model 定义云平台各种资源，会进行数据库读写相关操作。&lt;/li>
 &lt;/ul>
-&lt;p>因此根据&lt;a href="https://www.cloudpods.org/zh/docs/development/codestruct/">后端代码结构&lt;/a>：&lt;/p>
+&lt;p>因此根据&lt;a href="../../development/codestruct/">后端代码结构&lt;/a>：&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>pkg/compute/models为服务资源模型代码，一般一个model对应数据库中的一张表。由于要处理某个zone下的所有dns记录，所以在dns_zones.go文件中给SDnsZone增加&lt;strong>GetDetailsExports&lt;/strong>方法，必要时也可以在dns_recordsets.go文件中向SDnsRecordSet增加处理一条dns记录的方法。&lt;/p>

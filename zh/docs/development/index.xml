@@ -846,6 +846,14 @@ $ climc service-create --enabled identity keystone
 $ climc endpoint-create --enabled keystone Yunion public http://127.0.0.1:35357/v3
 $ climc endpoint-create --enabled keystone Yunion admin http://127.0.0.1:35357/v3
 $ climc endpoint-create --enabled keystone Yunion internal http://127.0.0.1:5000/v3
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="初始化离线套餐服务">初始化离线套餐服务&lt;/h2>
+&lt;p>套餐存储在阿里云对象存储，是由region服务查找对应的endpoint去拉取套餐&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 创建 offlinecloudmeta 服务&lt;/span>
+$ climc service-create --enabled offlinecloudmeta offlinecloudmeta
+&lt;span style="color:#8f5902;font-style:italic"># 创建 offlinecloudmeta 端点&lt;/span>
+$ climc endpoint-create --enabled offlinecloudmeta Yunion public https://yunionmeta.oss-cn-beijing.aliyuncs.com
+$ climc endpoint-create --enabled offlinecloudmeta Yunion admin https://yunionmeta.oss-cn-beijing.aliyuncs.com
+$ climc endpoint-create --enabled offlinecloudmeta Yunion internal https://yunionmeta.oss-cn-beijing.aliyuncs.com
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置服务yunionconf初始化">配置服务（yunionconf）初始化&lt;/h2>
 &lt;p>yuninconf服务保存了前端页面的配置选项&lt;/p>
 &lt;ol>

@@ -61,16 +61,20 @@ $ vi /etc/sysconfig/network-scripts/ifcfg-eth0 &lt;span style="color:#8f5902;fon
 &lt;span style="color:#8f5902;font-style:italic"># 修改配置文件内容&lt;/span>
 &lt;span style="color:#000">ONBOOT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>yes
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>禁用selinux，修改/etc/selinux/config文件，将&amp;quot;SELINUX=enforcing&amp;quot;改为&amp;quot;SELINUX=disabled&amp;quot;。修改完成后，重启系统生效。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vi /etc/selinux/config
-&lt;span style="color:#8f5902;font-style:italic"># 修改配置文件内容，修改完成后保存。&lt;/span>
-&lt;span style="color:#000">SELINUX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>disabled
-&lt;span style="color:#8f5902;font-style:italic"># 重启使配置生效&lt;/span>
+&lt;/ol>
+&lt;p>centos8和centos9重启网卡=systemctl start NetworkManager.service
+2. 禁用selinux，修改/etc/selinux/config文件，将&amp;quot;SELINUX=enforcing&amp;quot;改为&amp;quot;SELINUX=disabled&amp;quot;。修改完成后，重启系统生效。&lt;/p>
+&lt;pre>&lt;code>```bash
+$ vi /etc/selinux/config
+# 修改配置文件内容，修改完成后保存。
+SELINUX=disabled
+# 重启使配置生效
 $ reboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+```
+&lt;/code>&lt;/pre>
+&lt;ol start="3">
 &lt;li>
-&lt;p>将必要的kernel module加入启动initram.img。&lt;/p>
+&lt;p>将必要的kernel module加入启动initram.img。（centos8的内核已经安装了virtio所以需要在列表删除）&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vi /etc/dracut.conf
 &lt;span style="color:#8f5902;font-style:italic"># 修改配置文件，去掉add_drivers+前面#注释，并在引号中添加如下内容，修改完成后保存。&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 以下为 x86 需要添加的内核驱动&lt;/span>
@@ -81,7 +85,7 @@ $ reboot
 &lt;span style="color:#8f5902;font-style:italic"># dracut -f&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
-&lt;p>关闭网卡持久化功能，保证CentOS 7中网卡名称为“eth0，eth1”形式。修改/etc/default/grub文件，在GRUB_CMDLINE_LINUX中添加&amp;quot;net.ifnames=0 biosdevname=0&amp;quot;参数。&lt;/p>
+&lt;p>关闭网卡持久化功能，保证CentOS 7中网卡名称为“eth0，eth1”形式。修改/etc/default/grub文件，在GRUB_CMDLINE_LINUX中添加&amp;quot;net.ifnames=0 biosdevname=0&amp;quot;参数。（centos8，centos9略过）&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vi /etc/default/grub
 &lt;span style="color:#8f5902;font-style:italic"># 修改配置文件，修改完成后保存。&lt;/span>
 &lt;span style="color:#000">GRUB_CMDLINE_LINUX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet net.ifnames=0 biosdevname=0&amp;#34;&lt;/span>
@@ -116,7 +120,8 @@ $ timedatectl status
 &lt;span style="color:#8f5902;font-style:italic">#分别找到PermitRootLogin属性和UseDNS属性&lt;/span>
 PermitRootLogin yes
 UseDNS no
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>systemctl restart sshd&lt;/p>
+&lt;/li>
 &lt;/ol>
 &lt;h3 id="ubuntudebian镜像优化">Ubuntu/Debian镜像优化&lt;/h3>
 &lt;p>以ubuntu-16.04.6-server-amd64.iso为例，介绍Ubuntu和Debian镜像的优化方法。Ubuntu系统安装完成后，默认使用普通权限用户。&lt;/p>

@@ -306,9 +306,9 @@ $ mount --bind /data/test /opt/cloud/test
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>修改该宿主机的/etc/yunion/host.conf，找到 &lt;strong>local_image_path&lt;/strong> 配置项，将新磁盘的挂载目录路径加入数组中。保存后，重启host服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看host服务所在pod，并删除&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host
-$ kubectl delete pod &amp;lt;host-pod-name&amp;gt; -n onecloud
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看host和host-image服务所在pod，并删除&lt;/span>
+$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -E &lt;span style="color:#4e9a06">&amp;#39;host|host-image&amp;#39;&lt;/span>
+$ kubectl delete pod -n onecloud &amp;lt;host-pod-name&amp;gt; &amp;lt;host-image-pod-name&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ol>
 &lt;div class="alert alert-warning" role="alert">

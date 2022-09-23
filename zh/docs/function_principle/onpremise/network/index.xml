@@ -108,14 +108,32 @@
 &lt;h3 id="ip子网配置">IP子网配置&lt;/h3>
 &lt;p>在二层网络&lt;em>bcast0&lt;/em>创建至少2个IP子网，其中一个IP子网给宿主机管理口使用，需要包含宿主机的管理口IP。另外一个子网给虚拟机用。可以配置更多的IP子网给虚拟机使用，并且这些虚拟机用IP子网可以配置不同的VLAN ID（非1的VLAN ID）。这些IP子网的网关以及对应的VLAN都需要配置在物理机连接的三层交换机上。&lt;/p>
 &lt;h3 id="宿主机配置">宿主机配置&lt;/h3>
-&lt;p>宿主机的网口在交换机上需要配置为trunk模式，宿主机管理口采用VLAN 1（缺省VLAN）。&lt;/p>
+&lt;p>宿主机的网口在交换机上需要配置为trunk模式，宿主机管理口&lt;em>必须&lt;/em>采用默认VLAN ID。一般来说，默认VLAN ID 为 1。但目前交换机也支持为TRUNK口设置非1的VLAN ID，具体请参考交换机的配置手册。&lt;/p>
 &lt;p>宿主机host.conf的networks配置：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">&amp;lt;host_ifname&amp;gt;/br0/&amp;lt;host_management_ip&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例如:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.168.20.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="eip配置">EIP配置&lt;/h3>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="宿主机管理口使用非1的vlan-id并且交换机不支持设置trunk口的默认vlan-id这种情况如何配置">宿主机管理口使用非1的VLAN ID，并且交换机不支持设置TRUNK口的默认VLAN ID，这种情况如何配置？&lt;/h4>
+&lt;p>这种情况需要为宿主机设置一个VLAN子接口，宿主机使用这个VLAN子接口作为管理口，并且虚拟机交换机需要桥接到主接口上。下面以宿主机主接口为bond0，宿主机管理口的VLAN ID为3001为示例说明：&lt;/p>
+&lt;p>1、在宿主机配置VLAN子接口 bond0.3001，配置如下：&lt;/p>
+&lt;pre>&lt;code># /etc/sysconfig/network-scripts/ifcfg-bond0.3001
+VLAN=yes
+NAME=bond0.3001
+DEVICE=bond0.3001
+IPADDR=&amp;lt;management_ip&amp;gt;
+PREFIX=&amp;lt;prefix&amp;gt;
+DEFROUTE=yes
+ONBOOT=yes
+&lt;/code>&lt;/pre>&lt;ol start="2">
+&lt;li>修改/etc/yunion/host.conf，设置如下:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">listen_interface&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">bond0.3001&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">bond0/br0/bcast0&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>需要注意的是，这种配置下，虚拟机将不能使用和宿主机相同的VLAN ID（这里是3001)。&lt;/p>
+&lt;h3 id="eip配置">EIP配置&lt;/h3>
 &lt;p>经典网络模式下，外部能直接访问虚拟机IP，无需配置EIP&lt;/p>
 &lt;h2 id="单网口vpc网络-计算节点单个网口虚拟机使用vpc网络">(单网口VPC网络) 计算节点单个网口，虚拟机使用VPC网络&lt;/h2>
 &lt;p>这种场景下，每个计算节点宿主机只有一个网口做管理口。管理口也承载业务流量，但是虚拟机之间的业务流量经过ovn的geneve隧道封装。&lt;/p>

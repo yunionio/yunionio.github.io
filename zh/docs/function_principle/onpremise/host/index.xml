@@ -173,6 +173,25 @@ $ climc host-enable &amp;lt;host_id&amp;gt;
 &lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用宿主机&lt;/span>
 $ climc host-disable &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 宕机自动迁移</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/auto-migrate-on-hostdown/</link><pubDate>Mon, 07 Feb 2022 18:24:26 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/auto-migrate-on-hostdown/</guid><description>
+&lt;h2 id="简介">简介&lt;/h2>
+&lt;p>当检测到宿主机宕机时，宿主机上运行中的虚机自动迁移到其他宿主机上。&lt;/p>
+&lt;h3 id="原理介绍">原理介绍&lt;/h3>
+&lt;p>宕机检测依赖 etcd watch 机制。host-agent 启动时向 etcd 注册一个 key。 region watch 到 host key 消失后一段时间时(60s)发起宕机迁移，将宿主机上共享存储的虚机乔伊到其他宿主机上。&lt;/p>
+&lt;p>所以宕机自动迁移依赖 onecloud operator 部署的 etcd。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 onecloud operator 部署的 etcd 状态&lt;/span>
+kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep default-etcd
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>host-agent 启动时会向 etcd 注册一个 key. 当开启宕机自动迁移，宿主机断网时一段时间后 host-agent 会将宿主机上的虚机关机，防止网络恢复后磁盘双写。&lt;/p>
+&lt;h2 id="使用介绍">使用介绍&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># climc 命令&lt;/span>
+$ climc host-auto-migrate-on-host-down --help
+Usage: climc host-auto-migrate-on-host-down &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-migrate-on-host-shutdown &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>enable,disable&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-migrate-on-host-down &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>enable,disable&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &amp;lt;ID&amp;gt; ...
+&lt;span style="color:#8f5902;font-style:italic"># 开启宕机自动迁移&lt;/span>
+$ climc host-auto-migrate-on-host-down --auto-migrate-on-host-down &lt;span style="color:#204a87">enable&lt;/span> &amp;lt;ID&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 开启宕机自动迁移同时开启关机自动迁移&lt;/span>
+$ climc host-auto-migrate-on-host-down --auto-migrate-on-host-down &lt;span style="color:#204a87">enable&lt;/span> --auto-migrate-on-host-shutdown &lt;span style="color:#204a87">enable&lt;/span> &amp;lt;ID&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 取消宕机自动迁移&lt;/span>
+$ climc host-auto-migrate-on-host-down &amp;lt;ID&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 宿主机 CPU 预留</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/reservecpus/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/reservecpus/</guid><description>
 &lt;h2 id="功能介绍">功能介绍&lt;/h2>
 &lt;p>宿主机 CPU 预留功能支持将部分 CPU 预留给其他进程使用，不再分配给虚拟机使用。&lt;/p>

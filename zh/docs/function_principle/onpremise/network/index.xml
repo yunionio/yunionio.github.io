@@ -246,6 +246,36 @@ $ kubectl delete pods -n onecloud default-host-zgrkg
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-create --gateway 10.2.53.254 --server-type baremetal &amp;lt;name_of_new_wire&amp;gt; adm4 10.2.53.55 10.2.53.55 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第三步重建宿主机的对接网络记录">第三步：重建宿主机的对接网络记录&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-add-netif --ip-addr 192.168.3.201 --bridge br0 --interface bond0 --type admin localhost 73710abe-a0cf-48de-8fcd0-0b7b0492f4ef &lt;span style="color:#4e9a06">&amp;#39;0c:c4:7a:0e:fa:f4&amp;#39;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 网卡多队列</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/multiqueue/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/multiqueue/</guid><description>
+&lt;p>平台支持虚拟机的虚拟网卡开启多队列特性。&lt;/p>
+&lt;h2 id="qemu命令行参数">Qemu命令行参数&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">-netdev &lt;span style="color:#000">type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>tap,id&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>GUESTNET1-219,queues&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>4,ifname&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>GUESTNET1-219,vhost&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>on,vhostforce&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>off,script&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span>-up-br1-GUESTNET1-219.sh,downscript&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span>-down-br1-GUESTNET1-219.sh -device virtio-net-pci,mq&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>on,vectors&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>9,id&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>netdev-GUESTNET1-219,netdev&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>GUESTNET1-219,mac&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>00:22:02:a1:0f:da
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>参数设置：&lt;/p>
+&lt;ul>
+&lt;li>queues&lt;/li>
+&lt;/ul>
+&lt;p>queues 是队列数量，包括收发包；一般来说队列数为 cpu的数量的一半，最多16个队列。 如 8C 4个队列，16C 8个队列，32C 及以上 16个队列。如果需要更好的网络性能可以自定义队列数量，但数量不是越大越好，和虚机CPU的数量挂钩&lt;/p>
+&lt;ul>
+&lt;li>vectors&lt;/li>
+&lt;/ul>
+&lt;p>vectors是该设备中断向量的数量，一般为 queues * 2 + 1，每个个队列有两个向量，分别对应收包和发包，再加上配置空间的中断向量&lt;/p>
+&lt;h2 id="宿主机上验证">宿主机上验证&lt;/h2>
+&lt;p>当设置虚拟网卡queues=4之后，宿主机上，可以看到该网卡对应的4个vhost线程。这四个线程独立于 VCPU线程，需要占用 宿主机 CPU，网络繁忙的时候CPU使用率较高，没有绑核的话可能会对其他虚机造成干扰。如果需要更好的网络性能可以分配一些 CPU 给这部分线程使用。&lt;/p>
+&lt;h2 id="虚拟机内验证">虚拟机内验证&lt;/h2>
+&lt;p>在虚拟机内，通过ethtool查看虚拟网卡的队列数：&lt;/p>
+&lt;pre>&lt;code># ethtool -l eth0
+Channel parameters for eth0:
+Pre-set maximums:
+RX: 0
+TX: 0
+Other: 0
+Combined: 4
+&lt;/code>&lt;/pre>&lt;p>如果有必要配置队列数&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># ethtool -L eth0 combined 4&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看网卡设备的中断处理CPU&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># cat /proc/interrupts | grep virtio&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查虚拟机镜像中是否带了irqbalance服务来打散多队列的中断到不同的CPU上：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl status irqbalance
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 网络配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/configuration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/configuration/</guid><description>
 &lt;p>本节介绍私有云虚拟机的网络设置，包括DHCP，DNS，NTP等设置。&lt;/p>
 &lt;h2 id="dhcp">DHCP&lt;/h2>

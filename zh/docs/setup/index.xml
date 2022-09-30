@@ -1420,7 +1420,9 @@ v3.8.13
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="拉取-ocboot-工具">拉取 ocboot 工具&lt;/h2>
 &lt;p>如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
-$ yum install -y ansible python-paramiko
+$ yum install -y python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible paramiko
 &lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
 $ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
@@ -2091,9 +2093,10 @@ $ ssh-copy-id 10.127.190.228
 &lt;li>部署&lt;code>ocboot&lt;/code>服务&lt;/li>
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在`master`节点上安装ansible，以centos为例&lt;/span>
-$ yum install -y ansible
 &lt;span style="color:#8f5902;font-style:italic"># 安装pip&lt;/span>
-$ yum -y install python-pip
+$ yum -y install python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
 &lt;span style="color:#8f5902;font-style:italic"># 拉取ocboot代码&lt;/span>
 $ git clone https://github.com/yunionio/ocboot.git
 $ &lt;span style="color:#204a87">cd&lt;/span> ./ocboot &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span> pip install -r ./requirements.txt

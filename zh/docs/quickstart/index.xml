@@ -59,19 +59,31 @@ $ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#3
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="安装ansible和git">安装ansible和git&lt;/h4>
 &lt;p>首先需要安装ansible和git&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
-&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Debian 10&lt;/a>&lt;/li>
-&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">其它操作系统&lt;/a>&lt;/li>&lt;/ul>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Kylin V10&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">其它操作系统&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ yum install -y epel-release ansible git
+$ yum install -y epel-release git python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ apt install -y ansible git
+$ yum install -y git python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+$ apt install -y git python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
-$ pip install ansible
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
 &lt;p>部署的工具是 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 Cloudpods 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p>

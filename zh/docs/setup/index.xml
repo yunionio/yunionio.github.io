@@ -2508,4 +2508,31 @@ $ climc feature-config-jdcloud --switch off
 &lt;td>feature-config-k8s&lt;/td>
 &lt;/tr>
 &lt;/tbody>
-&lt;/table></description></item></channel></rss>
+&lt;/table></description></item><item><title>Docs: 更换节点IP</title><link>https://www.cloudpods.org/zh/docs/setup/changeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/changeip/</guid><description>
+&lt;p>本文介绍更换集群控制节点和计算节点IP的方法步骤.&lt;/p>
+&lt;p>由于Kubernetes的节点IP无法动态更换，更换后必须重新部署Kubelet服务，因此更换节点IP后，需要将节点上Kubelet实例重置，并重新部署节点。&lt;/p>
+&lt;p>下面分几种情况讨论：&lt;/p>
+&lt;h3 id="allinone节点更换ip">AllInOne节点更换IP&lt;/h3>
+&lt;ol>
+&lt;li>清理Kubelet&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm reset -f
+kubeadm reset -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>修改config.yml&lt;/li>
+&lt;/ol>
+&lt;p>在/opt/yunion/upgrade保存有部署时使用的config.yml。备份该yaml文件，并修改文件，将旧的IP地址替换为新的IP地址。&lt;/p>
+&lt;ol start="3">
+&lt;li>重新部署&lt;/li>
+&lt;/ol>
+&lt;p>使用ocboot重新部署AllInOne节点&lt;/p>
+&lt;pre>&lt;code>ocboot install config.yml
+&lt;/code>&lt;/pre>&lt;ol start="4">
+&lt;li>开启operator sync-user模式&lt;/li>
+&lt;/ol>
+&lt;p>重新部署会重新生成各个服务在mysql的账号的密码，以及各个服务账号的密码。这些信息都存储在数据库中。重新部署之后，新的Kubernetes中configmaps中留下的密码和旧的配置不一致，会导致服务无法正常启动。解决的办法是：修改onecloud-opeartor服务的启动参数，添加-sync-user参数，这样operator会自动更新数据库中保存的密码，确保和Kubernetes的configmaps中的密码一致。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud edit deployment onecloud-operator
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="高可用集群的控制节点更换ip">高可用集群的控制节点更换IP&lt;/h3>
+&lt;p>TODO&lt;/p>
+&lt;h3 id="私有云计算节点更换ip">私有云计算节点更换IP&lt;/h3>
+&lt;p>计算节点更换IP的流程同AllInOne，但是需要在控制节点删除清理该节点信息，包括k8s的node信息和云平台的宿主机信息。删除干净后，再运行上述命令，重置计算节点的Kubenetes.&lt;/p></description></item></channel></rss>

@@ -1820,4 +1820,11 @@ Swap: 0B 0B 0B
 | 84c82f1f-7b25-4260-8996-58d60e79ef7d | office-03-host01 | 6c:0b:84:0c:e8:44 | 192.168.222.3 | running | true | online | 36 | 21 | 7381235 | 3301376 | 7381235 | 4079859 | 0.45 | 128703 | 95232 | 24 | 73 | 3.0416666666666665 | 0.803896575301993 | 8 | 2 | PC0169QS | rotate | cloudpods | hotfix/qj-cleanup-openvswitch-conf(d7f77fff821092421) | [{&amp;quot;id&amp;quot;:&amp;quot;a9c14466-e63d-46c9-80f4-52a14945b9d5&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;container&amp;quot;,&amp;quot;res_name&amp;quot;:&amp;quot;schedtag&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;01fa585c-c670-4b2e-83bd-9070ac7a37d7&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;wcl-test-避免使用&amp;quot;,&amp;quot;res_name&amp;quot;:&amp;quot;schedtag&amp;quot;}] | 7569007 | default | Default | none |
 +--------------------------------------+------------------+-------------------+---------------+---------+---------+-------------+--------+----------------+---------+--------------+-----------------+--------------+---------------------+----------+------------+-----------+------------+--------------------+-------------------+------------------+------------+----------+--------------+-----------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+-----------+----------------+--------------+
 *** Total: 1 ***
-&lt;/code>&lt;/pre></description></item></channel></rss>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 虚拟机时钟</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/time/</link><pubDate>Mon, 10 Oct 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/time/</guid><description>
+&lt;p>虚拟机时钟由虚拟设备&lt;code>-rtc base=utc,clock=host,driftfix=none&lt;/code>，虚拟机硬件基准时钟基于宿主机的UTC时间。&lt;/p>
+&lt;p>因此，虚拟机需要配置其硬件时钟为UTC时间，如果没有正确配置，则容易出现虚拟机时间不准的情况。&lt;/p>
+&lt;p>下面介绍虚拟机配置硬件时钟为UTC时间的方法。&lt;/p>
+&lt;h3 id="linux系统">Linux系统&lt;/h3>
+&lt;p>修改/etc/adjtime，将第三行设置为UTC&lt;/p>
+&lt;h3 id="windows系统">Windows系统&lt;/h3>
+&lt;p>运行regedit，打开注册表，在HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation下，右键新建New &amp;gt; DWORD (32-bit) Value，命名为RealTimeIsUniversal，键值为1。&lt;/p></description></item></channel></rss>

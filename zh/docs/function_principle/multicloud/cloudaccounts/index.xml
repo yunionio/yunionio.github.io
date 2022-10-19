@@ -22,7 +22,34 @@ $ climc service-config --config &lt;span style="color:#000">cloudaccount_health_
 &lt;h4 class="alert-heading">注意&lt;/h4>
 功能的开关不会立刻影响云账号状态，可以等待几分钟后云账号状态会更新
 或者到云账号列表选定云账号，点击连接状态，云账号健康状态会随即更新
-&lt;/div></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
+&lt;/div></description></item><item><title>Docs: AWS</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/aws/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/aws/</guid><description>
+&lt;h2 id="获取aws子账号资源信息的权限要求">获取AWS子账号资源信息的权限要求&lt;/h2>
+&lt;p>如果云管对接的AWS账号归属于组织（Organization），可以通过权限配置，将AWS组织下所有账号同步到云管，每个账号对应到云账号下的一个订阅。&lt;/p>
+&lt;p>获取AWS组织的每个成员账号下资源的原理为：使用一个主账号下的IAM账号的AKSK通过AssumeRole的方式获得OrganizationAccountAccessRole的权限，访问每个成员账号下的资源&lt;/p>
+&lt;p>权限配置要求如下：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>对接AK/SK必须是一个主账号一个IAM user的AK/SK，不能是主账号的主AKSK&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>该IAM user的最小权限要求为：sts:AssumeRole&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;Version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;2012-10-17&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;Statement&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;Effect&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Allow&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;Action&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;sts:AssumeRole&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;Resource&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;arn:aws:iam::*:role/OrganizationAccountAccessRole&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>每个成员账号内都有 Role：OrganizationAccountAccessRole&lt;/li>
+&lt;/ol>
+&lt;p>对于在AWS组织（Organization）下新建的AWS成员账号，都自动有一个Role：OrganizationAccountAccessRole，该role的权限等同于 AdministratorAccess&lt;/p>
+&lt;p>如果是邀请加入的AWS成员账号，则不一定有这个Role，需要手工增加，具体步骤参见：https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role&lt;/p></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
 &lt;h2 id="对接-openstack-后端使用ceph-存储的时候云账户管理经常同步不下相关的ceph-磁盘配置">对接 Openstack 后端使用ceph 存储的时候，云账户管理，经常同步不下相关的ceph 磁盘配置&lt;/h2>
 &lt;p>我们需要在创建磁盘的时候指定相关的ceph 类型。首先检查一下是否指定了volume_backend_name.&lt;/p>
 &lt;p>1、查看cinder配置文件的ceph 指定的name,没有就添加：&lt;/p>

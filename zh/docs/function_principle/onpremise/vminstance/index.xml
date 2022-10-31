@@ -462,9 +462,10 @@ climc server-qga-set-password test-server root testPassword@1234
 &lt;li>热迁移：在虚拟机&lt;strong>运行的状态&lt;/strong>下，将虚拟机的磁盘以及内存状态同步到目标宿主机，当两边数据同步后，再将虚拟机切换到目标宿主机。&lt;/li>
 &lt;/ul>
 &lt;p>热迁移和冷迁移比起来，能够在不关机，保证业务运行的情况下，将虚拟机从一台宿主机迁移到另一台宿主机。&lt;/p>
-&lt;p>但热迁移默认要求目标宿主机和源宿主机的 CPU microcode 一致，可以通过以下命令查看 CPU 的 microcode：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /proc/cpuinfo &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep microcode &lt;span style="color:#000;font-weight:bold">|&lt;/span> uniq
-microcode : 0xca
+&lt;p>但热迁移默认要求目标宿主机和源宿主机的 CPU 型号与 CPU microcode 一致，可以通过以下命令查看 CPU 的型号和 microcode：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat /proc/cpuinfo &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -e &lt;span style="color:#4e9a06">&amp;#39;model name&amp;#39;&lt;/span> -e &lt;span style="color:#4e9a06">&amp;#39;microcode&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sort &lt;span style="color:#000;font-weight:bold">|&lt;/span> uniq
+microcode : 0x42e
+model name : Intel&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>R&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> Xeon&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>R&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> CPU E5-2650 v2 @ 2.60GHz
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="climc">Climc&lt;/h2>
 &lt;h3 id="冷迁移">冷迁移&lt;/h3>
 &lt;p>虚拟机在关机状态下，可以执行冷迁移操作。&lt;/p>
@@ -519,7 +520,7 @@ $ climc server-migrate --auto-start --prefer-host xxx vm1
 &lt;h4 id="查看热迁移帮助信息">查看热迁移帮助信息&lt;/h4>
 &lt;p>热迁移的命令为 &lt;code>climc server-live-migrate&lt;/code>，通过下面的命令查看帮助信息：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate --help
-Usage: climc server-live-migrate &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-cpu-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
+Usage: climc server-live-migrate &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-cpu-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-kernel-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--enable-tls&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--quickly-finish&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--max-bandwidth-mb MAX_BANDWIDTH_MB&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--keep-dest-guest-on-failed&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
 Live-Migrate server
 Positional arguments:
 &amp;lt;ID&amp;gt;
@@ -527,6 +528,18 @@ ID of server
 Optional arguments:
 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-cpu-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
 Skip check CPU mode of the target host
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--skip-kernel-check&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Skip target kernel version check
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--enable-tls&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Enable tls migration
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--quickly-finish&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+quickly finish, fix downtime after a few rounds of memory synchronization
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--max-bandwidth-mb MAX_BANDWIDTH_MB&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+live migrate downtime, unit MB
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--keep-dest-guest-on-failed&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">do&lt;/span> not delete dest guest on migrate failed, &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> debug
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Print usage and this &lt;span style="color:#204a87">help&lt;/span> message and exit.
 &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--prefer-host PREFER_HOST&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
 Server migration prefer host id or name
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="热迁移举例">热迁移举例&lt;/h4>
@@ -535,38 +548,45 @@ Server migration prefer host id or name
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate vm1
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>热迁移默认要求目标宿主机和虚拟机当前所在的宿主机 CPU microcode 、内核版本等一致， 如果不一致该宿主机则会被调度器过滤掉，如果环境里面实在没有 CPU 一致的目标宿主机，可以使用 &lt;code>--skip-cpu-check&lt;/code> 绕过 CPU microcode 的检查&lt;/li>
+&lt;li>热迁移默认要求目标宿主机和虚拟机当前所在的宿主机 CPU 、内核版本等一致， 如果不一致该宿主机则会被调度器过滤掉，如果环境里面实在没有 CPU 一致的目标宿主机，可以使用 &lt;code>--skip-cpu-check&lt;/code> 绕过 CPU 的检查。默认不限制热迁移的带宽。默认 Downtime 最大是 300ms。&lt;/li>
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate --skip-cpu-check vm1
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU microcode 检查&lt;/li>
+&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU 检查&lt;/li>
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU 检查，并且限制热迁移带宽(最低 100 MB/s)&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --max-bandwidth-mb &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU 检查，并且限制热迁移带宽和打开快速收敛。快速收敛是让虚机内存拷贝一定轮次后调整热迁移 downtime 让热迁移完成最后一次拷贝。&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --max-bandwidth-mb &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --quickly-finish &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="宿主机宕机自动迁移">宿主机宕机自动迁移&lt;/h3>
 &lt;h4 id="原理">原理&lt;/h4>
 &lt;p>宿主机宕机自动迁移会自动检测宿主机的在线状况，当控制器（region）检测到宿主机离线，则会自动将宿主机上使用共享存储的虚拟机在别的宿主机上启动起来。宿主机宕机检测原理是 host会维持 etcd 上的一个 key (路径为：/onecloud/kvm/host/health/&amp;lt;host_id&amp;gt;)，region会watch这个key，一旦host离线，这个key会超时删除，region检测到这个事件后，开始把host上的共享存储主机强制迁移到别的宿主机。&lt;/p>
 &lt;h4 id="开启宕机自动迁移">开启宕机自动迁移&lt;/h4>
 &lt;p>通过如下步骤开启宕机自动迁移：&lt;/p>
-&lt;h5 id="修改宿主机host配置">修改宿主机host配置&lt;/h5>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">vi /etc/yunion/host.conf
-把
-enable_health_checker: &lt;span style="color:#204a87">false&lt;/span>
-改为true
-enable_health_checker: &lt;span style="color:#204a87">true&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="修改region服务的配置">修改region服务的配置&lt;/h5>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-config-show region2
-climc service-config-edit region2
-把
-enable_host_health_check: &lt;span style="color:#204a87">false&lt;/span>
-改为
-enable_host_health_check: &lt;span style="color:#204a87">true&lt;/span>
-climc host-auto-migrate-on-host-down --enable &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>宿主机ID&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="重启服务">重启服务&lt;/h5>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud rollout restart daemonset default-host
-kubectl -n onecloud rollout restart deployment default-region
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-auto-migrate-on-host-down --help
+Usage: climc host-auto-migrate-on-host-down &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-migrate-on-host-shutdown &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>enable,disable&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-migrate-on-host-down &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>enable,disable&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &amp;lt;ID&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 分为宕机自动迁移和关机自动迁移，要打开关机自动迁移必须同时打开宕机自动迁移&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 只打开宕机自动迁移&lt;/span>
+$ climc host-auto-migrate-on-host-down --auto-migrate-on-host-down &lt;span style="color:#204a87">enable&lt;/span> &amp;lt;host_id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 同时打开关机自动迁移和宕机自动迁移&lt;/span>
+$ climc host-auto-migrate-on-host-down --auto-migrate-on-host-down &lt;span style="color:#204a87">enable&lt;/span> --auto-migrate-on-host-shutdown &lt;span style="color:#204a87">enable&lt;/span> &amp;lt;host_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: GPU 相关</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/gpu/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/gpu/</guid><description>
 &lt;p>目前仅支持 Cloudpods kvm 虚拟机使用 GPU，使用的 PCI Passthrough 的方式将宿主机上的 Nvidia/AMD GPU 透传给虚拟机使用。&lt;/p>
 &lt;h2 id="climc">Climc&lt;/h2>

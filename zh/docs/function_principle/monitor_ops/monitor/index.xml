@@ -1,15 +1,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
 监控</title><link>https://www.cloudpods.org/zh/docs/function_principle/monitor_ops/monitor/</link><description>Recent content in 监控 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 19 Jul 2019 20:59:00 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/monitor_ops/monitor/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 监控代理</title><link>https://www.cloudpods.org/zh/docs/function_principle/monitor_ops/monitor/monitoragent/</link><pubDate>Thu, 05 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/monitor_ops/monitor/monitoragent/</guid><description>
-&lt;p>监控 Agent 是运行在虚拟机上的 daemon，采集监控数据，并把数据传回Cloudpods的 InfluxDB。&lt;/p>
-&lt;p>由此，可以衍生出三个问题：如何安装 Agent，如何采集数据，以及如何传输监控数据。&lt;/p>
-&lt;h2 id="如何安装-agent">如何安装 Agent&lt;/h2>
-&lt;p>Cloudpods使用 Ansible 将 Agent 安装到虚拟机上，为了能够做到这一点，我们需要保证
-Cloudpods能够连接到虚拟机并且能够登录到虚拟机；这里我们先假设Cloudpods能够过连接到
-虚拟机，故而来优先讨论解决登录问题。&lt;/p>
+&lt;p>监控代理 是运行在虚拟机上的 telegraf 守护进程，采集监控数据，并把数据传回Cloudpods的 InfluxDB。&lt;/p>
+&lt;p>本文介绍三个问题：如何安装监控代理，如何采集监控数据，以及如何传输监控数据。&lt;/p>
+&lt;h2 id="安装监控代理">安装监控代理&lt;/h2>
+&lt;p>针对KVM虚拟机，平台支持在创建虚拟机时或关机时自动安装telegraf二进制和服务，安装路径在 /opt/.cloud-monitor/。&lt;/p>
+&lt;p>针对运行时的KVM虚拟机，以及纳管的虚拟机，Cloudpods 使用 ansible 将 Agent 安装到虚拟机上。 为此，我们需要保证 ansible 控制服务能够 ssh 登录虚拟机&lt;/p>
 &lt;p>&lt;img src="../images/20210805163249.png" alt="host_install">&lt;/p>
-&lt;h3 id="如何登录虚拟机">如何登录虚拟机&lt;/h3>
-&lt;p>假设Cloudpods已经能够连接到 VPC 内部的虚拟机，比如说通过 NAT网关或者虚拟机已经绑
-定了 EIP 等。&lt;/p>
+&lt;h3 id="ssh免密登录虚拟机">SSH免密登录虚拟机&lt;/h3>
+&lt;p>Cloudpods已经能够连接到 VPC 内部的虚拟机，比如说通过 NAT网关或者虚拟机已经绑定了 EIP 等。&lt;/p>
 &lt;p>&lt;img src="../images/20210805163416.png" alt="connect_direct">&lt;/p>
 &lt;h4 id="直接免密登录">直接免密登录&lt;/h4>
 &lt;p>如果虚拟机是通过Cloudpods平台创建出来的，那么Cloudpods是可以直接免密登录到虚拟机，
@@ -23,9 +21,9 @@ Cloudpods能够连接到虚拟机并且能够登录到虚拟机；这里我们�
 &lt;p>同理，其实也可以直接让用户在虚拟机上执行脚本，以达到创建 cloudroot 用户以及配置
 公钥登录的目的。&lt;/p>
 &lt;p>&lt;img src="../images/20210805164239.png" alt="exec_script">&lt;/p>
-&lt;h3 id="如何连接虚拟机">如何连接虚拟机&lt;/h3>
-&lt;p>Cloudpods不能直接连接到虚拟机，是一种最广泛的情况。比如公有云 VPC 内部且没有配置
-Nat 以及 EIP 的虚拟机。对于此种情况，我们使用 SSH 代理，具体来说是 Local Port
+&lt;h3 id="ansible服务访问虚拟机">ansible服务访问虚拟机&lt;/h3>
+&lt;p>Cloudpods的ansible服务一般不能直接访问云平台内的虚拟机。比如公有云 VPC 内部且没有配置
+NAT 以及 EIP 的虚拟机。对于此种情况，我们使用 SSH 代理，具体来说是 Local Port
 Forwarding。&lt;/p>
 &lt;h4 id="ssh-local-port-forwarding">SSH Local Port Forwarding&lt;/h4>
 &lt;p>&lt;img src="../images/20210805165213.png" alt="question1">&lt;/p>
@@ -38,16 +36,17 @@ Forwarding。&lt;/p>
 proxyB 会把请求转发到&lt;code>172.31.25.194:80&lt;/code>&lt;/p>
 &lt;p>&lt;img src="../images/20210805165029.png" alt="answer1">&lt;/p>
 &lt;p>然后 VMA 只要访问&lt;code>10.127.30.251:12345&lt;/code>就能够访问 VMB 上的 web 服务。&lt;/p>
-&lt;h2 id="如何收集数据">如何收集数据&lt;/h2>
-&lt;p>我们的监控数据存储在 InfluxDB 中，所以采集数据的 Agent 优先选择了 Telegraf，在其
-基础上修改了一些代码并定制了配置文件以满足Cloudpods采集数据的要求。&lt;/p>
+&lt;h2 id="采集监控数据">采集监控数据&lt;/h2>
+&lt;p>监控数据存储在 InfluxDB 服务中，所以采集数据的 Agent 优先选择了 Telegraf，在其基础上修改了一些代码并定制了配置文件以满足Cloudpods采集数据的要求。&lt;/p>
 &lt;p>配置主要描述了需要什么样的监控数据，数据的标签以及数据存储的地址。&lt;/p>
-&lt;h2 id="如何传输监控数据">如何传输监控数据&lt;/h2>
-&lt;p>最简单的，如果虚拟机可以直接连接到Cloudpods中的 InfluxDB，那么数据就可以直接传输
-回来。&lt;/p>
-&lt;p>在安装 Agent 的过程中，Cloudpods回去检测是否可以从虚拟机直接访问 InfluxDB，如何不
-可以，就要使用 SSH 代理，具体来说是 Remote Port Forwarding。&lt;/p>
+&lt;h2 id="上报监控数据">上报监控数据&lt;/h2>
+&lt;p>Telegraf 可以通过以下几种方式向influxdb上报数据&lt;/p>
+&lt;h3 id="直接上报">直接上报&lt;/h3>
+&lt;p>如果虚拟机可以直接连接到Cloudpods中的 InfluxDB，那么数据就可以直接上报。一般KVM虚拟机，裸金属都适用这个场景。&lt;/p>
+&lt;p>如果是KVM虚拟机，可以向虚拟机所在宿主机本地的metadata服务接口上报监控数据，上报地址为：http://169.254.169.254/monitor&lt;/p>
+&lt;p>通过向metadata上报数据，就不要求云平台的 InfluxdDB 必须要被虚拟机网络访问。&lt;/p>
 &lt;h3 id="ssh-remote-port-forwarding">SSH Remote Port Forwarding&lt;/h3>
+&lt;p>如果主机无法直接访问influxdb，则需要设置ssh代理服务，通过SSH Remote Port Forwarding 建立从虚拟机到Influxdb的通信通道。&lt;/p>
 &lt;p>&lt;img src="../images/20210805165957.png" alt="question2">&lt;/p>
 &lt;p>网络 A 和网络 B 是两个隔离的网络，proxyB 具有公网 IP，所以 proxyA 可以访问到 proxyB，
 如何让 VMB 访问 DB？&lt;/p>

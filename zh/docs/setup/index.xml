@@ -481,7 +481,7 @@ $ /opt/yunion/bin/ocadm init phase upload-certs &lt;span style="color:#000;font-
 &lt;span style="color:#8f5902;font-style:italic"># 重启 host 服务&lt;/span>
 $ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#000">$your&lt;/span>-reset-node
 $ kubectl delete pods -n onecloud default-host-xxxx
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上手动的步骤参考了 ocboot join master-node 的逻辑，可参考 &lt;a href="https://github.com/yunionio/ocboot/blob/master/onecloud/roles/master-node/tasks/main.yml">https://github.com/yunionio/ocboot/blob/master/onecloud/roles/master-node/tasks/main.yml&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 平台服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>

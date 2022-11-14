@@ -450,7 +450,38 @@ cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EO
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./ocboot.py install ./config-k8s-ha.yml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>等待部署完成后，就可以使用浏览器访问 https://10.127.190.10 (VIP), 输入用户名 &lt;code>admin&lt;/code> 和密码 &lt;code>admin@123&lt;/code>，进入前端。&lt;/p>
-&lt;p>另外部署完成后，可以给已有集群添加节点，参考文档：&lt;a href="../host">添加计算节点&lt;/a>。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
+&lt;p>另外部署完成后，可以给已有集群添加节点，参考文档：&lt;a href="../host">添加计算节点&lt;/a>。&lt;/p>
+&lt;h2 id="常见问题">常见问题&lt;/h2>
+&lt;h3 id="1-如何手动重新添加控制控制节点">1. 如何手动重新添加控制控制节点？&lt;/h3>
+&lt;p>3个控制节点都会运行 kube-apiserver, etcd 这些关键服务，如果遇到某一个节点遇到 etcd 数据不一致，可以将该节点 reset 后重新加入集群，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 到其他正常的控制节点创建 join token&lt;/span>
+$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">KUBECONFIG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/etc/kubernetes/admin.conf
+$ ocadm token create --description &lt;span style="color:#4e9a06">&amp;#34;ocadm-playbook-node-joining-token&amp;#34;&lt;/span> --ttl 90m
+2fmpbx.7zikd8sp5uhaxrjr
+&lt;span style="color:#8f5902;font-style:italic"># 获取控制节点认证&lt;/span>
+$ /opt/yunion/bin/ocadm init phase upload-certs &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v upload-certs
+6150f8da2dcdf3a8a730f407ddce9f1cb9f24b15ffa4e4b3680e16ed40201cf0
+&lt;span style="color:#8f5902;font-style:italic">########## 注意下面的命令需要登陆到需要重新加入的节点执行 ###########&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 如果该节点曾经作为计算节点加入过云平台&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 需要备份当前宿主机 /etc/yunion/host.conf 配置&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ cp /etc/yunion/host.conf /etc/yunion/host.conf.manual.bk
+&lt;span style="color:#8f5902;font-style:italic"># 登陆到需要重新 reset 加入的节点，reset 当前的 kubernetes 环境&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ kubeadm reset -f
+&lt;span style="color:#8f5902;font-style:italic"># 假设当前的网卡为 bond0(如果不做 bond ，物理网卡一般为 eth0 之类的名称)，ip 为 172.16.84.40，需要加入集群 172.16.84.101:6443 集群&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ ocadm join &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --control-plane 172.16.84.101:6443 &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 加入的目标集群&lt;/span>
+--token 2fmpbx.7zikd8sp5uhaxrjr --certificate-key 6150f8da2dcdf3a8a730f407ddce9f1cb9f24b15ffa4e4b3680e16ed40201cf0 --discovery-token-unsafe-skip-ca-verification &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 加入认证信息&lt;/span>
+--apiserver-advertise-address 172.16.84.40 --node-ip 172.16.84.40 &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 该节点 ip&lt;/span>
+--as-onecloud-controller &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 作为 cloudpods 控制节点&lt;/span>
+--enable-host-agent &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 作为 cloudpods 计算节点&lt;/span>
+--host-networks &lt;span style="color:#4e9a06">&amp;#39;bond0/br0/172.16.84.40&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 计算节点的桥接网络，意思创建 br0 网桥，并把 bond0 加入进来，给 br0 网桥配置 ip 172.16.84.40&lt;/span>
+--high-availability-vip 172.16.84.101 --keepalived-version-tag v2.0.25 &lt;span style="color:#8f5902;font-style:italic"># keepalived 的 vip ，保证 kube-apiserver 的高可用性&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 等待加入完成后，还原 /etc/yunion/host.conf.manual.bk 配置&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ cp /etc/yunion/host.conf.manual.bk /etc/yunion/host.conf
+&lt;span style="color:#8f5902;font-style:italic"># 重启 host 服务&lt;/span>
+$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#000">$your&lt;/span>-reset-node
+$ kubectl delete pods -n onecloud default-host-xxxx
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 平台服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>

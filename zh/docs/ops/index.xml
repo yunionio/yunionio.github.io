@@ -377,9 +377,15 @@ UDP 10.96.0.10:53 rr
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">env&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">IP_AUTODETECTION_METHOD&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">value&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">can-reach=10.61.1.254&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="链路问题">链路问题&lt;/h3>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>默认集群配置的 IP_AUTODETECTION_METHOD 为 can-reach=&amp;lt;primary_master_ip&amp;gt; ，比如上面例子中的 10.61.1.254 应该就是第一个 K8s 控制节点的 IP 。&lt;/p>
+&lt;p>IP_AUTODETECTION_METHOD 还可以配置为其他的值，可以参考 calico 官方文档：&lt;a href="https://projectcalico.docs.tigera.io/reference/node/configuration#ip-autodetection-methods">Configuring calico/node/Manifest&lt;/a>。&lt;/p>
+&lt;p>其中常用的配置可以设置成：&lt;code>IP_AUTODETECTION_METHOD=kubernetes-internal-ip&lt;/code>，这个就会使用 K8s 节点的 Status.Addresses 作为ip-in-ip 发送的端口。&lt;/p>
+&lt;h3 id="链路问题">链路问题&lt;/h3>
 &lt;p>如上一步确认无误，则需要确认calico的报文能够正常发送到对端节点，可通过tcpdump在源和目的节点抓包确认。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">tcpdump -i &amp;lt;if_of_calico_node&amp;gt; -nnn ip proto &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> and host &amp;lt;ip_of_dst_node&amp;gt;
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 格式为&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># tcpdump -i &amp;lt;if_of_calico_node&amp;gt; -nnn &amp;#34;ip proto 4&amp;#34; and host &amp;lt;ip_of_dst_node&amp;gt;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 比如要在控制节点的 br0 上抓来自于计算节点(IP: 10.130.0.13) 的 ip-in-ip 包，命令如下：&lt;/span>
+$ tcpdump -i br0 -nnn &lt;span style="color:#4e9a06">&amp;#34;ip proto 4&amp;#34;&lt;/span> and host 10.130.0.13
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="常见故障原因">常见故障原因&lt;/h2>
 &lt;h3 id="节点路由问题">节点路由问题&lt;/h3>
 &lt;p>由于节点路由配置不一致，导致节点发送和接收ip-in-ip报文的端口IP不一致，导致双方无法通信&lt;/p>

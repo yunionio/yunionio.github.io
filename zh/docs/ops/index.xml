@@ -390,7 +390,40 @@ $ tcpdump -i br0 -nnn &lt;span style="color:#4e9a06">&amp;#34;ip proto 4&amp;#34
 &lt;h3 id="节点路由问题">节点路由问题&lt;/h3>
 &lt;p>由于节点路由配置不一致，导致节点发送和接收ip-in-ip报文的端口IP不一致，导致双方无法通信&lt;/p>
 &lt;h3 id="内核问题">内核问题&lt;/h3>
-&lt;p>特定内核在开启GSO之后会导致ip-in-ip报文丢弃&lt;/p></description></item><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org/zh/docs/ops/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/backendlogs/</guid><description>
+&lt;p>特定内核在开启GSO之后会导致ip-in-ip报文丢弃&lt;/p></description></item><item><title>Docs: 调整Kubernetes节点驱逐的阈值</title><link>https://www.cloudpods.org/zh/docs/ops/eviction_threshold/</link><pubDate>Mon, 05 Dec 2022 10:34:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/eviction_threshold/</guid><description>
+&lt;p>Kubernetes 有一个节点驱逐的机制，比如当节点的根分区使用空间大于 85% 就会把节点变成 NotReady 状态，然后驱逐上面的 Pod 。下面介绍如何调整节点的相关配置的阈值，可根据自己的环境适当调整。&lt;/p>
+&lt;h2 id="调整-kubelet-阈值配置">调整 kubelet 阈值配置&lt;/h2>
+&lt;p>kubelet 所有的配置参数写在了文件 &lt;code>/var/lib/kubelet/config.yaml&lt;/code>，阈值相关的参数如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#800080;font-weight:bold">@@ -34,10 +34,10 @@ enforceNodeAllocatable:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> eventBurst: 10
+eventRecordQPS: 5
+# 驱逐相关参数
+evictionHard:
+&lt;span style="color:#a40000">- imagefs.available: 15%
+&lt;/span>&lt;span style="color:#a40000">- memory.available: 1024Mi
+&lt;/span>&lt;span style="color:#a40000">- nodefs.available: 15%
+&lt;/span>&lt;span style="color:#a40000">- nodefs.inodesFree: 15%
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ imagefs.available: 5% # 当容器镜像所在目录的空闲容量小于 5% 的时候触发，imagefs 为 docker 所在目录，配置为 `/opt/docker`
+&lt;/span>&lt;span style="color:#00a000">+ memory.available: 100Mi # 当内存不够 100Mi 的时候触发
+&lt;/span>&lt;span style="color:#00a000">+ nodefs.available: 5% # 当根分区可用容量不够 5% 的时候触发
+&lt;/span>&lt;span style="color:#00a000">+ nodefs.inodesFree: 5% # 当根分区 inodes 不够 5% 的时候触发
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> evictionPressureTransitionPeriod: 5m0s
+failSwapOn: true
+fileCheckFrequency: 20s
+&lt;span style="color:#800080;font-weight:bold">@@ -45,8 +45,8 @@ hairpinMode: promiscuous-bridge
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 20s
+&lt;span style="color:#a40000">-imageGCHighThresholdPercent: 85
+&lt;/span>&lt;span style="color:#a40000">-imageGCLowThresholdPercent: 80
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+imageGCHighThresholdPercent: 95 # 当硬盘存储使用率超过imageGCHighThresholdPercent时，会触发Image GC，直到硬盘存储使用率低于imageGCLowThresholdPercent
+&lt;/span>&lt;span style="color:#00a000">+imageGCLowThresholdPercent: 90
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>调整完 &lt;code>/var/lib/kubelet/config.yaml&lt;/code> 后，重启 kubelet:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl restart kubelet
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org/zh/docs/ops/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/backendlogs/</guid><description>
 &lt;p>Cloudpods平台自&lt;code>3.7.6&lt;/code>版本后，operator服务 结合 kubeserver 会默认部署 grafana 和 loki 提供查看后端服务日志的功能。&lt;/p>
 &lt;p>查看日志只用登录 grafana 即可，默认的 grafana 访问方式是以 ingress 的方式暴露服务。&lt;/p>
 &lt;h3 id="访问grafana">访问Grafana&lt;/h3>

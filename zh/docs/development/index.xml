@@ -39,7 +39,7 @@ brew install docker
 docker --version
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h3 id="配置-docker">配置 Docker&lt;/h3>
-&lt;p>后续的代码编译和打包使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 的功能，需要做在让 docker daemon 开启 experimental 特性。&lt;/p>
+&lt;p>后续的代码编译和打包使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 的功能，需要做在让 docker daemon 开启 experimental 特性，用于编译不同架构的镜像，可参考 docker 官方的 &lt;a href="https://docs.docker.com/build/building/multi-platform/">Building multi-platform images&lt;/a> 文档。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在 docker daemon 的配置里面打开 experimental 特性&lt;/span>
 $ cat /etc/docker/daemon.json
 &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
@@ -47,6 +47,9 @@ $ cat /etc/docker/daemon.json
 &lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 重启 docker 服务&lt;/span>
 $ systemctl restart docker
+&lt;span style="color:#8f5902;font-style:italic"># 打开 binfmt_misc 特性，用于 qemu 模拟编译其他架构镜像&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 详细说明参考：https://docs.docker.com/build/building/multi-platform/#building-multi-platform-images&lt;/span>
+$ docker run --privileged --rm tonistiigi/binfmt --install all
 &lt;span style="color:#8f5902;font-style:italic"># 创建 buildx context&lt;/span>
 $ docker buildx create --use --name build --node build --driver-opt &lt;span style="color:#000">network&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>host
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编译-cloudpods-组件">编译 cloudpods 组件&lt;/h2>

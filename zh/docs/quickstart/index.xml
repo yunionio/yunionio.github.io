@@ -258,7 +258,9 @@ $ reboot
 $ &lt;span style="color:#204a87">cd&lt;/span> charts/cloudpods
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试环境安装">测试环境安装&lt;/h3>
 &lt;p>测试环境安装方法如下，该方法会在 Kubernetes 集群里部署 mysql ，local-path-provisioner CSI 依赖插件，不需要连接集群之外的 mysql 。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm install --name-template default --namespace onecloud --debug . -f values-dev.yaml --create-namespace
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 注意这里的 `--namespace onecloud` 不能改成其他的，必须是 onecloud&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 原因是 operator 服务还不支持把平台的服务部署到其他 namespace ，这个后续会改进&lt;/span>
+$ helm install --name-template default --namespace onecloud --debug . -f values-dev.yaml --create-namespace
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="生产环境安装">生产环境安装&lt;/h3>
 &lt;p>之前部署的方法仅限测试使用，因为依赖少，安装快，但如果用于生产环境，请根据需求修改 ./values-prod.yaml 里面的参数，然后使用该文件创建 Helm Release 。&lt;/p>
 &lt;p>建议需要修改的地方如下：&lt;/p>

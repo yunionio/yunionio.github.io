@@ -256,10 +256,15 @@ $ reboot
 &lt;p>Cloudpods Helm Chart 位于 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 仓库，使用以下命令下载到本地：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git clone https://github.com/yunionio/ocboot
 $ &lt;span style="color:#204a87">cd&lt;/span> charts/cloudpods
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试环境安装">测试环境安装&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;p>接下来会使用 helm 安装 cloudpods chart，在使用 &lt;code>helm install&lt;/code> 的时候必须指定 &lt;code>--namespace onecloud&lt;/code>，不能使用其他的 namespace。&lt;/p>
+&lt;p>原因是 operator 服务还不支持把平台的服务部署到其他 namespace ，这个后续会改进。&lt;/p>
+&lt;/div>
+&lt;h3 id="测试环境安装">测试环境安装&lt;/h3>
 &lt;p>测试环境安装方法如下，该方法会在 Kubernetes 集群里部署 mysql ，local-path-provisioner CSI 依赖插件，不需要连接集群之外的 mysql 。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 注意这里的 `--namespace onecloud` 不能改成其他的，必须是 onecloud&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 原因是 operator 服务还不支持把平台的服务部署到其他 namespace ，这个后续会改进&lt;/span>
 $ helm install --name-template default --namespace onecloud --debug . -f values-dev.yaml --create-namespace
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="生产环境安装">生产环境安装&lt;/h3>
 &lt;p>之前部署的方法仅限测试使用，因为依赖少，安装快，但如果用于生产环境，请根据需求修改 ./values-prod.yaml 里面的参数，然后使用该文件创建 Helm Release 。&lt;/p>
@@ -316,17 +321,52 @@ nodePort: 30889
 &lt;span style="color:#00a000">+# 设置 ingress
 &lt;/span>&lt;span style="color:#00a000">&lt;/span> ingress:
 enabled: true
-className: &amp;#34;&amp;#34;
+&lt;span style="color:#00a000">+ # 设置 ingress 的 className，比如集群里面使用 nginx-ingress-controller
+&lt;/span>&lt;span style="color:#00a000">+ # 这里的 className 就写 nginx
+&lt;/span>&lt;span style="color:#00a000">+ # className: nginx
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> className: &amp;#34;&amp;#34;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>修改完 values-prod.yaml 文件后，用以下命令部署：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm install --name-template default --namespace onecloud . -f values-prod.yaml --create-namespace
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 注意这里的 `--namespace onecloud` 不能改成其他的，必须是 onecloud&lt;/span>
+$ helm install --name-template default --namespace onecloud . -f values-prod.yaml --create-namespace
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="查看部署服务状态">查看部署服务状态&lt;/h2>
+&lt;p>使用 helm install 安装完 cloudpods chart 后，使用以下命令查看部署的 pod 状态。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 正常运行情况下，在 onecloud namespace 下会有这些 pod&lt;/span>
+$ kubectl get pods -n onecloud
+NAME READY STATUS RESTARTS AGE
+default-cloudpods-ansibleserver-779bcbc875-nzj6k 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-apigateway-7877c64f5c-vljrs 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-climc-6f4bf8c474-nj276 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-cloudevent-79c894bbfc-zdqcs 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-cloudid-67c7894db7-86czj 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-cloudmon-5cd9866bdf-c27fc 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 68m
+default-cloudpods-cloudproxy-6679d94fc7-gm5tx 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-devtool-6db6f4d454-ldw69 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-esxi-agent-7bcc56987b-lgpnf 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-etcd-q8j5c29tm2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 145m
+default-cloudpods-glance-7547c455d5-fnzqq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-influxdb-c9947bdc8-x8xth 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-keystone-6cc64bdcc7-xhh7m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 145m
+default-cloudpods-kubeserver-5544d59c98-l9d74 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-logger-8f56cd9b5-f9kbp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-monitor-746985b5cf-l8sqm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-notify-dd566cfd6-hxzr4 10/10 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-operator-7478b6c64b-wbg26 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 72m
+default-cloudpods-region-7dfd9b888-hsvv8 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 144m
+default-cloudpods-scheduledtask-7d69b877f7-4ltm6 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-scheduler-8495f85798-zgvq2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-web-5bc6fcf78d-4f7lw 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-webconsole-584cfb4796-4mtnj 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-yunionconf-677b4448b6-tz62m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="创建默认管理用户">创建默认管理用户&lt;/h2>
 &lt;h3 id="创建账号登录-web-ui">创建账号登录 Web UI&lt;/h3>
 &lt;p>如果是企业版，前端会提示注册，获取 license ，下面的操作适用于开源版本：&lt;/p>
 &lt;h3 id="进入-climc-命令行-pod">进入 climc 命令行 pod&lt;/h3>
 &lt;p>如果是部署的 ce(社区开源版本)，需要使用平台的命令行工具创建默认用户，进行相关操作，对应命令如下，首先是进入 climc pod 容器：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 进入 climc pod&lt;/span>
-$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> sh
-/ &lt;span style="color:#8f5902;font-style:italic">#&lt;/span>
+$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -- bash
+Welcome to Cloud Shell :-&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> You may execute climc and other &lt;span style="color:#204a87">command&lt;/span> tools in this shell.
+Please &lt;span style="color:#204a87">exec&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;climc&amp;#39;&lt;/span> to get started
+bash-5.1#
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建用户">创建用户&lt;/h3>
 &lt;p>在 climc pod 里面创建 admin 用户，命令如下：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建 admin 用户，设置密码为 admin@123 ，根据需求自己调整&lt;/span>
@@ -392,7 +432,7 @@ $ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="删除">删除&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm delete -n onecloud default
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它问题">其它问题&lt;/h2>
-&lt;h3 id="切换成开源企业版本">切换成开源/企业版本&lt;/h3>
+&lt;h3 id="1-如何切换成开源企业版本">1. 如何切换成开源/企业版本？&lt;/h3>
 &lt;p>现在默认 k8s 部署的集群是开源版本(ee)，可以通过下面的操作切换成企业版本(ce)：&lt;/p>
 &lt;p>通过修改对应的 values yaml 文件，修改里面的 cluster.edition 为 ce(开源) 或者 ee(企业) ，然后使用 helm upgrade 升级：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
@@ -407,4 +447,12 @@ $ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span
 # 有状态服务使用的 storageClass，如果不设置就会使用 local-path CSI
 # 这个可根据 k8s 集群情况自行调节
 &lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm upgrade -n onecloud default . -f values-prod.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-onecloud-namespace-缺少-keystone-glance-region-等-pod">2. onecloud namespace 缺少 keystone, glance, region 等 pod&lt;/h3>
+&lt;p>如果执行 &lt;code>helm install&lt;/code> 后，执行 &lt;code>kubectl get pods -n onecloud&lt;/code> 发现只有 operator 这个 pod，而没有出现 keystone, glance, region 这些平台相关服务的 pod ，可以使用下面的命令查看 operator pod 的日志排查问题。&lt;/p>
+&lt;p>出现这种情况的原因一般都是 operator 在创建 keystone, region 这些平台相关服务出现了错误。常见的问题有 operator 无法使用相关的 mysql 用户创建用户和数据库；或者创建了 keystone 服务后，又无法通过 K8s 内部 service 域名访问 keystone pod 等。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将 operator 的所有日志重定向到文件&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep operator &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &amp;gt; /tmp/operator.log
+&lt;span style="color:#8f5902;font-style:italic"># 然后查看 /tmp/operator.log 里面有没有相关错误&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看 operator 日志当中有没有 requeuing 关键字，一般错误会反馈到这里&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep operator &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep requeuing
 &lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

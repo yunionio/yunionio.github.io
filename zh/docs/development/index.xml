@@ -209,22 +209,23 @@ apt-get update &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp
 $ &lt;span style="color:#204a87">cd&lt;/span> cloudpods
 $ git remote add upstream https://github.com/yunionio/cloudpods
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="提交代码流程">提交代码流程&lt;/h2>
-&lt;ul>
-&lt;li>从 master checkout 出 feature 或者 bugfix 分支&lt;/li>
-&lt;/ul>
+&lt;h3 id="1-从-master-checkout-出-feature-或者-bugfix-分支">1. 从 master checkout 出 feature 或者 bugfix 分支&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># checkout 新分支&lt;/span>
 $ git fetch upstream --tags
+&lt;span style="color:#8f5902;font-style:italic"># 下面假设新的分支名为 &amp;#39;feature/implement-x&amp;#39;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 分支名应该有语义性，描述这次开发要实现或者修复什么&lt;/span>
 $ git checkout -b feature/implement-x upstream/master
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>在新的分支上进行开发&lt;/li>
-&lt;li>开发完成后，进行提交PR前的准备操作&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch upstream &lt;span style="color:#8f5902;font-style:italic"># 同步远程 upstream master 代码&lt;/span>
-$ git rebase upstream/master &lt;span style="color:#8f5902;font-style:italic"># 有冲突则解决冲突&lt;/span>
-$ git push origin feature/implement-x &lt;span style="color:#8f5902;font-style:italic"># push 分支到自己的 repo&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>在GitHub的Web界面完成提交PR的流程&lt;/li>
-&lt;/ul>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-在新的分支上进行开发">2. 在新的分支上进行开发&lt;/h3>
+&lt;p>所有的代码修改，都在新的分支上进行。&lt;/p>
+&lt;p>如果不熟悉 git 相关的操作，可参考这个文档先学习 git 的基本操作：&lt;a href="https://github.com/twtrubiks/Git-Tutorials">Git-Tutorials&lt;/a>。&lt;/p>
+&lt;h3 id="3-开发完成后进行提交pr前的准备操作">3. 开发完成后，进行提交PR前的准备操作&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 同步远程 upstream master 代码&lt;/span>
+$ git fetch upstream
+&lt;span style="color:#8f5902;font-style:italic"># 有冲突则解决冲突&lt;/span>
+$ git rebase upstream/master
+&lt;span style="color:#8f5902;font-style:italic"># push 分支到自己的 repo&lt;/span>
+$ git push origin feature/implement-x
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-在github的web界面完成提交pr的流程">4. 在GitHub的Web界面完成提交PR的流程&lt;/h3>
 &lt;p>&lt;img src="../images/submitPR.png" alt="">&lt;/p>
 &lt;ul>
 &lt;li>提完 PR 后请求相关开发人员 review，并设置Labels来表明提交的代码属于哪一个模块或者哪几个模块&lt;/li>
@@ -235,9 +236,8 @@ $ git push origin feature/implement-x &lt;span style="color:#8f5902;font-style:i
 &lt;/ul>
 &lt;p>&lt;img src="../images/robot_review_label.png" alt="">&lt;/p>
 &lt;p>​ 所有Label都可以在issues——Labels下查询到，带area/前缀的Label均可以使用评论&amp;quot;/area&amp;quot;的形式添加&lt;/p>
-&lt;ul>
-&lt;li>如果是 bugfix 或者需要合并到之前 release 分支的 feature PR，需要额外使用脚本将此PR cherry-pick 到对应的 release 分支&lt;/li>
-&lt;/ul>
+&lt;h3 id="5-cherry-pick-代码">5. cherry-pick 代码&lt;/h3>
+&lt;p>如果是 bugfix 或者需要合并到之前 release 分支的 feature PR，需要额外使用脚本将此PR cherry-pick 到对应的 release 分支&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 自行下载安装 github 的 cli 工具：https://github.com/github/hub&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># macOS 使用: brew install hub&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># Debian: sudo apt install hub&lt;/span>
@@ -2847,7 +2847,292 @@ Body:
 {
 &amp;quot;Msg&amp;quot;: &amp;quot;This is a validate message.&amp;quot;
 }
-&lt;/code>&lt;/pre></description></item><item><title>Docs: API与SDK</title><link>https://www.cloudpods.org/zh/docs/development/apisdk/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/development/apisdk/</guid><description/></item><item><title>Docs: CHANGELOG</title><link>https://www.cloudpods.org/zh/docs/development/changelog/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/changelog/</guid><description/></item><item><title>Docs: 开发计划</title><link>https://www.cloudpods.org/zh/docs/development/roadmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/roadmap/</guid><description>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 贡献文档</title><link>https://www.cloudpods.org/zh/docs/development/docs-dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/docs-dev/</guid><description>
+&lt;p>Cloudpods 文档使用 markdown 编写，所有内容都放到 &lt;a href="https://github.com/yunionio/docs.git">https://github.com/yunionio/docs.git&lt;/a> 这个仓库里面管理，然后使用 &lt;a href="https://gohugo.io/">hugo&lt;/a> 这个工具把文档转换成 HTML 静态网站，最后发布到 &lt;a href="https://www.cloudpods.org">https://www.cloudpods.org&lt;/a>。&lt;/p>
+&lt;p>本文介绍如何搭建文档编写环境，以及如何贡献文档等注意事项。&lt;/p>
+&lt;h2 id="在网页编辑已有文档">在网页编辑已有文档&lt;/h2>
+&lt;p>编辑已有文档的最简单方式是在 &lt;a href="https://cloudpods.org">https://cloudpods.org&lt;/a> 相关文档界面，点击“编辑此页”，就会跳转到文档的 github 仓库界面进行在线编辑。&lt;/p>
+&lt;p>&lt;img src="../images/web_edit_doc.png" alt="">&lt;/p>
+&lt;p>这是最简单快捷修改已有文档的方式，适合对已有文档进行小的改动。如果要新增加文档，或者全面掌握文档编写以及打包发布机制，请阅读下面的内容。&lt;/p>
+&lt;h2 id="配置文档开发环境">配置文档开发环境&lt;/h2>
+&lt;h3 id="1-fork-主仓库">1. Fork 主仓库&lt;/h3>
+&lt;p>文档放到 &lt;a href="https://github.com/yunionio/docs.git">https://github.com/yunionio/docs.git&lt;/a> 仓库进行管理，所以在编写文档之前，需要先把主仓库 fork 一份到自己的 github 账号下。&lt;/p>
+&lt;p>访问 &lt;a href="https://github.com/yunionio/docs">https://github.com/yunionio/docs&lt;/a> ，将仓库 fork 到自己的 github 账号下。&lt;/p>
+&lt;h3 id="2-clone-文档仓库">2. clone 文档仓库&lt;/h3>
+&lt;p>Fork 完成后，将自己 github 账号的 docs 文档仓库使用 &lt;code>git clone&lt;/code> 下来。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 注意这里把 &amp;lt;your_name&amp;gt; 改成自己的 github 账号&lt;/span>
+$ git clone https://github.com/&amp;lt;your_name&amp;gt;/docs --recursive
+$ &lt;span style="color:#204a87">cd&lt;/span> docs
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-安装-hugo">3. 安装 hugo&lt;/h3>
+&lt;p>&lt;a href="https://gohugo.io/">hugo&lt;/a> 这个工具的作用是把 markdown 编辑的文档转换成静态网站，我们编写完文档后需要靠这个工具来预览最终文档的效果。&lt;/p>
+&lt;p>安装 hugo 请参考文档：&lt;a href="https://gohugo.io/installation/">https://gohugo.io/installation/&lt;/a>&lt;/p>
+&lt;p>下一步是安装 npm 相关的依赖，因为主题用到了 css 相关的插件。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装 npm 相关的包&lt;/span>
+$ npm install -g postcss-cli
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果没有安装过 Node.js 和 npm 请先参考文档 &lt;a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">https://docs.npmjs.com/downloading-and-installing-node-js-and-npm&lt;/a> 安装配置 Node.js 和 npm ，然后再执行上面的命令安装 &lt;code>postcss-cli&lt;/code> 包。&lt;/p>
+&lt;h2 id="markdown-简单说明">markdown 简单说明&lt;/h2>
+&lt;p>在编写文档之前，需要掌握 markdown 的基本语法，可参考：&lt;a href="https://www.markdownguide.org/basic-syntax/">https://www.markdownguide.org/basic-syntax/&lt;/a>。&lt;/p>
+&lt;p>另外在使用 markdown 编写文档时，建议多使用语义化的标签，比如注意标题层级，使用 list item 和 codeblock 这些标签。下面是一个例子：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-markdown" data-lang="markdown">&lt;span style="color:#800080;font-weight:bold">## 2级标题
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+编写文档的时候请使用 &amp;#39;##&amp;#39; 2级标题开始，如果使用 &amp;#39;#&amp;#39; 1级标题，是不会出现在当前文档对应的目录(TOC)的。
+&lt;span style="color:#800080;font-weight:bold">### 3级子标题
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+3级标题会作为2级标题的子标题，以缩进的方式出现在文档对应的目录里面。
+&lt;span style="color:#800080;font-weight:bold">### 使用 list item
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> Todo1
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo1
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo2
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> Todo2
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo1
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo2
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubSubTodo1
+&lt;span style="color:#800080;font-weight:bold">### 使用 codeblock
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+当编写的文档设计到代码或者命令行操作时，应该尽量使用 codeblock 代码块语法。
+```bash
+# 更新 centos 系统
+$ sudo yum update -y
+```
+```yaml
+# yaml 注释
+key1: val1
+key2:
+sub_key1: sub_val1
+```
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>
+&lt;h2 id="2级标题">2级标题&lt;/h2>
+&lt;p>编写文档的时候请使用 &amp;lsquo;##&amp;rsquo; 2级标题开始，如果使用 &amp;lsquo;#&amp;rsquo; 1级标题，是不会出现在当前文档对应的目录(TOC)的。&lt;/p>
+&lt;h3 id="3级子标题">3级子标题&lt;/h3>
+&lt;p>3级标题会作为2级标题的子标题，以缩进的方式出现在文档对应的目录里面。&lt;/p>
+&lt;h3 id="使用-list-item">使用 list item&lt;/h3>
+&lt;ul>
+&lt;li>Todo1
+&lt;ul>
+&lt;li>SubTodo1&lt;/li>
+&lt;li>SubTodo2&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Todo2
+&lt;ul>
+&lt;li>SubTodo1&lt;/li>
+&lt;li>SubTodo2
+&lt;ul>
+&lt;li>SubSubTodo1&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="使用-codeblock">使用 codeblock&lt;/h3>
+&lt;p>当编写的文档设计到代码或者命令行操作时，应该尽量使用 codeblock 代码块语法。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 更新 centos 系统&lt;/span>
+$ sudo yum update -y
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#8f5902;font-style:italic"># yaml 注释&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">key1&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">val1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">key2&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">sub_key1&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">sub_val1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编写文档">编写文档&lt;/h2>
+&lt;p>文档在 content/{en,zh} 目录下，选择需要的部分进行编辑或者添加，内容组织请参考：https://gohugo.io/content-management/organization/。&lt;/p>
+&lt;h3 id="目录结构说明">目录结构说明&lt;/h3>
+&lt;p>以 content/zh 目录的结构来说明各个目录包含的内容。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree -L &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> content/zh/
+content/zh/
+├── _index.html &lt;span style="color:#8f5902;font-style:italic"># 文档首页，一般不需要变更&lt;/span>
+├── blog &lt;span style="color:#8f5902;font-style:italic"># 对应博客的内容&lt;/span>
+│   ├── _index.md
+│   └── _posts &lt;span style="color:#8f5902;font-style:italic"># 包含 markdown 编写的博客&lt;/span>
+├── docs &lt;span style="color:#8f5902;font-style:italic"># 对应文档目录&lt;/span>
+│   ├── contact &lt;span style="color:#8f5902;font-style:italic"># 联系相关的文档&lt;/span>
+│   ├── development &lt;span style="color:#8f5902;font-style:italic"># 开发相关的文档&lt;/span>
+│   ├── faq &lt;span style="color:#8f5902;font-style:italic"># 常见问题相关的文档&lt;/span>
+│   ├── function_principle &lt;span style="color:#8f5902;font-style:italic"># 功能原理相关文档&lt;/span>
+│   ├── introduce &lt;span style="color:#8f5902;font-style:italic"># 平台介绍相关文档&lt;/span>
+│   ├── ops &lt;span style="color:#8f5902;font-style:italic"># 运维相关文档&lt;/span>
+│   ├── quickstart &lt;span style="color:#8f5902;font-style:italic"># 快速开始相关文档&lt;/span>
+│   ├── quickuse &lt;span style="color:#8f5902;font-style:italic"># 快速上手相关文档&lt;/span>
+│   ├── release &lt;span style="color:#8f5902;font-style:italic"># release note 相关文档，记录每一次的发布日志&lt;/span>
+│   ├── setup &lt;span style="color:#8f5902;font-style:italic"># 安装部署相关文档&lt;/span>
+│   ├── swagger &lt;span style="color:#8f5902;font-style:italic"># swagger api 文档&lt;/span>
+│   └── web_ui &lt;span style="color:#8f5902;font-style:italic"># 前端 UI 使用相关的文档&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="文档头部-meta-元信息">文档头部 meta 元信息&lt;/h3>
+&lt;p>每篇使用 markdown 编写的文档，在开头都有 &amp;lsquo;&amp;mdash;&amp;rsquo; 包起来，并用 yaml 格式配置的 meta 源信息，下面对相关配置进行说明。&lt;/p>
+&lt;pre>&lt;code># 表示该文档的主标题
+title: &amp;quot;your document title&amp;quot;
+# 控制同级文档之间的顺序，值越大，文档越靠后
+weight: 80
+# 文档创建的时间
+date: 2022-12-16T07:10:02+08:00
+# 表示文档是草稿，最终不会发布，一般不需要配置这个选项
+# 只有在使用 `hugo new` 命令新建的文档才会出现这个配置
+draft: true
+# 文档简要描述
+description: &amp;quot;document description&amp;quot;
+# edition 标记文档包含在ce(开源版)或者ee(企业版)，如果不设置则表示两个版本都会包含
+edition: ce
+# docscope 表示文档所属的作用域，这个在离线编译模式会用到，默认为 system ，可以设置为 domain 和 project
+docscope: project
+# oem_ignore 表示该文档会在 oem 模式下编译被忽略
+oem_ignore: true
+&lt;/code>&lt;/pre>&lt;h3 id="预览文档">预览文档&lt;/h3>
+&lt;p>编辑文档的过程中，我们想要一个实时预览的效果，可以执行 &lt;code>hugo serve&lt;/code> 命令。改命令会在本地启动一个 http 服务，默认监听 &amp;lsquo;1313&amp;rsquo; 端口。访问该服务就可以预览整个文档页面。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 执行 hugo serve&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># &amp;#39;-D&amp;#39; 表示把草稿文档也展示出来&lt;/span>
+$ hugo serve -D
+Start building sites …
+hugo v0.84.0 darwin/arm64 &lt;span style="color:#000">BuildDate&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>unknown
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> EN &lt;span style="color:#000;font-weight:bold">|&lt;/span> ZH
+-------------------+-----+------
+Pages &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">119&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">775&lt;/span>
+Paginator pages &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+Non-page files &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">25&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">954&lt;/span>
+Static files &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">92&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">92&lt;/span>
+Processed images &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+Aliases &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+Sitemaps &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+Cleaned &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+Built in &lt;span style="color:#0000cf;font-weight:bold">5337&lt;/span> ms
+Watching &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> changes in /Users/lzx/code/go/src/yunion.io/x/docs/&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>assets,content,layouts,package.json,static,themes&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+Watching &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> config changes in /Users/lzx/code/go/src/yunion.io/x/docs/config.toml, /Users/lzx/code/go/src/yunion.io/x/docs/themes/docsy/config.toml
+Environment: &lt;span style="color:#4e9a06">&amp;#34;development&amp;#34;&lt;/span>
+Serving pages from memory
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+&lt;span style="color:#8f5902;font-style:italic"># 注意这里显示的 http web 服务访问地址&lt;/span>
+Web Server is available at //localhost:1313/ &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87">bind&lt;/span> address 127.0.0.1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Press Ctrl+C to stop
+&lt;span style="color:#8f5902;font-style:italic"># 如果是本地 1313 端口被占用，可以通过&amp;#39;--port&amp;#39;参数指定其他端口&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 下面命令监听到 8088 端口&lt;/span>
+$ hugo serve --port &lt;span style="color:#0000cf;font-weight:bold">8088&lt;/span> -D
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 hugo web 服务后，通过浏览器访问相关页面，然后对文档进行编辑。每次内容的修改，就会触发 hugo 对文档的编译，然后浏览器里面对应的文档界面就会实时刷新。&lt;/p>
+&lt;h3 id="新建文档">新建文档&lt;/h3>
+&lt;p>可以通过以下 2 种方式新建文档：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>使用 &lt;code>hugo new&lt;/code> 命令&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo new content/zh/docs/quickstart/test-new.md
+content/zh/docs/quickstart/test-new.md created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用自己喜欢的编辑器编写对应的 markdown 文档即可。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>直接新建文档编辑&lt;/p>
+&lt;p>另外一种方式是直接在相应目录新建文档，然后配置 meta 元信息编辑。&lt;/p>
+&lt;p>下面是一个命令行下新建文档的例子：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 新建文档&lt;/span>
+$ touch new content/zh/docs/quickstart/test-new-by-cmd.md
+&lt;span style="color:#8f5902;font-style:italic"># 编辑文档&lt;/span>
+$ vim content/zh/docs/quickstart/test-new-by-cmd.md
+&lt;span style="color:#8f5902;font-style:italic"># 添加 meta 元信息后的内容&lt;/span>
+$ cat content/zh/docs/quickstart/test-new-by-cmd.md
+---
+title: &lt;span style="color:#4e9a06">&amp;#34;Test New By Commandline&amp;#34;&lt;/span>
+weight: &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span>
+---
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="提交文档">提交文档&lt;/h2>
+&lt;p>文档编辑完成后请参考 git 配置提交代码，相关文档参考：&lt;a href="../contrib/#%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B">提交贡献代码&lt;/a>。&lt;/p>
+&lt;p>如果只是编写和贡献文档，看到这里就已经可以了。接下来是文档编译打包以及转换成 docx 相关的内容。&lt;/p>
+&lt;h2 id="编译打包文档">编译打包文档&lt;/h2>
+&lt;p>编译打包文档是指通过 hugo 这个工具，把文档转换成最终的 HTML 站点，最后发布到线上或者打包成一个容器镜像。&lt;/p>
+&lt;p>编译打包后的文档，有下面这4种输出结果，其中 ce 是 &amp;lsquo;Community Edition&amp;rsquo;，ee 是 &amp;lsquo;Enterprise Edition&amp;rsquo; 简写。&lt;/p>
+&lt;ul>
+&lt;li>在线文档：发布到线上
+&lt;ul>
+&lt;li>开源版本(ce)：在线开源版文档，发布到 &lt;a href="https://www.cloudpods.org">https://www.cloudpods.org&lt;/a>&lt;/li>
+&lt;li>企业版本(ee)：在线商业版文档，发布到 &lt;a href="https://docs.yunion.cn">https://docs.yunion.cn&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>离线文档：作为容器镜像打包
+&lt;ul>
+&lt;li>企业版本(ee)：商业版离线文档，集成到 Cloudpods 商业版本&lt;/li>
+&lt;li>OEM 版本(ee)：商业版 OEM 离线文档，集成到 Cloudpods OEM 商业版本&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="在线文档">在线文档&lt;/h3>
+&lt;h4 id="ce-开源版本">ce 开源版本&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地启用 http server 查看 ce 开源版本文档&lt;/span>
+$ make local-serve
+&lt;span style="color:#8f5902;font-style:italic"># 将 ce 文档编译成 HTML 站点&lt;/span>
+$ make ce-build
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在线开源文档会在每次合并到 release 分支的时候，使用 github workflow 自动更新线上站点。&lt;/p>
+&lt;p>对应的配置在 &lt;a href="https://github.com/yunionio/docs/blob/master/.github/workflows/release.yml">https://github.com/yunionio/docs/blob/master/.github/workflows/release.yml&lt;/a>。&lt;/p>
+&lt;h4 id="ee-商业版本">ee 商业版本&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地启用 http server 查看 ee 文档&lt;/span>
+$ make ee-local-serve
+&lt;span style="color:#8f5902;font-style:italic"># 将 ee 文档编译成 HTML 站点&lt;/span>
+$ make ee-build
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="离线文档">离线文档&lt;/h3>
+&lt;p>离线文档最终是以容器镜像的方式打包，关于 docker 的设置请参考文档：&lt;a href="../dev-env/#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-docker">安装配置 Docker&lt;/a>&lt;/p>
+&lt;h4 id="ee-商业版本-1">ee 商业版本&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编译离线文档，最终的 HTML 站点会输出到 public 目录&lt;/span>
+$ make ee-build-offline
+&lt;span style="color:#8f5902;font-style:italic"># 制作 ee 镜像&lt;/span>
+$ &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/yunionio &lt;span style="color:#000">TAG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>your-test-tag make ee-image
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="oem-商业版本">OEM 商业版本&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编译打包&lt;/span>
+$ &lt;span style="color:#000">OEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OEMCLOUD &lt;span style="color:#000">OEM_NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OEM_NAME &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> &lt;span style="color:#000">REGISTRY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>registry.cn-beijing.aliyuncs.com/yunionio &lt;span style="color:#000">TAG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>your-test-tag &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> make ee-image
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="生成-docx-word-文档">生成 docx word 文档&lt;/h2>
+&lt;h3 id="安装依赖">安装依赖&lt;/h3>
+&lt;p>依赖如下:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/jgm/pandoc">pandoc&lt;/a>: 将 markdown 转换成 docx&lt;/li>
+&lt;li>&lt;a href="https://github.com/wkhtmltopdf/wkhtmltopdf">wkhtmltopdf&lt;/a>: 将 html 页面转换成 pdf&lt;/li>
+&lt;li>&lt;a href="https://imagemagick.org/script/download.php">imagemagick&lt;/a>: 将 pdf 转换成 png&lt;/li>
+&lt;li>python3 相关依赖包如下:
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/sergiocorreia/panflute">panflute&lt;/a>: pandoc 对应的 python lib&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装依赖 pandoc == 2.9.2.1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 从页面下载所需的操作系统版本: https://github.com/jgm/pandoc/releases/tag/2.9.2.1&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 安装其它依赖&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># for macOS&lt;/span>
+$ brew cask install wkhtmltopdf
+$ brew install imagemagick ghostscript
+&lt;span style="color:#8f5902;font-style:italic"># python 依赖&lt;/span>
+$ pip3 install panflute
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="生成-docx-文档">生成 docx 文档&lt;/h3>
+&lt;p>可以根据需要选择需要生成 docx 的部分。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 进入 scripts 目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ./scripts
+&lt;span style="color:#8f5902;font-style:italic"># 清理 _output 目录&lt;/span>
+$ make clean
+&lt;span style="color:#8f5902;font-style:italic"># 比如要选择生成 quickstart 目录下面的文档&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 该命令会把对应的 markdown 文件转换处理放到 _output 目录&lt;/span>
+$ ./collect-input.py ../content/zh/docs/quickstart ./_output
+&lt;span style="color:#8f5902;font-style:italic"># 该命令会调用 pandoc 把 _output 的 *.md 聚合生成 docx&lt;/span>
+$ make gen-docx
+&lt;span style="color:#8f5902;font-style:italic"># 输出的 docx 文档在&lt;/span>
+$ ls _output/output.docx
+&lt;span style="color:#8f5902;font-style:italic"># 选择子目录生成文档&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 下面命令选择了 web_ui 里面的 computing ，docker 和 database 目录的内容生成 docx&lt;/span>
+$ make clean
+$ ./collect-input.py ../content/zh/docs/web_ui ./_output computing docker database
+$ make gen-docx
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上述的命令不会区分 &amp;lsquo;ce&amp;rsquo; 和 &amp;lsquo;ee&amp;rsquo; 的版本，如果要生成的文档需要区分 &amp;lsquo;ce&amp;rsquo; 和 &amp;lsquo;ee&amp;rsquo;，则需要先编译不通版本文档，然后再转换，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 假设现在在 scripts 目录，需要回到 docs 目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ..
+&lt;span style="color:#8f5902;font-style:italic"># 编译 ee 离线文档&lt;/span>
+$ make ee-build-offline
+&lt;span style="color:#8f5902;font-style:italic"># 编译后的文档会保存在 ./_output 目录里面，对应结构如下；&lt;/span>
+$ tree -L &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> _output
+_output
+├── content_ee_domain &lt;span style="color:#8f5902;font-style:italic"># domain 域视图相关的文档&lt;/span>
+├── content_ee_project &lt;span style="color:#8f5902;font-style:italic"># project 项目视图相关的文档 &lt;/span>
+└── content_ee_system &lt;span style="color:#8f5902;font-style:italic"># system 系统视图相关文档，也是最全的文档&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 转换对应文档&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ./scripts
+$ make clean
+&lt;span style="color:#8f5902;font-style:italic"># 收集系统视图下的所有文档&lt;/span>
+$ ./collect-input.py ../_output/content_ee_system/zh/docs ./_output
+&lt;span style="color:#8f5902;font-style:italic"># 转换成 docx&lt;/span>
+$ make gen-docx
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: API与SDK</title><link>https://www.cloudpods.org/zh/docs/development/apisdk/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/development/apisdk/</guid><description/></item><item><title>Docs: CHANGELOG</title><link>https://www.cloudpods.org/zh/docs/development/changelog/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/changelog/</guid><description/></item><item><title>Docs: 开发计划</title><link>https://www.cloudpods.org/zh/docs/development/roadmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/roadmap/</guid><description>
 &lt;h2 id="架构">架构&lt;/h2>
 &lt;p>优化Cloudpods的代码和架构&lt;/p>
 &lt;ul>

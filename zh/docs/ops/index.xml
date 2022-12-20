@@ -895,7 +895,7 @@ sc query telegraf
 &lt;pre>&lt;code>kubectl -n onecloud edit deployment onecloud-operator
 &lt;/code>&lt;/pre>&lt;h3 id="停止部分控制服务">停止部分控制服务&lt;/h3>
 &lt;p>通过删除控制服务的deployment实现停止控制服务。然而，为了不影响虚拟机的正常运行，部分控制服务应保持继续运行：default-ovn-north、default-influxdb。&lt;/p>
-&lt;pre>&lt;code>kubectl -n onecloud get deployments | awk '{print $1}' | grep -vE 'default-ovn-north|default-influxdb|onecloud-operator' | xargs kubectl -n onecloud delete deployments
+&lt;pre>&lt;code>kubectl -n onecloud get deployments | awk '{print $1}' | grep -vE 'default-ovn-north|default-influxdb|onecloud-operator|NAME' | xargs kubectl -n onecloud delete deployments
 &lt;/code>&lt;/pre>&lt;h3 id="停止部分daemonset服务">停止部分daemonset服务&lt;/h3>
 &lt;p>还有部分daemonset服务需要停止：default-region-dns、default-yunionagent。&lt;/p>
 &lt;pre>&lt;code>kubectl -n onecloud delete daemonsets default-region-dns default-yunionagent

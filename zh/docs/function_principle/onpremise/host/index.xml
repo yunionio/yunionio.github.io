@@ -184,6 +184,8 @@ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>host-agent 启动时会向 etcd 注册一个 key. 当开启宕机自动迁移，宿主机断网时一段时间后 host-agent 会将宿主机上的虚机关机，防止网络恢复后磁盘双写。&lt;/p>
 &lt;h2 id="使用介绍">使用介绍&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># climc 命令&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 修改region服务的配置&lt;/span>
+$ climc service-config --config &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;default&amp;#34;:{&amp;#34;enable_host_health_check&amp;#34;:true}}&amp;#39;&lt;/span> region2
 $ climc host-auto-migrate-on-host-down --help
 Usage: climc host-auto-migrate-on-host-down &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-migrate-on-host-shutdown &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>enable,disable&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-migrate-on-host-down &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>enable,disable&lt;span style="color:#ce5c00;font-weight:bold">}]&lt;/span> &amp;lt;ID&amp;gt; ...
 &lt;span style="color:#8f5902;font-style:italic"># 开启宕机自动迁移&lt;/span>
@@ -192,6 +194,8 @@ $ climc host-auto-migrate-on-host-down --auto-migrate-on-host-down &lt;span styl
 $ climc host-auto-migrate-on-host-down --auto-migrate-on-host-down &lt;span style="color:#204a87">enable&lt;/span> --auto-migrate-on-host-shutdown &lt;span style="color:#204a87">enable&lt;/span> &amp;lt;ID&amp;gt;
 &lt;span style="color:#8f5902;font-style:italic"># 取消宕机自动迁移&lt;/span>
 $ climc host-auto-migrate-on-host-down &amp;lt;ID&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 重启region服务&lt;/span>
+kubectl -n onecloud rollout restart deployment default-region
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 宿主机 CPU 预留</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/reservecpus/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/reservecpus/</guid><description>
 &lt;h2 id="功能介绍">功能介绍&lt;/h2>
 &lt;p>宿主机 CPU 预留功能支持将部分 CPU 预留给其他进程使用，不再分配给虚拟机使用。&lt;/p>

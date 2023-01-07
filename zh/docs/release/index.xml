@@ -1,5 +1,62 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-发布日志</title><link>https://www.cloudpods.org/zh/docs/release/</link><description>Recent content in 发布日志 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 31 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/release/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.9.4 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_4/</link><pubDate>Mon, 31 Oct 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_4/</guid><description>
+发布日志</title><link>https://www.cloudpods.org/zh/docs/release/</link><description>Recent content in 发布日志 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 06 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/release/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.9.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_5/</link><pubDate>Tue, 06 Dec 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_5/</guid><description>
+&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】热迁移优化：缩短VPC主机热迁移过程中网络中断时间；兼容旧版本主机热迁移；热迁移快速收敛；批量热迁移死锁；&lt;/li>
+&lt;li>【主机】探测宿主机USB设备时，自动忽略HUB类型的USB设备&lt;/li>
+&lt;li>【主机】私有云主机监控数据发送到metadata（169.254.169.254），不依赖虚拟机是否能访问influxdb&lt;/li>
+&lt;li>【主机】将SSD类型存储上分配的虚拟磁盘自动标识为SSD类型&lt;/li>
+&lt;li>【主机】改进虚拟机磁盘更换存储UI交互&lt;/li>
+&lt;li>【主机】同步VMware虚拟机时，发现有重复UUID的虚拟机，不再终止同步，会自动忽略有重复UUID的虚拟机&lt;/li>
+&lt;li>【主机】同步VMware虚拟机时，允许虚拟机IP子网未被纳管。如果IP子网未被纳管，会将IP子网同步到元数据中，在前端展示并提示用户纳管IP子网&lt;/li>
+&lt;li>【裸金属】允许指定外部tftp服务器和pxe启动文件&lt;/li>
+&lt;li>【CloudID】改进HCSO SAML provider&lt;/li>
+&lt;li>【Ceph】防止调用ceph命令时服务hang的问题&lt;/li>
+&lt;li>【Ceph】改进Ceph容量计算规则，采用Used+MaxAvail作为总容量&lt;/li>
+&lt;li>【API网关】导出execl的浮点数输出格式优化&lt;/li>
+&lt;li>【监控】只检查aliyun云账号的账号余额&lt;/li>
+&lt;li>【容器】部署的Kubernetes集群支持自动更新证书&lt;/li>
+&lt;li>【容器】为指定Kubernetes集群部署监控组件&lt;/li>
+&lt;/ul>
+&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】AWS虚拟机CPU架构同步采用instance的Architecture字段&lt;/li>
+&lt;li>【主机】自动为主机生成ssh host keys，解决部分Ubuntu/Debian镜像生成虚拟机启动后无法ssh的问题&lt;/li>
+&lt;li>【主机】VPC主机的入方向安全组规则应该默认deny所有流量&lt;/li>
+&lt;li>【主机】修正探测CPU架构和UEFI格式的错误&lt;/li>
+&lt;li>【主机】VMWare主机转换为KVM主机后，不能被再次转换&lt;/li>
+&lt;li>【API网关】通过apigateway类型的endpoint上传镜像报错&lt;/li>
+&lt;li>【调度】采用共享存储的主机迁移时不应该检查目标宿主机的存储容量限制&lt;/li>
+&lt;li>【裸金属】未使用网卡缺少index或nic_type，导致宿主机转换回裸金属失败&lt;/li>
+&lt;li>【i18n】修正重复添加删除i18n信息的错误&lt;/li>
+&lt;li>【多云纳管】防止Cloudpods嵌套纳管自己&lt;/li>
+&lt;li>【镜像】arm镜像上传后显示CPU架构为x86&lt;/li>
+&lt;/ul>
+&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】允许更新主机的hostname&lt;/li>
+&lt;li>【主机】支持通过快照创建磁盘&lt;/li>
+&lt;li>【裸金属】允许纳管没有BMC的物理机&lt;/li>
+&lt;li>【容器】支持基于银河麒麟V10SP2部署Kubernetes 1.20集群&lt;/li>
+&lt;li>【容器】为部署的容器集群自动增加nginx的ingress controller，并且支持sticky session等特性&lt;/li>
+&lt;li>【监控】自动采集各个服务的性能指标参数，用于后续服务健康监控&lt;/li>
+&lt;li>【部署】ocboot支持自动设置clickhouse&lt;/li>
+&lt;li>【前端】全局搜索支持搜索外部ID&lt;/li>
+&lt;li>【前端】增加”关于“页面&lt;/li>
+&lt;/ul>
+&lt;h2 id="升级方式">升级方式&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>具体变更请参考:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.9/3-9-5/">CHANGELOG v3.9.5&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: v3.9.4 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_4/</link><pubDate>Mon, 31 Oct 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_4/</guid><description>
 &lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
 &lt;ul>
 &lt;li>【认证】用户密码过期登录强制修改密码&lt;/li>
@@ -633,61 +690,4 @@
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
-&lt;p>具体变更请参考 &lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.7/3-7-6/">CHANGELOG v3.7.6&lt;/a> 。&lt;/p></description></item><item><title>Docs: v3.9.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_5/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_5/</guid><description>
-&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】热迁移优化：缩短VPC主机热迁移过程中网络中断时间；兼容旧版本主机热迁移；热迁移快速收敛；批量热迁移死锁；&lt;/li>
-&lt;li>【主机】探测宿主机USB设备时，自动忽略HUB类型的USB设备&lt;/li>
-&lt;li>【主机】私有云主机监控数据发送到metadata（169.254.169.254），不依赖虚拟机是否能访问influxdb&lt;/li>
-&lt;li>【主机】将SSD类型存储上分配的虚拟磁盘自动标识为SSD类型&lt;/li>
-&lt;li>【主机】改进虚拟机磁盘更换存储UI交互&lt;/li>
-&lt;li>【主机】同步VMware虚拟机时，发现有重复UUID的虚拟机，不再终止同步，会自动忽略有重复UUID的虚拟机&lt;/li>
-&lt;li>【主机】同步VMware虚拟机时，允许虚拟机IP子网未被纳管。如果IP子网未被纳管，会将IP子网同步到元数据中，在前端展示并提示用户纳管IP子网&lt;/li>
-&lt;li>【裸金属】允许指定外部tftp服务器和pxe启动文件&lt;/li>
-&lt;li>【CloudID】改进HCSO SAML provider&lt;/li>
-&lt;li>【Ceph】防止调用ceph命令时服务hang的问题&lt;/li>
-&lt;li>【Ceph】改进Ceph容量计算规则，采用Used+MaxAvail作为总容量&lt;/li>
-&lt;li>【API网关】导出execl的浮点数输出格式优化&lt;/li>
-&lt;li>【监控】只检查aliyun云账号的账号余额&lt;/li>
-&lt;li>【容器】部署的Kubernetes集群支持自动更新证书&lt;/li>
-&lt;li>【容器】为指定Kubernetes集群部署监控组件&lt;/li>
-&lt;/ul>
-&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】AWS虚拟机CPU架构同步采用instance的Architecture字段&lt;/li>
-&lt;li>【主机】自动为主机生成ssh host keys，解决部分Ubuntu/Debian镜像生成虚拟机启动后无法ssh的问题&lt;/li>
-&lt;li>【主机】VPC主机的入方向安全组规则应该默认deny所有流量&lt;/li>
-&lt;li>【主机】修正探测CPU架构和UEFI格式的错误&lt;/li>
-&lt;li>【主机】VMWare主机转换为KVM主机后，不能被再次转换&lt;/li>
-&lt;li>【API网关】通过apigateway类型的endpoint上传镜像报错&lt;/li>
-&lt;li>【调度】采用共享存储的主机迁移时不应该检查目标宿主机的存储容量限制&lt;/li>
-&lt;li>【裸金属】未使用网卡缺少index或nic_type，导致宿主机转换回裸金属失败&lt;/li>
-&lt;li>【i18n】修正重复添加删除i18n信息的错误&lt;/li>
-&lt;li>【多云纳管】防止Cloudpods嵌套纳管自己&lt;/li>
-&lt;li>【镜像】arm镜像上传后显示CPU架构为x86&lt;/li>
-&lt;/ul>
-&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】允许更新主机的hostname&lt;/li>
-&lt;li>【主机】支持通过快照创建磁盘&lt;/li>
-&lt;li>【裸金属】允许纳管没有BMC的物理机&lt;/li>
-&lt;li>【容器】支持基于银河麒麟V10SP2部署Kubernetes 1.20集群&lt;/li>
-&lt;li>【容器】为部署的容器集群自动增加nginx的ingress controller，并且支持sticky session等特性&lt;/li>
-&lt;li>【监控】自动采集各个服务的性能指标参数，用于后续服务健康监控&lt;/li>
-&lt;li>【部署】ocboot支持自动设置clickhouse&lt;/li>
-&lt;li>【前端】全局搜索支持搜索外部ID&lt;/li>
-&lt;li>【前端】增加”关于“页面&lt;/li>
-&lt;/ul>
-&lt;h2 id="升级方式">升级方式&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>具体变更请参考:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.9/3-9-5/">CHANGELOG v3.9.5&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;p>具体变更请参考 &lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.7/3-7-6/">CHANGELOG v3.7.6&lt;/a> 。&lt;/p></description></item></channel></rss>

@@ -340,148 +340,7 @@
 &lt;li>由于公有云上的云主机不能设置vip，数据库不是双主模式，因此在公有云上无法安装高可用环境，建议仅配置k8s高可用，Cloudpods平台部署一个控制节点和两个计算节点。&lt;/li>
 &lt;li>当在公有云上部署多个节点时，建议云主机之间请放开全部端口。&lt;/li>
 &lt;li>在公有云上部署环境时，建议部署Mariadb数据库，不要使用mysql 5.6及以下版本，防止索引长度 bug： Index column size too large. The maximum column size is 767 bytes.&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 高可用安装</title><link>https://www.cloudpods.org/zh/docs/setup/ha-ce/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/ha-ce/</guid><description>
-&lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>关于环境的准备和不同架构 CPU 操作系统的要求，请参考 &lt;a href="../../quickstart/allinone#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">All in One 安装/机器配置要求&lt;/a>。&lt;/p>
-&lt;p>假设准备好了 3 台 CentOS7 机器，以及 1 台 Mariadb/MySQL 的机器，规划如下：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>role&lt;/th>
-&lt;th>ip&lt;/th>
-&lt;th>interface&lt;/th>
-&lt;th>note&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>k8s primary&lt;/td>
-&lt;td>10.127.90.101&lt;/td>
-&lt;td>eth0&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s master 1&lt;/td>
-&lt;td>10.127.90.102&lt;/td>
-&lt;td>eth0&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s master 2&lt;/td>
-&lt;td>10.127.90.103&lt;/td>
-&lt;td>eth0&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s VIP&lt;/td>
-&lt;td>10.127.190.10&lt;/td>
-&lt;td>-&lt;/td>
-&lt;td>-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>DB&lt;/td>
-&lt;td>10.127.190.11&lt;/td>
-&lt;td>-&lt;/td>
-&lt;td>pswd=&amp;ldquo;0neC1oudDB#&amp;rdquo;, port=3306&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>其中 DB 的部署目前是不归 ocboot 部署工具管理的，需要提前手动部署，高可用的数据库部署可以参考文档 &lt;a href="../db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
-&lt;h2 id="开始安装">开始安装&lt;/h2>
-&lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
-&lt;p>参考 &lt;a href="../../quickstart/allinone/#%E4%B8%8B%E8%BD%BD-ocboot">All in One 安装/下载 ocboot&lt;/a>。&lt;/p>
-&lt;h3 id="编写部署配置">编写部署配置&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 填充变量，生成配置&lt;/span>
-&lt;span style="color:#000">DB_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;10.127.190.11&amp;#34;&lt;/span>
-&lt;span style="color:#000">DB_PORT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3306&lt;/span>
-&lt;span style="color:#000">DB_PSWD&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0neC1oudDB#&amp;#34;&lt;/span>
-&lt;span style="color:#000">DB_USER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>root
-&lt;span style="color:#000">K8S_VIP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.190.10
-&lt;span style="color:#000">PRIMARY_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
-&lt;span style="color:#000">PRIMARY_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.101
-&lt;span style="color:#000">MASTER_1_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
-&lt;span style="color:#000">MASTER_1_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.102
-&lt;span style="color:#000">MASTER_2_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
-&lt;span style="color:#000">MASTER_2_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.103
-cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: $PRIMARY_IP
-&lt;/span>&lt;span style="color:#4e9a06"> use_local: false
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.9.6&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: $DB_IP
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: &amp;#34;$DB_USER&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: &amp;#34;$DB_PSWD&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> db_port: &amp;#34;$DB_PORT&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> skip_docker_config: true
-&lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunionio
-&lt;/span>&lt;span style="color:#4e9a06"> ha_using_local_registry: false
-&lt;/span>&lt;span style="color:#4e9a06"> node_ip: &amp;#34;$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> ip_autodetection_method: &amp;#34;can-reach=$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: $K8S_VIP
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
-&lt;/span>&lt;span style="color:#4e9a06"> high_availability: true
-&lt;/span>&lt;span style="color:#4e9a06"> use_ee: false
-&lt;/span>&lt;span style="color:#4e9a06"> enable_minio: true
-&lt;/span>&lt;span style="color:#4e9a06"> registry_mirrors:
-&lt;/span>&lt;span style="color:#4e9a06"> - https://lje6zxpk.mirror.aliyuncs.com
-&lt;/span>&lt;span style="color:#4e9a06"> insecure_registries:
-&lt;/span>&lt;span style="color:#4e9a06"> - $PRIMARY_IP:5000
-&lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$PRIMARY_INTERFACE/br0/$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">
-&lt;/span>&lt;span style="color:#4e9a06">master_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: $K8S_VIP
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> as_controller: true
-&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
-&lt;/span>&lt;span style="color:#4e9a06"> ntpd_server: &amp;#34;$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> registry_mirrors:
-&lt;/span>&lt;span style="color:#4e9a06"> - https://lje6zxpk.mirror.aliyuncs.com
-&lt;/span>&lt;span style="color:#4e9a06"> high_availability: true
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - user: root
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: &amp;#34;$MASTER_1_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$MASTER_1_INTERFACE/br0/$MASTER_1_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> - user: root
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: &amp;#34;$MASTER_2_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$MASTER_2_INTERFACE/br0/$MASTER_2_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./ocboot.py install ./config-k8s-ha.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>等待部署完成后，就可以使用浏览器访问 https://10.127.190.10 (VIP), 输入用户名 &lt;code>admin&lt;/code> 和密码 &lt;code>admin@123&lt;/code>，进入前端。&lt;/p>
-&lt;p>另外部署完成后，可以给已有集群添加节点，参考文档：&lt;a href="../host">添加计算节点&lt;/a>。&lt;/p>
-&lt;h2 id="常见问题">常见问题&lt;/h2>
-&lt;h3 id="1-如何手动重新添加控制控制节点">1. 如何手动重新添加控制控制节点？&lt;/h3>
-&lt;p>3个控制节点都会运行 kube-apiserver, etcd 这些关键服务，如果遇到某一个节点遇到 etcd 数据不一致，可以将该节点 reset 后重新加入集群，步骤如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 到其他正常的控制节点创建 join token&lt;/span>
-$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">KUBECONFIG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/etc/kubernetes/admin.conf
-$ ocadm token create --description &lt;span style="color:#4e9a06">&amp;#34;ocadm-playbook-node-joining-token&amp;#34;&lt;/span> --ttl 90m
-2fmpbx.7zikd8sp5uhaxrjr
-&lt;span style="color:#8f5902;font-style:italic"># 获取控制节点认证&lt;/span>
-$ /opt/yunion/bin/ocadm init phase upload-certs &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v upload-certs
-6150f8da2dcdf3a8a730f407ddce9f1cb9f24b15ffa4e4b3680e16ed40201cf0
-&lt;span style="color:#8f5902;font-style:italic">########## 注意下面的命令需要登陆到需要重新加入的节点执行 ###########&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果该节点曾经作为计算节点加入过云平台&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 需要备份当前宿主机 /etc/yunion/host.conf 配置&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ cp /etc/yunion/host.conf /etc/yunion/host.conf.manual.bk
-&lt;span style="color:#8f5902;font-style:italic"># 登陆到需要重新 reset 加入的节点，reset 当前的 kubernetes 环境&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ kubeadm reset -f
-&lt;span style="color:#8f5902;font-style:italic"># 假设当前的网卡为 bond0(如果不做 bond ，物理网卡一般为 eth0 之类的名称)，ip 为 172.16.84.40，需要加入集群 172.16.84.101:6443 集群&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ ocadm join &lt;span style="color:#4e9a06">\
-&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --control-plane 172.16.84.101:6443 &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 加入的目标集群&lt;/span>
---token 2fmpbx.7zikd8sp5uhaxrjr --certificate-key 6150f8da2dcdf3a8a730f407ddce9f1cb9f24b15ffa4e4b3680e16ed40201cf0 --discovery-token-unsafe-skip-ca-verification &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 加入认证信息&lt;/span>
---apiserver-advertise-address 172.16.84.40 --node-ip 172.16.84.40 &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 该节点 ip&lt;/span>
---as-onecloud-controller &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 作为 cloudpods 控制节点&lt;/span>
---enable-host-agent &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 作为 cloudpods 计算节点&lt;/span>
---host-networks &lt;span style="color:#4e9a06">&amp;#39;bond0/br0/172.16.84.40&amp;#39;&lt;/span> &lt;span style="color:#4e9a06">\ &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 计算节点的桥接网络，意思创建 br0 网桥，并把 bond0 加入进来，给 br0 网桥配置 ip 172.16.84.40&lt;/span>
---high-availability-vip 172.16.84.101 --keepalived-version-tag v2.0.25 &lt;span style="color:#8f5902;font-style:italic"># keepalived 的 vip ，保证 kube-apiserver 的高可用性&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 等待加入完成后，还原 /etc/yunion/host.conf.manual.bk 配置&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>your-reset-node&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> $ cp /etc/yunion/host.conf.manual.bk /etc/yunion/host.conf
-&lt;span style="color:#8f5902;font-style:italic"># 重启 host 服务&lt;/span>
-$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#000">$your&lt;/span>-reset-node
-$ kubectl delete pods -n onecloud default-host-xxxx
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上手动的步骤参考了 ocboot join master-node 的逻辑，可参考 &lt;a href="https://github.com/yunionio/ocboot/blob/master/onecloud/roles/master-node/tasks/main.yml">https://github.com/yunionio/ocboot/blob/master/onecloud/roles/master-node/tasks/main.yml&lt;/a> 。&lt;/p></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 部署 DB HA 环境</title><link>https://www.cloudpods.org/zh/docs/setup/db-ha/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-ha/</guid><description>
 &lt;p>Cloudpods 平台服务使用 Mariadb，这里使用 keepalived 和 Mariadb 的主主复制功能来实现 DB 的高可用。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
 &lt;p>keepalived 的主要作用是为 Mariadb 提供 vip，在2个 Mariadb 实例之间切换，不间断的提供服务。&lt;/p>
@@ -1036,107 +895,7 @@ $ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bo
 default-host-7b5cr 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.4 controller01
 default-host-ctx5s 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">218&lt;/span> 18h 192.168.222.5 controller02
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="升级组件版本">升级组件版本&lt;/h3>
-&lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 多节点安装(已废弃)</title><link>https://www.cloudpods.org/zh/docs/setup/nodes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/nodes/</guid><description>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>多节点安装的内容已经废弃，不提倡使用这种方式，推荐用户先参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 或者 &lt;a href="../ha">高可用安装&lt;/a> 把集群搭建好，然后再使用 &lt;a href="../host">添加计算节点&lt;/a> 的方式添加计算节点到集群。&lt;/p>
-&lt;p>以下内容只是作为保留作为参考。&lt;/p>
-&lt;/div>
-&lt;p>多节点安装和 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 一样，都使用 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 这个部署工具，根据配置执行 ansible playbook 部署节点。&lt;/p>
-&lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>关于环境的准备和不同架构 CPU 操作系统的要求，请参考 &lt;a href="../../quickstart/allinone#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">All in One 安装/机器配置要求&lt;/a>。&lt;/p>
-&lt;p>以下为待部署机器的环境，假设已经准备好了 5 台机器，IP 分别是 10.127.10.156-160 ，各个节点做出以下角色规划：&lt;/p>
-&lt;ul>
-&lt;li>mariadb_node: 这个角色表示该节点上部署并运行 mariadb 数据库服务，该角色不一定要写在配置中，如果环境中有准备好的数据库，也可以不部署
-&lt;ul>
-&lt;li>节点: 10.127.10.156&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>primary_master_node: 这个角色表示该节点是第一个部署并运行 k8s master 组件的节点，该角色必须存在于配置中，该角色运行 onecloud 控制服务
-&lt;ul>
-&lt;li>节点: 10.127.10.156&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>master_nodes: 这个角色表示这些节点运行控制服务，该角色可选，主要作用是和 primary_master_node 一起组成 Kubernetes 的 etcd 3 节点高可用
-&lt;ul>
-&lt;li>节点: 10.127.10.157-158&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>worker_nodes: 这个角色表示这些节点运行私有云计算服务，该角色可选，如果不需要内置的私有云功能，可以不配置
-&lt;ul>
-&lt;li>节点: 10.127.10.159-160&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">IP&lt;/th>
-&lt;th style="text-align:center">登录用户&lt;/th>
-&lt;th>角色&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">10.127.10.156&lt;/td>
-&lt;td style="text-align:center">root&lt;/td>
-&lt;td>mariadb_node &amp;amp; primary_master_node&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">10.127.10.157-158&lt;/td>
-&lt;td style="text-align:center">root&lt;/td>
-&lt;td>master_nodes&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">10.127.10.159-160&lt;/td>
-&lt;td style="text-align:center">root&lt;/td>
-&lt;td>worker_nodes&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="开始安装">开始安装&lt;/h2>
-&lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
-&lt;p>参考 &lt;a href="../../quickstart/allinone/#%E4%B8%8B%E8%BD%BD-ocboot">All in One 安装/下载 ocboot&lt;/a>。&lt;/p>
-&lt;h3 id="编写部署配置">编写部署配置&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编写 config-nodes.yml 文件&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.yml
-&lt;/span>&lt;span style="color:#4e9a06">mariadb_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.6
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">master_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.157
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.158
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">worker_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.159
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.160
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始部署">开始部署&lt;/h3>
-&lt;p>当填写完 config-nodes.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py ./config-nodes.yml&lt;/code> 部署集群了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开始部署&lt;/span>
-$ ./run.py ./config-nodes.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>等待部署完成后，就可以使用浏览器访问 https://10.168.26.216 (primary_master_node 的 IP), 输入用户名 &lt;code>admin&lt;/code> 和密码 &lt;code>admin@123&lt;/code>，进入前端。&lt;/p>
-&lt;p>然后就可以&lt;a href="../../quickstart/allinone/#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E5%8F%B0%E8%99%9A%E6%8B%9F%E6%9C%BA">创建私有云虚拟机&lt;/a>或者&lt;a href="../../quickstart/allinone/#%E5%AF%BC%E5%85%A5%E5%85%AC%E6%9C%89%E4%BA%91%E6%88%96%E8%80%85%E5%85%B6%E5%AE%83%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B3%E5%8F%B0%E8%B5%84%E6%BA%90">纳管公有云资源&lt;/a>。&lt;/p></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host/</guid><description>
+&lt;p>请参考 &lt;a href="../upgrade/">升级相关&lt;/a> 进行升级。&lt;/p></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host/</guid><description>
 &lt;p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -1382,7 +1141,7 @@ $ climc agent-list
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> f3c2c671-c41d-4f30-8d04-e022b49bb9b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal-10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.168.222.150:8879 &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal &lt;span style="color:#000;font-weight:bold">|&lt;/span> remotes/origin/master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>5e415506120011509&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6230b485-2e54-480e-8284-33360b8202a8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="../../function_principle/onpremise/baremetal">&amp;ldquo;私有云/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后可以参考 &lt;a href="../../onpremise/baremetal">&amp;ldquo;私有云/物理机&amp;rdquo;&lt;/a> 来进行对物理机的注册管理。&lt;/p>
 &lt;h2 id="禁用-baremetal-agent">禁用 baremetal-agent&lt;/h2>
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
@@ -1399,8 +1158,8 @@ $ ocadm cluster update --use-ce --wait
 $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>
 $ kubectl rollout restart deployment -n onecloud default-web
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级内核</title><link>https://www.cloudpods.org/zh/docs/setup/update_kernel/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/update_kernel/</guid><description>
-&lt;h2 id="宿主机内核从yn20191203升级yn20201125">宿主机内核从yn20191203升级yn20201125&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级内核</title><link>https://www.cloudpods.org/zh/docs/setup/%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/</guid><description>
+&lt;h2 id="cloudpods内核从yn20191203升级yn20201125">cloudpods内核从yn20191203升级yn20201125&lt;/h2>
 &lt;p>1、查看内核版本&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># uname -r&lt;/span>
 3.10.0-1062.4.3.el7.yn20191203.x86_64
@@ -1419,14 +1178,13 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># uname -r&lt;/span>
 3.10.0-1160.6.1.el7.yn20201125.x86_64
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级相关</title><link>https://www.cloudpods.org/zh/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/upgrade/</guid><description>
-&lt;p>本文介绍从 v3.8.x 升级到 v3.9.x 的步骤以及注意事项。&lt;/p>
-&lt;p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.8.x 需要以下的步骤：&lt;/p>
+&lt;p>本文介绍从 v3.7.x 升级到 v3.8.x 的步骤以及注意事项。&lt;/p>
+&lt;p>版本升级建议从相邻的版本升级，比如从 v3.2.x 升级到 v3.7.x 需要以下的步骤：&lt;/p>
 &lt;ol>
 &lt;li>v3.2.x =&amp;gt; v3.3.x&lt;/li>
 &lt;li>v3.3.x =&amp;gt; v3.4.x&lt;/li>
 &lt;li>v3.4.x =&amp;gt; v3.6.x&lt;/li>
 &lt;li>v3.6.x =&amp;gt; v3.7.x&lt;/li>
-&lt;li>v3.7.x =&amp;gt; v3.8.x&lt;/li>
 &lt;/ol>
 &lt;p>直接跨多个版本升级可能会出现问题，建议参考以下的内容选择升级步骤:&lt;/p>
 &lt;ul>
@@ -1435,29 +1193,26 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;li>&lt;a href="https://www.cloudpods.org/v3.4/docs/setup/upgrade">v3.3.x 升级到 v3.4.x&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cloudpods.org/v3.6/zh/docs/setup/upgrade">v3.4.x 升级到 v3.6.x&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cloudpods.org/v3.7/zh/docs/setup/upgrade">v3.6.x 升级到 v3.7.x&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.cloudpods.org/v3.8/zh/docs/setup/upgrade">v3.7.x 升级到 v3.8.x&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;p>使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p>
 &lt;ol>
-&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 release/3.9 分支&lt;/li>
+&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 release/3.8 分支&lt;/li>
 &lt;li>使用 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 进行大版本升级&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看当前版本">查看当前版本&lt;/h2>
 &lt;p>可以使用 kubectl 查看当前集群的版本&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.8.17&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.7.5&lt;/span>
 $ kubectl -n onecloud get onecloudclusters default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
-v3.8.17
+v3.7.5
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="拉取-ocboot-工具">拉取 ocboot 工具&lt;/h2>
 &lt;p>如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
-$ yum install -y python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible paramiko
+$ yum install -y ansible python-paramiko
 &lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+$ git clone -b release/3.8 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git checkout release/3.9
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git checkout release/3.8
 $ git pull
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-cloudpods-服务">更新 Cloudpods 服务&lt;/h2>
 &lt;p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p>
@@ -1466,12 +1221,12 @@ $ git pull
 &lt;li>PRIMARY_MASTER_HOST 能够 ssh 免密码登录集群中的其它节点&lt;/li>
 &lt;/ol>
 &lt;p>如果没有设置免密码登录，请使用 &lt;em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em> 命令把公钥下发到自己环境对应的节点。&lt;/p>
-&lt;p>升级的版本号可以到 &lt;a href="../../development/changelog/release-3.9/">CHANGELOG release/3.9 页面&lt;/a> 查询。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务升级到 v3.9.6 版本&lt;/span>
+&lt;p>升级的版本号可以到 &lt;a href="../../changelog/release-3.8/">CHANGELOG release/3.8 页面&lt;/a> 查询。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务到 v3.8.6 版本&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 需要本机能够使用 ssh 密钥登录上去&lt;/span>
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.9.6
+$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.8.12
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以使用 `./ocboot.py upgrade --help` 查看其它可选参数&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如:&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># --user 可以指定其它 ssh 用户&lt;/span>
@@ -1485,354 +1240,19 @@ $ kubectl get pods -n onecloud --watch
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;ul>
-&lt;li>一般小版本降级没有问题，比如从 v3.9.6 降级到 v3.9.0&lt;/li>
-&lt;li>跨版本降级可能会有问题，比如从 v3.9.6 降级到 v3.8.13&lt;/li>
+&lt;li>一般小版本降级没有问题，比如从 v3.8.12 降级到 v3.8.2&lt;/li>
+&lt;li>跨版本降级可能会有问题，比如从 v3.8.12 降级到 v3.6.8&lt;/li>
 &lt;/ul>
 &lt;p>如果遇到问题请到 &lt;a href="https://github.com/yunionio/cloudpods/issues">GitHub 提 issue&lt;/a> 或者 &lt;a href="https://www.cloudpods.org/zh/docs/contact">联系我们&lt;/a> 获取帮助。
 &lt;/div>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 降级的原理是修改各个服务的 image version&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.9.6，然后想要降级到 v3.8.17&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.8.17&lt;/span>
-$ /opt/yunion/bin/ocadm cluster update --version v3.8.17 --wait
+&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.8.12，然后想要降级到 v3.7.8&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.7.8&lt;/span>
+$ /opt/yunion/bin/ocadm cluster update --version v3.7.8 --wait
 &lt;span style="color:#8f5902;font-style:italic"># 降级会重新拉取新的镜像，可以再开一个窗口&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 使用下面的命令查看每个 pod 的更新情况&lt;/span>
 $ kubectl -n onecloud get pods -w
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 修改OC更新集群状态</title><link>https://www.cloudpods.org/zh/docs/setup/oc-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/oc-update/</guid><description>
-&lt;p>cloudpods-operator会在Kubernetes集群中注入CRD资源oc，该CRD定义了一个服务集群的状态，可以通过修改oc来更改集群的状态，达到IaC的效果。&lt;/p>
-&lt;p>1、修改集群整体状态&lt;/p>
-&lt;p>主要几个参数：&lt;/p>
-&lt;ul>
-&lt;li>disableResourceManagement: true|false&lt;/li>
-&lt;/ul>
-&lt;p>是否关闭cgroup v1的资源限制，该选项默认关闭。对于一些较新操作系统，如CentOS 8等，只能支持cgroup v2 API，如果开启了资源限制，会导致容器无法启动。此时需要关闭cgroup v1资源限制。&lt;/p>
-&lt;ul>
-&lt;li>disableLocalVpc: true|false&lt;/li>
-&lt;/ul>
-&lt;p>是否关闭内置私有云的VPC功能，该选项默认关闭。&lt;/p>
-&lt;ul>
-&lt;li>enableCloudNet: true|false&lt;/li>
-&lt;/ul>
-&lt;p>是否开启Cloudnet组件，该选项默认关闭&lt;/p>
-&lt;ul>
-&lt;li>enableS3Gateway: true|false&lt;/li>
-&lt;/ul>
-&lt;p>是否开启S3网关服务，该选项默认关闭&lt;/p>
-&lt;ul>
-&lt;li>productVersion: CMP|Edge|FullStack&lt;/li>
-&lt;/ul>
-&lt;p>集群的部署模式，三个选项：CMP(只部署云管相关功能组件)，Edge（是部署内置私有云相关功能组件），FullStack（部署云管和内置私有云所有功能组件）&lt;/p>
-&lt;ul>
-&lt;li>imageRepository: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>指定集群的镜像repo地址，默认是 registry.cn-beijing.aliyuncs.com/yunion&lt;/p>
-&lt;ul>
-&lt;li>loadBalancerEndpoint: &lt;ip>&lt;/li>
-&lt;/ul>
-&lt;p>访问集群控制服务的虚拟IP地址或者域名&lt;/p>
-&lt;ul>
-&lt;li>version: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>集群的主版本号，如v3.8.15。当组件的tag未指定时，默认用version作为镜像的tag。可以通过修该属性实现集群镜像版本的整体切换。&lt;/p>
-&lt;ul>
-&lt;li>region: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>当前区域，默认为 region0&lt;/p>
-&lt;ul>
-&lt;li>zone: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>当前可用区，默认为 zone0&lt;/p>
-&lt;ol start="2">
-&lt;li>修改单个组件的属性&lt;/li>
-&lt;/ol>
-&lt;p>每个组件都可以设置如下属性：&lt;/p>
-&lt;ul>
-&lt;li>disable: true|false&lt;/li>
-&lt;/ul>
-&lt;p>该组件是否禁用，默认是false。如果设置为true，则operator不会更新对应的k8s资源（deployment或者daemonset)&lt;/p>
-&lt;ul>
-&lt;li>imageName: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>镜像的名称&lt;/p>
-&lt;ul>
-&lt;li>imagePullPolicy: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>镜像的拉取策略，默认为 IfNotPresent, 还可以设置为： Always&lt;/p>
-&lt;ul>
-&lt;li>repository: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>改组件的镜像地址，该属性override全局的 imageRepository 属性&lt;/p>
-&lt;ul>
-&lt;li>tag: &lt;string>&lt;/li>
-&lt;/ul>
-&lt;p>镜像的tag，该属性override全局的 version 属性&lt;/p>
-&lt;p>支持的组件列表如下：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>组件名称&lt;/th>
-&lt;th>功能&lt;/th>
-&lt;th>开源版&lt;/th>
-&lt;th>商业版&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>ansibleserver&lt;/td>
-&lt;td>ansible管理服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>apiGateway&lt;/td>
-&lt;td>API网关服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>autoupdate&lt;/td>
-&lt;td>更新服务&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>baremetalagent&lt;/td>
-&lt;td>裸金属代理，负责裸金属服务器的API和操作&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>climc&lt;/td>
-&lt;td>提供climc的容器&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloudevent&lt;/td>
-&lt;td>cloudevent服务，提供公有云日志收集&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloudid&lt;/td>
-&lt;td>负责CloudSSO功能组件&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloudmon&lt;/td>
-&lt;td>监控数据采集服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloudnet&lt;/td>
-&lt;td>云间网络服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloudproxy&lt;/td>
-&lt;td>ssh代理服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>devtool&lt;/td>
-&lt;td>应用部署服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>esxiagent&lt;/td>
-&lt;td>VMWare代理&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>glance&lt;/td>
-&lt;td>镜像服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>hostagent&lt;/td>
-&lt;td>宿主机代理&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>hostdeployer&lt;/td>
-&lt;td>磁盘数据部署服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>hostimage&lt;/td>
-&lt;td>磁盘数据下载服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>influxdb&lt;/td>
-&lt;td>开源监控数据库&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>itsm&lt;/td>
-&lt;td>工单流程服务&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>keystone&lt;/td>
-&lt;td>认证服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>kubeserver&lt;/td>
-&lt;td>Kubernetes集群管理代理&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>logger&lt;/td>
-&lt;td>操作日志服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>meter&lt;/td>
-&lt;td>计费计量服务&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>monitor&lt;/td>
-&lt;td>监控服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>notify&lt;/td>
-&lt;td>通知告警服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>onecloudServiceOperator&lt;/td>
-&lt;td>编排服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ovnNorth&lt;/td>
-&lt;td>OVN控制服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>regionDNS&lt;/td>
-&lt;td>DNS服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>regionServer&lt;/td>
-&lt;td>云资源管理服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>report&lt;/td>
-&lt;td>报表服务&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>s3gateway&lt;/td>
-&lt;td>S3代理网关服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>scheduledtask&lt;/td>
-&lt;td>定时任务服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>scheduler&lt;/td>
-&lt;td>调度器&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>suggestion&lt;/td>
-&lt;td>费用优化服务&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>telegraf&lt;/td>
-&lt;td>监控Agent，开源telegraf&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>vpcAgent&lt;/td>
-&lt;td>VPC代理&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>web&lt;/td>
-&lt;td>前端nginx&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>webconsole&lt;/td>
-&lt;td>H5控制台服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>yunionagent&lt;/td>
-&lt;td>企业版授权服务&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>yunionconf&lt;/td>
-&lt;td>配置管理服务&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;td>(x)&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table></description></item><item><title>Docs: RPM Repo</title><link>https://www.cloudpods.org/zh/docs/setup/repo/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/repo/</guid><description>
-&lt;p>本文各个版本RPM REPO的地址&lt;/p>
-&lt;h2 id="39">3.9&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/centos/7/3.9/x86_64">https://iso.yunion.cn/centos/7/3.9/x86_64&lt;/a>&lt;/li>
-&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos/7/3.9/aarch64">https://iso.yunion.cn/centos/7/3.9/aarch64&lt;/a>&lt;/li>
-&lt;li>银河麒麟 V10 SP2 x86_64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.9/x86_64">https://iso.yunion.cn/kylin/v10/3.9/x86_64&lt;/a>&lt;/li>
-&lt;li>银河麒麟 V10 SP2 arm64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.9/aarch64">https://iso.yunion.cn/kylin/v10/3.9/aarch64&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="38">3.8&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/3.8/">https://iso.yunion.cn/3.8/&lt;/a>&lt;/li>
-&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos-7-aarch/">https://iso.yunion.cn/centos-7-aarch/&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) x86_64: &lt;a href="https://iso.yunion.cn/uos/buster/amd64/3.8/">https://iso.yunion.cn/uos/buster/amd64/3.8/&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.8/">https://iso.yunion.cn/uos/buster/arm64/3.8/&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="37">3.7&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/3.7">https://iso.yunion.cn/3.7&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) x86_64: &lt;a href="https://iso.yunion.cn/uos/buster/amd64/3.7/">https://iso.yunion.cn/uos/buster/amd64/3.7/&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.7/">https://iso.yunion.cn/uos/buster/arm64/3.7/&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host-aarch64/</guid><description>
 &lt;h2 id="简介">简介&lt;/h2>
 &lt;p>从 v3.6.10 版本开始，可以将”Cloudpods“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 和 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 。&lt;/p>
 &lt;p>因为服务是容器化运行在 Kubernetes 之上的，为了在 ARM 架构的机器上运行容器，我们使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 和交叉编译的技术编译打包了同时支持 x86_64 和 arm64 的统一容器镜像。这样的可以让 Kubernetes 屏蔽 CPU 架构的差异性，我们制作的支持多架构的容器镜像可以在不同架构的机器上运行服务，实现 X86 和 ARM 机器混合部署的效果。&lt;/p>
@@ -1956,7 +1376,7 @@ tls:
 &lt;p>设置完 default-web ingress 规则后，可以重启下 ingress controller 服务，让证书生效。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n kube-system
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-修改服务-api_server-入口配置">4. 修改服务 api_server 入口配置&lt;/h3>
-&lt;p>因为使用域名 &lt;code>foo.bar.com&lt;/code> 访问，需要修改云平台的默认 api_server 配置，这个配置会影响前端 VNC 连接的地址。将旧的 https://&lt;ip> 访问地址改为 &lt;code>https://foo.bar.com&lt;/code>，操作如下：&lt;/p>
+&lt;p>因为使用域名 &lt;code>foo.bar.com&lt;/code> 访问，需要修改云平台的默认 api_server 配置，这个配置会影响前端 VNC 连接的地址。将旧的 https://&lt;ip> 访问地址改为 &lt;code>http://foo.bar.com&lt;/code>，操作如下：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc service-config-edit common
 default:
 api_server: https://foo.bar.com
@@ -2005,17 +1425,20 @@ api_server: https://foo.bar.com
 &lt;li>在&lt;code>/opt/ocboot&lt;/code>目录下执行备份命令；&lt;/li>
 &lt;/ul>
 &lt;h4 id="备份命令">备份命令&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">usage: ocboot.py backup &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--backup-path BACKUP_PATH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> config
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">usage: python3 ocboot.py backup &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--backup-path BACKUP_PATH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--light&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> config
 positional arguments:
 config config yaml file
 optional arguments:
 -h, --help show this &lt;span style="color:#204a87">help&lt;/span> message and &lt;span style="color:#204a87">exit&lt;/span>
 --backup-path BACKUP_PATH
-backup path
+backup path, default: /opt/backup
+--light ignore yunionmeter and yunionlogger database&lt;span style="color:#000;font-weight:bold">;&lt;/span> ignore
+tables start with &lt;span style="color:#4e9a06">&amp;#39;opslog&amp;#39;&lt;/span> and &lt;span style="color:#4e9a06">&amp;#39;task&amp;#39;&lt;/span>.
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>下面介绍各个参数的作用和注意事项&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>--backup-path&lt;/code>保存备份文件的目标目录，备份的内容包括config配置文件，通过&lt;code>mysqldump&lt;/code>命令备份的数据库临时文件的压缩包&lt;code>onecloud.sql.tgz&lt;/code>，请确保目标目录磁盘空间足够且可写。&lt;/li>
 &lt;li>&lt;code>config&lt;/code>是必选参数，即需要备份的配置文件名称，例如&lt;code>config-allinone.yml, config-nodes.yml, config-k8s-ha.yml，&lt;/code>以及使用快速安装时会生成的&lt;code>config-allinone-current.yml&lt;/code>，因此备份命令不对配置文件名称作假设，&lt;strong>需由使用者自行输入配置文件名称&lt;/strong>。&lt;/li>
+&lt;li>&lt;code>--light&lt;/code> 这个选项用来做精简备份，原理是在备份过程中，忽略掉一些尺寸较大的特定文件，主要是账单、操作日志等相关的文件。默认保留。&lt;/li>
 &lt;/ul>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
@@ -2037,7 +1460,31 @@ $ cp -i /opt/yunion/upgrade/config.yml /opt/ocboot
 $ &lt;span style="color:#204a87">cd&lt;/span> /opt/ocboot
 &lt;span style="color:#8f5902;font-style:italic"># 在`/opt/ocboot`目录执行备份命令，将备份文件保存到`/opt/backup`目录&lt;/span>
 $ ./ocboot.py backup --backup-path /opt/backup config.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="恢复平台">恢复平台&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="faq">FAQ&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>Q: 备份时提示缺&lt;code>MySQLdb&lt;/code> 包怎么办？&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>A：在centos上，可以执行如下命令来安装（其他os发行版请酌情修改，或联系客服）：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo yum install -y mariadb-devel python3-devel
+sudo yum groupinstall -y &lt;span style="color:#4e9a06">&amp;#34;Development Tools&amp;#34;&lt;/span>
+sudo pip3 install mysqlclient
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Q: 怎样查看、手工解压备份文件？&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>A：备份文件默认用户名为: &lt;code>/opt/backup/onecloud.sql.gz&lt;/code>, 预览、手工解压的方式如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 预览该文件：&lt;/span>
+gunzip --stdout /opt/backup/onecloud.sql.gz &lt;span style="color:#000;font-weight:bold">|&lt;/span> less
+&lt;span style="color:#8f5902;font-style:italic"># 解压，同时保留源文件：&lt;/span>
+gunzip --stdout /opt/backup/onecloud.sql.gz &amp;gt; /opt/backup/onecloud.sql
+&lt;span style="color:#8f5902;font-style:italic"># 有些高版本的gunzip 提供 -k/--keep 选项，来保存源文件。可以直接执行：&lt;/span>
+gunzip -k /opt/backup/onecloud.sql.gz
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h3 id="恢复平台">恢复平台&lt;/h3>
 &lt;h4 id="原理-1">原理&lt;/h4>
 &lt;p>恢复节点即基于上面备份的配置文件和数据库文件恢复到新的节点中，主要包括解压数据库，并根据用户根据新环境生成的配置文件重新安装环境。&lt;/p>
 &lt;p>&lt;strong>恢复流程&lt;/strong>&lt;/p>
@@ -2124,10 +1571,9 @@ $ ssh-copy-id 10.127.190.228
 &lt;li>部署&lt;code>ocboot&lt;/code>服务&lt;/li>
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在`master`节点上安装ansible，以centos为例&lt;/span>
+$ yum install -y ansible
 &lt;span style="color:#8f5902;font-style:italic"># 安装pip&lt;/span>
-$ yum -y install python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
+$ yum -y install python-pip
 &lt;span style="color:#8f5902;font-style:italic"># 拉取ocboot代码&lt;/span>
 $ git clone https://github.com/yunionio/ocboot.git
 $ &lt;span style="color:#204a87">cd&lt;/span> ./ocboot &lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span> pip install -r ./requirements.txt
@@ -2166,21 +1612,8 @@ customZones:
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get deployments. -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep my-zone-1
 default-baremetal-agent-my-zone-1 0/0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m37s
 default-esxi-agent-my-zone-1 1/1 &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 3m42s
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中物理机服务(baremetal-agent)需要选择一个 k8s node 手动开启。&lt;/p>
-&lt;h3 id="启用-baremetal-agent">启用 baremetal-agent&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># $listen_interface 指的是 baremetal-agent 监听的网卡名称&lt;/span>
-$ ocadm baremetal &lt;span style="color:#204a87">enable&lt;/span> --node &lt;span style="color:#000">$node_name&lt;/span> --listen-interface &lt;span style="color:#000">$listen_interface&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 观察 baremetal agent pod 状态查看是否启动成功&lt;/span>
-$ watch &lt;span style="color:#4e9a06">&amp;#34;kubectl get pods -n onecloud | grep baremetal&amp;#34;&lt;/span>
-default-baremetal-agent-7c84996c9b-hhllw 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3m10s
-&lt;span style="color:#8f5902;font-style:italic"># 启动成功确认 baremetal-agent 注册到控制节点&lt;/span>
-$ climc agent-list
-+--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Name &lt;span style="color:#000;font-weight:bold">|&lt;/span> Access_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> Manager_URI &lt;span style="color:#000;font-weight:bold">|&lt;/span> Status &lt;span style="color:#000;font-weight:bold">|&lt;/span> agent_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> version &lt;span style="color:#000;font-weight:bold">|&lt;/span> zone_id &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> f3c2c671-c41d-4f30-8d04-e022b49bb9b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal-10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.168.222.150 &lt;span style="color:#000;font-weight:bold">|&lt;/span> https://10.168.222.150:8879 &lt;span style="color:#000;font-weight:bold">|&lt;/span> enabled &lt;span style="color:#000;font-weight:bold">|&lt;/span> baremetal &lt;span style="color:#000;font-weight:bold">|&lt;/span> remotes/origin/master&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>5e415506120011509&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> 6230b485-2e54-480e-8284-33360b8202a8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+--------------------------+----------------+-----------------------------+---------+------------+------------------------------------------+--------------------------------------+
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="宿主机服务">宿主机服务&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中物理机服务(baremetal-agent)需要选择一个 k8s node 手动开启，请参考文档&lt;a href="../baremetal/">物理机管理服务&lt;/a>。&lt;/p>
+&lt;h2 id="宿主机服务">宿主机服务&lt;/h2>
 &lt;p>宿主机服务(host)管理一台宿主机上的虚拟机，默认情况下的宿主机属于可用区zone0，如果有其它机房的宿主机，需要新建可用区，然后创建一个属于这个可用区的二层网络(wire)，再基于这个二层网络(wire)创建包含注册宿主机IP的子网(network)，最后把宿主机添加进来就可以了。&lt;/p>
 &lt;h3 id="创建二层网络">创建二层网络&lt;/h3>
 &lt;p>直接基于之前创建的可用区 my-zone-1 创建二层网络 my-wire-1，命令如下：&lt;/p>
@@ -2307,263 +1740,4 @@ $ openssl pkcs12 -in pkcs12.pem -export -out pkcs12.p12
 &lt;p>选择刚才生成的 pkcs12.p12 证书：&lt;/p>
 &lt;p>&lt;img src="../images/chrome-import-pkcs12.png" alt="">&lt;/p>
 &lt;p>导入后再刷新访问前端，就可以成功访问界面。&lt;/p>
-&lt;p>&lt;img src="../images/chrome-web.png" alt="">&lt;/p></description></item><item><title>Docs: 数据库记录一致性校验</title><link>https://www.cloudpods.org/zh/docs/setup/db-record-consistency/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/db-record-consistency/</guid><description>
-&lt;p>数据库记录一致性校验的原理是计算表里面每条记录的 md5 值，如果人工修改字段，平台的服务在读取，更新或者删除的时候就会发现计算的 md5 checksum 不一致，禁止接下来的操作。&lt;/p>
-&lt;h2 id="配置">配置&lt;/h2>
-&lt;p>开启改选项会产生额外的计算量。默认开启以下服务的配置表：&lt;/p>
-&lt;ul>
-&lt;li>keystone 服务:
-&lt;ul>
-&lt;li>user 表: 保存用户信息的表&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>region 服务:
-&lt;ul>
-&lt;li>guests_tbl 表: 保存虚拟机信息&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>logger 服务:
-&lt;ul>
-&lt;li>actionlog_tbl 表: 保存操作日志&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>分别编辑这两个服务的配置 configmap default-keystone 和 default-region 里面的 enable_db_checksum_tables 这个参数：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 配置 keystone 服务配置&lt;/span>
-$ kubectl -n onecloud edit configmaps default-keystone
-...
-enable_db_checksum_tables: &lt;span style="color:#204a87">true&lt;/span>
-...
-&lt;span style="color:#8f5902;font-style:italic"># 重启 keystone 服务&lt;/span>
-$ kubectl -n onecloud rollout restart deployment default-keystone
-&lt;span style="color:#8f5902;font-style:italic"># 配置 region 服务配置&lt;/span>
-$ kubectl -n onecloud edit configmaps default-region
-...
-enable_db_checksum_tables: &lt;span style="color:#204a87">true&lt;/span>
-...
-&lt;span style="color:#8f5902;font-style:italic"># 重启 region 服务&lt;/span>
-$ kubectl -n onecloud rollout restart deployment default-region
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
-&lt;p>当开启 enable_db_checksum_tables 的配置后，每条记录就会有一个 record_checksum 的字段，这里以 keystone 数据库的 user 表来测试，看看如果手动修改了记录会发生什么情况：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 cloudadmin 用户的 record_checksum, id 和 last_login_ip&lt;/span>
-$ climc user-show cloudadmin &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep -w &lt;span style="color:#4e9a06">&amp;#39;record_checksum|id|last_login_ip&amp;#39;&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 475925c93c344a54837fe49f852c5086 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> last_login_ip &lt;span style="color:#000;font-weight:bold">|&lt;/span> 192.168.121.1 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> record_checksum &lt;span style="color:#000;font-weight:bold">|&lt;/span> 3d953f46c400ba3bd9562be8ae2a9d9c &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 找到当前集群的数据库密码&lt;/span>
-$ kubectl get oc -n onecloud -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
-mysql:
-host: 192.168.121.21
-password: y4uzCV37gZEr
-port: &lt;span style="color:#0000cf;font-weight:bold">3306&lt;/span>
-username: root
-&lt;span style="color:#8f5902;font-style:italic"># 连上 keystone 数据库，把 cloudadmin 的 last_login_ip 字段改成 192.168.121.2&lt;/span>
-$ mysql -u root -py4uzCV37gZEr -h 192.168.121.21 keystone
-MariaDB &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>keystone&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&amp;gt; update user &lt;span style="color:#204a87">set&lt;/span> &lt;span style="color:#000">last_login_ip&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;192.168.121.2&amp;#39;&lt;/span> where &lt;span style="color:#000">id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;475925c93c344a54837fe49f852c5086&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
-Query OK, &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> row affected &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>0.00 sec&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-Rows matched: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Changed: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Warnings: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 再次查看 cloudadmin user，会提示记录被修改，checksum 不一致的报错&lt;/span>
-$ climc user-show cloudadmin
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;error&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;class&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;UnclassifiedError&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;code&amp;#34;&lt;/span>:500,&lt;span style="color:#4e9a06">&amp;#34;details&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;Record user(475925c93c344a54837fe49f852c5086) checksum changed, expected(3d953f46c400ba3bd9562be8ae2a9d9c) != calculated(701f345054c8fee78cebb130730c8ba0)&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;request&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;headers&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;User-Agent&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;yunioncloud-go/201708&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;X-Auth-Token&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;method&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;GET&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;url&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;http://192.168.121.21:30500/v3/users/cloudadmin&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}}}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="注意事项">注意事项&lt;/h2>
-&lt;p>为了兼容性，这个 db_checksum_tables 里面配置的表每次服务启动都会计算，如果数据量很大，可能会导致服务启动很慢，当第一次服务初始完每条记录的 checksum 后，可以配置 &lt;code>db_checksum_skip_init: true&lt;/code> 参数跳过初始化 checksum 。比如关闭 keystone 服务第一次初始化 checksum 操作如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl -n onecloud edit configmaps default-keystone
-...
-db_checksum_skip_init: &lt;span style="color:#204a87">true&lt;/span>
-...
-&lt;span style="color:#8f5902;font-style:italic"># 重启 keystone 服务&lt;/span>
-$ kubectl -n onecloud rollout restart deployment default-keystone
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 隐藏功能配置</title><link>https://www.cloudpods.org/zh/docs/setup/feature-config/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/feature-config/</guid><description>
-&lt;p>由 ocboot 部署的 Cloudpods 是基于 Cloudpods 开源代码构建的社区免费版。这个版本方便用户体验 Cloudpods 的功能。&lt;/p>
-&lt;p>Cloudpods 自2017年开始开发，有较长时间积累。但代码量大，功能繁多，有部分代码已经较长时间没有迭代维护。因此，我们在社区免费版的前端选择性地隐藏具备以下特性的部分功能：&lt;/p>
-&lt;ol>
-&lt;li>不够成熟;&lt;/li>
-&lt;li>缺人维护;&lt;/li>
-&lt;li>少有人使用;&lt;/li>
-&lt;li>复杂度比较高较难理解使用的功能组件；&lt;/li>
-&lt;/ol>
-&lt;p>这样可以降低维护支持成本，同时提升使用体验。&lt;/p>
-&lt;p>隐藏功能的代码依然在开源项目的代码仓库中维护。&lt;/p>
-&lt;p>基于这些原因，从 v3.8.7 版本，我们陆续隐藏了一些功能。如果用户这些功能有需求，可以选择如下的方式打开这些功能：&lt;/p>
-&lt;ol>
-&lt;li>提issue申请打开这个功能；&lt;/li>
-&lt;li>部分功能可以通过climc打开功能；&lt;/li>
-&lt;li>fork自己的前端版本，把此功能打开。&lt;/li>
-&lt;/ol>
-&lt;h2 id="使用-climc-打开隐藏功能特性">使用 climc 打开隐藏功能特性&lt;/h2>
-&lt;p>比如在 3.9 版本中，我们默认隐藏了 k8s 容器集群管理、京东公有云管理等功能；默认打开了常用的阿里云、AWS 等公有云管理功能。用户可以通过 climc 命令行工具根据自身需要打开或者关闭对应的功能。&lt;/p>
-&lt;h3 id="举例">举例&lt;/h3>
-&lt;p>子命令的格式和参数如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc feature-config-&lt;span style="color:#000">$feature&lt;/span> --switch &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>on&lt;span style="color:#000;font-weight:bold">|&lt;/span>off&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># $feature: 表示具体的功能名，比如: k8s, s3, jdcloud 等&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># on: 表示打开&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># off: 表示关闭&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>比如开关 k8s 容器集群管理功能命令为：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 打开&lt;/span>
-$ climc feature-config-k8s --switch on
-&lt;span style="color:#8f5902;font-style:italic"># 关闭&lt;/span>
-$ climc feature-config-k8s --switch off
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>比如开关 京东云 管理功能命令为：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 打开&lt;/span>
-$ climc feature-config-jdcloud --switch on
-&lt;span style="color:#8f5902;font-style:italic"># 关闭&lt;/span>
-$ climc feature-config-jdcloud --switch off
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="功能参照表">功能参照表&lt;/h3>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>名称&lt;/th>
-&lt;th>功能&lt;/th>
-&lt;th>climc 子命令&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>onestack&lt;/td>
-&lt;td>KVM虚拟化管理&lt;/td>
-&lt;td>feature-config-onestack&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>baremetal&lt;/td>
-&lt;td>裸金属管理&lt;/td>
-&lt;td>feature-config-baremetal&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>lb&lt;/td>
-&lt;td>负载均衡管理&lt;/td>
-&lt;td>feature-config-lb&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>aliyun&lt;/td>
-&lt;td>阿里公有云管理&lt;/td>
-&lt;td>feature-config-aliyun&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>aws&lt;/td>
-&lt;td>AWS 亚马逊公有云管理&lt;/td>
-&lt;td>feature-config-aws&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>azure&lt;/td>
-&lt;td>Azure 微软公有云管理&lt;/td>
-&lt;td>feature-config-azure&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>google&lt;/td>
-&lt;td>Google 公有云管理&lt;/td>
-&lt;td>feature-config-google&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>qcloud&lt;/td>
-&lt;td>腾讯公有云管理&lt;/td>
-&lt;td>feature-config-qcloud&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ctyun&lt;/td>
-&lt;td>天翼公有云管理&lt;/td>
-&lt;td>feature-config-ctyun&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>huawei&lt;/td>
-&lt;td>华为公有云管理&lt;/td>
-&lt;td>feature-config-huawei&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ucloud&lt;/td>
-&lt;td>ucloud 公有云管理&lt;/td>
-&lt;td>feature-config-ucloud&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ecloud&lt;/td>
-&lt;td>移动公有云管理&lt;/td>
-&lt;td>feature-config-ecloud&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>jdcloud&lt;/td>
-&lt;td>京东公有云管理&lt;/td>
-&lt;td>feature-config-jdcloud&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>vmware&lt;/td>
-&lt;td>VMWare 管理&lt;/td>
-&lt;td>feature-config-vmware&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>openstack&lt;/td>
-&lt;td>openstack 私有云管理&lt;/td>
-&lt;td>feature-config-openstack&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>zstack&lt;/td>
-&lt;td>zstack 私有云管理&lt;/td>
-&lt;td>feature-config-zstack&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>apsara&lt;/td>
-&lt;td>阿里飞天专有云管理&lt;/td>
-&lt;td>feature-config-apsara&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloudpods&lt;/td>
-&lt;td>Cloudpods私有云管理&lt;/td>
-&lt;td>feature-config-cloudpods&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>hcso&lt;/td>
-&lt;td>华为HCSO私有云管理&lt;/td>
-&lt;td>feature-config-hcso&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>nutanix&lt;/td>
-&lt;td>Nutanix超融合管理&lt;/td>
-&lt;td>feature-config-nutanix&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>s3&lt;/td>
-&lt;td>通用S3对象存储管理&lt;/td>
-&lt;td>feature-config-s3&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ceph&lt;/td>
-&lt;td>Ceph rados对象存储管理&lt;/td>
-&lt;td>feature-config-ceph&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>xsky&lt;/td>
-&lt;td>Xsky 存储管理&lt;/td>
-&lt;td>feature-config-xsky&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>k8s&lt;/td>
-&lt;td>K8S 容器集群管理&lt;/td>
-&lt;td>feature-config-k8s&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table></description></item><item><title>Docs: 更换节点IP</title><link>https://www.cloudpods.org/zh/docs/setup/changeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/changeip/</guid><description>
-&lt;p>本文介绍更换集群控制节点和计算节点IP的方法步骤.&lt;/p>
-&lt;p>由于Kubernetes的节点IP无法动态更换，更换后必须重新部署Kubelet服务，因此更换节点IP后，需要将节点上Kubelet实例重置，并重新部署节点。&lt;/p>
-&lt;p>下面分几种情况讨论：&lt;/p>
-&lt;h3 id="allinone节点更换ip">AllInOne节点更换IP&lt;/h3>
-&lt;ol>
-&lt;li>清理Kubelet&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm reset -f
-kubeadm reset -f
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
-&lt;li>修改config.yml&lt;/li>
-&lt;/ol>
-&lt;p>在/opt/yunion/upgrade保存有部署时使用的config.yml。备份该yaml文件，并修改文件，将旧的IP地址替换为新的IP地址。&lt;/p>
-&lt;ol start="3">
-&lt;li>重新部署&lt;/li>
-&lt;/ol>
-&lt;p>使用ocboot重新部署AllInOne节点&lt;/p>
-&lt;pre>&lt;code>ocboot install config.yml
-&lt;/code>&lt;/pre>&lt;ol start="4">
-&lt;li>开启operator sync-user模式&lt;/li>
-&lt;/ol>
-&lt;p>重新部署会重新生成各个服务在mysql的账号的密码，以及各个服务账号的密码。这些信息都存储在数据库中。重新部署之后，新的Kubernetes中configmaps中留下的密码和旧的配置不一致，会导致服务无法正常启动。解决的办法是：修改onecloud-opeartor服务的启动参数，添加-sync-user参数，这样operator会自动更新数据库中保存的密码，确保和Kubernetes的configmaps中的密码一致。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud edit deployment onecloud-operator
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="高可用集群的控制节点更换ip">高可用集群的控制节点更换IP&lt;/h3>
-&lt;p>TODO&lt;/p>
-&lt;h3 id="私有云计算节点更换ip">私有云计算节点更换IP&lt;/h3>
-&lt;p>计算节点更换IP的流程同AllInOne，但是需要在控制节点删除清理该节点信息，包括k8s的node信息和云平台的宿主机信息。删除干净后，再运行上述命令，重置计算节点的Kubenetes.&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="../images/chrome-web.png" alt="">&lt;/p></description></item></channel></rss>

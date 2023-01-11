@@ -1,0 +1,73 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+原理介绍</title><link>https://www.cloudpods.org/zh/docs/monitor_ops/monitor/principle/</link><description>Recent content in 原理介绍 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 10 Jan 2022 10:46:37 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/monitor_ops/monitor/principle/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 监控代理</title><link>https://www.cloudpods.org/zh/docs/monitor_ops/monitor/principle/monitoragent/</link><pubDate>Thu, 05 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/monitor_ops/monitor/principle/monitoragent/</guid><description>
+&lt;p>监控 Agent 是运行在虚拟机上的 daemon，采集监控数据，并把数据传回Cloudpods的 InfluxDB。&lt;/p>
+&lt;p>由此，可以衍生出三个问题：如何安装 Agent，如何采集数据，以及如何传输监控数据。&lt;/p>
+&lt;h2 id="如何安装-agent">如何安装 Agent&lt;/h2>
+&lt;p>Cloudpods使用 Ansible 将 Agent 安装到虚拟机上，为了能够做到这一点，我们需要保证
+Cloudpods能够连接到虚拟机并且能够登录到虚拟机；这里我们先假设Cloudpods能够过连接到
+虚拟机，故而来优先讨论解决登录问题。&lt;/p>
+&lt;p>&lt;img src="../../images/20210805163249.png" alt="host_install">&lt;/p>
+&lt;h3 id="如何登录虚拟机">如何登录虚拟机&lt;/h3>
+&lt;p>假设Cloudpods已经能够连接到 VPC 内部的虚拟机，比如说通过 NAT网关或者虚拟机已经绑
+定了 EIP 等。&lt;/p>
+&lt;p>&lt;img src="../../images/20210805163416.png" alt="connect_direct">&lt;/p>
+&lt;h4 id="直接免密登录">直接免密登录&lt;/h4>
+&lt;p>如果虚拟机是通过Cloudpods平台创建出来的，那么Cloudpods是可以直接免密登录到虚拟机，
+它是通过在虚拟机上自动创建一个可以通过公钥登录的 cloudroot 用户而实现的，对应的
+私钥存储在Cloudpods的本地数据库。&lt;/p>
+&lt;h4 id="用户协助配置免密登录">用户协助配置免密登录&lt;/h4>
+&lt;p>如果虚拟机并非通过Cloudpods平台创建出来的，那么就需要用户协助配置免密登录了。&lt;/p>
+&lt;p>用户需要在前端相关界面输入虚拟机的用户名和密钥/密码，以使Cloudpods能够暂时登录到
+目标虚拟机，然后借助 Ansible 在目标虚拟机上创建 cloudroot 用户并配置公钥登录。&lt;/p>
+&lt;p>&lt;img src="../../images/20210805164138.png" alt="set_root">&lt;/p>
+&lt;p>同理，其实也可以直接让用户在虚拟机上执行脚本，以达到创建 cloudroot 用户以及配置
+公钥登录的目的。&lt;/p>
+&lt;p>&lt;img src="../../images/20210805164239.png" alt="exec_script">&lt;/p>
+&lt;h3 id="如何连接虚拟机">如何连接虚拟机&lt;/h3>
+&lt;p>Cloudpods不能直接连接到虚拟机，是一种最广泛的情况。比如公有云 VPC 内部且没有配置
+Nat 以及 EIP 的虚拟机。对于此种情况，我们使用 SSH 代理，具体来说是 Local Port
+Forwarding。&lt;/p>
+&lt;h4 id="ssh-local-port-forwarding">SSH Local Port Forwarding&lt;/h4>
+&lt;p>&lt;img src="../../images/20210805165213.png" alt="question1">&lt;/p>
+&lt;p>假设网络 A 和网络 B 是两个隔离的网络，如果想让 VMA 能够访问 VMB 上监听在 80 端口
+的 web 服务应该怎么办呢？&lt;/p>
+&lt;p>在 proxyA 上执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ssh –NfL 10.127.30.251:12345:172.31.25.194:80 cloudroot@140.179.54.109
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令会在 proxyA 和 proxyB 之间建立 SSH隧道，并在 proxyA 上创建一个 port forwarding，
+它将监听&lt;code>10.127.30.251:12345&lt;/code>，一旦有请求发来，就会通过 SSH 隧道转发到 proxyB，
+proxyB 会把请求转发到&lt;code>172.31.25.194:80&lt;/code>&lt;/p>
+&lt;p>&lt;img src="../../images/20210805165029.png" alt="answer1">&lt;/p>
+&lt;p>然后 VMA 只要访问&lt;code>10.127.30.251:12345&lt;/code>就能够访问 VMB 上的 web 服务。&lt;/p>
+&lt;h2 id="如何收集数据">如何收集数据&lt;/h2>
+&lt;p>我们的监控数据存储在 InfluxDB 中，所以采集数据的 Agent 优先选择了 Telegraf，在其
+基础上修改了一些代码并定制了配置文件以满足Cloudpods采集数据的要求。&lt;/p>
+&lt;p>配置主要描述了需要什么样的监控数据，数据的标签以及数据存储的地址。&lt;/p>
+&lt;h2 id="如何传输监控数据">如何传输监控数据&lt;/h2>
+&lt;p>最简单的，如果虚拟机可以直接连接到Cloudpods中的 InfluxDB，那么数据就可以直接传输
+回来。&lt;/p>
+&lt;p>在安装 Agent 的过程中，Cloudpods回去检测是否可以从虚拟机直接访问 InfluxDB，如何不
+可以，就要使用 SSH 代理，具体来说是 Remote Port Forwarding。&lt;/p>
+&lt;h3 id="ssh-remote-port-forwarding">SSH Remote Port Forwarding&lt;/h3>
+&lt;p>&lt;img src="../../images/20210805165957.png" alt="question2">&lt;/p>
+&lt;p>网络 A 和网络 B 是两个隔离的网络，proxyB 具有公网 IP，所以 proxyA 可以访问到 proxyB，
+如何让 VMB 访问 DB？&lt;/p>
+&lt;p>在 proxyA 上执行:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ssh –NfR 172.31.25.194:12345:10.127.40.251:30086 cloudroot@140.179.54.109
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令会在 proxyA 和 proxyB 之间建立 SSH 隧道，并在 proxyB 上创建一个 port
+forwarding，它将监听&lt;code>172.31.25.194:12345&lt;/code>，一旦有请求发来，就会通过 SSH 隧道转
+发到 proxyA，proxyA 会把请求转发到&lt;code>10.172.40.251:80&lt;/code>&lt;/p>
+&lt;p>&lt;img src="../../images/20210805170059.png" alt="answer2">&lt;/p>
+&lt;p>通过上面的方式，网络B 内部的 VMB 只要访问&lt;code>172.31.25.194:12345&lt;/code>就可以访问到 DB。&lt;/p>
+&lt;p>总结来说，Local Port Forwarding 和 Remote Port Forwarding 的区别在于，Port
+Forwarding 建立的位置对于执行命令的一方来说是 Local 还是 Remote。&lt;/p>
+&lt;h3 id="传输数据">传输数据&lt;/h3>
+&lt;p>在 proxy 和 proxyVM 之间建立 SSH 隧道，并在 proxy 执行命令以在 proxyVM 上建立
+port fowarding，对 proxy 来说就是 remote port forwarding。&lt;/p>
+&lt;p>VPC 内部的虚拟机就可以通过访问 proxyVM 的 port，访问Cloudpods的 DB 以把数据传输
+回来。&lt;/p>
+&lt;p>&lt;img src="../../images/20210805170450.png" alt="tarnsfer">&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>总结来说，对于大多数情况，Cloudpods通过 SSH 代理连接到目标虚拟机，借助 Ansible 将
+监控 Agent 安装到目标虚拟机上，并做好 Agent 的配置，而监控数据数据也将通过 SSH
+代理传回到Cloudpods中的 InfluxDB 中。&lt;/p>
+&lt;p>&lt;img src="../../images/20210805170928.png" alt="summarize">&lt;/p></description></item></channel></rss>

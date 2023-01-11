@@ -1,0 +1,54 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+操作指南</title><link>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/</link><description>Recent content in 操作指南 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 07 Jan 2022 10:54:29 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 系统镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/sysimage/</link><pubDate>Fri, 07 Jan 2022 10:48:49 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/sysimage/</guid><description/></item><item><title>Docs: 主机镜像</title><link>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/hostimage/</link><pubDate>Fri, 07 Jan 2022 10:49:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/hostimage/</guid><description>
+&lt;p>主机镜像用于创建虚拟机，主机镜像是同时将模板虚拟机上的所有硬盘保存为镜像，基于主机镜像创建的虚拟机拥有除模板虚拟机用户数据之外的全部数据。&lt;/p>
+&lt;p>&lt;strong>来源&lt;/strong>：通过虚拟机列表保存镜像功能，保存主机镜像。&lt;/p>
+&lt;p>&lt;strong>用法&lt;/strong>：新建虚拟机时操作系统选择主机快照。&lt;/p></description></item><item><title>Docs: 扩容镜像后端存储</title><link>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/resize/</link><pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/onpremise/glance/tutorial/resize/</guid><description>
+&lt;h2 id="扩容适用于以下两种情况">扩容适用于以下两种情况&lt;/h2>
+&lt;ul>
+&lt;li>新部署的环境 &lt;strong>/opt/cloud/workspace/data/glance&lt;/strong> 空间太小，不足以存储所需要的镜像&lt;/li>
+&lt;li>已有环境已经耗尽存储空间，无法存储新的镜像，且已有镜像正在使用都不能清理释放&lt;/li>
+&lt;/ul>
+&lt;h2 id="新环境">新环境&lt;/h2>
+&lt;ul>
+&lt;li>目标是将&lt;strong>空的&lt;/strong> /opt/cloud/workspace/data/glance 进行扩容，以保证可以存储所需要的镜像文件
+&lt;ol>
+&lt;li>新磁盘 /dev/sdd
+&lt;ul>
+&lt;li>将/dev/sdd分区并格式化&lt;/li>
+&lt;li>将/dev/sdd1挂载到 /opt/cloud/workspace/data/glance 目录, 并且将挂载信息写入/etc/fstab&lt;/li>
+&lt;li>mount /dev/sdd1 /opt/cloud/workspace/data/glance&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>大空间目录 /home/glance/images
+&lt;ul>
+&lt;li>将 /home/glance/images 目录挂载到 /opt/cloud/workspace/data/glance 目录, 并且将挂载信息写入/etc/fstab&lt;/li>
+&lt;li>mount &amp;ndash;bind /home/glance/images /opt/cloud/workspace/data/glance&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="已有环境扩容">已有环境扩容&lt;/h2>
+&lt;ul>
+&lt;li>目标是将&lt;strong>已有镜像&lt;/strong> /opt/cloud/workspace/data/glance 进行扩容
+&lt;ol>
+&lt;li>新磁盘 /dev/sdd
+&lt;ul>
+&lt;li>将/dev/sdd分区并格式化&lt;/li>
+&lt;li>将/dev/sdd1挂载到/mnt目录(mount /dev/sdd1 /mnt)&lt;/li>
+&lt;li>将/opt/cloud/workspace/data/glance镜像转移至/mnt(rsync -avp /opt/cloud/workspace/data/glance/* /mnt/)&lt;/li>
+&lt;li>卸载/dev/sdd1(unmount /dev/sdd1)&lt;/li>
+&lt;li>将/dev/sdd1挂载到 /opt/cloud/workspace/data/glance 目录, 并且将挂载信息写入/etc/fstab&lt;/li>
+&lt;li>mount /dev/sdd1 /opt/cloud/workspace/data/glance&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>大空间目录 /home/glance/images
+&lt;ul>
+&lt;li>将 /opt/cloud/workspace/data/glance 镜像文件转移至/home/glance/images目录(rsync -avp /opt/cloud/workspace/data/glance/* /home/glance/images/)&lt;/li>
+&lt;li>将 /home/glance/images 目录挂载到 /opt/cloud/workspace/data/glance 目录, 并且将挂载信息写入/etc/fstab&lt;/li>
+&lt;li>mount &amp;ndash;bind /home/glance/images /opt/cloud/workspace/data/glance&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

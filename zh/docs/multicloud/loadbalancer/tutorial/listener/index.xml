@@ -1,0 +1,1186 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/</link><description>Recent content in 监听 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 17 Dec 2021 17:04:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建TCP监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/tcp/</link><pubDate>Fri, 17 Dec 2021 17:05:49 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/tcp/</guid><description>
+&lt;p>TCP监听适用于注重可靠性，对数据准确性要求高，速度可以相对较慢的场景，如文件传输、收发邮件、远程登录等；用户可创建TCP监听来转发开自客户端的TCP请求。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+当用户希望通过TCP协议监听22端口时，则需要在对应的转发节点（虚拟机、宿主机或外部机器）上修改sshd配置文件。将&amp;quot;/etc/ssh/sshd_config&amp;quot;配置文件的&lt;code>#ListenAddress 0.0.0.0&lt;/code>改为&lt;code>ListenAddress &amp;lt;转发节点IP&amp;gt;&lt;/code>
+&lt;/div>
+&lt;ul class="nav nav-tabs" id="create_tcp" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#create_tcp-0" role="tab" aria-controls="create_tcp-0" aria-selected="true">OpenStack&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_tcp-1" role="tab" aria-controls="create_tcp-1">阿里云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_tcp-2" role="tab" aria-controls="create_tcp-2">腾讯云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_tcp-3" role="tab" aria-controls="create_tcp-3">华为云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_tcp-4" role="tab" aria-controls="create_tcp-4">AWS&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="create_tcp">&lt;div id="create_tcp-0" class="tab-pane show active" role="tabpanel" aria-labelledby="create_tcp-0">
+&lt;p>&lt;h3 id="openstack">OpenStack&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击OpenStack平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“TCP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。只支持白名单。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>后端连接超时时间：转发节点收到客户端请求后，请求后端服务器的超时时间。&lt;/li>
+&lt;li>后端连接空闲时间：设置转发节点与后端服务器的连接空闲时间。&lt;/li>
+&lt;li>连接空闲超时时间：连接会话建议后允许的空闲时间，在超时时间内一直没有访问请求，将会暂时中断当前连接。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP和HTTP，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查路径（仅支持HTTP）：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名（仅支持HTTP）：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码（仅支持HTTP）：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_tcp-1" class="tab-pane" role="tabpanel" aria-labelledby="create_tcp-1">
+&lt;p>&lt;h3 id="阿里云">阿里云&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击阿里云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“TCP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP和HTTP，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_tcp-2" class="tab-pane" role="tabpanel" aria-labelledby="create_tcp-2">
+&lt;p>&lt;h3 id="腾讯云">腾讯云&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击腾讯云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“TCP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。调度算法为加权最小连接数时不支持会话保持。
+&lt;ul>
+&lt;li>会话超时时间：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数：&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_tcp-3" class="tab-pane" role="tabpanel" aria-labelledby="create_tcp-3">
+&lt;p>&lt;h3 id="华为云">华为云&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击华为云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“TCP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>会话超时时间：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP和HTTP，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_tcp-4" class="tab-pane" role="tabpanel" aria-labelledby="create_tcp-4">
+&lt;p>&lt;h3 id="网络型aws">网络型AWS&lt;/h3>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击AWS平台的网络型实例名称项，进入实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“TCP”。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。
+&lt;ul>
+&lt;li>开启健康检查：AWS的监听不支持关闭健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP、HTTP、HTTPS，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康；HTTPS协议健康检查即负载均衡实例向指定的服务器端口发HTTPS请求进行健康检查。。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;/div>&lt;/div></description></item><item><title>Docs: 新建UDP监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/udp/</link><pubDate>Fri, 17 Dec 2021 17:05:52 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/udp/</guid><description>
+&lt;p>UDP协议适用于注重实时性而不关注可靠性的场景，如视频聊天、游戏等。用户可创建UDP监听来转发开自客户端的UDP请求。&lt;/p>
+&lt;ul class="nav nav-tabs" id="create_udp" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#create_udp-0" role="tab" aria-controls="create_udp-0" aria-selected="true">OpenStack&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_udp-1" role="tab" aria-controls="create_udp-1">阿里云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_udp-2" role="tab" aria-controls="create_udp-2">腾讯云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_udp-3" role="tab" aria-controls="create_udp-3">华为云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_udp-4" role="tab" aria-controls="create_udp-4">AWS&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="create_udp">&lt;div id="create_udp-0" class="tab-pane show active" role="tabpanel" aria-labelledby="create_udp-0">
+&lt;p>&lt;h4 id="openstack">OpenStack&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击OpenStack平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“UDP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。只支持白名单。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>后端连接超时时间：转发节点收到客户端请求后，请求后端服务器的超时时间。&lt;/li>
+&lt;li>后端连接空闲时间：设置转发节点与后端服务器的连接空闲时间。&lt;/li>
+&lt;li>连接空闲超时时间：连接会话建议后允许的空闲时间，在超时时间内一直没有访问请求，将会暂时中断当前连接。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括UDP协议。UDP协议通过UDP报文探测获取状态信息。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_udp-1" class="tab-pane" role="tabpanel" aria-labelledby="create_udp-1">
+&lt;p>&lt;h4 id="阿里云">阿里云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击阿里云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“UDP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。仅性能保障型实例支持，具体支持地域请参考&lt;a href="https://help.aliyun.com/document_detail/86130.html?spm=a2c4g.11186623.6.596.4dff2854pDyNnj#title-5o9-j8f-ric">阿里云帮助文档&lt;/a>。&lt;/li>
+&lt;li>四元组的一致性哈希(TCH)：基于四元组的一致性hash（源IP+目的IP+源端口+目的端口），相同的流会调度到相同的后端服务器。仅性能保障型实例支持，具体支持地域请参考&lt;a href="https://help.aliyun.com/document_detail/86130.html?spm=a2c4g.11186623.6.596.4dff2854pDyNnj#title-5o9-j8f-ric">阿里云帮助文档&lt;/a>。&lt;/li>
+&lt;li>QUIC Connection ID一致性哈希(QCH)：基于QUIC Connection ID一致性hash，相同的QUIC Connection ID会调度到相同的后端服务器。仅性能保障型实例支持，具体支持地域请参考&lt;a href="https://help.aliyun.com/document_detail/86130.html?spm=a2c4g.11186623.6.596.4dff2854pDyNnj#title-5o9-j8f-ric">阿里云帮助文档&lt;/a>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;li>健康检查请求：设置健康检查请求内容。&lt;/li>
+&lt;li>健康检查返回结果：设置健康检查返回结果，当负载均衡发送健康检查请求和返回结果与设置一致时，则表示健康检查成功。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_udp-2" class="tab-pane" role="tabpanel" aria-labelledby="create_udp-2">
+&lt;p>&lt;h4 id="腾讯云">腾讯云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击腾讯云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“UDP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。调度算法为加权最小连接数时不支持会话保持。
+&lt;ul>
+&lt;li>会话超时时间：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数：&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_udp-3" class="tab-pane" role="tabpanel" aria-labelledby="create_udp-3">
+&lt;p>&lt;h4 id="华为云">华为云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击华为云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“UDP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>会话超时时间：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括UDP协议。UDP协议通过UDP报文探测获取状态信息。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_udp-4" class="tab-pane" role="tabpanel" aria-labelledby="create_udp-4">
+&lt;p>&lt;h4 id="网络型aws">网络型AWS&lt;/h4>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击AWS平台的网络型实例名称项，进入实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“UDP”。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。
+&lt;ul>
+&lt;li>开启健康检查：AWS的监听不支持关闭健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;/div>&lt;/div></description></item><item><title>Docs: 新建HTTP监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/http/</link><pubDate>Fri, 17 Dec 2021 17:05:56 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/http/</guid><description>
+&lt;p>HTTP协议适用于需要对请求的内容进行识别的应用，如Web应用、App服务等。用户可创建HTTP监听来转发开自客户端的HTTP请求。&lt;/p>
+&lt;ul class="nav nav-tabs" id="create_http" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#create_http-0" role="tab" aria-controls="create_http-0" aria-selected="true">OpenStack&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_http-1" role="tab" aria-controls="create_http-1">阿里云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_http-2" role="tab" aria-controls="create_http-2">腾讯云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_http-3" role="tab" aria-controls="create_http-3">华为云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_http-4" role="tab" aria-controls="create_http-4">AWS&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="create_http">&lt;div id="create_http-0" class="tab-pane show active" role="tabpanel" aria-labelledby="create_http-0">
+&lt;p>&lt;h4 id="openstack">OpenStack&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击OpenStack平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>Cookie处理方式：只支持重写Cookie。负载均衡服务发现用户自定义了Cookie，将会对原来的Cookie进行重写，下次客户端携带新的Cookie访问，负载均衡服务会将请求定向转发给之前记录到的后端服务器。&lt;/li>
+&lt;li>Cookie名称：设置cookie名称为后端服务器上配置的Cookie名称。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。只支持白名单。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>后端连接超时时间：转发节点收到客户端请求后，请求后端服务器的超时时间。&lt;/li>
+&lt;li>后端连接空闲时间：设置转发节点与后端服务器的连接空闲时间。&lt;/li>
+&lt;li>连接空闲超时时间：连接会话建议后允许的空闲时间，在超时时间内一直没有访问请求，将会暂时中断当前连接。&lt;/li>
+&lt;li>Gzip数据压缩：是否启用Gzip数据压缩，开启后将会对特定的文件类型进行压缩，目前Gzip支持压缩的类型包括：text/xml、text/plain、text/css、application/javascript、application/x-javascript application/rss+xml、application/atom+xml、application/xml。&lt;/li>
+&lt;li>附加HTTP头部字段：选择是否通过X-Forwarded-For获取客户端真实IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP和HTTP，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查路径（仅支持HTTP）：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名（仅支持HTTP）：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码（仅支持HTTP）：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_http-1" class="tab-pane" role="tabpanel" aria-labelledby="create_http-1">
+&lt;p>&lt;h4 id="阿里云">阿里云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击阿里云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>Cookie处理方式：包括植入Cookie和重写Cookie。当选择“植入Cookie”时，需要设置会话超时时间，客户端在第一次访问时，负载均衡会在返回请求中植入Cookie，下次客户端会携带此Cookie访问，负载均衡服务将会将请求重定向给之前记录到的后端服务器上。当选择“重写Cookie”时，需要在后端服务器上配置Cookie，并设置Cookie名称，负载均衡服务发现用户自定义了Cookie，将会对原来的Cookie进行重写，下次客户端携带新的Cookie访问，负载均衡服务会将请求定向转发给之前记录到的后端服务器。&lt;/li>
+&lt;li>会话超时时间（植入Cookie设置此参数）：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;li>Cookie名称（重写Cookie设置此参数）：设置cookie名称为后端服务器上配置的Cookie名称。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>连接空闲超时时间：连接会话建议后允许的空闲时间，在超时时间内一直没有访问请求，将会暂时中断当前连接。&lt;/li>
+&lt;li>连接请求超时时间：在超时时间内，服务器一直没有响应，负载均衡将放弃等待。&lt;/li>
+&lt;li>Gzip数据压缩：是否启用Gzip数据压缩，开启后将会对特定的文件类型进行压缩，目前Gzip支持压缩的类型包括：text/xml、text/plain、text/css、application/javascript、application/x-javascript application/rss+xml、application/atom+xml、application/xml。&lt;/li>
+&lt;li>获取客户端真实IP：选择是否通过X-Forwarded-For获取客户端真实IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_http-2" class="tab-pane" role="tabpanel" aria-labelledby="create_http-2">
+&lt;p>&lt;h4 id="腾讯云">腾讯云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击腾讯云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Gzip数据压缩：是否启用Gzip数据压缩，开启后将会对特定的文件类型进行压缩，目前Gzip支持压缩的类型包括：text/xml、text/plain、text/css、application/javascript、application/x-javascript application/rss+xml、application/atom+xml、application/xml。&lt;/li>
+&lt;li>获取客户端真实IP：选择是否通过X-Forwarded-For获取客户端真实IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_http-3" class="tab-pane" role="tabpanel" aria-labelledby="create_http-3">
+&lt;p>&lt;h4 id="华为云">华为云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击华为云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTP”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>Cookie处理方式：包括植入Cookie和重写Cookie。当选择“植入Cookie”时，需要设置会话超时时间，客户端在第一次访问时，负载均衡会在返回请求中植入Cookie，下次客户端会携带此Cookie访问，负载均衡服务将会将请求重定向给之前记录到的后端服务器上。当选择“重写Cookie”时，需要在后端服务器上配置Cookie，并设置Cookie名称，负载均衡服务发现用户自定义了Cookie，将会对原来的Cookie进行重写，下次客户端携带新的Cookie访问，负载均衡服务会将请求定向转发给之前记录到的后端服务器。&lt;/li>
+&lt;li>会话超时时间（植入Cookie设置此参数）：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;li>Cookie名称（重写Cookie设置此参数）：设置cookie名称为后端服务器上配置的Cookie名称。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP和HTTP，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_http-4" class="tab-pane" role="tabpanel" aria-labelledby="create_http-4">
+&lt;p>&lt;h4 id="应用型aws">应用型AWS&lt;/h4>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击AWS平台的应用型实例名称项，进入实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTP”。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。
+&lt;ul>
+&lt;li>开启健康检查：AWS的监听不支持关闭健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括HTTP和HTTPS，HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康；HTTPS协议健康检查即负载均衡实例向指定的服务器端口发HTTPS请求进行健康检查。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;/div>&lt;/div></description></item><item><title>Docs: 新建HTTPS监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/https/</link><pubDate>Fri, 17 Dec 2021 17:06:01 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/https/</guid><description>
+&lt;p>HTTPS协议适用于需要加密传输的应用，用户可创建HTTPS监听来转发开自客户端的HTTPS请求。&lt;/p>
+&lt;h3 id="前提条件">前提条件&lt;/h3>
+&lt;ul>
+&lt;li>已&lt;a href="../../cert/create">新建证书&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;ul class="nav nav-tabs" id="create_https" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#create_https-0" role="tab" aria-controls="create_https-0" aria-selected="true">OpenStack&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_https-1" role="tab" aria-controls="create_https-1">阿里云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_https-2" role="tab" aria-controls="create_https-2">腾讯云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_https-3" role="tab" aria-controls="create_https-3">华为云&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#create_https-4" role="tab" aria-controls="create_https-4">AWS&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="create_https">&lt;div id="create_https-0" class="tab-pane show active" role="tabpanel" aria-labelledby="create_https-0">
+&lt;p>&lt;h4 id="openstack">OpenStack&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击OpenStack平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTPS”。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>Cookie处理方式：只支持重写Cookie。负载均衡服务发现用户自定义了Cookie，将会对原来的Cookie进行重写，下次客户端携带新的Cookie访问，负载均衡服务会将请求定向转发给之前记录到的后端服务器。&lt;/li>
+&lt;li>Cookie名称：设置cookie名称为后端服务器上配置的Cookie名称。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。只支持白名单。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>附加HTTP头部字段：选择是否通过X-Forwarded-For获取客户端真实IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括TCP和HTTP，TCP协议健康检查通过发送SYN握手报文来检测服务器端口是否存活；HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查路径（仅支持HTTP）：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名（仅支持HTTP）：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码（仅支持HTTP）：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_https-1" class="tab-pane" role="tabpanel" aria-labelledby="create_https-1">
+&lt;p>&lt;h4 id="阿里云">阿里云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击阿里云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTPS”。&lt;/li>
+&lt;li>证书：选择负载均衡证书。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>轮询(RR)：按照访问顺序依次将外部请求分发到后端服务器组。&lt;/li>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>连接空闲超时时间：连接会话建议后允许的空闲时间，在超时时间内一直没有访问请求，将会暂时中断当前连接。&lt;/li>
+&lt;li>连接请求超时时间：在超时时间内，服务器一直没有响应，负载均衡将放弃等待。&lt;/li>
+&lt;li>启用HTTP2.0：选择是否启用HTTP 2.0协议。&lt;/li>
+&lt;li>Gzip数据压缩：是否启用Gzip数据压缩，开启后将会对特定的文件类型进行压缩，目前Gzip支持压缩的类型包括：text/xml、text/plain、text/css、application/javascript、application/x-javascript application/rss+xml、application/atom+xml、application/xml。&lt;/li>
+&lt;li>获取客户端真实IP：选择是否通过X-Forwarded-For获取客户端真实IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_https-2" class="tab-pane" role="tabpanel" aria-labelledby="create_https-2">
+&lt;p>&lt;h4 id="腾讯云">腾讯云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击腾讯云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTPS”。&lt;/li>
+&lt;li>证书：选择负载均衡证书。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用HTTP2.0：选择是否启用HTTP 2.0协议。&lt;/li>
+&lt;li>Gzip数据压缩：是否启用Gzip数据压缩，开启后将会对特定的文件类型进行压缩，目前Gzip支持压缩的类型包括：text/xml、text/plain、text/css、application/javascript、application/x-javascript application/rss+xml、application/atom+xml、application/xml。&lt;/li>
+&lt;li>获取客户端真实IP：选择是否通过X-Forwarded-For获取客户端真实IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_https-3" class="tab-pane" role="tabpanel" aria-labelledby="create_https-3">
+&lt;p>&lt;h4 id="华为云">华为云&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击华为云平台的实例名称项，进入实例详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“监听”页签，进入监听页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。&lt;/p>
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTPS”。&lt;/li>
+&lt;li>证书：选择负载均衡证书。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>高级设置&lt;/strong>：默认隐藏，可根据需求进行配置。&lt;/p>
+&lt;ul>
+&lt;li>调度算法：设置负载均衡的调度算法。
+&lt;ul>
+&lt;li>加权轮询(WRR)：权重值越高的后端服务器，被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>加权最小连接数(WLC)：除了根据每台后端服务器设定的权重值来进行轮询，同时还考虑后端服务器的实际负载（即连接数）。当权重值相同时，当前连接数越小的后端服务器被轮询到的次数（概率）也越高。&lt;/li>
+&lt;li>源IP一致性哈希(SCH)：基于源IP地址的一致性hash，相同的源地址会调度到相同的后端服务器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启会话保持：选择是否开启会话保持，开启会话保持后，负载均衡监听会把来自同一客户端的请求分发到同一台服务器上。
+&lt;ul>
+&lt;li>会话超时时间：当超过设置时间后，连接内无新的请求，将会自动断开会话保持。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用访问控制：设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用HTTP2.0：选择是否启用HTTP 2.0协议。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。&lt;/p>
+&lt;ul>
+&lt;li>开启健康检查：选择是否开启健康检查，若勾选开启健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括HTTP和HTTPS，HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康；HTTPS协议健康检查即负载均衡实例向指定的服务器端口发HTTPS请求进行健康检查。&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>健康检查域名：设置健康检查的请求域名。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;div id="create_https-4" class="tab-pane" role="tabpanel" aria-labelledby="create_https-4">
+&lt;p>&lt;h4 id="应用型aws">应用型AWS&lt;/h4>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击AWS平台的应用型实例名称项，进入实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建负载均衡监听对话框，配置协议&amp;amp;监听相关参数。
+&lt;ul>
+&lt;li>名称：设置监听的名称。&lt;/li>
+&lt;li>监听端口：用来接收请求并向后端服务器转发请求的端口，端口范围为1-65535。&lt;/li>
+&lt;li>协议：支持监听TCP、UDP、HTTP、HTTPS协议，协议选择为“HTTPS”。&lt;/li>
+&lt;li>证书：选择负载均衡证书。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：后端服务器组&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择后端服务器组，如无后端服务器组，可新建。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：健康检查&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置健康检查相关参数。
+&lt;ul>
+&lt;li>开启健康检查：AWS的监听不支持关闭健康检查，配置以下参数。&lt;/li>
+&lt;li>健康检查协议：选择健康检查协议，包括HTTP和HTTPS，HTTP协议健康检查通过发送HEAD/GET请求模拟浏览器的访问行为来检查服务器应用是否健康；HTTPS协议健康检查即负载均衡实例向指定的服务器端口发HTTPS请求进行健康检查&lt;/li>
+&lt;li>健康检查路径：设置健康检查的URL地址的路径。&lt;/li>
+&lt;li>正常状态码：设置健康检查正常的HTTP状态码。&lt;/li>
+&lt;li>健康检查响应超时时间：健康检查响应的最大超时时间，如在响应时间内未响应，则判定健康检查异常。&lt;/li>
+&lt;li>健康检查间隔时间：负载均衡进行健康检查的时间间隔。&lt;/li>
+&lt;li>健康检查健康阈值：连续n（n为设置的值）次收到健康检查的结果为成功，则显示状态为健康。&lt;/li>
+&lt;li>健康检查不健康阈值：连续n（n为设置的值）次收到健康检查的结果为识别，则显示状态为异常。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;/div>&lt;/div></description></item><item><title>Docs: 修改监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/modify/</link><pubDate>Fri, 17 Dec 2021 17:06:12 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/modify/</guid><description>
+&lt;p>该功能用于修改监听。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改负载均衡监听对话框。&lt;/li>
+&lt;li>修改相关参数，具体请参考新建监听，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/delete/</link><pubDate>Fri, 17 Dec 2021 17:06:17 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/delete/</guid><description>
+&lt;p>该功能用于删除监听。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>在列表中选择一个或多个监听，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 启用/禁用监听</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/enable/</link><pubDate>Fri, 17 Dec 2021 17:06:21 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/enable/</guid><description>
+&lt;h3 id="启用监听">启用监听&lt;/h3>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的监听。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用监听">禁用监听&lt;/h3>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的监听。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 调整访问控制</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/modifyaccess/</link><pubDate>Fri, 17 Dec 2021 17:06:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/modifyaccess/</guid><description>
+&lt;p>该功能设置监听的访问控制策略。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整访问控制&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出调整访问控制对话框。&lt;/li>
+&lt;li>设置是否启用访问控制，如勾选启用访问控制后，需要设置访问控制方式以及访问策略控制组。
+&lt;ul>
+&lt;li>访问控制方式：白名单即允许访问控制策略组中的IP访问负载均衡；黑名单即禁止访问控制策略组中的IP访问负载均衡。&lt;/li>
+&lt;li>访问控制策略组：选择访问控制策略组，请先在访问控制页面创建策略组。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 健康检查</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/healthcheck/</link><pubDate>Fri, 17 Dec 2021 17:06:44 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/healthcheck/</guid><description>
+&lt;h3 id="启用健康检查">启用健康检查&lt;/h3>
+&lt;p>该功能用于为未开启健康检查的监听启用健康检查。重定向类型的监听不支持设置健康检查。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用健康检查&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用健康检查">禁用健康检查&lt;/h3>
+&lt;p>该功能用于为已开启健康检查的监听禁用健康检查。重定向类型的监听不支持设置健康检查。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用健康检查&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看监听详情</title><link>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/show/</link><pubDate>Fri, 17 Dec 2021 17:06:52 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/multicloud/loadbalancer/tutorial/listener/show/</guid><description>
+&lt;p>该功能用于查看监听的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/负载均衡实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入负载均衡实例页面。&lt;/li>
+&lt;li>单击实例名称项，进入负载均衡实例详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。&lt;/li>
+&lt;li>单击监听名称项，进入监听详情页面。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：包括云上ID、ID、名称、状态、域、项目、平台、创建时间、更新时间、备注。&lt;/li>
+&lt;li>配置信息：包括前端协议/端口、负载均衡实例、后端服务器组。&lt;/li>
+&lt;li>高级信息：包括调度算法、会话保持、Cookie处理方式、Cookie名称、会话超时时间、访问控制、重定向、重定向方式、重定向至、后端连接超时时间、后端连接空闲时间、连接空闲超时时间、连接请求超时时间、限定同源IP发送请求速率、HTTP2.0、Gzip数据压缩、获取客户端真实IP、带宽峰值、设置Proxy协议、附加HTTP头部字段。&lt;/li>
+&lt;li>健康检查：启用健康检查、健康检查协议、健康检查路径、健康检查域名、正常状态码、健康检查响应超时时间、健康检查间隔时间、健康检查健康阈值、健康检查不健康阈值、健康检查请求、健康检查返回结果。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

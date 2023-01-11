@@ -1,207 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-发布日志</title><link>https://www.cloudpods.org/zh/docs/release/</link><description>Recent content in 发布日志 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 06 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/release/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.9.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_5/</link><pubDate>Tue, 06 Dec 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_5/</guid><description>
-&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】热迁移优化：缩短VPC主机热迁移过程中网络中断时间；兼容旧版本主机热迁移；热迁移快速收敛；批量热迁移死锁；&lt;/li>
-&lt;li>【主机】探测宿主机USB设备时，自动忽略HUB类型的USB设备&lt;/li>
-&lt;li>【主机】私有云主机监控数据发送到metadata（169.254.169.254），不依赖虚拟机是否能访问influxdb&lt;/li>
-&lt;li>【主机】将SSD类型存储上分配的虚拟磁盘自动标识为SSD类型&lt;/li>
-&lt;li>【主机】改进虚拟机磁盘更换存储UI交互&lt;/li>
-&lt;li>【主机】同步VMware虚拟机时，发现有重复UUID的虚拟机，不再终止同步，会自动忽略有重复UUID的虚拟机&lt;/li>
-&lt;li>【主机】同步VMware虚拟机时，允许虚拟机IP子网未被纳管。如果IP子网未被纳管，会将IP子网同步到元数据中，在前端展示并提示用户纳管IP子网&lt;/li>
-&lt;li>【裸金属】允许指定外部tftp服务器和pxe启动文件&lt;/li>
-&lt;li>【CloudID】改进HCSO SAML provider&lt;/li>
-&lt;li>【Ceph】防止调用ceph命令时服务hang的问题&lt;/li>
-&lt;li>【Ceph】改进Ceph容量计算规则，采用Used+MaxAvail作为总容量&lt;/li>
-&lt;li>【API网关】导出execl的浮点数输出格式优化&lt;/li>
-&lt;li>【监控】只检查aliyun云账号的账号余额&lt;/li>
-&lt;li>【容器】部署的Kubernetes集群支持自动更新证书&lt;/li>
-&lt;li>【容器】为指定Kubernetes集群部署监控组件&lt;/li>
-&lt;/ul>
-&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】AWS虚拟机CPU架构同步采用instance的Architecture字段&lt;/li>
-&lt;li>【主机】自动为主机生成ssh host keys，解决部分Ubuntu/Debian镜像生成虚拟机启动后无法ssh的问题&lt;/li>
-&lt;li>【主机】VPC主机的入方向安全组规则应该默认deny所有流量&lt;/li>
-&lt;li>【主机】修正探测CPU架构和UEFI格式的错误&lt;/li>
-&lt;li>【主机】VMWare主机转换为KVM主机后，不能被再次转换&lt;/li>
-&lt;li>【API网关】通过apigateway类型的endpoint上传镜像报错&lt;/li>
-&lt;li>【调度】采用共享存储的主机迁移时不应该检查目标宿主机的存储容量限制&lt;/li>
-&lt;li>【裸金属】未使用网卡缺少index或nic_type，导致宿主机转换回裸金属失败&lt;/li>
-&lt;li>【i18n】修正重复添加删除i18n信息的错误&lt;/li>
-&lt;li>【多云纳管】防止Cloudpods嵌套纳管自己&lt;/li>
-&lt;li>【镜像】arm镜像上传后显示CPU架构为x86&lt;/li>
-&lt;/ul>
-&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】允许更新主机的hostname&lt;/li>
-&lt;li>【主机】支持通过快照创建磁盘&lt;/li>
-&lt;li>【裸金属】允许纳管没有BMC的物理机&lt;/li>
-&lt;li>【容器】支持基于银河麒麟V10SP2部署Kubernetes 1.20集群&lt;/li>
-&lt;li>【容器】为部署的容器集群自动增加nginx的ingress controller，并且支持sticky session等特性&lt;/li>
-&lt;li>【监控】自动采集各个服务的性能指标参数，用于后续服务健康监控&lt;/li>
-&lt;li>【部署】ocboot支持自动设置clickhouse&lt;/li>
-&lt;li>【前端】全局搜索支持搜索外部ID&lt;/li>
-&lt;li>【前端】增加”关于“页面&lt;/li>
-&lt;/ul>
-&lt;h2 id="升级方式">升级方式&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>具体变更请参考:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.9/3-9-5/">CHANGELOG v3.9.5&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: v3.9.4 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_4/</link><pubDate>Mon, 31 Oct 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_4/</guid><description>
-&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
-&lt;ul>
-&lt;li>【认证】用户密码过期登录强制修改密码&lt;/li>
-&lt;li>【主机】KVM平台本地磁盘支持新建&lt;/li>
-&lt;li>【主机】OpenStack平台VNC链接优化&lt;/li>
-&lt;li>【主机】KVM主机迁移支持设置带宽及取消任务&lt;/li>
-&lt;li>【主机】KVM平台支持磁盘更换块存储&lt;/li>
-&lt;li>【主机】挂载 GPFS 存储时进行本地磁盘检查&lt;/li>
-&lt;li>【调度器】优化过滤结果步骤，提升接口性能&lt;/li>
-&lt;li>【监控】纳管平台默认拉取CPU/内存/磁盘使用率&lt;/li>
-&lt;li>【监控】减少操作日志记录，防止 opslog 表过大导系统存储异常&lt;/li>
-&lt;li>【系统】列表字段整体排序优化&lt;/li>
-&lt;li>【部署】支持Debian 10部署系统&lt;/li>
-&lt;/ul>
-&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】修复同步磁盘未通过系统标签过滤问题&lt;/li>
-&lt;li>【主机】修复ESXI镜像保存失败问题&lt;/li>
-&lt;li>【裸金属】修复BIOS UEFI/Legacy 模式切换，平台对应数据没有更新问题&lt;/li>
-&lt;li>【容器】修复记录 log 过多问题&lt;/li>
-&lt;li>【容器】修复集群失联会导致服务卡住的问题&lt;/li>
-&lt;li>【弹性伸缩】修复基于监控指标的策略没有生效问题&lt;/li>
-&lt;li>【SDN控制器】修复OVS意外退导致服务不可用问题&lt;/li>
-&lt;li>【监控】修复部分告警会出现未恢复的问题&lt;/li>
-&lt;li>【命令行工具】修复network-update默认把 vlan_id 设置为 1 的问题&lt;/li>
-&lt;li>【费用】修复费用列表总计报错问题（企业版）&lt;/li>
-&lt;li>【费用】修复费用部分详情查询错误问题（企业版）&lt;/li>
-&lt;/ul>
-&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】KVM虚机支持执行 QGA 命令，并且支持 QGA 修改密码&lt;/li>
-&lt;li>【主机】KVM平台新建虚拟机支持同时安装监控agent&lt;/li>
-&lt;li>【面板】数字图支持通过调度/项目标签过滤&lt;/li>
-&lt;li>【存储】支持快速过滤物理机/宿主机存储&lt;/li>
-&lt;li>【多云】华为云ModelArt对接（企业版）&lt;/li>
-&lt;/ul>
-&lt;h2 id="升级方式">升级方式&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>具体变更请参考:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.9/3-9-4/">CHANGELOG v3.9.4&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: v3.9.2 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_2/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_2/</guid><description>
-&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
-&lt;ul>
-&lt;li>【监控】监控优化，支持SQL Server数据库监控&lt;/li>
-&lt;li>【主机】迁移过程优化&lt;/li>
-&lt;li>【认证】MFA认证增加安卓离线包下载及Chrome插件引导&lt;/li>
-&lt;li>【主机】增加远程连接信息查看&lt;/li>
-&lt;li>【系统】更多的资源列表字段支持排序&lt;/li>
-&lt;/ul>
-&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
-&lt;ul>
-&lt;li>【监控】告警状态无法更新问题修复&lt;/li>
-&lt;li>【认证】个人中心展示多云免密登录异常问题修复&lt;/li>
-&lt;li>【主机】KVM使用ceph磁盘报认证错误&lt;/li>
-&lt;li>【网络】VPCAgent同步安全组错误&lt;/li>
-&lt;li>【认证】SMTP邮件发送失败&lt;/li>
-&lt;li>【调度】同时使用反亲和组和调度标签时结果不符合预期&lt;/li>
-&lt;li>【容器】集群创建虚拟机出现磁盘分配失败的问题&lt;/li>
-&lt;/ul>
-&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】中标麒麟镜像支持&lt;/li>
-&lt;li>【认证】支持通过手机号验证码登录(需配置短信通知渠道)&lt;/li>
-&lt;li>【容器】高版本k8s纳管支持&lt;/li>
-&lt;li>【部署】支持通过Kubernetes Helm 安装云管平台&lt;/li>
-&lt;li>【控制面板】使用率增加水波球样式&lt;/li>
-&lt;/ul>
-&lt;h2 id="升级方式">升级方式&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>具体变更请参考:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.9/3-9-2/">CHANGELOG v3.9.2&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: v3.9.1 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_9_1/</link><pubDate>Fri, 29 Jul 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_9_1/</guid><description>
-&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
-&lt;ul>
-&lt;li>【系统】费用模块数据加载速度优化&lt;/li>
-&lt;li>【主机】新增镜像缓存状态及进度，更清晰了解主机创建状态&lt;/li>
-&lt;li>【主机】虚拟机操作与功能选择联动，只展示与用户使用相关的菜单&lt;/li>
-&lt;li>【主机】虚拟机及宿主机增加hostname字段，name字段不再限制&lt;/li>
-&lt;li>【监控】致命告警增加弹窗通知方式&lt;/li>
-&lt;li>【系统】磁贴支持自动向上排列&lt;/li>
-&lt;li>【主机】Webconsole控制台优化&lt;/li>
-&lt;li>【部署】EIP网关支持自动化部署&lt;/li>
-&lt;li>【多云】云账号同步重构，支持定时任务&lt;/li>
-&lt;li>【多云】云账号同步支持仅同步部分资源，同步速度更快&lt;/li>
-&lt;li>【多云】云账号增加账单任务显示（企业版）&lt;/li>
-&lt;li>【计费】图表扩展，支持导出PDF及Excel（企业版）&lt;/li>
-&lt;li>【计费】多维度分析优化，支持多维度聚合查询（企业版）&lt;/li>
-&lt;li>【计费】账单对接云上标签信息，支持基于标签分析（企业版&lt;/li>
-&lt;/ul>
-&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
-&lt;ul>
-&lt;li>【主机】支持ARM物理机纳管&lt;/li>
-&lt;li>【主机】支持UEFI启动模式物理机纳管&lt;/li>
-&lt;li>【主机】USB透传设备支持&lt;/li>
-&lt;li>【主机】支持保存主机内存快照&lt;/li>
-&lt;li>【主机】QEMU升级至v4.2.0&lt;/li>
-&lt;li>【主机】支持主机备份和恢复&lt;/li>
-&lt;li>【多云】Nutanix私有云纳管&lt;/li>
-&lt;li>【多云】品高云纳管&lt;/li>
-&lt;li>【多云】支持阿里云、腾讯云及Azure平台的容器产品纳管&lt;/li>
-&lt;li>【多云】支持阿里云表格存储实例的纳管&lt;/li>
-&lt;li>【多云】支持AWS平台RDS新建和操作&lt;/li>
-&lt;li>【网络】支持纳管阿里云ipv6网关&lt;/li>
-&lt;li>【网络】支持私有云的网络拓扑展示&lt;/li>
-&lt;li>【网络】支持阿里云、腾讯云VPC互联&lt;/li>
-&lt;li>【网络】支持华为云、腾讯云及AWS对等链接&lt;/li>
-&lt;li>【监控】致命等级告警增强，增加弹窗提醒&lt;/li>
-&lt;li>【监控】支持Azure平台RDS、Redis及LB监控&lt;/li>
-&lt;li>【主机】创建主机失败后自动更换同配置套餐（企业版）&lt;/li>
-&lt;li>【计费】支持Azure平台RI实例分析（企业版）&lt;/li>
-&lt;li>【计费】支持Azure中国导入CPP并进行项目分摊（企业版）&lt;/li>
-&lt;li>【计费】多维度分析重构，同时支持账单标签（企业版）&lt;/li>
-&lt;li>【计费】多维度费用报表支持（企业版）&lt;/li>
-&lt;li>【计费】二次定价支持私有云（企业版）&lt;/li>
-&lt;li>【认证】支持多层级组织架构和权限（企业版）&lt;/li>
-&lt;/ul>
-&lt;h2 id="升级方式">升级方式&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>具体变更请参考:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.9/3-9-1/">CHANGELOG v3.9.1&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: v3.8.12 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_12/</link><pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_12/</guid><description>
+发布日志</title><link>https://www.cloudpods.org/zh/docs/release/</link><description>Recent content in 发布日志 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 17 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/release/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.8.12 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_12/</link><pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_12/</guid><description>
 &lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
 &lt;ul>
 &lt;li>【监控】升级监控组件Telegraf版本1.19.2&lt;/li>
@@ -230,7 +28,7 @@
 &lt;/ul>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-12/">CHANGELOG v3.8.12&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-12/">CHANGELOG v3.8.12&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.11 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_11/</link><pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_11/</guid><description>
 &lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
 &lt;ul>
@@ -249,7 +47,7 @@
 &lt;/ul>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-11/">CHANGELOG v3.8.11&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-11/">CHANGELOG v3.8.11&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.10 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_10/</link><pubDate>Tue, 17 May 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_10/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -289,7 +87,7 @@
 &lt;/ul>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-10/">CHANGELOG v3.8.10&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-10/">CHANGELOG v3.8.10&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.8 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_8/</link><pubDate>Sat, 02 Apr 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_8/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -342,7 +140,7 @@
 &lt;/ul>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-8/">CHANGELOG v3.8.8&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-8/">CHANGELOG v3.8.8&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.7 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_7/</link><pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_7/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -380,7 +178,7 @@
 &lt;/ul>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-7/">CHANGELOG v3.8.7&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-7/">CHANGELOG v3.8.7&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.6 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_6/</link><pubDate>Tue, 11 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_6/</guid><description>
 &lt;h2 id="优化-enhancements">优化 (Enhancements)&lt;/h2>
 &lt;ul>
@@ -417,7 +215,7 @@
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-6/">CHANGELOG v3.8.6&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-6/">CHANGELOG v3.8.6&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_5/</link><pubDate>Fri, 31 Dec 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_5/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -469,7 +267,7 @@
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-5/">CHANGELOG v3.8.5&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-5/">CHANGELOG v3.8.5&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.4 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_4/</link><pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_4/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -510,7 +308,7 @@
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-4/">CHANGELOG v3.8.4&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-4/">CHANGELOG v3.8.4&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.8.3 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_8_3/</link><pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_8_3/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -570,10 +368,10 @@
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
 &lt;p>具体变更请参考:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-3/">CHANGELOG v3.8.3&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-2/">CHANGELOG v3.8.2&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-1/">CHANGELOG v3.8.1&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.8/3-8-0/">CHANGELOG v3.8.0&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-3/">CHANGELOG v3.8.3&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-2/">CHANGELOG v3.8.2&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-1/">CHANGELOG v3.8.1&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.8/3-8-0/">CHANGELOG v3.8.0&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: v3.7.7 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_7_7/</link><pubDate>Wed, 15 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_7_7/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
@@ -640,7 +438,7 @@
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
-&lt;p>具体变更请参考 &lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.7/3-7-7/">CHANGELOG v3.7.7&lt;/a> 。&lt;/p></description></item><item><title>Docs: v3.7.6 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_7_6/</link><pubDate>Thu, 29 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_7_6/</guid><description>
+&lt;p>具体变更请参考 &lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.7/3-7-7/">CHANGELOG v3.7.7&lt;/a> 。&lt;/p></description></item><item><title>Docs: v3.7.6 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_7_6/</link><pubDate>Thu, 29 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_7_6/</guid><description>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
 &lt;li>【宿主机】探测 kubelet 驱逐配置，避免内存和存储使用过高触发 k8s 驱逐&lt;/li>
@@ -690,4 +488,4 @@
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="changelog">CHANGELOG&lt;/h2>
-&lt;p>具体变更请参考 &lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.7/3-7-6/">CHANGELOG v3.7.6&lt;/a> 。&lt;/p></description></item></channel></rss>
+&lt;p>具体变更请参考 &lt;a href="https://www.cloudpods.org/zh/docs/changelog/release-3.7/3-7-6/">CHANGELOG v3.7.6&lt;/a> 。&lt;/p></description></item></channel></rss>

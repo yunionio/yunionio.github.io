@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-开发相关</title><link>https://www.cloudpods.org/zh/docs/development/</link><description>Recent content in 开发相关 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/development/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 搭建开发环境</title><link>https://www.cloudpods.org/zh/docs/development/dev-env/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/dev-env/</guid><description>
+开发手册</title><link>https://www.cloudpods.org/zh/docs/development/</link><description>Recent content in 开发手册 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 05 Jun 2022 20:39:39 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/development/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 搭建开发环境</title><link>https://www.cloudpods.org/zh/docs/development/dev-env/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/dev-env/</guid><description>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 &lt;ul>
@@ -11,7 +11,7 @@
 &lt;/div>
 &lt;p>接下来介绍如何搭建开发环境。&lt;/p>
 &lt;h2 id="部署-cloudpods-服务">部署 Cloudpods 服务&lt;/h2>
-&lt;p>在开始开发之前，请先参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 或者 &lt;a href="../../quickstart/minikube">MiniKube 安装&lt;/a> 部署 Cloudpods 服务。我们的服务全部使用容器的方式运行在 Kubernetes 集群里面，所以需要先搭建好我们的服务，把这个环境作为自己的开发环境。&lt;/p>
+&lt;p>在开始开发之前，请先参考 &lt;a href="../../quickstart/allinone">All in One 安装&lt;/a> 部署 Cloudpods 服务。我们的服务全部使用容器的方式运行在 Kubernetes 集群里面，所以需要先搭建好我们的服务，把这个环境作为自己的开发环境。&lt;/p>
 &lt;p>这里建议使用一个单独的 CentOS 7 虚拟机，配置(至少 4C8G + 100G 系统盘)，安装部署我们的服务。&lt;/p>
 &lt;h2 id="安装-go">安装 Go&lt;/h2>
 &lt;p>Golang 版本要求 1.15 以上&lt;/p>
@@ -39,7 +39,7 @@ brew install docker
 docker --version
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h3 id="配置-docker">配置 Docker&lt;/h3>
-&lt;p>后续的代码编译和打包使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 的功能，需要做在让 docker daemon 开启 experimental 特性。&lt;/p>
+&lt;p>后续的代码编译和打包使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 的功能，需要做在让 docker daemon 开启 experimental 特性，用于编译不同架构的镜像，可参考 docker 官方的 &lt;a href="https://docs.docker.com/build/building/multi-platform/">Building multi-platform images&lt;/a> 文档。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在 docker daemon 的配置里面打开 experimental 特性&lt;/span>
 $ cat /etc/docker/daemon.json
 &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
@@ -47,6 +47,9 @@ $ cat /etc/docker/daemon.json
 &lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 重启 docker 服务&lt;/span>
 $ systemctl restart docker
+&lt;span style="color:#8f5902;font-style:italic"># 打开 binfmt_misc 特性，用于 qemu 模拟编译其他架构镜像&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 详细说明参考：https://docs.docker.com/build/building/multi-platform/#building-multi-platform-images&lt;/span>
+$ docker run --privileged --rm tonistiigi/binfmt --install all
 &lt;span style="color:#8f5902;font-style:italic"># 创建 buildx context&lt;/span>
 $ docker buildx create --use --name build --node build --driver-opt &lt;span style="color:#000">network&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>host
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编译-cloudpods-组件">编译 cloudpods 组件&lt;/h2>
@@ -165,110 +168,9 @@ $ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f
 $ kubectl logs -n onecloud default-region-6bd8c54d68-sq4gq -f --since 5m
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-climc">安装配置 climc&lt;/h3>
 &lt;p>climc 是访问后端的命令行工具，可以通过该工具向后端各个服务发送API请求，日常开发中会使用改命令行工具进行功能验证和调试，安装和使用方法参考下面的连接。&lt;/p>
-&lt;p>climc 的本地安装参考: &lt;a href="../../climc/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装&lt;/a>&lt;/p>
-&lt;p>climc 的本地配置参考: &lt;a href="../../climc/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE">非控制节点认证配置&lt;/a>&lt;/p>
-&lt;p>climc 的使用简介参考: &lt;a href="../../climc/#%E4%BD%BF%E7%94%A8">climc 使用&lt;/a>&lt;/p>
-&lt;h2 id="快速开发调试">快速开发调试&lt;/h2>
-&lt;p>我们的服务都已经容器化运行在 Kubernetes 集群中，使用上面说的 &lt;strong>&amp;ldquo;制作docker镜像-&amp;gt;发布到集群&amp;rdquo;&lt;/strong> 的开发流程有些长，对于快速开发调试并不方便。&lt;/p>
-&lt;p>通过 &lt;a href="https://www.telepresence.io">Telepresence&lt;/a> 提供远程 Kubernetes 连接信息上下文，可以在本地开发调试。下面介绍使用 Telepresence 进行本地快速开发。&lt;/p>
-&lt;h3 id="安装配置-kubectl">安装配置 kubectl&lt;/h3>
-&lt;p>需要在本地安装 &lt;a href="https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/">kubectl&lt;/a>。&lt;/p>
-&lt;p>需要在本地配置好集群信息，以通过 kubectl 访问；将 cloudpods 控制节点上的&lt;code>$KUBECONFIG&lt;/code>文件拷贝到本地&lt;code>~/.kube/config&lt;/code>;
-如果本地已经有此文件，参考 &lt;a href="https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">配置多集群访问&lt;/a> 进行合并。&lt;/p>
-&lt;h3 id="安装-telepresence">安装 telepresence&lt;/h3>
-&lt;p>这里介绍 CentOS 7 的本地环境安装，其他发行版可参考官方文档：&lt;a href="https://www.telepresence.io/reference/install">Installing Telepresence&lt;/a>。&lt;/p>
-&lt;blockquote>
-&lt;p>不建议K8S集群的部署和开发在同一个环境，使用Telepresence会有端口冲突。&lt;/p>
-&lt;/blockquote>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装依赖&lt;/span>
-$ yum install -y python3 sshfs conntrack iptables torsocks sshuttle sudo yum-utils
-&lt;span style="color:#8f5902;font-style:italic"># 安装 kubectl 用于连接 K8S 集群&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/yum.repos.d/kubernetes.repo
-&lt;/span>&lt;span style="color:#4e9a06">[kubernetes]
-&lt;/span>&lt;span style="color:#4e9a06">name=Kubernetes
-&lt;/span>&lt;span style="color:#4e9a06">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
-&lt;/span>&lt;span style="color:#4e9a06">enabled=1
-&lt;/span>&lt;span style="color:#4e9a06">gpgcheck=0
-&lt;/span>&lt;span style="color:#4e9a06">repo_gpgcheck=0
-&lt;/span>&lt;span style="color:#4e9a06">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-$ yum install -y kubectl-1.15.12-0
-&lt;span style="color:#8f5902;font-style:italic"># 需要自行配置kubctl config&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 测试kubctl可以访问之前部署的K8S集群&lt;/span>
-$ kubctl version
-&lt;span style="color:#8f5902;font-style:italic"># 源码安装 telepresence 到 /usr/local/bin/telepresence&lt;/span>
-$ git clone https://github.com/telepresenceio/telepresence
-$ &lt;span style="color:#204a87">cd&lt;/span> telepresence
-$ git checkout 0.109
-$ sed -i &lt;span style="color:#4e9a06">&amp;#39;s/https:\/\/github.com\/datawire\/sshuttle.git/git@github.com:datawire\/sshuttle.git/g&amp;#39;&lt;/span> packaging/build-sshuttle.py
-$ sudo env &lt;span style="color:#000">PREFIX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/usr/local ./install.sh
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用">使用&lt;/h3>
-&lt;p>利用 telepresence 本地连通远端 K8S 的特性，我们就可以做到在本地编译运行 region，keystone 等服务，同时又能访问远端 K8S 其它服务的环境。&lt;/p>
-&lt;p>&lt;strong>macOS 或 linux 中本地编译运行 region 服务&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
-&lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
-$ make cmd/region
-&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span>
-$ telepresence --swap-deployment default-region --namespace onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
-接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ sudo chmod &lt;span style="color:#0000cf;font-weight:bold">777&lt;/span> /etc
-&lt;span style="color:#8f5902;font-style:italic"># 将 $TELEPRESENCE_ROOT/etc/yunion 链接到本地的 /etc&lt;/span>
-$ ln -s &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/etc/yunion /etc
-&lt;span style="color:#8f5902;font-style:italic"># 启动 region 服务&lt;/span>
-$ ./_output/bin/region --config /etc/yunion/region.conf
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>这个时候如果我们在外部调用 climc 就会发现相关的请求已经被转发到本地开发机启动 region 服务了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-list
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>调试完成后需要进行清理操作&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 退出 telepresence&lt;/span>
-$ &lt;span style="color:#204a87">exit&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 会看到类似下面的输出&lt;/span>
-T: Your process exited with &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> code 127.
-T: Exit cleanup in progress
-T: Cleaning up Pod
-&lt;span style="color:#8f5902;font-style:italic"># 删除链接文件&lt;/span>
-$ rm /etc/yunion
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Linux系统中本地编译运行 region 服务&lt;/strong>&lt;/p>
-&lt;p>这种方式相比上一种方式，更加干净；但是相对复杂&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到 cloudpods 代码目录&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> &lt;span style="color:#000">$GOPATH&lt;/span>/src/yunion.io/x/cloudpods
-&lt;span style="color:#8f5902;font-style:italic"># 编译 region 服务&lt;/span>
-$ make cmd/region
-&lt;span style="color:#8f5902;font-style:italic"># 使用 telepresence 替换 K8S 里面的 default-region deployment&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 该命令在 K8S 集群中启动一个 deployment 替换掉原来的 default-regoin&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 然后把流量的访问导向本地&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果想要使用特定的 shell，比如 zsh，可以在后面加上&amp;#34;--run /bin/zsh&amp;#34;&lt;/span>
-$ telepresence --swap-deployment default-region --namespace onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>到这里已经进入到 telepresence 隔离的 namespace 里面了，
-$TELEPRESENCE_ROOT 这个目录 是通过 sshfs 挂载的远端 K8S pod 的文件系统。
-接下来我们就可以在这个 namespace 里面运行 region 服务了：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置 max_user_namespaces&lt;/span>
-$ cat /proc/sys/user/max_user_namespaces
-&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 如果 max_user_namespaces 为 0，需要设置下 user_namespaces&lt;/span>
-$ &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">640&lt;/span> &amp;gt; /proc/sys/user/max_user_namespaces
-&lt;span style="color:#8f5902;font-style:italic"># 启动一个新的 namespace , 但不共享 mount namespace，这样接下来的 mount bind 操作就不会影响到宿主机&lt;/span>
-$ unshare --map-root-user --mount
-&lt;span style="color:#8f5902;font-style:italic"># bind K8S /var/run/secrets&lt;/span>
-$ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/var/run /var/run
-$ ls /var/run/
-secrets
-&lt;span style="color:#8f5902;font-style:italic"># bind cloudpods config&lt;/span>
-$ mkdir /etc/yunion
-$ mount --bind &lt;span style="color:#000">$TELEPRESENCE_ROOT&lt;/span>/etc/yunion /etc/yunion
-$ ls /etc/yunion/
-pki region.conf
-&lt;span style="color:#8f5902;font-style:italic"># 启动 region 服务&lt;/span>
-$ ./_output/bin/region --config /etc/yunion/region.conf
-&lt;span style="color:#8f5902;font-style:italic"># 这个时候如果我们在外部调用 climc&lt;/span>
-$ climc network-list
-&lt;span style="color:#8f5902;font-style:italic"># 就会发现相关的请求已经被转发到本地开发机启动 region 服务了&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多用法，以及 telepresence 的原理请参考&lt;a href="https://www.telepresence.io/discussion/overview">官方文档&lt;/a>。&lt;/p>
+&lt;p>climc 的本地安装参考: &lt;a href="../../ops/climc/usage/#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装&lt;/a>&lt;/p>
+&lt;p>climc 的本地配置参考: &lt;a href="../../ops/climc/usage/#%E9%9D%9E%E6%8E%A7%E5%88%B6%E8%8A%82%E7%82%B9%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE">非控制节点认证配置&lt;/a>&lt;/p>
+&lt;p>climc 的使用简介参考: &lt;a href="../../ops/climc/usage/#%E4%BD%BF%E7%94%A8">climc 使用&lt;/a>&lt;/p>
 &lt;h2 id="faq">FAQ&lt;/h2>
 &lt;h3 id="1-开发环境是-windows-或者-macos怎么开发">1. 开发环境是 windows 或者 macOS，怎么开发？&lt;/h3>
 &lt;p>因为我们的服务最后会运行在基于 CentOS 7 搭建的 K8S 集群里面，所以日常的开发和打包中一般都是在 CentOS 7 里面做的。&lt;/p>
@@ -282,18 +184,7 @@ $ climc network-list
 enable_host_health_check: false
 &lt;/code>&lt;/pre>
 &lt;/blockquote>
-&lt;h3 id="3-使用-telepresence-时上次未正常退出再次使用一直报错">3. 使用 telepresence 时，上次未正常退出，再次使用一直报错&lt;/h3>
-&lt;p>尝试手动清理:&lt;/p>
-&lt;ol>
-&lt;li>使用 kubectl 删除 onecloud namespace 下除 default-region-dns-xxxxx 外，所有以 default-region 开头的Pod；&lt;/li>
-&lt;li>使用&lt;code>kubectl edit deployment default-region -n onecloud&lt;/code>，将 spec 下的 replicas 从0改为1.&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 可以编译cmd下制定的组件，比如：编译 region 和 host 组件&lt;/span>
-$ make cmd/region cmd/host
-&lt;span style="color:#8f5902;font-style:italic"># 查看编译好的二进制文件&lt;/span>
-$ ls _output/bin
-region host
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-本地直接运行-make-cmdhost-会出现-ceph-依赖的报错">4. 本地直接运行 &lt;code>make cmd/host&lt;/code> 会出现 ceph 依赖的报错&lt;/h3>
+&lt;h3 id="3-本地直接运行-make-cmdhost-会出现-ceph-依赖的报错">3. 本地直接运行 &lt;code>make cmd/host&lt;/code> 会出现 ceph 依赖的报错&lt;/h3>
 &lt;p>host 组件是私有云里面管理虚拟机的一个关键组件，依赖了 cephfs, rbd 和 rados 相关的库，如果是本地直接编译，则需要安装对应的依赖，操作如下：&lt;/p>
 &lt;ul class="nav nav-tabs" id="host_dep_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#host_dep_install-0" role="tab" aria-controls="host_dep_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#host_dep_install-1" role="tab" aria-controls="host_dep_install-1">Ubuntu 20.04&lt;/a>&lt;/li>&lt;/ul>
@@ -318,22 +209,23 @@ apt-get update &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp
 $ &lt;span style="color:#204a87">cd&lt;/span> cloudpods
 $ git remote add upstream https://github.com/yunionio/cloudpods
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="提交代码流程">提交代码流程&lt;/h2>
-&lt;ul>
-&lt;li>从 master checkout 出 feature 或者 bugfix 分支&lt;/li>
-&lt;/ul>
+&lt;h3 id="1-从-master-checkout-出-feature-或者-bugfix-分支">1. 从 master checkout 出 feature 或者 bugfix 分支&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># checkout 新分支&lt;/span>
 $ git fetch upstream --tags
+&lt;span style="color:#8f5902;font-style:italic"># 下面假设新的分支名为 &amp;#39;feature/implement-x&amp;#39;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 分支名应该有语义性，描述这次开发要实现或者修复什么&lt;/span>
 $ git checkout -b feature/implement-x upstream/master
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>在新的分支上进行开发&lt;/li>
-&lt;li>开发完成后，进行提交PR前的准备操作&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch upstream &lt;span style="color:#8f5902;font-style:italic"># 同步远程 upstream master 代码&lt;/span>
-$ git rebase upstream/master &lt;span style="color:#8f5902;font-style:italic"># 有冲突则解决冲突&lt;/span>
-$ git push origin feature/implement-x &lt;span style="color:#8f5902;font-style:italic"># push 分支到自己的 repo&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>在GitHub的Web界面完成提交PR的流程&lt;/li>
-&lt;/ul>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-在新的分支上进行开发">2. 在新的分支上进行开发&lt;/h3>
+&lt;p>所有的代码修改，都在新的分支上进行。&lt;/p>
+&lt;p>如果不熟悉 git 相关的操作，可参考这个文档先学习 git 的基本操作：&lt;a href="https://github.com/twtrubiks/Git-Tutorials">Git-Tutorials&lt;/a>。&lt;/p>
+&lt;h3 id="3-开发完成后进行提交pr前的准备操作">3. 开发完成后，进行提交PR前的准备操作&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 同步远程 upstream master 代码&lt;/span>
+$ git fetch upstream
+&lt;span style="color:#8f5902;font-style:italic"># 有冲突则解决冲突&lt;/span>
+$ git rebase upstream/master
+&lt;span style="color:#8f5902;font-style:italic"># push 分支到自己的 repo&lt;/span>
+$ git push origin feature/implement-x
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-在github的web界面完成提交pr的流程">4. 在GitHub的Web界面完成提交PR的流程&lt;/h3>
 &lt;p>&lt;img src="../images/submitPR.png" alt="">&lt;/p>
 &lt;ul>
 &lt;li>提完 PR 后请求相关开发人员 review，并设置Labels来表明提交的代码属于哪一个模块或者哪几个模块&lt;/li>
@@ -344,14 +236,14 @@ $ git push origin feature/implement-x &lt;span style="color:#8f5902;font-style:i
 &lt;/ul>
 &lt;p>&lt;img src="../images/robot_review_label.png" alt="">&lt;/p>
 &lt;p>​ 所有Label都可以在issues——Labels下查询到，带area/前缀的Label均可以使用评论&amp;quot;/area&amp;quot;的形式添加&lt;/p>
-&lt;ul>
-&lt;li>如果是 bugfix 或者需要合并到之前 release 分支的 feature PR，需要额外使用脚本将此PR cherry-pick 到对应的 release 分支&lt;/li>
-&lt;/ul>
+&lt;h3 id="5-cherry-pick-代码">5. cherry-pick 代码&lt;/h3>
+&lt;p>如果是 bugfix 或者需要合并到之前 release 分支的 feature PR，需要额外使用脚本将此PR cherry-pick 到对应的 release 分支&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 自行下载安装 github 的 cli 工具：https://github.com/github/hub&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># OSX 使用: brew install hub&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># macOS 使用: brew install hub&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># Debian: sudo apt install hub&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 二进制安装: https://github.com/github/hub/releases&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 设置github的用户名&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 可已把该环境变量放到 ~/.bashrc 里面，如果使用的 zsh 则放到 ~/.zshrc 里面&lt;/span>
 $ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">GITHUB_USER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;your_username&amp;gt;
 &lt;span style="color:#8f5902;font-style:italic"># 使用脚本自动 cherry-pick PR 到 release 分支&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如现在有一个提交的PR的编号为18，要把它合并到 release/3.4&lt;/span>
@@ -364,7 +256,43 @@ $ git am --continue
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 提交 git 代码后需要书写 commit 内容，规范请参考: &lt;a href="../git-convention">Git 提交内容规范&lt;/a>。
-&lt;/div></description></item><item><title>Docs: Git 提交内容规范</title><link>https://www.cloudpods.org/zh/docs/development/git-convention/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/git-convention/</guid><description>
+&lt;/div>
+&lt;h2 id="开发效率提升推荐配置">开发效率提升推荐配置&lt;/h2>
+&lt;p>上述的提 PR 流程使用到了很多命令行操作，特别是在执行 &lt;code>./scripts/cherry_pick_pull.sh&lt;/code> 脚本的时候会输入很多字符。以及每次执行该脚本都需要输入 github 的 token。重复执行这些操作会让人觉得浪费时间。&lt;/p>
+&lt;p>下面提供一些配置和工具，可以提升一些命令行下的开发效率，请根据自己的实际需要选择配置。&lt;/p>
+&lt;h3 id="避免每次输入-github-认证信息">避免每次输入 github 认证信息&lt;/h3>
+&lt;p>每次 push 代码或者执行 cherry_pick_pull.sh 脚本的时候，都需要输入 github 账号和 token，可以配置 git credential cache 缓存输入的认证信息。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># tells Git to keep your password cached in memory for a particular amount of minutes&lt;/span>
+$ git config --global credential.helper &lt;span style="color:#4e9a06">&amp;#34;cache --timeout=86400&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外如果想实现 github 自动登陆，可以创建 &lt;code>~/.netrc&lt;/code> 文件，里面配置 github 用户名和 token。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat ~/.netrc
+machine github.com
+login &lt;span style="color:#000">$github_user&lt;/span>
+password &lt;span style="color:#000">$github_token&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="提升命令重复输入效率">提升命令重复输入效率&lt;/h3>
+&lt;p>在 shell 里面重复输入命令，可以通过&amp;rsquo;上键&amp;rsquo;或者&amp;rsquo;Ctrl-p' 输入上一条执行过的命令。&lt;/p>
+&lt;p>另外一个好用的功能是输入 &amp;lsquo;Ctrl-r&amp;rsquo; 就会进入 shell 的已输入命令查找模式，然后在这个模式里面输入之前命令的关键字，就可以进行查找。如果不匹配重复按 &amp;lsquo;Ctrl-r&amp;rsquo; 就会继续找，找到想要的命令后，按下 &amp;lsquo;Enter&amp;rsquo; 就可以重复输入之前输入的命令。合理的使用 &amp;lsquo;Ctrl-r&amp;rsquo; 可以极大的提升重复相关命令的输入效率。&lt;/p>
+&lt;p>另外推荐安装一个不错的命令行模糊查找工具(command-line fuzzy finder)，叫做 &lt;a href="https://github.com/junegunn/fzf">fzf&lt;/a> ，参考该文档安装 &lt;a href="https://github.com/junegunn/fzf#installation">fzf installation&lt;/a>。安装配置完该工具后，再使用 &amp;lsquo;Ctrl-r&amp;rsquo; ，就会进入一个命令行模糊查找的模式，比 shell 自带的 &amp;lsquo;Ctrl-r&amp;rsquo; 命令查找要好用。&lt;/p>
+&lt;p>另外关于命令行下的使用思想，非常建议阅读这篇文章：&lt;a href="https://github.com/jlevy/the-art-of-command-line">The Art of Command Line&lt;/a>。&lt;/p>
+&lt;h3 id="美化-shell">美化 shell&lt;/h3>
+&lt;p>在 linux 和 macOS 系统自带的 shell 默认是 bash，进入 git 代码仓库，$PS1 是没有显示 git branch 等信息的，可以使用下面的方式美化系统的 shell，提供更舒适的命令行操作体验。&lt;/p>
+&lt;p>下面提供2种方式美化 shell ，请根据自己需要选择其一就行：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>bash + &lt;a href="https://github.com/ohmybash/oh-my-bash">oh-my-bash&lt;/a> 的方式&lt;/p>
+&lt;ul>
+&lt;li>系统自带 bash，所以只需要参考 &lt;a href="https://github.com/ohmybash/oh-my-bash#getting-started">oh-my-bash 安装文档&lt;/a>配置即可。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>zsh + &lt;a href="https://github.com/ohmyzsh/ohmyzsh">ohmyzsh&lt;/a>：这种方式需要安装 zsh 和 ohmyzsh 插件，zsh 和 bash 类似都是 shell ，但提供更丰富的特性，结合 ohmyzsh 插件使用是很多开发者的选择&lt;/p>
+&lt;ul>
+&lt;li>zsh 安装参考文档: &lt;a href="https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH">安装 zsh&lt;/a>&lt;/li>
+&lt;li>ohmyzsh 插件安装参考: &lt;a href="https://github.com/ohmyzsh/ohmyzsh#basic-installation">安装 ohmyzsh&lt;/a>&lt;/li>
+&lt;li>另外需要注意的是 zsh 的默认配置文件在 &lt;code>~/.zshrc&lt;/code>，如果之前在 &lt;code>~/.bashrc&lt;/code> 里面加了一些环境变量，需要迁移到 &lt;code>~/.zshrc&lt;/code> 里面。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: Git 提交内容规范</title><link>https://www.cloudpods.org/zh/docs/development/git-convention/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/git-convention/</guid><description>
 &lt;p>为了方便代码提交记录的查看，以及以后的统计，我们制定了以下使用 Git 书写提交内容的规范，提交代码的时候请大家遵循以下的格式。&lt;/p>
 &lt;h2 id="git-提交记录书写规范">Git 提交记录书写规范&lt;/h2>
 &lt;p>格式如下:&lt;/p>
@@ -440,6 +368,29 @@ $ git cz
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>相关配置参考：https://github.com/lintingzhen/commitizen-go/blob/master/README.MD#configure&lt;/p>
 &lt;p>当然工具并不是说强制使用，只是说有工具的帮助，生成的 commit 内容会更统一一点　;)&lt;/p>
 &lt;p>当然也有 nodejs 版本的工具，可能更符合前端的使用: &lt;a href="https://github.com/commitizen/cz-cli">https://github.com/commitizen/cz-cli&lt;/a> ，前端的同学也可以使用这个工具。&lt;/p>
+&lt;h2 id="cherry-pick">cherry pick&lt;/h2>
+&lt;p>用于帮助用户合并代码至指定release版本。&lt;/p>
+&lt;p>1、下载安装hub&lt;/p>
+&lt;p>hub地址：https://github.com/github/hub&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Mac环境下安装&lt;/span>
+$ brew install hub
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>2、配置hub环境变量&lt;/p>
+&lt;p>1.编辑hub文件&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vim /User/username/.config
+user: &amp;lt;github_username&amp;gt;
+oauth_token: &amp;lt;github_token&amp;gt;
+protocol: https
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>2.生成github_token&lt;/p>
+&lt;p>github-&amp;gt;个人中心-&amp;gt;settings-&amp;gt;developer settings -&amp;gt;personal access tokens-&amp;gt;generate new token&lt;/p>
+&lt;img src="../images/github_token_location.png" width="800">
+&lt;p>note:该token用于何处&lt;/p>
+&lt;p>expiration:token有效期，建议设置no expiration永久保留&lt;/p>
+&lt;p>repo:all&lt;/p>
+&lt;p>将生成的token放入/User/username/.config中的oauth_token中&lt;/p>
+&lt;p>3、执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./scripts/cherry_pick_pull.sh upstream/&amp;lt;分支&amp;gt; &amp;lt;PR number&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>4、tips:&lt;/p>
+&lt;p>scripts/cherry_pick_pull可重复执行，覆盖上一次结果，出现already时结果已覆盖。&lt;/p>
 &lt;h2 id="参考">参考&lt;/h2>
 &lt;ul>
 &lt;li>
@@ -451,6 +402,379 @@ $ git cz
 &lt;li>
 &lt;p>&lt;a href="https://blog.csdn.net/noaman_wgs/article/details/103429171">https://blog.csdn.net/noaman_wgs/article/details/103429171&lt;/a>&lt;/p>
 &lt;/li>
+&lt;/ul></description></item><item><title>Docs: Cloudpods Go 语言规范</title><link>https://www.cloudpods.org/zh/docs/development/specification/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/specification/</guid><description>
+&lt;h2 id="代码风格">代码风格&lt;/h2>
+&lt;p>大部分格式问题都可以通过 &lt;strong>gofmt&lt;/strong> 解决，gofmt 自动格式化代码，保证所有的go代码与官方推荐的格式保持一致，于是所有格式有关问题，都以gofmt的结果为准。
+不同的编辑器有不同的配置, sublime的配置教程：http://michaelwhatcott.com/gosublime-goimports/&lt;/p>
+&lt;ul>
+&lt;li>LiteIDE默认已经支持了goimports，如果你的不支持请点击属性配置-&amp;gt;golangfmt→勾选goimports保存之前自动fmt你的代码&lt;/li>
+&lt;li>使用 vim 开发请安装插件：https://github.com/fatih/vim-go 或者 coc.nvim + gopls&lt;/li>
+&lt;li>使用 vscode 开发请直接安装里面的 Go 插件：https://github.com/golang/vscode-go&lt;/li>
+&lt;/ul>
+&lt;h2 id="命名规则">命名规则&lt;/h2>
+&lt;p>Go语言程序员推荐使用 &lt;strong>驼峰式&lt;/strong> 命名,当名字有几个单词组成的时优先使用大小写分隔,而不是优先用下划线分隔。
+因此,在标准库有 QuoteRuneToASCII 和 parseRequestLine 这样的函数命名,但是一般不会用 quote_rune_to_ASCII 和 parse_request_line 这样的命名。
+而像ASCII和HTML这样的缩略词则避免使用大小写混合的写法,它们可能被称为htmlEscape、HTMLEscape或escapeHTML,但不会是escapeHtml。&lt;/p>
+&lt;h2 id="文件名">文件名&lt;/h2>
+&lt;p>以kerbab命名法命名，比如：foo_bar.go&lt;/p>
+&lt;h2 id="包名-package">包名 (package)&lt;/h2>
+&lt;p>包名与包所在的目录名一致并小写&lt;/p>
+&lt;h2 id="结构体-struct">结构体 (Struct)&lt;/h2>
+&lt;p>必须以 &lt;strong>S&lt;/strong> 开头，私有struct名以小写 s 开头
+遵循CamelCase(驼峰）命名法，由有意义的名词组合而成&lt;/p>
+&lt;h2 id="接口-interface">接口 (Interface)&lt;/h2>
+&lt;p>遵循CamelCase(驼峰）命名法
+必须以 I 开头，私有interface名以小写 i 开头 , 比如：IModelManager&lt;/p>
+&lt;h2 id="函数或方法">函数或方法&lt;/h2>
+&lt;ul>
+&lt;li>遵循CamelCase(驼峰）命名法，由有意义的英文单词拼接而成&lt;/li>
+&lt;li>若函数或方法为判断类型（返回值主要为 bool 类型），则名称应以 Has, Is, Can 或 Allow 等判断性动词开头：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">HasPrefix&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">prefixes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">IsEntry&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">entries&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">CanManage&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">name&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">AllowGitHook&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>必须以动词开头，如Get/Set/Make/Upload等，从名字能看出该方法实现的功能&lt;/li>
+&lt;/ul>
+&lt;h2 id="常量">常量&lt;/h2>
+&lt;ul>
+&lt;li>常量均需使用全部大写字母组成，并使用下划线分词：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">APP_VER&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.7.0.1110 Beta&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>如果是枚举类型的常量，需要先创建相应类型，并且以大写 T（公共类型） 或小写 t（私有类型） 开头：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">TScheme&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#000">HTTP&lt;/span> &lt;span style="color:#000">TScheme&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;http&amp;#34;&lt;/span>
+&lt;span style="color:#000">HTTPS&lt;/span> &lt;span style="color:#000">TScheme&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;https&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>如果模块的功能较为复杂、常量名称容易混淆的情况下，为了更好地区分枚举类型，可以使用完整的前缀：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">TPullRequestStatus&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#000">PULL_REQUEST_STATUS_CONFLICT&lt;/span> &lt;span style="color:#000">TPullRequestStatus&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">iota&lt;/span>
+&lt;span style="color:#000">PULL_REQUEST_STATUS_CHECKING&lt;/span>
+&lt;span style="color:#000">PULL_REQUEST_STATUS_MERGEABLE&lt;/span>
+&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="变量">变量&lt;/h2>
+&lt;h3 id="变量命名">变量命名&lt;/h3>
+&lt;ul>
+&lt;li>遵循CamelCase(驼峰）命名法，由有意义的英文单词拼接而成&lt;/li>
+&lt;li>必须为名词，变量命名基本上遵循相应的英文表达或简写&lt;/li>
+&lt;li>在相对简单的环境（对象数量少、针对性强）中，可以将一些名称由完整单词简写为单个字母，例如：
+&lt;ul>
+&lt;li>user 可以简写为 u&lt;/li>
+&lt;li>userID 可以简写 uid&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>若变量类型为 bool 类型，则名称应以 Has, Is, Enable, Can 或 Allow 开头：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">
+&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">isExist&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">hasConflict&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">canManage&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">allowGitHook&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>上条规则也适用于结构定义：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">
+&lt;span style="color:#8f5902;font-style:italic">// Webhook represents a web hook object.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">Webhook&lt;/span> &lt;span style="color:#204a87;font-weight:bold">struct&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">Id&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int64&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;pk autoincr&amp;#34;`&lt;/span>
+&lt;span style="color:#000">RepoID&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int64&lt;/span>
+&lt;span style="color:#000">OrgID&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int64&lt;/span>
+&lt;span style="color:#000">Url&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;url TEXT&amp;#34;`&lt;/span>
+&lt;span style="color:#000">ContentType&lt;/span> &lt;span style="color:#000">HookContentType&lt;/span>
+&lt;span style="color:#000">Secret&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;TEXT&amp;#34;`&lt;/span>
+&lt;span style="color:#000">Events&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;TEXT&amp;#34;`&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">HookEvent&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;-&amp;#34;`&lt;/span>
+&lt;span style="color:#000">IsSSL&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;is_ssl&amp;#34;`&lt;/span>
+&lt;span style="color:#000">IsActive&lt;/span> &lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>
+&lt;span style="color:#000">HookTaskType&lt;/span> &lt;span style="color:#000">HookTaskType&lt;/span>
+&lt;span style="color:#000">Meta&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;TEXT&amp;#34;`&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// store hook-specific attributes
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">LastStatus&lt;/span> &lt;span style="color:#000">HookStatus&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// Last delivery status
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">Created&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Time&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;CREATED&amp;#34;`&lt;/span>
+&lt;span style="color:#000">Updated&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Time&lt;/span> &lt;span style="color:#4e9a06">`xorm:&amp;#34;UPDATED&amp;#34;`&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="string变量">string变量&lt;/h3>
+&lt;p>类似Java的String，golang中的string为immutable变量，通过concat构造string时，请用bytes.Buffer或者strings.Builder&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">buf&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Buffer&lt;/span>
+&lt;span style="color:#000">buf&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">WriteByte&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;a&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">buf&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">WriteString&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;b&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">buf&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">String&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="size变量命名">size变量命名&lt;/h3>
+&lt;p>容量，大小，时间等的变量，为了避免量纲的混淆，需要带上单位量纲，例如：sizeMb, sizeGb, intervalSeconds等。&lt;/p>
+&lt;h2 id="声明语句">声明语句&lt;/h2>
+&lt;h3 id="函数或方法-1">函数或方法&lt;/h3>
+&lt;ul>
+&lt;li>函数或方法的参数排列顺序遵循以下几点原则（从左到右）：
+&lt;ul>
+&lt;li>简单类型优先于复杂类型&lt;/li>
+&lt;li>尽可能将同种类型的参数放在相邻位置，则只需写一次类型&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>以下声明语句，User 类型要复杂于 string 类型，但由于 Repository 是 User 的附属品，首先确定 User 才能继而确定 Repository。因此，User 的顺序要优先于 repoName。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">IsRepositoryExist&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">user&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">User&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">repoName&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>函数的返回值尽量避免使用命名的函数返回值
+举例：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">findCertEndPosition&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">endPost&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Index&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CERT_SEP&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">err&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">ErrOutOfRange&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议的方式：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">findCertEndPosition&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Index&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CERT_SEP&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">-&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ErrOutOfRange&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">endPos&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>除非函数执行流程确定无错误发生，或者错误可以确定忽略，函数的返回值尽量携带error。代码流程中遇到错误要尽早返回，并且除非做了特殊处理，遇到错误时应该立即显式返回。&lt;/li>
+&lt;/ul>
+&lt;p>举例：不建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">findCertEndPosition&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Index&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CERT_SEP&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">log&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Errorf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;find not certEndPost&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// find error, but no immediate return
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">endPos&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议的方式：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">findCertEndPosition&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Index&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CERT_SEP&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">log&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Errorf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;find not certEndPost&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// find error and immediately return error
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">-&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ErrOutOfRange&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">endPos&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>避免不必要的else分支&lt;/li>
+&lt;/ul>
+&lt;p>举例: 不建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">s&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SReadSeeker&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">Read&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">readerOffset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">readerSize&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">reader&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Read&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">n&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">wn&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">werr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">tmpFile&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Write&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span>&lt;span style="color:#000;font-weight:bold">[:&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">])&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">werr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">werr&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">wn&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#000">n&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">errors&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Error&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;sFakeSeeker write less bytes&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#204a87">int64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">readerOffset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#204a87">int64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span> &lt;span style="color:#204a87;font-weight:bold">else&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">tmpFile&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ReadAt&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">n&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#204a87">int64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">s&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SReadSeeker&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">Read&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">readerOffset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">readerSize&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">reader&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Read&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">n&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">wn&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">werr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">tmpFile&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Write&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span>&lt;span style="color:#000;font-weight:bold">[:&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">])&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">werr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">werr&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">wn&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#000">n&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">errors&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Error&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;sFakeSeeker write less bytes&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#204a87">int64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">readerOffset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#204a87">int64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">tmpFile&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ReadAt&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">p&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">n&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">s&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">offset&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#204a87">int64&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">n&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>除非必要，尽量避免使用interface{}, jsonutils.JSONObject等通用的数据类型作为函数的输入参数和输出参数。建议定义struct或者专门的type来约束参数类型，以利用好golang的静态类型检查，发现传参错误。&lt;/li>
+&lt;/ul>
+&lt;h2 id="控制语句">控制语句&lt;/h2>
+&lt;p>如非必须，避免使用超过3个分支以上的if &amp;hellip; else &amp;hellip; 嵌套，这种情况应该考虑使用switch case语句替换。
+尽量避免使用if初始化语句，除非初始化语句只有一个分支。禁止使用多个分支的if初始化语句。&lt;/p>
+&lt;p>举例：不建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">diskId&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CreateDisk&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">StorageType&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SizeGb&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Desc&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Image&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span> &lt;span style="color:#204a87;font-weight:bold">else&lt;/span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">disk&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetDisk&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">diskId&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span> &lt;span style="color:#204a87;font-weight:bold">else&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">printObject&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">disk&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议的方式:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#000">diskId&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">CreateDisk&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">StorageType&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SizeGb&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Desc&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">args&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Image&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">disk&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetDisk&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">diskId&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">printObject&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">disk&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>当使用range循环枚举Array/Slice和Map时，需要注意在如下的模式中，变量k, v的内存地址在每次循环时都是同一个，每次循环开始时通过内存拷贝，将对应key值和Slice[k]/Map[k]的值拷贝到k, v的内存中。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000">k&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">v&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">range&lt;/span> &lt;span style="color:#000">myMap&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// access v
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果要直接访问Slice[k]/Map[k]的内存，请用如下方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000">k&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">range&lt;/span> &lt;span style="color:#000">myMap&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// access &amp;amp;myMap[k]
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议：使用for&amp;hellip;range遍历map或slice时，如果不确定，请只对key(for map)或index(for slice)进行遍历，在for &amp;hellip;range的body里，通过map[key]或slice[index]访问map或slice里的元素。&lt;/p>
+&lt;h2 id="行宽">行宽&lt;/h2>
+&lt;p>尽量避免很长的一行代码&lt;/p>
+&lt;p>举例：不建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">init&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">CachedimageManager&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">SCachedimageManager&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">SStandaloneResourceBaseManager&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">db&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewStandaloneResourceBaseManager&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">SCachedimage&lt;/span>&lt;span style="color:#000;font-weight:bold">{},&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cachedimages_tbl&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cachedimage&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cachedimages&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">init&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">CachedimageManager&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">SCachedimageManager&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">SStandaloneResourceBaseManager&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">db&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewStandaloneResourceBaseManager&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#000">SCachedimage&lt;/span>&lt;span style="color:#000;font-weight:bold">{},&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;cachedimages_tbl&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;cachedimage&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;cachedimages&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="函数间距">函数间距&lt;/h2>
+&lt;p>尽量避免函数直接紧挨一起
+举例：不建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">IsRepositoryExist&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">user&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">User&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">repoName&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">findCertEndPosition&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Index&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CERT_SEP&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">-&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ErrOutOfRange&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">endPos&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>建议的方式&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">IsRepositoryExist&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">user&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">User&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">repoName&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">findCertEndPosition&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">bytes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Index&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">certBytes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CERT_SEP&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">endPos&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">-&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">ErrOutOfRange&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">endPos&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="receiver或者函数传参类型by-value-or-by-pointer建议">Receiver或者函数传参类型（by value or by pointer）建议&lt;/h2>
+&lt;ul>
+&lt;li>方法的receiver或者入参可以by value或by pointer来传递，参考https://github.com/golang/go/wiki/CodeReviewComments#receiver-type，一般来说遵循如下建议：
+&lt;ul>
+&lt;li>如果receiver或入参的类型是map, func或者chan，不要用指针。如果是slice，如果不想重新分配slice（reslice or reallocate the slice），也不要用指针。&lt;/li>
+&lt;li>如果该方法内需要修改该receiver或入参的成员变量，必须用指针&lt;/li>
+&lt;li>如果receiver或者入参是包含sync.Mutex或其他用于同步的数据结构，必须用指针&lt;/li>
+&lt;li>如果receiver或者入参是很大的struct或者array，用指针传递会高效一些（避免了内存拷贝）&lt;/li>
+&lt;li>如果receiver或者入参是struct, array, slice，并且其成员变量包含指针，并且需要修改该指针指向的值，那么建议用指针&lt;/li>
+&lt;li>如果receiver或者入参是一个基本数据（如int, string, time.Time），小的struct，并且对该数的修改只在函数内有效，那建议传值。值传递的参数在栈上分配，尽量使用值传递可以降低内存垃圾回收几率，提高程序的效率&lt;/li>
+&lt;li>最后，如果不太确定，就传指针&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="代码注释">代码注释&lt;/h2>
+&lt;p>注释应优先使用双斜线（//）。用“/* &amp;hellip; */”的情况：大段文字，长度达页，例如encoding/gob的doc.go
+代码中“魔法”的部分，应通过注释描述缘由，变更此处的注意事项，以及变更不当的后果。这样做改进时有机会可以照顾到
+注释应该“言之有物”，简练便于快速阅读&lt;/p>
+&lt;ul>
+&lt;li>通常以被注释的名字开头，用一个短句概括功能（who does what），上下文一般是当前package或者其所组成的更大功能点。&lt;/li>
+&lt;li>更细节的描述另开段落，一个段落一件事，段首第一句话体现后续内容主题
+代码变更过程中，不再使用的代码应直接删除，不建议使用注释
+举例:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8f5902;font-style:italic">// Errorf formats according to a format specifier and returns the string
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">// as a value that satisfies error.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">Errorf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">format&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">a&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>&lt;span style="color:#204a87;font-weight:bold">interface&lt;/span>&lt;span style="color:#000;font-weight:bold">{})&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">errors&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">New&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Sprintf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">format&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">a&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>&lt;span style="color:#000;font-weight:bold">))&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// Strings for use with buffer.WriteString.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">// This is less overhead than using buffer.Write with byte arrays.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#000">commaSpaceString&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;, &amp;#34;&lt;/span>
+&lt;span style="color:#000">nilAngleString&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;lt;nil&amp;gt;&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// State represents the printer state passed to custom formatters.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">// It provides access to the io.Writer interface plus information about
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">// the flags and options for the operand&amp;#39;s format specifier.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">State&lt;/span> &lt;span style="color:#204a87;font-weight:bold">interface&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// Write is the function to call to emit formatted output to be printed.
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">Write&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">b&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">byte&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">n&lt;/span> &lt;span style="color:#204a87;font-weight:bold">int&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="导入标准库第三方或其它包">导入标准库、第三方或其它包&lt;/h2>
+&lt;p>除标准库外，Go 语言的导入路径基本上依赖代码托管平台上的 URL 路径，因此一个源文件需要导入的包有 4 种分类：标准库、第三方包、组织内其它包和当前包的子包。
+基本规则：&lt;/p>
+&lt;ul>
+&lt;li>如果同时存在 2 种及以上，则需要使用分区来导入。每个分类使用一个分区，采用空行作为分区之间的分割。&lt;/li>
+&lt;li>在非测试文件(*_test.go）中，禁止使用 . 来简化导入包的对象调用。&lt;/li>
+&lt;li>禁止使用相对路径导入（./subpackage），所有导入路径必须符合 go get 标准。
+下面是一个完整的示例：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;encoding/json&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;net/http&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;os&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;github.com/codegangsta/cli&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;gopkg.in/macaron.v1&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;k8s.io/helm/pkg/helm&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;github.com/yunionio/jsonutils&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;github.com/yunionio/log&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;github.com/yunionio/onecloud/pkg/cloudcommon&amp;#34;&lt;/span>
+&lt;span style="color:#4e9a06">&amp;#34;github.com/yunionio/onecloud/pkg/compute/models&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="api参数暴露">API参数暴露&lt;/h2>
+&lt;p>基本规则：&lt;/p>
+&lt;ul>
+&lt;li>创建及过滤参数,若是内部的model,请使用model的keyword, 避免使用keyword_id向外暴露参数&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">type&lt;/span> &lt;span style="color:#000">ServerCreateInput&lt;/span> &lt;span style="color:#204a87;font-weight:bold">struct&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">//主机快照ID或name，尽量使用主机快照ID进行唯一匹配
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">InstanceSnapshot&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">//swagger:ignore 内部使用，API文档里面不会出现此参数
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">InstanceSnapshotId&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">manager&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SGusetManager&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#000">ValidateCreateData&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>&lt;span style="color:#000;font-weight:bold">.,&lt;/span> &lt;span style="color:#000">input&lt;/span> &lt;span style="color:#000">api&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ServerCreateInput&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>
+&lt;span style="color:#000">input&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">InstanceSnapshotId&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">InstanceSnapshotManager&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">FetchByIdOrName&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">userCred&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">input&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">InstanceSnapshot&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="参考">参考&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/Unknwon/go-code-convention/tree/master/zh-CN">https://github.com/Unknwon/go-code-convention/tree/master/zh-CN&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/golang/go/wiki/CodeReviewComments">https://github.com/golang/go/wiki/CodeReviewComments&lt;/a>&lt;/li>
+&lt;li>Godoc: documenting Go code，https://blog.golang.org/godoc-documenting-go-code&lt;/li>
 &lt;/ul></description></item><item><title>Docs: 手动部署开发集群</title><link>https://www.cloudpods.org/zh/docs/development/single_service_dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/single_service_dev/</guid><description>
 &lt;p>本文介绍手工部署用于开发测试用途的服务集群的步骤。&lt;/p>
 &lt;h2 id="适用人群">适用人群&lt;/h2>
@@ -562,7 +886,58 @@ $ climc service-create --enabled identity keystone
 $ climc endpoint-create --enabled keystone Yunion public http://127.0.0.1:35357/v3
 $ climc endpoint-create --enabled keystone Yunion admin http://127.0.0.1:35357/v3
 $ climc endpoint-create --enabled keystone Yunion internal http://127.0.0.1:5000/v3
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="计算服务region初始化">计算服务（region）初始化&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="初始化离线套餐服务">初始化离线套餐服务&lt;/h2>
+&lt;p>套餐存储在阿里云对象存储，是由region服务查找对应的endpoint去拉取套餐&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 创建 offlinecloudmeta 服务&lt;/span>
+$ climc service-create --enabled offlinecloudmeta offlinecloudmeta
+&lt;span style="color:#8f5902;font-style:italic"># 创建 offlinecloudmeta 端点&lt;/span>
+$ climc endpoint-create --enabled offlinecloudmeta Yunion public https://yunionmeta.oss-cn-beijing.aliyuncs.com
+$ climc endpoint-create --enabled offlinecloudmeta Yunion admin https://yunionmeta.oss-cn-beijing.aliyuncs.com
+$ climc endpoint-create --enabled offlinecloudmeta Yunion internal https://yunionmeta.oss-cn-beijing.aliyuncs.com
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置服务yunionconf初始化">配置服务（yunionconf）初始化&lt;/h2>
+&lt;p>yuninconf服务保存了前端页面的配置选项&lt;/p>
+&lt;ol>
+&lt;li>首先在keystone配置yunionconf服务的服务账号，并且注册yunionconf服务的服务端点（service endpoint）。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 创建 yunionconf 服务&lt;/span>
+$ climc service-create --enabled yunionconf yunionconf
+&lt;span style="color:#8f5902;font-style:italic"># 确定 yunionconf 服务监听端口，这里假定是8010，后面yunionconf服务配置时指定端口得是8010&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 创建 yunionconf 端点&lt;/span>
+$ climc endpoint-create --enabled yunionconf Yunion internal http://127.0.0.1:8010
+$ climc endpoint-create --enabled yunionconf Yunion public http://127.0.0.1:8010
+&lt;span style="color:#8f5902;font-style:italic"># 创建 yunionconf 服务的服务账号&lt;/span>
+$ climc user-create --enabled --system-account --no-web-console --password yunionconf@admin yunionconfadmin
+&lt;span style="color:#8f5902;font-style:italic"># 赋予 yunionconfadmin 用户 admin 角色&lt;/span>
+$ climc user-join-project --role admin --project system yunionconfadmin
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>其次配置yunionconf的数据库&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 为yunionconf服务创建数据库及数据库账号&lt;/span>
+$ mysql -uroot -e &lt;span style="color:#4e9a06">&amp;#39;create database yunionconf;&amp;#39;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里设置一个密码为cloudpods-yunionconf的yunionconf用户&lt;/span>
+$ mysql -uroot -e &lt;span style="color:#4e9a06">&amp;#39;grant all privileges on yunionconf.* to &amp;#34;yunionconf&amp;#34;@&amp;#34;%&amp;#34; identified by &amp;#34;cloudpods-yunionconf&amp;#34;; flush privileges;&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>下面配置并启动yunionconf服务&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 编译 yunionconf
+$ cd /root/cloudpods/ &amp;amp;&amp;amp; make cmd/yunionconf
+# 编写yunionconf服务的配置文件
+# 这里要注意使用刚创建的数据库及数据库账号密码, 及yunionconf服务认证的用户名密码
+$ cat&amp;lt;&amp;lt;EOF &amp;gt;/etc/yunion/yunionconf.conf
+region = 'Yunion'
+address = '127.0.0.1'
+port = 8010
+auth_uri = 'http://127.0.0.1:35357/v3'
+admin_user = 'yunionconfadmin'
+admin_password = 'yunionconf@admin'
+admin_tenant_name = 'system'
+sql_connection = 'mysql+pymysql://yunionconf:cloudpods-yunionconf@localhost:3306/yunionconf?charset=utf8'
+log_level = 'debug'
+auto_sync_table = true
+EOF
+# 启动 yunionconf 服务
+$ /root/cloudpods/_output/bin/yunionconf --conf /etc/yunion/yunionconf.conf
+&lt;/code>&lt;/pre>&lt;h2 id="计算服务region初始化">计算服务（region）初始化&lt;/h2>
 &lt;p>region服务是基础服务，也是控制节点。&lt;/p>
 &lt;ol>
 &lt;li>首先在keystone配置region服务的服务账号，并且注册region服务的服务端点（service endpoint）。&lt;/li>
@@ -611,7 +986,7 @@ $ /root/cloudpods/_output/bin/region --conf /etc/yunion/region.conf
 &lt;pre>&lt;code># 测试 region 服务接口
 $ climc server-list
 *** Total: 0 ***
-&lt;/code>&lt;/pre>&lt;p>其他使用数据库的服务的配置步骤和region类似。&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>其他使用数据库的服务的配置步骤和region类似, 这里注意调度器(scheduler)的配置文件同样是使用region服务的配置文件。&lt;/p>
 &lt;h2 id="api网关服务apigateway初始化">API网关服务（apigateway）初始化&lt;/h2>
 &lt;p>api网关是web到各个服务的中间层，web请求到达nginx再由nginx分发到api网关服务，最终由api网关去判断请求需要转发到哪个服务&lt;/p>
 &lt;p>首先为api网关创建服务账号&lt;/p>
@@ -701,7 +1076,73 @@ $ climc user-create --enabled --password admin@123 admin
 &lt;span style="color:#8f5902;font-style:italic"># 赋予 admin 用户 admin 角色&lt;/span>
 $ climc user-join-project --role admin --project system admin
 &lt;span style="color:#8f5902;font-style:italic"># 此时可以打开虚拟机的地址(http://ip)进行前端登录, 用户名密码分别为admin/admin@123&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="后续改进">后续改进&lt;/h1>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它服务配置">其它服务配置&lt;/h2>
+&lt;h3 id="监控服务monitor初始化">监控服务（monitor）初始化&lt;/h3>
+&lt;p>monitor 为监控服务，依赖外部的 influxdb v1.7.7 服务。&lt;/p>
+&lt;ol>
+&lt;li>首先在keystone配置monitor服务的服务账号，并且注册monitor服务的服务端点（service endpoint）。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 创建 region 服务&lt;/span>
+$ climc service-create --enabled monitor monitor
+&lt;span style="color:#8f5902;font-style:italic"># 确定 monitor 服务监听端口，这里假定是8093，后面 monitor 服务配置时指定端口得是 8093&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 创建 monitor 端点&lt;/span>
+$ climc endpoint-create --enabled monitor Yunion internal http://127.0.0.1:8093
+$ climc endpoint-create --enabled monitor Yunion public http://127.0.0.1:8093
+&lt;span style="color:#8f5902;font-style:italic"># 创建 monitor 服务的服务账号&lt;/span>
+$ climc user-create --enabled --system-account --no-web-console --password monitor@admin monitoradmin
+&lt;span style="color:#8f5902;font-style:italic"># 赋予 monitoradmin 用户 admin 角色&lt;/span>
+$ climc user-join-project --role admin --project system monitoradmin
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>配置 influxdb 服务&lt;/li>
+&lt;/ol>
+&lt;p>monitor 依赖 influxdb 服务，需要在本地部署一个 influxdb 服务，然后把 influxdb 的 service endpoint 添加到集群中，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 docker 启动 influxdb 1.7.7 是最简单的方式，其它安装方式请自行搜索&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 监听到本地 8086 端口，持久化目录在 /tmp/influxdb ，可根据自己环境修改&lt;/span>
+$ docker run -p 8086:8086 -v /tmp/influxdb:/var/lib/influxdb registry.cn-beijing.aliyuncs.com/yunion/influxdb:1.7.7
+&lt;span style="color:#8f5902;font-style:italic"># 测试 influxdb 的网络连通性，如果返回报错说明连通性没问题&lt;/span>
+$ curl http://127.0.0.1:8086/query
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;error&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;missing required parameter \&amp;#34;q\&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 添加 influxdb service endpoint&lt;/span>
+$ climc service-create --enabled influxdb influxdb
+&lt;span style="color:#8f5902;font-style:italic"># 确定 influxdb 服务监听端口，这里假定是 8086，后面 monitor 服务配置时指定端口得是 8086&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 创建 influxdb 端点&lt;/span>
+$ climc endpoint-create --enabled influxdb Yunion internal http://127.0.0.1:8086
+$ climc endpoint-create --enabled influxdb Yunion public http://127.0.0.1:8086
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>其次配置monitor的数据库&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic"># 为monitor服务创建数据库及数据库账号&lt;/span>
+$ mysql -uroot -e &lt;span style="color:#4e9a06">&amp;#39;create database yunionmonitor;&amp;#39;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 这里设置一个密码为cloudpods-monitor的yunionmonitor用户&lt;/span>
+$ mysql -uroot -e &lt;span style="color:#4e9a06">&amp;#39;grant all privileges on yunionmonitor.* to &amp;#34;yunionmonitor&amp;#34;@&amp;#34;%&amp;#34; identified by &amp;#34;cloudpods-monitor&amp;#34;; flush privileges;&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>下面配置并启动monitor服务&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 编译 monitor
+$ cd /root/cloudpods/ &amp;amp;&amp;amp; make cmd/monitor
+# 编写monitor服务的配置文件
+# 这里要注意使用刚创建的数据库及数据库账号密码, 及monitor服务认证的用户名密码
+$ cat&amp;lt;&amp;lt;EOF &amp;gt;/etc/yunion/monitor.conf
+region = 'Yunion'
+address = '127.0.0.1'
+port = 8093
+auth_uri = 'http://127.0.0.1:35357/v3'
+admin_user = 'monitoradmin'
+admin_password = 'monitor@admin'
+admin_tenant_name = 'system'
+sql_connection = 'mysql+pymysql://yunionmonitor:cloudpods-monitor@localhost:3306/yunionmonitor?charset=utf8'
+log_level = 'debug'
+auto_sync_table = true
+EOF
+# 启动 monitor 服务
+$ /root/cloudpods/_output/bin/monitor --conf /etc/yunion/monitor.conf
+&lt;/code>&lt;/pre>&lt;ol start="5">
+&lt;li>测试monitor服务是否正常&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code># 测试 monitor 服务接口
+$ climc monitor-alert-list
+*** Total: 0 ***
+&lt;/code>&lt;/pre>&lt;h2 id="后续改进">后续改进&lt;/h2>
 &lt;ul>
 &lt;li>此步骤是直接指定的参数执行各个服务
 &lt;ul>
@@ -827,7 +1268,52 @@ $ climc user-join-project --role admin --project system admin
 &lt;h2 id="资源层">资源层&lt;/h2>
 &lt;ul>
 &lt;li>资源层实现对KVM虚拟机，裸机，VMWare虚拟机等计算资源的管理和控制功能。云管平台目前主要支持对KVM虚拟机，裸机，VMWare虚拟机，常用私有云openstack, zstack 以及公有云阿里云，Azure，腾讯云，AWS等公有云资源的管理。&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 后端服务框架</title><link>https://www.cloudpods.org/zh/docs/development/framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/framework/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 添加选项支持外表查询</title><link>https://www.cloudpods.org/zh/docs/development/extra-order/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/extra-order/</guid><description>
+&lt;h2 id="确定资源">确定资源&lt;/h2>
+&lt;p>首先确定所需添加关联的资源，例如本次为disk资源，因此在climc调用中即对应disk-list,而在climc，与region中所需修改添加的文件有cmd/climc/shell/compute/disks.go、pkg/apis/compute/disks.go、pkg/compute/models/disks.go&lt;/p>
+&lt;h2 id="climc内容">climc内容&lt;/h2>
+&lt;p>在climc中主要用于命令行输入，确定传入参数，&amp;ndash;order-by-guest-count asc|desc&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># vim cmd/climc/shell/compute/disks.go，在init()中的ListOptions中添加命令&lt;/span>
+&lt;span style="color:#204a87">type&lt;/span> DiskListOptions struct &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+options.BaseListOptions
+...
+OrderByGuestCount string &lt;span style="color:#4e9a06">`&lt;/span>help:&lt;span style="color:#4e9a06">&amp;#34;Order By Guest Count&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>
+...
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="region内容">region内容&lt;/h2>
+&lt;p>在climc中主要用于逻辑处理，确定所需添加list的命令的region服务字段&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic">#vim pkg/apis/compute/disks.go，在ListInput中添加字段&lt;/span>
+&lt;span style="color:#204a87">type&lt;/span> DiskListInput struct &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+...
+OrderByGuestCount sting &lt;span style="color:#4e9a06">`&lt;/span>json:&lt;span style="color:#4e9a06">&amp;#34;order_by_guest_count&amp;#34;&lt;/span> choices:&lt;span style="color:#4e9a06">&amp;#34;asc|desc&amp;#34;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>
+...
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#8f5902;font-style:italic">#vim pkg/compute/models/disks.go,在OrderByExtraFields函数中添加排序逻辑&lt;/span>
+func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>manager *SDiskManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> OrderByExtraFields&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>
+ctx context.Context,
+q *sqlchemy.SQuery,
+userCred mcclient.TokenCredential,
+query api.DiskListInput,
+&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>*sqlchemy.SQuery, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+...
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> db.NeedOrderQuery&lt;span style="color:#ce5c00;font-weight:bold">([]&lt;/span>string&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>query.OrderByGuestCount&lt;span style="color:#ce5c00;font-weight:bold">})&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+guestdisks :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> GuestdiskManager.Query&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>.SubQuery&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>
+disks :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> DiskManager.Query&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>.SubQuery&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>
+guestdiskQ :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> guestdisks.Query&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>
+guestdisks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+guestdisks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>,
+sqlchemy.COUNT&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_count&amp;#34;&lt;/span>, guestdisks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>,
+&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">guestdiskQ&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> guestdiskQ.LeftJoin&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>disks, sqlchemy.Equals&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, disks.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)))&lt;/span>
+guestdiskSQ :&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> guestdiskQ.GroupBy&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>.SubQuery&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>
+q.AppendField&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>q.QueryFields&lt;span style="color:#ce5c00;font-weight:bold">()&lt;/span>...&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+q.AppendField&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskSQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_count&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">))&lt;/span>
+&lt;span style="color:#000">q&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> q.LeftJoin&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guestdiskSQ, sqlchemy.Equals&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>q.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>, guestdiskSQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;disk_id&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)))&lt;/span>
+db.OrderByFields&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>q, &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>string&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>query.OrderByGuestCount&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>, &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>sqlchemy.IQueryField&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>guestdiskQ.Field&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;guest_count&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">)})&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+...
+&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 后端服务框架</title><link>https://www.cloudpods.org/zh/docs/development/framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/framework/</guid><description>
 &lt;p>介绍云平台后端服务所用的框架和相关库的使用方法，建议先阅读 &lt;a href="../../development/services/">&amp;ldquo;开发相关/服务组件介绍&amp;rdquo;&lt;/a> 了解各个服务大概的功能。&lt;/p>
 &lt;h2 id="后端服务框架">后端服务框架&lt;/h2>
 &lt;p>keystone, region, glance 等后端服务，都是用的同一套后端服务框架，这个框架是我们自己定义实现的，核心模块如下:&lt;/p>
@@ -2217,4 +2703,389 @@ pkg/mcclient/modules/compute/mod_hosts.go:func &lt;span style="color:#ce5c00;fon
 pkg/mcclient/modules/compute/mod_dbinstanceaccounts.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>this *SDBInstanceAccountManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
 pkg/mcclient/modules/compute/mod_elasticcache.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>self *ElasticCacheManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
 pkg/mcclient/modules/compute/mod_elasticcache.go:func &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>self *ElasticCacheAccountManager&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> GetLoginInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s *mcclient.ClientSession, id string, params jsonutils.JSONObject&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>jsonutils.JSONObject, error&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源纳管</title><link>https://www.cloudpods.org/zh/docs/development/resource_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/resource_sync/</guid><description/></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 添加一个API的过程</title><link>https://www.cloudpods.org/zh/docs/development/add-api/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/add-api/</guid><description>
+&lt;p>本文以DNS记录导出Zone格式文件为例，介绍如何添加一个API。&lt;/p>
+&lt;h2 id="原理">原理&lt;/h2>
+&lt;p>实现Zone格式文件导出DNS资源记录：将某个dns zone在数据库中的dns记录读出，按Zone文件的格式组织成字符串，并返回json格式的结果。&lt;/p>
+&lt;p>根据&lt;a href="../../development/framework/#">后端服务框架&lt;/a>：&lt;/p>
+&lt;ul>
+&lt;li>REST API 负责解析客户端发送的 CRUD http 请求，将不同的请求对应到 Model Dispatcher 模块；&lt;/li>
+&lt;li>Model Dispatcher 将客户端的请求分发到对应资源的业务操作；&lt;/li>
+&lt;li>Model 定义云平台各种资源，会进行数据库读写相关操作。&lt;/li>
+&lt;/ul>
+&lt;p>因此根据&lt;a href="../../development/codestruct/">后端代码结构&lt;/a>：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>pkg/compute/models为服务资源模型代码，一般一个model对应数据库中的一张表。由于要处理某个zone下的所有dns记录，所以在dns_zones.go文件中给SDnsZone增加&lt;strong>GetDetailsExports&lt;/strong>方法，必要时也可以在dns_recordsets.go文件中向SDnsRecordSet增加处理一条dns记录的方法。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SDnsZone&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">GetDetailsExports&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span> &lt;span style="color:#000">context&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Context&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span> &lt;span style="color:#000">mcclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TokenCredential&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">query&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// TODO
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>pkg/cloudcommon/db为服务models通用代码，在db_dispatcher.go文件的&lt;strong>GetSpecific&lt;/strong>方法中，可以看到对上述GetDetailsXXX方法进行了反射调用。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>cmd/climc/shell为各个服务对应的命令行工具代码，在cmd/climc/shell/compute/dnszone.go文件中调用&lt;strong>GetWithCustomShow&lt;/strong>方法，该方法会调用上述GetSpecific方法，用于测试dns-zone-exports命令返回的结果。GetWithCustomShow的第一个参数是GetDetailsXXX的XXX的小写，第二个参数为处理GetDetailsXXX返回结果的函数，第三个参数为该测试命令的参数。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#000">cmd&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetWithCustomShow&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;exports&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">func&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// TODO
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">},&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">options&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SDnsZoneIdOptions&lt;/span>&lt;span style="color:#000;font-weight:bold">{})&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="实现">实现&lt;/h2>
+&lt;h3 id="实现getdetailsexports方法">实现GetDetailsExports方法&lt;/h3>
+&lt;p>编辑 pkg/compute/models/dns_zones.go 文件&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8f5902;font-style:italic">// 将dns记录转换成zone格式，返回json
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SDnsZone&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">GetDetailsExports&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span> &lt;span style="color:#000">context&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Context&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">userCred&lt;/span> &lt;span style="color:#000">mcclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TokenCredential&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">query&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 获取数据库中dns记录
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">records&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetDnsRecordSets&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">errors&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Wrapf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">err&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;GetDnsRecordSets&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// zone文件内容
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;$ORIGIN &amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;.\n&amp;#34;&lt;/span>
+&lt;span style="color:#000">lines&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000;font-weight:bold">[]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">{}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000">_&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">record&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">range&lt;/span> &lt;span style="color:#000">records&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">lines&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">append&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">lines&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">record&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ToZoneLine&lt;/span>&lt;span style="color:#000;font-weight:bold">())&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#000">strings&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Join&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">lines&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;\n&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 将string写成map，并转换成json返回
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">rr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#204a87">make&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">map&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">rr&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;zone&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#000">result&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Marshal&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">rr&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="实现tozoneline方法">实现ToZoneLine方法&lt;/h3>
+&lt;p>编辑 pkg/compute/models/dns_recordsets.go 文件，实现上文的 ToZoneLine() 方法&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8f5902;font-style:italic">// 将一条dns记录转换成zone格式，返回string
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SDnsRecordSet&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000">ToZoneLine&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;\t&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#000">fmt&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Sprint&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">TTL&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;\tIN\t&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DnsType&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;\t&amp;#34;&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">MxPriority&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#000">fmt&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Sprint&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">MxPriority&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;\t&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DnsValue&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DnsType&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;CNAME&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">||&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DnsType&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;MX&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">||&lt;/span> &lt;span style="color:#000">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DnsType&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;SRV&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;.&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">result&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="climc命令编写">climc命令编写&lt;/h3>
+&lt;p>编辑 cmd/climc/shell/compute/dnszone.go 文件&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8f5902;font-style:italic">// 用于命令行测试
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">init&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">cmd&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">shell&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewResourceCmd&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modules&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DnsZones&lt;/span>&lt;span style="color:#000;font-weight:bold">).&lt;/span>&lt;span style="color:#000">WithKeyword&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;dns-zone&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 添加dns-zone-exports命令
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">cmd&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GetWithCustomShow&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;exports&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">func&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">result&lt;/span> &lt;span style="color:#000">jsonutils&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">JSONObject&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 将 GetDetailsExports 返回的json转换成map
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">rr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#204a87">make&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">map&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">result&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Unmarshal&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">rr&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">!=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">log&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Errorf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;error: %v&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">// 输出结果
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000">_&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">v&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">range&lt;/span> &lt;span style="color:#000">rr&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">fmt&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Printf&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;%s\n&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">v&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">},&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">options&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">SDnsZoneIdOptions&lt;/span>&lt;span style="color:#000;font-weight:bold">{})&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编译 climc 和 region&lt;/span>
+$ make cmd/climc cmd/region
+&lt;span style="color:#8f5902;font-style:italic"># 执行climc&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> cloudpods/_output/bin
+$ climc
+&lt;span style="color:#8f5902;font-style:italic"># 测试命令&lt;/span>
+climc&amp;gt; dns-zone-exports &amp;lt;zone id&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 退出&lt;/span>
+climc&amp;gt; &lt;span style="color:#204a87">exit&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源纳管</title><link>https://www.cloudpods.org/zh/docs/development/resource_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/resource_sync/</guid><description/></item><item><title>Docs: Webhook</title><link>https://www.cloudpods.org/zh/docs/development/webhook/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/webhook/</guid><description>
+&lt;p>平台的通知服务(notify)提供了回调webhook机制，允许外部系统实时接收平台的事件以及事件相关的资源信息。&lt;/p>
+&lt;h2 id="配置webhook">配置Webhook&lt;/h2>
+&lt;p>⾸先需要在机器⼈管理界⾯，增加⼀个Webhook类型的机器⼈。&lt;/p>
+&lt;p>然后在消息订阅管理界⾯，在你感兴趣消息的接收管理中新建机器⼈类型的接收⼈，并选择上述新创建Webhook机器⼈。&lt;/p>
+&lt;p>⽬前⽐较统⼀的是配置
+“资源创建、删除发送通知”,“资源调整配置发送通知”以及“资源同步发送通知”（也可能叫做“resource sync”）。&lt;/p>
+&lt;h2 id="支持webhook时间通知的资源">支持Webhook时间通知的资源&lt;/h2>
+&lt;ul>
+&lt;li>云管平台⽀持创建、删除、更新、删除的资源：虚拟机、硬盘、RDS、Redis、LB、EIP、VPC、IP⼦⽹、安全组、证书、DNS、NAT、对象存储OSS、NAS；&lt;/li>
+&lt;li>云管平台支持更新的资源：虚拟机，用户&lt;/li>
+&lt;li>云管平台只⽀持同步的资源：Webapp、Azure LB；&lt;/li>
+&lt;li>云管平台⽀持同步加删除的资源：CDN、WAF、Kafka、Elasticsearch、MongDB、TDSQL(RDS)、 Memcached(RDS )&lt;/li>
+&lt;/ul>
+&lt;h2 id="webhook消息格式">Webhook消息格式&lt;/h2>
+&lt;p>Webhook回调请求都携带http header &amp;lsquo;X-Yunion-Event&amp;rsquo;，代表触发Webhook回调通知的事件类型。&lt;/p>
+&lt;p>除&amp;quot;验证事件&amp;quot;外，reponse body示例如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;action&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;lt;action&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;resource_type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;lt;resource_type&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;resource_details&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#a40000">...&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>都包含如下三个字段：&lt;/p>
+&lt;ul>
+&lt;li>action: 表示动作（create/update/delete 等等）&lt;/li>
+&lt;li>resource_type: 表示资源类型，⽐如 server, user等&lt;/li>
+&lt;li>resource_details: 表示资源的详情信息，其的内容与通过API获取的资源详细信息一致&lt;/li>
+&lt;/ul>
+&lt;h3 id="资源同步事件">资源同步事件&lt;/h3>
+&lt;p>有三种特殊的action事件：sync_create/sync_update/sync_delete 代表的是云账号同步触发的本地资源数据与云上资源数据的同步。&lt;/p>
+&lt;ul>
+&lt;li>sync_create 同步了⼀个新的云上资源&lt;/li>
+&lt;li>sync_update 本地资源根据云上资源更新&lt;/li>
+&lt;li>sync_delete 本地资源对应的云上资源已经被删除&lt;/li>
+&lt;/ul>
+&lt;h3 id="验证事件">验证事件&lt;/h3>
+&lt;p>添加webhook时，平台会向webhook发起VALIDATE类型的调用，webhook需要处理这类请求，返回200的成功响应。&lt;/p>
+&lt;pre>&lt;code>Method: POST
+Header:
+Content-Type: application/json
+X-Yunion-Event: VALIDATE
+User-Agent: yunioncloud-go/201708
+Content-Length: 37
+Accept: */*
+Accept-Encoding: *
+Body:
+{
+&amp;quot;Msg&amp;quot;: &amp;quot;This is a validate message.&amp;quot;
+}
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 贡献文档</title><link>https://www.cloudpods.org/zh/docs/development/docs-dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/docs-dev/</guid><description>
+&lt;p>Cloudpods 文档使用 markdown 编写，所有内容都放到 &lt;a href="https://github.com/yunionio/docs.git">https://github.com/yunionio/docs.git&lt;/a> 这个仓库里面管理，然后使用 &lt;a href="https://gohugo.io/">hugo&lt;/a> 这个工具把文档转换成 HTML 静态网站，最后发布到 &lt;a href="https://www.cloudpods.org">https://www.cloudpods.org&lt;/a>。&lt;/p>
+&lt;p>本文介绍如何搭建文档编写环境，以及如何贡献文档等注意事项。&lt;/p>
+&lt;h2 id="在网页编辑已有文档">在网页编辑已有文档&lt;/h2>
+&lt;p>编辑已有文档的最简单方式是在 &lt;a href="https://cloudpods.org">https://cloudpods.org&lt;/a> 相关文档界面，点击“编辑此页”，就会跳转到文档的 github 仓库界面进行在线编辑。&lt;/p>
+&lt;p>&lt;img src="../images/web_edit_doc.png" alt="">&lt;/p>
+&lt;p>这是最简单快捷修改已有文档的方式，适合对已有文档进行小的改动。如果要新增加文档，或者全面掌握文档编写以及打包发布机制，请阅读下面的内容。&lt;/p>
+&lt;h2 id="配置文档开发环境">配置文档开发环境&lt;/h2>
+&lt;h3 id="1-fork-主仓库">1. Fork 主仓库&lt;/h3>
+&lt;p>文档放到 &lt;a href="https://github.com/yunionio/docs.git">https://github.com/yunionio/docs.git&lt;/a> 仓库进行管理，所以在编写文档之前，需要先把主仓库 fork 一份到自己的 github 账号下。&lt;/p>
+&lt;p>访问 &lt;a href="https://github.com/yunionio/docs">https://github.com/yunionio/docs&lt;/a> ，将仓库 fork 到自己的 github 账号下。&lt;/p>
+&lt;h3 id="2-clone-文档仓库">2. clone 文档仓库&lt;/h3>
+&lt;p>Fork 完成后，将自己 github 账号的 docs 文档仓库使用 &lt;code>git clone&lt;/code> 下来。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 注意这里把 &amp;lt;your_name&amp;gt; 改成自己的 github 账号&lt;/span>
+$ git clone https://github.com/&amp;lt;your_name&amp;gt;/docs --recursive
+$ &lt;span style="color:#204a87">cd&lt;/span> docs
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-安装-hugo">3. 安装 hugo&lt;/h3>
+&lt;p>&lt;a href="https://gohugo.io/">hugo&lt;/a> 这个工具的作用是把 markdown 编辑的文档转换成静态网站，我们编写完文档后需要靠这个工具来预览最终文档的效果。&lt;/p>
+&lt;p>安装 hugo 请参考文档：&lt;a href="https://gohugo.io/installation/">https://gohugo.io/installation/&lt;/a>&lt;/p>
+&lt;p>下一步是安装 npm 相关的依赖，因为主题用到了 css 相关的插件。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装 npm 相关的包&lt;/span>
+$ npm install -g postcss-cli
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果没有安装过 Node.js 和 npm 请先参考文档 &lt;a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">https://docs.npmjs.com/downloading-and-installing-node-js-and-npm&lt;/a> 安装配置 Node.js 和 npm ，然后再执行上面的命令安装 &lt;code>postcss-cli&lt;/code> 包。&lt;/p>
+&lt;h2 id="markdown-简单说明">markdown 简单说明&lt;/h2>
+&lt;p>在编写文档之前，需要掌握 markdown 的基本语法，可参考：&lt;a href="https://www.markdownguide.org/basic-syntax/">https://www.markdownguide.org/basic-syntax/&lt;/a>。&lt;/p>
+&lt;p>另外在使用 markdown 编写文档时，建议多使用语义化的标签，比如注意标题层级，使用 list item 和 codeblock 这些标签。下面是一个例子：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-markdown" data-lang="markdown">&lt;span style="color:#800080;font-weight:bold">## 2级标题
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+编写文档的时候请使用 &amp;#39;##&amp;#39; 2级标题开始，如果使用 &amp;#39;#&amp;#39; 1级标题，是不会出现在当前文档对应的目录(TOC)的。
+&lt;span style="color:#800080;font-weight:bold">### 3级子标题
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+3级标题会作为2级标题的子标题，以缩进的方式出现在文档对应的目录里面。
+&lt;span style="color:#800080;font-weight:bold">### 使用 list item
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> Todo1
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo1
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo2
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> Todo2
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo1
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubTodo2
+&lt;span style="color:#204a87;font-weight:bold">-&lt;/span> SubSubTodo1
+&lt;span style="color:#800080;font-weight:bold">### 使用 codeblock
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+当编写的文档设计到代码或者命令行操作时，应该尽量使用 codeblock 代码块语法。
+```bash
+# 更新 centos 系统
+$ sudo yum update -y
+```
+```yaml
+# yaml 注释
+key1: val1
+key2:
+sub_key1: sub_val1
+```
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>
+&lt;h2 id="2级标题">2级标题&lt;/h2>
+&lt;p>编写文档的时候请使用 &amp;lsquo;##&amp;rsquo; 2级标题开始，如果使用 &amp;lsquo;#&amp;rsquo; 1级标题，是不会出现在当前文档对应的目录(TOC)的。&lt;/p>
+&lt;h3 id="3级子标题">3级子标题&lt;/h3>
+&lt;p>3级标题会作为2级标题的子标题，以缩进的方式出现在文档对应的目录里面。&lt;/p>
+&lt;h3 id="使用-list-item">使用 list item&lt;/h3>
+&lt;ul>
+&lt;li>Todo1
+&lt;ul>
+&lt;li>SubTodo1&lt;/li>
+&lt;li>SubTodo2&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Todo2
+&lt;ul>
+&lt;li>SubTodo1&lt;/li>
+&lt;li>SubTodo2
+&lt;ul>
+&lt;li>SubSubTodo1&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="使用-codeblock">使用 codeblock&lt;/h3>
+&lt;p>当编写的文档设计到代码或者命令行操作时，应该尽量使用 codeblock 代码块语法。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 更新 centos 系统&lt;/span>
+$ sudo yum update -y
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#8f5902;font-style:italic"># yaml 注释&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">key1&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">val1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">key2&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">sub_key1&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">sub_val1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="编写文档">编写文档&lt;/h2>
+&lt;p>文档在 content/{en,zh} 目录下，选择需要的部分进行编辑或者添加，内容组织请参考：https://gohugo.io/content-management/organization/。&lt;/p>
+&lt;h3 id="目录结构说明">目录结构说明&lt;/h3>
+&lt;p>以 content/zh 目录的结构来说明各个目录包含的内容。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree -L &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> content/zh/
+content/zh/
+├── _index.html &lt;span style="color:#8f5902;font-style:italic"># 文档首页，一般不需要变更&lt;/span>
+├── blog &lt;span style="color:#8f5902;font-style:italic"># 对应博客的内容&lt;/span>
+│   ├── _index.md
+│   └── _posts &lt;span style="color:#8f5902;font-style:italic"># 包含 markdown 编写的博客&lt;/span>
+├── docs &lt;span style="color:#8f5902;font-style:italic"># 对应文档目录&lt;/span>
+│   ├── contact &lt;span style="color:#8f5902;font-style:italic"># 联系相关的文档&lt;/span>
+│   ├── development &lt;span style="color:#8f5902;font-style:italic"># 开发相关的文档&lt;/span>
+│   ├── faq &lt;span style="color:#8f5902;font-style:italic"># 常见问题相关的文档&lt;/span>
+│   ├── function_principle &lt;span style="color:#8f5902;font-style:italic"># 功能原理相关文档&lt;/span>
+│   ├── introduce &lt;span style="color:#8f5902;font-style:italic"># 平台介绍相关文档&lt;/span>
+│   ├── ops &lt;span style="color:#8f5902;font-style:italic"># 运维相关文档&lt;/span>
+│   ├── quickstart &lt;span style="color:#8f5902;font-style:italic"># 快速开始相关文档&lt;/span>
+│   ├── quickuse &lt;span style="color:#8f5902;font-style:italic"># 快速上手相关文档&lt;/span>
+│   ├── release &lt;span style="color:#8f5902;font-style:italic"># release note 相关文档，记录每一次的发布日志&lt;/span>
+│   ├── setup &lt;span style="color:#8f5902;font-style:italic"># 安装部署相关文档&lt;/span>
+│   ├── swagger &lt;span style="color:#8f5902;font-style:italic"># swagger api 文档&lt;/span>
+│   └── web_ui &lt;span style="color:#8f5902;font-style:italic"># 前端 UI 使用相关的文档&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="文档头部-meta-元信息">文档头部 meta 元信息&lt;/h3>
+&lt;p>每篇使用 markdown 编写的文档，在开头都有 &amp;lsquo;&amp;mdash;&amp;rsquo; 包起来，并用 yaml 格式配置的 meta 源信息，下面对相关配置进行说明。&lt;/p>
+&lt;pre>&lt;code># 表示该文档的主标题
+title: &amp;quot;your document title&amp;quot;
+# 控制同级文档之间的顺序，值越大，文档越靠后
+weight: 80
+# 文档创建的时间
+date: 2022-12-16T07:10:02+08:00
+# 表示文档是草稿，最终不会发布，一般不需要配置这个选项
+# 只有在使用 `hugo new` 命令新建的文档才会出现这个配置
+draft: true
+# 文档简要描述
+description: &amp;quot;document description&amp;quot;
+# edition 标记文档包含在ce(开源版)或者ee(企业版)，如果不设置则表示两个版本都会包含
+edition: ce
+&lt;/code>&lt;/pre>&lt;h3 id="预览文档">预览文档&lt;/h3>
+&lt;p>编辑文档的过程中，我们想要一个实时预览的效果，可以执行 &lt;code>hugo serve&lt;/code> 命令。改命令会在本地启动一个 http 服务，默认监听 &amp;lsquo;1313&amp;rsquo; 端口。访问该服务就可以预览整个文档页面。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 执行 hugo serve&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># &amp;#39;-D&amp;#39; 表示把草稿文档也展示出来&lt;/span>
+$ hugo serve -D
+Start building sites …
+hugo v0.84.0 darwin/arm64 &lt;span style="color:#000">BuildDate&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>unknown
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> EN &lt;span style="color:#000;font-weight:bold">|&lt;/span> ZH
+-------------------+-----+------
+Pages &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">119&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">775&lt;/span>
+Paginator pages &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+Non-page files &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">25&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">954&lt;/span>
+Static files &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">92&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">92&lt;/span>
+Processed images &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+Aliases &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+Sitemaps &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+Cleaned &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+Built in &lt;span style="color:#0000cf;font-weight:bold">5337&lt;/span> ms
+Watching &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> changes in /Users/lzx/code/go/src/yunion.io/x/docs/&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>assets,content,layouts,package.json,static,themes&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+Watching &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> config changes in /Users/lzx/code/go/src/yunion.io/x/docs/config.toml, /Users/lzx/code/go/src/yunion.io/x/docs/themes/docsy/config.toml
+Environment: &lt;span style="color:#4e9a06">&amp;#34;development&amp;#34;&lt;/span>
+Serving pages from memory
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+&lt;span style="color:#8f5902;font-style:italic"># 注意这里显示的 http web 服务访问地址&lt;/span>
+Web Server is available at //localhost:1313/ &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87">bind&lt;/span> address 127.0.0.1&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+Press Ctrl+C to stop
+&lt;span style="color:#8f5902;font-style:italic"># 如果是本地 1313 端口被占用，可以通过&amp;#39;--port&amp;#39;参数指定其他端口&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 下面命令监听到 8088 端口&lt;/span>
+$ hugo serve --port &lt;span style="color:#0000cf;font-weight:bold">8088&lt;/span> -D
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 hugo web 服务后，通过浏览器访问相关页面，然后对文档进行编辑。每次内容的修改，就会触发 hugo 对文档的编译，然后浏览器里面对应的文档界面就会实时刷新。&lt;/p>
+&lt;h3 id="新建文档">新建文档&lt;/h3>
+&lt;p>可以通过以下 2 种方式新建文档：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>使用 &lt;code>hugo new&lt;/code> 命令&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo new content/zh/docs/quickstart/test-new.md
+content/zh/docs/quickstart/test-new.md created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用自己喜欢的编辑器编写对应的 markdown 文档即可。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>直接新建文档编辑&lt;/p>
+&lt;p>另外一种方式是直接在相应目录新建文档，然后配置 meta 元信息编辑。&lt;/p>
+&lt;p>下面是一个命令行下新建文档的例子：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 新建文档&lt;/span>
+$ touch new content/zh/docs/quickstart/test-new-by-cmd.md
+&lt;span style="color:#8f5902;font-style:italic"># 编辑文档&lt;/span>
+$ vim content/zh/docs/quickstart/test-new-by-cmd.md
+&lt;span style="color:#8f5902;font-style:italic"># 添加 meta 元信息后的内容&lt;/span>
+$ cat content/zh/docs/quickstart/test-new-by-cmd.md
+---
+title: &lt;span style="color:#4e9a06">&amp;#34;Test New By Commandline&amp;#34;&lt;/span>
+weight: &lt;span style="color:#0000cf;font-weight:bold">100&lt;/span>
+---
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="提交文档">提交文档&lt;/h2>
+&lt;p>文档编辑完成后请参考 git 配置提交代码，相关文档参考：&lt;a href="../contrib/#%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B">提交贡献代码&lt;/a>。&lt;/p>
+&lt;p>如果只是编写和贡献文档，看到这里就已经可以了。接下来是文档编译打包以及转换成 docx 相关的内容。&lt;/p>
+&lt;h2 id="编译打包文档">编译打包文档&lt;/h2>
+&lt;p>编译打包文档是指通过 hugo 这个工具，把文档转换成最终的 HTML 站点，最后发布到线上。&lt;/p>
+&lt;p>编译打包后的文档，有下面这4种输出结果，其中 ce 是 &amp;lsquo;Community Edition&amp;rsquo;，ee 是 &amp;lsquo;Enterprise Edition&amp;rsquo; 简写。&lt;/p>
+&lt;ul>
+&lt;li>在线文档：发布到线上
+&lt;ul>
+&lt;li>开源版本(ce)：在线开源版文档，发布到 &lt;a href="https://www.cloudpods.org">https://www.cloudpods.org&lt;/a>&lt;/li>
+&lt;li>企业版本(ee)：在线商业版文档，发布到 &lt;a href="https://docs.yunion.cn">https://docs.yunion.cn&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="在线文档">在线文档&lt;/h3>
+&lt;h4 id="ce-开源版本">ce 开源版本&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地启用 http server 查看 ce 开源版本文档&lt;/span>
+$ make local-serve
+&lt;span style="color:#8f5902;font-style:italic"># 将 ce 文档编译成 HTML 站点&lt;/span>
+$ make ce-build
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在线开源文档会在每次合并到 release 分支的时候，使用 github workflow 自动更新线上站点。&lt;/p>
+&lt;p>对应的配置在 &lt;a href="https://github.com/yunionio/docs/blob/master/.github/workflows/release.yml">https://github.com/yunionio/docs/blob/master/.github/workflows/release.yml&lt;/a>。&lt;/p>
+&lt;h4 id="ee-商业版本">ee 商业版本&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地启用 http server 查看 ee 文档&lt;/span>
+$ make ee-local-serve
+&lt;span style="color:#8f5902;font-style:italic"># 将 ee 文档编译成 HTML 站点&lt;/span>
+$ make ee-build
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: API与SDK</title><link>https://www.cloudpods.org/zh/docs/development/apisdk/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/development/apisdk/</guid><description/></item><item><title>Docs: CHANGELOG</title><link>https://www.cloudpods.org/zh/docs/development/changelog/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/changelog/</guid><description/></item><item><title>Docs: 开发计划</title><link>https://www.cloudpods.org/zh/docs/development/roadmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/roadmap/</guid><description>
+&lt;h2 id="架构">架构&lt;/h2>
+&lt;p>优化Cloudpods的代码和架构&lt;/p>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> 把本地IDC的云平台管理功能（Cloudpods内置私有云，包含KVM，裸金属和VMware）和多云管理功能（纳管其他平台）分拆为不同的组件&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 内置私有云：把存储管理功能从Host Agent分离出来，成为一个独立的存储代理服务&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 内置私有云：集成Rook以提供云原生的共享存储方案&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 内置私有云：将Baremetal Agent的状态存储在数据库中（现在是在内存中），使得Baremetal Agent可以水平扩展&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 多云管理：允许管理多个内置私有云实例&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 多云管理：重构资源同步代码，更好的代码结构，更细粒度地控制资源同步&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 支持SQLITE数据库&lt;/li>
+&lt;/ul>
+&lt;h2 id="多云资源对接">多云资源对接&lt;/h2>
+&lt;p>完善多云对接的广度和深度，接入更多的云平台和云产品&lt;/p>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> 支持 Azure RDS，Redis，LoadBalance，WebApp 等&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 支持 AWS Redis 等&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 对接 NAS，MongoDB，MQ 等通用云产品&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 对接有较强客户需求的其他云平台，例如中国移动公有云，青云等&lt;/li>
+&lt;/ul>
+&lt;h2 id="统一监控报警">统一监控报警&lt;/h2>
+&lt;p>完善多云监控数据采集的能力，实现多云统一监控报警&lt;/p>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> 全面采用 Prometheus 方案，从现有基于 Influxdb 的监控存储方案逐步迁移到 Prometheus 的监控方案，将监控后端采用多实例基于对象存储的分布式 Prometheus 集群方案&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 基于 Agent 的监控数据的采集，实现自动化安装 Agent ，通过 Agent 采集监控指标，获得更准确，更丰富和更精细化的监控指标，不仅涵盖基础设施（计算网络存储）的监控指标，含可以包含应用的监控指标（nginx，mysql等）&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 实现跨云监控数据采集，通过代理网关打通监控服务和资源的网络隧道，实现跨云采集内网监控&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 对接云平台自身的报警API，实现云平台自身报警和 Prometheus 报警的统一&lt;/li>
+&lt;/ul>
+&lt;h2 id="多云应用和编排">多云应用和编排&lt;/h2>
+&lt;p>以容器为基础，应用为核心，发展多云应用部署和编排能力&lt;/p>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> 多 Kubernetes 集群的统一管理：完善多集群容器集群的数据采集和呈现，实现应用在多容器集群的部署和升级&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 多云容器集群部署：进一步完善在多云环境的容器部署能力，提高可靠性和速度，提高容器集群的性能和稳定性&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 多云应用部署：基于多容器容器集群实现多云应用部署&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 多云应用迁移：实现应用在多云环境的迁移&lt;/li>
+&lt;/ul></description></item></channel></rss>

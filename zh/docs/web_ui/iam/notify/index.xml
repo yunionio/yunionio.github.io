@@ -1,0 +1,764 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+消息中心</title><link>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/</link><description>Recent content in 消息中心 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/web_ui/iam/notify/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 站内信</title><link>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/notify/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/notify/</guid><description>
+&lt;p>站内信用于查看通过控制台发送给用户的信息。一般为用户操作通知和操作成功信息、工单审批和任务完成等信息。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>管理后台下可以看到系统所有的站内信；&lt;/li>
+&lt;li>域管理后台下可以看到本域下所有的站内信；&lt;/li>
+&lt;li>项目视图下仅可以看到发送给当前用户的站内信&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>入口&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;系统配置/消息中心/站内信&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入站内信页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/notify.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在云管平台单击系统界面右上角&lt;img src="../../../images/system/messageicon1.png" alt="">图标，单击&amp;quot;更多站内信&amp;quot;链接跳转到消息中心页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/notifycenter.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>在消息中心页面，查看站内信信息，包括标题、级别、接收人、接收时间、内容等。&lt;/li>
+&lt;li>其中接收人支持展开，查看具体的接收人名称、接收时间、接收状态等。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 消息订阅设置</title><link>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/notify-topic/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/notify-topic/</guid><description>
+&lt;p>消息订阅设置用于自定义接收资源变动所带来的消息通知，目前支持对资源创建、删除、调整配置、密码变更、操作失败、到期释放、定时任务、自动快照、伸缩策略等操作发送消息通知，并支持对资源消息配置接收人或机器人等接收消息通知。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;系统配置/消息中心/消息订阅设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入消息订阅设置页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/topic.png" alt="">&lt;/p>
+&lt;h2 id="接收管理">接收管理&lt;/h2>
+&lt;p>该功能用于管理接收消息通知的接收人或机器人等。&lt;/p>
+&lt;h3 id="新建接收人">新建接收人&lt;/h3>
+&lt;p>该功能用于新建接收消息通知的接收人或机器人等。&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建接收人对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>资源范围：限定发送消息通知的资源范围。
+&lt;ul>
+&lt;li>当资源范围为“系统”时，则系统内所有资源变化都将发送消息通知。&lt;/li>
+&lt;li>当资源范围为“域”并选择指定域时，仅指定域下的资源变化才会发送消息通知。&lt;/li>
+&lt;li>当资源范围为“项目”并选择指定项目时，仅指定项目下的资源变化才会发送消息通知。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>类型：选择接收消息通知的类型，包括接收人、角色、机器人。&lt;/li>
+&lt;li>接收人：当类型选择“接收人”时，需要选择接收资源消息通知的用户。&lt;/li>
+&lt;li>角色：当类型选择“角色”时，需要指定角色的范围和角色。
+&lt;ul>
+&lt;li>当范围为“全局”时，将会通知全系统中对应角色的用户。&lt;/li>
+&lt;li>当范围为“域”时，将会通知资源所在域下对应角色的用户。&lt;/li>
+&lt;li>当范围为“项目”时，将会通知资源所在项目下对应角色的用户。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>机器人：当类型选择“机器人”时，需要选择接收资源消息通知的机器人。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="修改接收人">修改接收人&lt;/h3>
+&lt;p>该功能用于修改接收管理中设置的接收人。&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>单击右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改接收人对话框。&lt;/li>
+&lt;li>资源范围、类型不可修改，仅允许修改具体的接收人、角色、机器人等。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="启用接收人">启用接收人&lt;/h3>
+&lt;p>该功能用于启用“禁用”状态的接收人，禁用状态下接收人将无法接收资源的消息通知。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>单击“禁用”状态的接收人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>在列表中选择一个或多个接收人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用接收人">禁用接收人&lt;/h3>
+&lt;p>该功能用于禁用“启用”状态的接收人，禁用状态下接收人将无法接收资源的消息通知。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>单击“启用”状态的接收人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>在列表中选择一个或多个接收人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除接收人">删除接收人&lt;/h3>
+&lt;p>该功能用于删除接收管理中的接收人。&lt;/p>
+&lt;p>&lt;strong>删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>单击右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;接收管理&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入详情-接收管理页面。&lt;/li>
+&lt;li>在列表中选择一个或多个接收人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用消息订阅">启用消息订阅&lt;/h2>
+&lt;p>该功能用于启用“禁用”状态的消息。当消息被禁用后，则消息下的所有接收对象都将收不到资源对应的消息通知。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击“禁用”状态的消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅页面选择一个或多个消息，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用消息订阅">禁用消息订阅&lt;/h2>
+&lt;p>该功能用于禁用“启用”状态的消息。当消息被禁用后，则消息下的所有接收对象都将收不到资源对应的消息通知。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击“启用”状态的消息右侧操作列 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅页面选择一个或多个消息，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看消息订阅详情">查看消息订阅详情&lt;/h2>
+&lt;p>该功能用于查看消息的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息名称项，进入消息订阅详情页面。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：包括ID、消息名称、名称、消息类型、启用状态、创建时间、更新时间。&lt;/li>
+&lt;li>资源列表：用于展示发送该消息的资源类型。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看消息订阅相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在消息订阅设置页面，单击消息名称项，进入消息订阅详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 通知渠道设置</title><link>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/mailconfig/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/mailconfig/</guid><description>
+&lt;p>通知渠道用于配置接收Cloudpods消息通知的途径，目前支持邮件、短信、钉钉、飞书、企业微信等渠道。&lt;/p>
+&lt;p>用户接收Cloudpods消息的流程如下：&lt;/p>
+&lt;ol>
+&lt;li>在通知渠道中配置邮件、短信、钉钉、飞书、企业微信等通知渠道。&lt;/li>
+&lt;li>在接收人管理中新建接收人，并为用户启用邮件、短信、钉钉、飞书、企业微信等通知渠道。&lt;/li>
+&lt;li>Cloudpods平台中的消息通知，如告警消息，当选择接收人接收告警消息后，将会通过邮件、短信、钉钉、飞书、企业微信等通知渠道将消息推送给用户。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;系统配置/消息中心/通知渠道设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入通知渠道设置页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/channel.png" alt="">&lt;/p>
+&lt;h2 id="新建通知渠道">新建通知渠道&lt;/h2>
+&lt;p>该功能用于为平台设置通知渠道。&lt;/p>
+&lt;ol>
+&lt;li>在通知渠道设置页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建通知渠道页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>归属：设置通知渠道的归属。当通知渠道归属于系统时，则全局可用；当通知渠道归属于域时，则域下可用；其中邮箱、短信只允许归属于系统，钉钉、飞书、企业微信可以归属于系统或域，当同时在系统和域配置了钉钉、飞书、企业微信时，以域下配置的为准。&lt;/li>
+&lt;li>名称：通知渠道的名称。&lt;/li>
+&lt;li>类型：包括邮箱、短信、钉钉、飞书、企业微信。当选择不同类型后配置对应的参数。
+&lt;ul>
+&lt;li>当类型为“邮箱”时，配置以下参数：
+&lt;ul>
+&lt;li>SMTP服务器：设置发送邮件的服务器地址。&lt;/li>
+&lt;li>SSL：是否通过SSL加密方式连接SMTP服务器。&lt;/li>
+&lt;li>端口：配置端口号，默认为465。&lt;/li>
+&lt;li>用户名：设置连接邮箱服务器的用户名。&lt;/li>
+&lt;li>密码：设置连接邮箱服务器的用户密码。&lt;/li>
+&lt;li>发件人邮箱：配置发送邮件的发件人邮箱地址。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当类型为“短信”时，配置以下参数：
+&lt;ul>
+&lt;li>Access key ID/Secret：对接阿里云短信平台的密钥信息，获取方式，请参考&lt;a href="#%E9%98%BF%E9%87%8C%E4%BA%91%E8%8E%B7%E5%8F%96%E7%9F%AD%E4%BF%A1%E5%8F%82%E6%95%B0%E6%AD%A5%E9%AA%A4">阿里云获取短信参数步骤&lt;/a>。&lt;/li>
+&lt;li>签名：一般为公司缩写，需要在对应的阿里云平台-》产品与服务-》短信服务-》签名管理获取对应信息。&lt;/li>
+&lt;li>国内消息模板：当向国内发送消息时，需要配置对应的消息模板，目前支持验证码、告警模板以及异常登录的模板。&lt;/li>
+&lt;li>国外消息模板：当向国际或港澳台发送消息时，需要配置对应的消息模板，目前支持验证码、告警模板以及异常登录的模板。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当类型为“钉钉”时，配置以下参数：
+&lt;ul>
+&lt;li>AgentId：在创建应用时，系统会自动生成一个AgentId，可用于发送企业会话消息等场景。获取方式请参考&lt;a href="#%E9%92%89%E9%92%89%E5%B9%B3%E5%8F%B0%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E6%AD%A5%E9%AA%A4">钉钉平台获取参数步骤&lt;/a>。&lt;/li>
+&lt;li>AppKey：在创建应用时，系统会自动分配一对AppKey和AppSecret，该AppKey是应用开发过程中的唯一性标识。&lt;/li>
+&lt;li>AppSecret：AppSecret和上面AppKey一同生成，使用AppKey和AppSecret来换取access_token。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当类型为“飞书”时，配置以下参数：
+&lt;ul>
+&lt;li>AppId：应用的id标识。获取方式请参考&lt;a href="#%E9%A3%9E%E4%B9%A6%E5%B9%B3%E5%8F%B0%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E6%AD%A5%E9%AA%A4">飞书平台获取参数步骤&lt;/a>。&lt;/li>
+&lt;li>AppSecret：应用的秘钥，创建app的时候由飞书开放平台生成，可以用于获取 app_access_token。可在应用详情页面&amp;gt;凭证与基础信息&amp;gt;应用凭证模块内查看app_secret。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当类型为“企业微信”时，配置以下参数：
+&lt;ul>
+&lt;li>企业ID：用于标识企业。获取方式请参考&lt;a href="#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E5%B9%B3%E5%8F%B0%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E6%AD%A5%E9%AA%A4">企业微信平台获取参数步骤&lt;/a>。&lt;/li>
+&lt;li>AgentId：应用的id标识。&lt;/li>
+&lt;li>Secret：应用的秘钥。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>配置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试云管平台与通知渠道的连通性。&lt;/li>
+&lt;li>连接测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h3 id="阿里云获取短信参数步骤">阿里云获取短信参数步骤&lt;/h3>
+&lt;p>配置短信服务之前需要先在阿里云平台购买短信服务获取Access Key ID、Access Key Secret，并在阿里云平台上配置短信模板等。&lt;/p>
+&lt;ul>
+&lt;li>获取Access Key ID/Access Key Secret：
+&lt;ol>
+&lt;li>登录阿里云控制台，单击页面右上角&amp;quot;用户头像&amp;quot;图标，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;accesskeys&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入安全信息管理页面。&lt;/li>
+&lt;li>获取Access Key ID和Access Key Secret。若不存在，可单击 &lt;strong>&lt;em>&amp;ldquo;创建Accesskey&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建AccessKey。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>配置签名：
+&lt;ol>
+&lt;li>登录阿里云控制台，单击左侧菜单栏 &lt;strong>&lt;em>&amp;ldquo;产品与服务/短信服务&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入短信服务控制台。&lt;/li>
+&lt;li>在国内短信或国际/港澳台消息中的签名管理页面配置签名，签名一般为公司缩写。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>配置短信模板：
+&lt;ol>
+&lt;li>登录阿里云控制台，单击左侧菜单栏 &lt;strong>&lt;em>&amp;ldquo;产品与服务/短信服务&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入短信服务控制台。&lt;/li>
+&lt;li>在国内短信或国际/港澳台消息中的模板管理页面配置短信模板，推荐使用以下四种模板格式。创建完成后获取模板CODE，如SMS_126462297。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>名称&lt;/th>
+&lt;th>格式&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>验证码&lt;/td>
+&lt;td>模板类型：验证码&lt;br />模版内容：您的注册码：${code}，如非本人操作，请忽略本短信！&lt;/td>
+&lt;td>短信验证码模板&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>告警模板&lt;/td>
+&lt;td>模板类型：短信通知&lt;br />模板内容：${alert_name}的${type}触发告警，请及时登录平台查看。&lt;/td>
+&lt;td>短信告警模板&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>异常登录&lt;/td>
+&lt;td>模板类型：${domain}域下的账号${user}因为异常登录被锁定，请您核实情况。&lt;/td>
+&lt;td>短信告警模板&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="华为云获取短信参数步骤">华为云获取短信参数步骤&lt;/h3>
+&lt;p>配置短信服务之前需要先在华为云平台购买短信服务获取Application_Key、Application_Secret、App接入地址，并在华为云平台上配置短信签名、短信模板等。&lt;/p>
+&lt;ul>
+&lt;li>获取Application Key、Application Secret、App接入地址：
+&lt;ol>
+&lt;li>登录华为云控制台，单击页面左侧服务列表中的 &lt;strong>&lt;em>&amp;ldquo;消息&amp;amp;短信MSGSMS&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入短信控制台。&lt;/li>
+&lt;li>单击左侧国内短信或国际/港澳台短信中的应用管理，获取Application_Key、Application_Secret和APP接入地址。若不存在，可单击 &lt;strong>&lt;em>&amp;ldquo;添加应用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建应用获取。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>配置签名：
+&lt;ol>
+&lt;li>登录华为云控制台，单击页面左侧服务列表中的 &lt;strong>&lt;em>&amp;ldquo;消息&amp;amp;短信MSGSMS&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入短信控制台。&lt;/li>
+&lt;li>单击左侧国内短信或国际/港澳台短信中的签名管理页面配置签名，签名一般为公司缩写。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>配置短信模板：
+&lt;ol>
+&lt;li>登录华为云控制台，单击页面左侧服务列表中的 &lt;strong>&lt;em>&amp;ldquo;消息&amp;amp;短信MSGSMS&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入短信控制台。&lt;/li>
+&lt;li>单击左侧国内短信或国际/港澳台短信中的模板管理页面配置短信模板，推荐使用以下三种模板格式。创建完成后获取模板通道号和模板Id，如8822082909133/d7001c8d7ada43cc917e0478e40583e5。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>名称&lt;/th>
+&lt;th>格式&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>验证码&lt;/td>
+&lt;td>模板类型：验证码&lt;br />模版内容：您的注册码：${code}，如非本人操作，请忽略本短信！&lt;/td>
+&lt;td>短信验证码模板&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>告警模板&lt;/td>
+&lt;td>模板类型：短信通知&lt;br />模板内容：${alert_name}的${type}触发告警，请及时登录平台查看。&lt;/td>
+&lt;td>短信告警模板&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>异常登录&lt;/td>
+&lt;td>模板类型：${domain}域下的账号${user}因为异常登录被锁定，请您核实情况。&lt;/td>
+&lt;td>短信告警模板&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="钉钉平台获取参数步骤">钉钉平台获取参数步骤&lt;/h3>
+&lt;p>以新建应用为例，介绍如何在钉钉开放平台上新建应用接收Cloudpods平台的消息通知。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+更多内容请参考&lt;a href="https://ding-doc.dingtalk.com/doc#/bgb96b/ok9au2">钉钉官网文档&lt;/a>
+&lt;/div>
+&lt;ol>
+&lt;li>
+&lt;p>以管理员登录&lt;a href="https://open.dingtalk.com/">钉订开放平台&lt;/a>。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在“应用开发”页面企业内部应用-小程序页面中创建应用。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置应用类型为“小程序”，根据需求设置应用名称、描述、图标等，单击 &lt;strong>&lt;em>&amp;ldquo;确定创建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/dingdingappcreate.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在新建应用的“凭证与基础信息”页面获取应用凭证。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/dingdingappkey.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在开发管理页面，将Cloudpods平台的外网访问IP添加到服务器出口IP。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/dingdingipwhite.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在权限管理页面，建议权限范围适用于“全部员工”，也可根据需求进行设置。根据需要为应用添加接口权限，至少添加“通讯录只读权限”、“手机号码信息”、“手机号获取useid”，其他权限请按需添加。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/dingdingauthority.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="飞书平台获取参数步骤">飞书平台获取参数步骤&lt;/h3>
+&lt;p>以新建应用为例，介绍如何在飞书开放平台上新建应用接收Cloudpods平台的消息通知。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+更多内容请参考&lt;a href="https://open.feishu.cn/document/uQjL04CN/ucDOz4yN4MjL3gzM">飞书官网文档&lt;/a>
+&lt;/div>
+&lt;ol>
+&lt;li>
+&lt;p>企业用户（无需管理员用户）登录&lt;a href="https://open.feishu.cn/">飞书开放平台&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在我的后台-开发者后台页面，创建企业自建应用。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/feishuappcreate.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在新建应用的“凭证与基础信息”页面获取应用凭证。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/feishuappkey.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在应用功能-通知渠道中启用通知渠道。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/enablefeishubot.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在安全设置中将Cloudpods平台的外网访问IP添加IP白名单。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/feishuipwhite.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在权限管理中根据需要为应用添加权限，至少添加“获取用户账号信息”、“通过手机号或者邮箱获取用户 ID”、“给多个用户批量发消息”、“以应用的身份发消息”，其他权限请按需添加。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/feishuauthority.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在版本管理与发布页面，创建版本，配置相关信息，注意将可用性状态设置为“所有员工”或应用适用的组织，单击 &lt;strong>&lt;em>&amp;ldquo;保存&amp;rdquo;&lt;/em>&lt;/strong> 按钮，待管理员审核发布应用。
+&lt;img src="../../../images/system/feishuapp.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="企业微信平台获取参数步骤">企业微信平台获取参数步骤&lt;/h3>
+&lt;p>以新建应用为例，介绍如何在企业微信平台上新建应用接收Cloudpods平台的消息通知。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+更多内容请参考&lt;a href="https://work.weixin.qq.com/api/doc/90000/90003/90487#%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%BB%BA%E5%BA%94%E7%94%A8">企业微信官网文档&lt;/a>
+&lt;/div>
+&lt;ol>
+&lt;li>
+&lt;p>以管理员用户登录&lt;a href="https://work.weixin.qq.com/wework_admin/loginpage_wx?from=myhome_baidu">企业微信管理后台&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在应用管理页签下，选择应用-创建自建应用，并配置应用的logo、名称、应用介绍以及可见范围，可见范围建议设置为“所有员工”或应用适用的组织。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/workweixincreate.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在应用详情中获取AgentId和Secret信息。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/workweixinappkey1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在我的企业页面中获取企业ID。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/workweixincorpid.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除通知渠道">删除通知渠道&lt;/h2>
+&lt;p>该功能用于删除通知渠道。&lt;/p>
+&lt;p>&lt;strong>删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在通知渠道设置页面，单击通知渠道右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在通知渠道列表中选择一个或多个通知渠道，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看通知渠道详情">查看通知渠道详情&lt;/h2>
+&lt;p>该功能用于查看通知渠道的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在通知渠道设置页面，单击通知渠道名称项，进入通知渠道详情页面。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：包括ID、名称、类型、所属范围、创建时间、更新时间。&lt;/li>
+&lt;li>配置信息：不同类型的通知渠道配置信息不同。
+&lt;ul>
+&lt;li>邮箱：包括SMTP服务器、端口、用户名、SSL。&lt;/li>
+&lt;li>短信：包括Access Key ID、签名、国内消息模板、国际/港澳台模板等。&lt;/li>
+&lt;li>钉钉：包括AgentID、Appkey。&lt;/li>
+&lt;li>飞书：包括AppID。&lt;/li>
+&lt;li>企业微信：包括企业ID、AgentID。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看通知渠道相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在通知渠道设置页面，单击通知渠道名称项，进入通知渠道详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 接收人管理</title><link>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/contact/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/contact/</guid><description>
+&lt;p>该功能用于设置接收Cloudpods消息通知的用户，并支持为用户设置多种通知渠道接收消息。&lt;/p>
+&lt;p>将用户设置为接收人的途径有两种：&lt;/p>
+&lt;ul>
+&lt;li>系统管理员在接收人管理中将系统中的用户设置为接收人。&lt;/li>
+&lt;li>用户在用户信息中修改联系方式并启用通知渠道等。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;系统配置/消息中心/接收人管理&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入接收人管理页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/contactlist.png" alt="">&lt;/p>
+&lt;h2 id="新建接收人">新建接收人&lt;/h2>
+&lt;p>该功能用于管理员将系统中的用户设置为接收人，并为其设置联系方式以及通知渠道等。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>新建接收人时可选择的通知渠道与系统管理员在通知渠道设置有关，如管理员仅配置了钉钉和飞书，则通知渠道处只可以选择钉钉和飞书。&lt;/li>
+&lt;li>默认支持通过系统内部站内信接收消息。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在联系方式页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建联系方式对话框。&lt;/li>
+&lt;li>选择域、用户（通过域过滤可选的用户）、输入手机号、邮箱账号、选择是否启用邮件、短信、钉钉、飞书、企业微信等，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="通知渠道验证">通知渠道验证&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>通知渠道&lt;/th>
+&lt;th>验证成功&lt;/th>
+&lt;th>未验证或验证失败&lt;/th>
+&lt;th>验证步骤&lt;/th>
+&lt;th>验证失败处理方法&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>邮件&lt;/td>
+&lt;td>&lt;img src="../../../images/system/emailsuccess.png" alt="">&lt;/td>
+&lt;td>&lt;img src="../../../images/system/emailfail.png" alt="">&lt;/td>
+&lt;td>用户在用户信息中单击通知渠道处的邮件图标，发送验证邮件，填写验证码进行验证&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>短信&lt;/td>
+&lt;td>&lt;img src="../../../images/system/messagesuccess.png" alt="">&lt;/td>
+&lt;td>&lt;img src="../../../images/system/messagefail.png" alt="">&lt;/td>
+&lt;td>用户在用户信息中单击通知渠道处的短信图标，发送验证短信，填写验证码进行验证&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>飞书&lt;/td>
+&lt;td>&lt;img src="../../../images/system/feishusuccess.png" alt="">&lt;/td>
+&lt;td>&lt;img src="../../../images/system/feishufail.png" alt="">&lt;/td>
+&lt;td>系统自动验证&lt;/td>
+&lt;td>鼠标悬停在图标上将显示具体错误原因&lt;/br>- 手机号有误，请修改手机号。&lt;/br> - 服务异常，请点击图标重新验证。&lt;/br> - 通知渠道设置有误，请在对应平台进行修改。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>钉钉&lt;/td>
+&lt;td>&lt;img src="../../../images/system/dingdingsuccess.png" alt="">&lt;/td>
+&lt;td>&lt;img src="../../../images/system/dingdingfail.png" alt="">&lt;/td>
+&lt;td>系统自动验证&lt;/td>
+&lt;td>鼠标悬停在图标上将显示具体错误原因&lt;/br>- 手机号有误，请修改手机号。&lt;/br> - 服务异常，请点击图标重新验证。&lt;/br> - 通知渠道设置有误，请在对应平台进行修改。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>企业微信&lt;/td>
+&lt;td>&lt;img src="../../../images/system/workweixinsuccess.png" alt="">&lt;/td>
+&lt;td>&lt;img src="../../../images/system/workweixinfail.png" alt="">&lt;/td>
+&lt;td>系统自动验证&lt;/td>
+&lt;td>鼠标悬停在图标上将显示具体错误原因&lt;/br>- 手机号有误，请修改手机号。&lt;/br> - 服务异常，请点击图标重新验证。&lt;/br> - 通知渠道设置有误，请在对应平台进行修改。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+在管理后台下，为接收人配置邮件、短信，无需验证。
+&lt;/div>
+&lt;h2 id="修改接收人">修改接收人&lt;/h2>
+&lt;p>该功能用于修改接收人的联系方式和通知渠道。&lt;/p>
+&lt;ol>
+&lt;li>在接收人页面，单击接收人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改接收人对话框。&lt;/li>
+&lt;li>修改用户的手机号、邮箱账号、是否启用邮件、短信、飞书、钉钉、企业微信，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用接收人">启用接收人&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的接收人，启用状态的接收人可以接收系统消息通知。&lt;/p>
+&lt;ol>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的接收人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，启用接收人。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用接收人">禁用接收人&lt;/h2>
+&lt;p>该功能用于禁用”启用“状态的接收人，禁用后，接收人无法接收到系统消息。&lt;/p>
+&lt;ol>
+&lt;li>单击”启用“状态的接收人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，禁用接收人。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除接收人">删除接收人&lt;/h2>
+&lt;p>该功能用于删除接收人。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在接收人页面，单击接收人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在接收人列表中选择一个或多个用户的接收人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看接收人详情">查看接收人详情&lt;/h2>
+&lt;p>该功能用于查看用户接收人详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在接收人页面，单击接收人名称项，进入接收人详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对接收人进行管理操作。&lt;/li>
+&lt;li>查看用户接收人的云上ID、ID、名称、启用状态、短信、邮箱、通知渠道、创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看接收人相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在接收人详情页面，单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 机器人管理</title><link>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/bot/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/iam/notify/bot/</guid><description>
+&lt;p>机器人用来接收监控和预算告警消息。目前支持钉钉机器人、飞书机器人、企业机器人以及Webhook。其中Webhook用于将平台上资源的增删改查消息发送给特定的URL。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;系统配置/消息中心/机器人管理&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入机器人管理页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/system/bot.png" alt="">&lt;/p>
+&lt;h2 id="新建机器人">新建机器人&lt;/h2>
+&lt;p>该功能用于添加机器人。&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建机器人对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>指定项目：指定机器人的所属项目。&lt;/li>
+&lt;li>名称：设置机器人的名称。&lt;/li>
+&lt;li>类型：支持钉钉机器人、飞书机器人、企业机器人以及Webhook。&lt;/li>
+&lt;li>Webhook：配置对应的机器人的Webhook地址，不同类型的机器人的Webhook获取方式请参考&lt;a href="#Webhook%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">Webhook获取方式&lt;/a>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="webhook获取方式">Webhook获取方式&lt;/h2>
+&lt;h3 id="钉钉机器人">钉钉机器人&lt;/h3>
+&lt;ol>
+&lt;li>在钉钉电脑客户端创建钉钉群或选择已有的钉钉群。&lt;/li>
+&lt;li>钉钉群右上角群设置-智能群助手中添加自定义机器人。&lt;/li>
+&lt;li>设置机器人名称，添加到对应群组以及在安全设置中勾选IP地址(段)，将Cloudpods平台的外网访问IP添加到IP地址段中。&lt;/li>
+&lt;li>添加成功后获取机器人Webhook地址。&lt;/li>
+&lt;/ol>
+&lt;h3 id="飞书机器人">飞书机器人&lt;/h3>
+&lt;ol>
+&lt;li>在飞书电脑客户端创建飞书群或选择已有的飞书群。&lt;/li>
+&lt;li>飞书群右侧设置-群机器人添加Custom Bot机器人。&lt;/li>
+&lt;li>添加成功后获取机器人Webhook地址。&lt;/li>
+&lt;/ol>
+&lt;h3 id="企业微信机器人">企业微信机器人&lt;/h3>
+&lt;ol>
+&lt;li>在企业微信客户端中创建企业微信群或选择已有的企业微信群。&lt;/li>
+&lt;li>企业微信群右上角群设置-智能群助手添加自定义机器人。&lt;/li>
+&lt;li>添加成功后获取机器人Webhook地址。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改机器人">修改机器人&lt;/h2>
+&lt;p>该功能用于修改机器人信息。&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击机器人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改机器人对话框。&lt;/li>
+&lt;li>仅支持修改名称、Webhook。&lt;/li>
+&lt;li>修改完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置共享">设置共享&lt;/h2>
+&lt;p>该功能用于设置机器人的共享状态。&lt;/p>
+&lt;p>项目资源的共享范围有五种：&lt;/p>
+&lt;ul>
+&lt;li>不共享（私有）：即项目资源只能本项目的用户可以使用。&lt;/li>
+&lt;li>项目共享-部分（本域内多项目共享）：即项目资源可以共享到同域下的指定项目（一个或多个），只有本项目和被共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>项目共享-全部（本域共享）：即项目资源可以共享给域下所有项目，即项目所在域的用户都可以使用项目资源。&lt;/li>
+&lt;li>域共享-部分（多域共享）：即项目资源可以共享到指定域（一个或多个），只有项目资源所在域和共享域下的用户可以使用项目资源。&lt;/li>
+&lt;li>域共享-全部（全局共享）：即项目资源可以共享给全部域使用，即系统中所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置域共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>在Cloudpods平台已开启三级权限。&lt;/li>
+&lt;li>用户处于管理后台。&lt;/li>
+&lt;/ul>
+&lt;p>设置项目共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>用户处于管理后台或域管理后台。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>物理机、PXE、IPMI类型的机器人建议不要设置为共享状态。&lt;/li>
+&lt;li>本地IDC的机器人共享范围任意。&lt;/li>
+&lt;li>私有云和公有云的机器人的共享范围与云账号的共享范围有关。
+&lt;ul>
+&lt;li>当云账号不共享时，通过云账号同步下来的资源也不能共享。&lt;/li>
+&lt;li>当云账号启用共享时，通过云账号同步下来的资源也将随着云账号启用共享。&lt;/li>
+&lt;li>当云账号启用共享时，通过云账号同步下来的资源可以更改共享范围，请确保共享范围在云账号的共享范围内。&lt;/li>
+&lt;li>当云账号修改共享范围时，通过云账号同步下来的资源的共享范围要始终保持在云账号的共享范围内。如云账号共享A、B、C、D域，域资源共享A、C域，云账号修改共享范围为A、B域，则域资源只能共享到A域。&lt;/li>
+&lt;li>云账号共享云订阅时，通过云账号同步下来的域资源不能共享。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个机器人设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击机器人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
+&lt;ul>
+&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
+&lt;p>多个机器人批量设置的共享范围必须相同。否则请单独为机器人设置共享。&lt;/p>
+&lt;ol>
+&lt;li>在机器人列表中选择一个或多个机器人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
+&lt;ul>
+&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更改项目">更改项目&lt;/h2>
+&lt;p>该功能用于更改机器人所属项目。当机器人为私有状态时，才可以更改项目。&lt;/p>
+&lt;p>&lt;strong>单个机器人更改项目&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击机器人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>修改域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量更改项目&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人列表中选择一个或多个机器人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>修改域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用">启用&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的机器人，禁用状态的机器人不会接收告警消息。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击&amp;quot;禁用&amp;quot;状态的机器人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用机器人。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人列表中选择一条或多条机器人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用机器人。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用">禁用&lt;/h2>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的机器人，禁用状态的机器人不会接收告警消息。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击&amp;quot;启用&amp;quot;状态的机器人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用机器人。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人列表中选择一条或多条机器人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用机器人。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除">删除&lt;/h2>
+&lt;p>该功能用于删除机器人。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击机器人右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在机器人列表中选择一条或多个机器人，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看机器人详情">查看机器人详情&lt;/h2>
+&lt;p>该功能用于查看机器人的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击机器人名称项，进入机器人详情页面。&lt;/li>
+&lt;li>查看机器人云上ID、ID、名称、状态、域、项目、共享范围、启用状态、类型、Webhook/URL、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看机器人相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在机器人管理页面，单击机器人名称项，进入机器人详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

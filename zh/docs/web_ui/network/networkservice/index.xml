@@ -1,0 +1,909 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+网络服务</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/</link><description>Recent content in 网络服务 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 弹性公网IP</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/eip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/eip/</guid><description>
+&lt;p>弹性公网IP（Elastic IP）是一种NAT IP，通过与虚拟机绑定，将弹性公网IP与虚拟机的私有地址进行NAT映射，实现虚拟机与公网之间的通信。一个弹性公网IP只能绑定一个虚拟机。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/弹性公网IP&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入弹性公网IP页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/network/eip1.png" alt="">&lt;/p>
+&lt;h2 id="新建弹性公网ip">新建弹性公网IP&lt;/h2>
+&lt;p>该功能用于创建弹性公网IP。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+在新建弹性公网IP页面，可单击顶部“本地IDC”、“私有云”、“公有云”页签，切换创建不同平台上的弹性公网IP。
+&lt;/div>
+&lt;h3 id="新建本地idc弹性公网ip">新建本地IDC弹性公网IP&lt;/h3>
+&lt;p>新建本地IDC的弹性公网IP之前请确保已创建了弹性公网IP类型的IP子网。&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击顶部“全部”或“本地IDC”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建本地IDC弹性公网IP页面。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建弹性公网IP时需要指定弹性公网IP所属的项目。&lt;/li>
+&lt;li>区域：选择弹性公网IP所属的区域。&lt;/li>
+&lt;li>名称：设置弹性公网IP的名称。&lt;/li>
+&lt;li>线路类型：可根据线路类过滤IP子网，创建指定线路类型的弹性公网IP。默认线路类型为空，即不跟进线路类型过滤IP子网，将随机从所有弹性公网IP类型的IP子网中分配EIP。&lt;/li>
+&lt;li>指定IP子网：选择VPC（仅支持default VPC）和IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>计费方式：目前仅支持按带宽计费。&lt;/li>
+&lt;li>带宽峰值：设置弹性公网IP支持的最大带宽。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建私有云平台弹性公网ip">新建私有云平台弹性公网IP&lt;/h3>
+&lt;p>在新建私有云平台弹性公网IP之前请确保有对应平台的云账号。&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击顶部“私有云”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建私有云平台弹性公网IP页面。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建弹性公网IP时需要指定弹性公网IP所属的项目。&lt;/li>
+&lt;li>区域：选择弹性公网IP所属的区域。可通过区域确定私有云所属平台以及创建硬盘使用的私有云云账号。&lt;/li>
+&lt;li>名称：设置弹性公网IP的名称。&lt;/li>
+&lt;li>指定IP子网：选择VPC和IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建公有云平台弹性公网ip">新建公有云平台弹性公网IP&lt;/h3>
+&lt;p>在新建公有云平台弹性公网IP之前请确保有对应平台的云账号。&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击顶部“公有云”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建公有云平台弹性公网IP页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建弹性公网IP时需要指定弹性公网IP所属的项目。&lt;/li>
+&lt;li>区域：选择弹性公网IP所属的区域。可通过城市、平台快速过滤筛选出合适区域。&lt;/li>
+&lt;li>名称：设置弹性公网IP的名称。&lt;/li>
+&lt;li>计费方式：可选择按流量计费或按固定带宽计费。
+- 按流量计费：按实际传输流量收费，可限制峰值带宽避免意外流量带来的费用，当瞬间带宽超过该值时将丢包，适用于网络波动大的场合。
+- 按固定带宽：按传输速率计费，选择固定带宽，超过带宽时将丢包，适用于网络波动较小的场景。
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>AWS、Azure、Google平台的弹性公网IP只支持按流量计费方式。&lt;/li>
+&lt;li>公有云平台的弹性公网IP创建完成后未绑定虚拟机时将按小时收取EIP的费用，绑定虚拟机后将不收取EIP的费用，只收取带宽和流量费。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>带宽峰值：设置弹性公网IP支持的最大带宽。&lt;/li>
+&lt;li>指定云订阅：指定创建弹性公网IP的云订阅。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改带宽">修改带宽&lt;/h2>
+&lt;p>该功能用于修改弹性公网IP的带宽。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>修改带宽之前弹性公网IP需要先绑定虚拟机。&lt;/li>
+&lt;li>私有云平台的弹性公网IP不支持设置带宽。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改带宽&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改带宽对话框。&lt;/li>
+&lt;li>修改带宽值，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="绑定">绑定&lt;/h2>
+&lt;p>将弹性公网IP绑定到虚拟机上，使虚拟机可以和公网通信。弹性公网IP和虚拟机需要属于同一区域内同一项目才可以绑定。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+私有云平台的弹性公网IP不能绑定同一IP子网下的虚拟机。
+&lt;/div>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;绑定&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出绑定对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>类型：包括虚拟机和NAT网关，仅阿里云平台支持绑定NAT网关。
+&lt;ul>
+&lt;li>当类型选择“虚拟机”时，选择可与弹性公网IP绑定的虚拟机。&lt;/li>
+&lt;li>当类型选择“NAT”网关时，选择可与弹性公网IP绑定的NAT网关。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="解绑">解绑&lt;/h2>
+&lt;p>该功能用于解除弹性公网IP与资源的绑定，解绑后的弹性公网IP可以绑定到其他资源。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+绑定AWS NAT网关的EIP暂不支持解绑
+&lt;/div>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;解绑&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出解绑确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="同步状态">同步状态&lt;/h2>
+&lt;p>该功能用于获取弹性公网IP的当前状态。&lt;/p>
+&lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步弹性公网IP的状态。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP列表中勾选一个或多个弹性公网IP，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，批量同步状态。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更改项目">更改项目&lt;/h2>
+&lt;p>项目是资源的拥有者，用户可以根据需求更改弹性公网IP所属的项目。只有项目中的成员才可以使用所属项目中的弹性公网IP资源。&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>设置项目信息，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除弹性公网ip">删除弹性公网IP&lt;/h2>
+&lt;p>该功能用于删除弹性公网IP，与资源绑定的弹性公网IP不支持删除，请解绑后再进行删除操作。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击弹性公网IP右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP列表中选择一个或多个弹性公网IP，单击页面上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看弹性公网ip详情">查看弹性公网IP详情&lt;/h2>
+&lt;p>该功能用于查看弹性公网IP的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP页面，单击指定弹性公网IP名称项，进行弹性公网IP详情页面。&lt;/li>
+&lt;li>在详情页面顶部菜单项支持对弹性网卡进行绑定、解绑、修改带宽、更改项目、删除等操作。&lt;/li>
+&lt;li>查看弹性公网IP的云上ID、ID、名称、状态、域、项目、用户标签、平台、绑定资源、线路类型、IP地址、带宽、计费方式、区域、可用区、云账号、云订阅、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看弹性公网IP相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在弹性公网IP详情页面，单击&amp;quot;操作日志&amp;quot;页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: NAT网关</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/nat/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/nat/</guid><description>
+&lt;p>NAT网关能够为公有云VPC网络中虚拟机提供IP地址转换功能，使虚拟机可以共享弹性公网IP访问Internet或使虚拟机提供互联网服务。&lt;/p>
+&lt;p>目前支持管理阿里云和华为云平台的NAT网关，只读同步AWS的NAT网关。&lt;/p>
+&lt;p>NAT网关提供SNAT（Source Network Address Translation，源网络地址转换）、DNAT（Destination Network Address Translation，目的网络地址转换）等功能。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>SNAT：SNAT适用于VPC中的虚拟机访问互联网。即VPC中的多个虚拟机共享同一公网IP主动访问互联网。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>DNAT：DNAT适用于从互联网访问VPC中的虚拟机。即将NAT网关上的公网IP映射给虚拟机使用。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/NAT网关&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入NAT网关页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/network/nat1.png" alt="">&lt;/p>
+&lt;h2 id="新建nat网关">新建NAT网关&lt;/h2>
+&lt;p>该功能用于新建NAT网关，目前支持创建阿里云和华为云的NAT网关。&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建NAT网关页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>域：在管理后台视图下新建NAT网关时，需要设置文件系统的所属域。&lt;/li>
+&lt;li>名称：NAT网关的名称。&lt;/li>
+&lt;li>计费方式：包括按量计费和包年包月。
+&lt;ul>
+&lt;li>按量付费：按NAT网关的实际使用率收费，此模式适用于需求量会瞬间大幅度增大的场景，价格对比包年包月要贵。阿里云按量付费的NAT网关按小时收费，华为云按量付费的NAT网关按天收费，不足一天的按一天计算，反复创建NAT网关将重复收费。&lt;/li>
+&lt;li>包年包月：是一种预付费的模式，提前一次性支付一个月、一年乃至多年的费用，该模式适用于设备需求比较平稳的场景，价格相对按量付费更便宜。选择包年包月后还需要设置购买时长。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>到期释放：设置新建的NAT网关的使用时长，超过设置时间后的NAT网关将会被删除。仅按量付费的NAT网关支持到期释放。&lt;/li>
+&lt;li>区域：设置NAT网关所在的区域和可用区。&lt;/li>
+&lt;li>套餐：选择NAT网关的规格。
+&lt;ul>
+&lt;li>阿里云：按量付费支持按使用量计费、小型、中型、大型。包年包月支持小型、中型、大型。&lt;/li>
+&lt;li>华为云：按量付费和包年包月都只支持小型、中型、大型、超大型。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>网络：选择VPC和IP子网。&lt;/li>
+&lt;li>弹性公网IP（阿里云）：选择要绑定到NAT网关的弹性公网IP，默认暂不需要，当选择“新建弹性公网IP”时，需要配置以下参数。
+&lt;ul>
+&lt;li>网络计费方式：设置弹性公网IP的计费方式，包括按量计费和按带宽计费。
+&lt;ul>
+&lt;li>按流量计费：按实际传输流量收费，可限制峰值带宽避免意外流量带来的费用，当瞬间带宽超过该值时将丢包，适用于网络波动大的场合。&lt;/li>
+&lt;li>按带宽计费：按传输速率计费，选择固定带宽，超过带宽时将丢包，适用于网络波动较小的场景。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>带宽：设置带宽的大小。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="同步状态">同步状态&lt;/h2>
+&lt;p>该功能用于获取NAT网关的当前状态。&lt;/p>
+&lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关页面，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 按钮，同步NAT网关状态。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表列表中选择一个或多个NAT网关，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量同步状态。&lt;/li>
+&lt;/ol>
+&lt;h2 id="到期释放">到期释放&lt;/h2>
+&lt;p>到期释放即设置NAT网关的使用时长，当超过设置期限时，NAT网关将会被自动删除。&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关页面，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;到期释放&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出到期释放对话框。&lt;/li>
+&lt;li>选择是否勾选到期释放，勾选后设置释放时间，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。
+&lt;ul>
+&lt;li>单击释放时间输入框，显示日历等内容，支持直接在释放时间输入框中输入日期和时间，格式为yyyy-mm-dd hh:mm:ss，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>在日历框中选择日期，单击 &lt;strong>&lt;em>选择时间&lt;/em>&lt;/strong> 按钮，将跳转到设置时间界面，选择时间后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>支持快速选择“1小时”、“2小时”、“3小时”、 “6小时”、 “1天”、“2天”、 “1周”按钮，释放时间将设置为对应时间范围内的时间，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>设置完成后，在计费方式列显示NAT网关还有多久时间释放等信息。&lt;/li>
+&lt;li>若不再需要到期释放功能，可在释放之前，在弹出的到期释放对话框中取消勾选到期释放，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="续费">续费&lt;/h2>
+&lt;p>该功能用于为包年包月的NAT网关进行续费操作。&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关页面，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;续费&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出续费对话框。&lt;/li>
+&lt;li>选择续费时长，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成续费操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="自动续费设置">自动续费设置&lt;/h2>
+&lt;p>该功能用于为包年包月的NAT网关进行自动续费操作。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+阿里云平台按周购买的虚拟机续费周期是一周，按月购买的虚拟机续费周期是一个月，按年购买的虚拟机续费周期是一年；其他平台续费周期均为一个月。后续虚拟机在每次到期之前都会自动续费。
+&lt;/div>
+&lt;ol>
+&lt;li>在NAT网关页面，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;自动续费设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出自动续费设置对话框。&lt;/li>
+&lt;li>自动续费：勾选自动续费，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置自动续费。&lt;/li>
+&lt;li>取消自动续费：取消勾选自动续费，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，取消自动续费。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置删除保护">设置删除保护&lt;/h2>
+&lt;p>该功能用于设置NAT网关的删除保护。当NAT网关启用删除保护后，NAT网关无法被删除；当NAT网关禁用删除保护后，NAT网关才可以被删除。&lt;/p>
+&lt;p>&lt;strong>单个NAT网关设置删除保护&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>禁用删除保护：
+&lt;ul>
+&lt;li>单击NAT网关名称右侧带有&lt;img src="../../images/computing/delprotect1.png" alt="">图标时，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择&amp;quot;禁用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用删除保护：
+&lt;ul>
+&lt;li>当NAT网关名称右侧不带&lt;img src="../../images/computing/delprotect1.png" alt="">图标时，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择&amp;quot;启用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置删除保护&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>禁用删除保护：
+&lt;ul>
+&lt;li>在NAT网关列表中勾选一个或多个NAT网关，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择&amp;quot;禁用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为NAT网关禁用删除保护。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启用删除保护：
+&lt;ul>
+&lt;li>在NAT网关列表中勾选一个或多个NAT网关，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置删除保护&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置删除保护对话框。&lt;/li>
+&lt;li>选择&amp;quot;启用&amp;quot;删除保护，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，批量为NAT网关启用删除保护。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除">删除&lt;/h2>
+&lt;p>该功能用于删除NAT网关，当NAT网关名称项右侧有&lt;img src="../../images/computing/delprotect1.png" alt="">图标，表示NAT网关启用了删除保护，无法删除NAT网关，如需删除NAT网关，需要先禁用删除保护。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关页面，单击NAT网关右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表中选择一个或多个NAT网关，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看nat网关详情">查看NAT网关详情&lt;/h2>
+&lt;ol>
+&lt;li>单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：包括云上ID、ID、名称、状态、域、项目、共享范围、平台、计费方式、区域、可用区、云账号、云订阅、创建时间、更新时间、备注。&lt;/li>
+&lt;li>配置信息：包括VPC、IP子网、内网IP地址、规格。&lt;/li>
+&lt;li>其他信息：支持开启或关闭删除保护。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+NAT网关的共享范围与VPC保持一致，即，当VPC更改共享范围时，NAT网关的共享范围也会改变。
+&lt;/div>
+&lt;h2 id="snat管理">SNAT管理&lt;/h2>
+&lt;p>该功能基于已有NAT网关的情况下，通过创建SNAT条目使VPC中IP子网的虚拟机可以通过NAT网关绑定的弹性公网IP访问公网。一条IP子网对应一条SNAT条目，如有多个IP子网需要访问公网，需要创建多个SNAT条目。&lt;/p>
+&lt;h3 id="新建snat条目">新建SNAT条目&lt;/h3>
+&lt;p>该功能用于创建SNAT条目，使VPC内的IP子网下虚拟机或虚拟机可以通过NAT网关绑定的弹性公网IP访问公网。&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击SNAT页签，进入SNAT页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出创建SNAT条目对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>名称：设置SNAT条目的名称。&lt;/li>
+&lt;li>类型：包括IP子网和虚拟机。
+&lt;ul>
+&lt;li>当类型选择“IP子网”时，需要选择具体的IP子网，该IP子网下的虚拟机可以访问公网。&lt;/li>
+&lt;li>当类型选择“虚拟机”时，需要选择具体的虚拟机，则只有该虚拟机可以访问公网。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>公网IP地址：选择永磊提供互联网访问的弹性公网IP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建SNAT条目。&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+用于创建DNAT条目的公网IP不能再用来创建SNAT条目。
+&lt;/div>
+&lt;h3 id="删除snat条目">删除SNAT条目&lt;/h3>
+&lt;p>该功能用于删除SNAT条目。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击SNAT页签，进入SNAT页面。&lt;/li>
+&lt;li>单击SNAT条目右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击SNAT页签，进入SNAT页面。&lt;/li>
+&lt;li>在SNAT条目列表中选择一个或多个SNAT条目，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="dnat管理">DNAT管理&lt;/h2>
+&lt;p>该功能基于已有NAT网关的情况下，通过创建DNAT条目使VPC内的虚拟机可以向外提供互联网访问服务。一个虚拟机绑定一条DNAT条目，如有多个虚拟机需要为互联网提供服务，则需要创建多条DNAT条目。&lt;/p>
+&lt;h3 id="新建dnat条目">新建DNAT条目&lt;/h3>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击DNAT页签，进入DNAT页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出创建DNAT条目对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>条目名称：DNAT条目名称。&lt;/li>
+&lt;li>公网IP地址：选择未被绑定的弹性公网IP。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+用于创建SNAT条目的公网IP不能再用来创建DNAT条目。
+&lt;/div>
+&lt;/li>
+&lt;li>虚拟机：选择提供互联网服务的虚拟机。&lt;/li>
+&lt;li>公网端口：进行端口转发的外部端口。&lt;/li>
+&lt;li>私网端口：进行端口转发的内部端口&lt;/li>
+&lt;li>协议类型：转发端口的协议类型。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建DNAT条目。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除dnat条目">删除DNAT条目&lt;/h3>
+&lt;p>该功能用于删除DNAT条目。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击DNAT页签，进入DNAT页面。&lt;/li>
+&lt;li>单击DNAT条目右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击DNAT页签，进入DNAT页面。&lt;/li>
+&lt;li>在DNAT条目列表中选择一个或多个DNAT条目，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看NAT网关相关操作的日志信息&lt;/p>
+&lt;ol>
+&lt;li>在NAT网关列表，单击NAT网关名称项，进入NAT网关详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: DNS解析</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/dns/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/dns/</guid><description>
+&lt;p>DNS解析用于将简单好记的域名解析为计算机用于通信的IP地址，便于用户通过域名访问到指定的网址或服务器等。目前仅支持阿里云、腾讯云和AWS，且腾讯云只支持PublicZone类型的DNS。&lt;/p>
+&lt;ul>
+&lt;li>PublicZone DNS：即公共DNS解析服务，用户可以通过Internet之前访问域名。&lt;/li>
+&lt;li>PrivateZone DNS：基于VPC网络的私有DNS服务，支持使用私有域名来解析VPC环境中的资源。私有域名在VPC外无法访问。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>使用流程&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>新建域名。&lt;/li>
+&lt;li>在域名详情-记录中添加记录。&lt;/li>
+&lt;li>同步到公有云。
+&lt;ul>
+&lt;li>PublicZone类型的域名需要通过新建缓存同步到公有云。&lt;/li>
+&lt;li>PrivateZone类型的域名需要关联VPC，同时新建缓存同步到公有云。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>同步规则&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>本地-云：通过对应的公有云缓存将本地的DNS解析同步到公有云。后续新建记录等也将同步将记录同步到公有云上。
+&lt;ul>
+&lt;li>PublicZone类型的DNS需要通过新建缓存将DNS解析同步到公有云上。&lt;/li>
+&lt;li>PrivateZone类型的DNS关联VPC时同时新建缓存将DNS解析同步到公有云上。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>云-本地：当DNS解析本地与公有云一一对应时，公有云上的操作将会同步到本地，若DNS解析本地与公有云为一对多关系时，则不会双向同步，仅第一次对接云账号时，会完全同步云上域名到本地；后续需要全量同步云账号同步云端新增域名及域名下记录，已同步到本地的域名在云端增删记录不会同步到本地，建议用户完全在云管平台上进行操作，以保证云端和本地的数据一致性。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/DNS解析&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入DNS解析页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/network/dns1.png" alt="">&lt;/p>
+&lt;h2 id="新建域名">新建域名&lt;/h2>
+&lt;p>该功能用于指定需要解析的主域名或子域名等。PublicZone类型的域名需要在Internet注册域名。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建域名对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>指定域：选择DNS解析所属的域。&lt;/li>
+&lt;li>解析域类型：包括PublicZone和PrivateZone。
+&lt;ul>
+&lt;li>PublicZone DNS：即公共DNS解析服务，用户可以通过Internet之前访问域名。&lt;/li>
+&lt;li>PrivateZone DNS：基于VPC网络的私有DNS服务，支持使用私有域名来解析VPC环境中的资源。私有域名在VPC外无法访问。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>域名：设置需要解析的域名。其中PublicZone类型目前仅支持二级域名。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入同步到公有云页面。&lt;/li>
+&lt;li>如需要将域名同步到公有云，则配置以下参数，配置完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。
+&lt;ul>
+&lt;li>当解析域类型是PublicZone时，选择平台和云订阅，即将域名同步到对应平台上。&lt;/li>
+&lt;li>当解析域类型是PrivateZone时，选择区域以及对应的VPC，即通过关联对应平台的VPC，将域名同步到对应公有云平台。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如暂不需要将域名同步到公有云，则直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮即可。&lt;/li>
+&lt;/ol>
+&lt;h2 id="关联vpc">关联VPC&lt;/h2>
+&lt;p>该功能用于将PrivateZone类型的解析域名关联到VPC，关联VPC的同时还会将域名同步到对应公有云平台。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+腾讯云不支持PrivateZone类型的DNS，即不能关联腾讯云的VPC。
+&lt;/div>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联VPC&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联VPC对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>区域：设置区域，并通过区域过滤VPC。可通过城市、平台快速过滤筛选出合适区域。&lt;/li>
+&lt;li>VPC：选择要关联的VPC，关联后将会把DNS解析域名同步到VPC所在平台账号中。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="同步状态">同步状态&lt;/h2>
+&lt;p>该功能用于同步域名的当前状态。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，同步DNS解析域名的状态。&lt;/li>
+&lt;/ol>
+&lt;h2 id="推送解析列表">推送解析列表&lt;/h2>
+&lt;p>当由于其他原因未能将本地的DNS解析记录完全同步到公有云平台时，可通过本功能将状态可用域名下的解析记录列表推送到公有云平台。推送时以本地的解析列表为准，向公有云覆盖，若公有云上存在未同步到本地的解析记录，可能会被删除，请谨慎操作。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;推送解析列表&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更改域">更改域&lt;/h2>
+&lt;p>该功能用于更改DNS解析的所属域。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>更改域的条件：需同时满足&lt;/p>
+&lt;ul>
+&lt;li>当前用户在管理后台。&lt;/li>
+&lt;li>在Cloudpods已开启三级权限。&lt;/li>
+&lt;li>DNS解析的共享范围为私有。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改域&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改域对话框。&lt;/li>
+&lt;li>选择DNS解析所属的域，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置共享">设置共享&lt;/h2>
+&lt;p>该功能用于设置DNS解析域名的共享范围。&lt;/p>
+&lt;p>域资源的共享范围有三种：&lt;/p>
+&lt;ul>
+&lt;li>不共享（私有）：即域资源只能本域的用户可以使用。&lt;/li>
+&lt;li>域共享-部分（多域共享）：即域资源可以共享到指定域（一个或多个），只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>域共享-全部（全局共享）：即域资源可以共享给全部域使用，即系统中所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置共享的条件：需同时满足&lt;/p>
+&lt;ul>
+&lt;li>当前用户在管理后台。&lt;/li>
+&lt;li>在Cloudpods已开启三级权限。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即域资源的共享范围为私有，仅本域的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即域资源的共享范围为域共享-部分，只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即域资源的共享范围为域共享-全部，系统中的所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除">删除&lt;/h2>
+&lt;p>该功能用于删除DNS解析域名，支持单个和批量操作。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析列表中选择一个或多个域名，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看dns解析详情">查看DNS解析详情&lt;/h2>
+&lt;p>该功能用于查看DNS解析的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>查看以下信息：包括云上ID、ID、名称、状态、域、解析域类型、记录数、关联VPC、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="记录管理">记录管理&lt;/h2>
+&lt;p>该功能用于管理域名下的解析记录。&lt;/p>
+&lt;h3 id="新建记录">新建记录&lt;/h3>
+&lt;p>该功能用于新建解析记录。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+主机记录仅支持字符a-z、A-Z、0-9、短划线（-）、下划线（_）、句点（.）、@、*，且短划线和句点不能出现在开头和结尾。
+&lt;/div>
+&lt;h4 id="新建a记录">新建A记录&lt;/h4>
+&lt;p>A记录实现将域名指向IP地址。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“A：将域名指向一个IPv4的地址”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：设置IPv4的地址。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建aaaa记录">新建AAAA记录&lt;/h4>
+&lt;p>AAAA记录实现将域名指向IPv6的地址。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“AAAA：将域名指向一个IPv6的地址”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：设置IPv6的地址。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建cname记录">新建CNAME记录&lt;/h4>
+&lt;p>CNAME记录实现将域名指向另一个域名，再由另一个域名解析为IP地址等。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+当为某个子域名创建了CNAME记录，则不能为该域创建其他记录。
+&lt;/div>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“CNAME：将域名指向另外一个域名”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：只可以设置域名。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建mx记录">新建MX记录&lt;/h4>
+&lt;p>MX记录实现将域名指向邮件服务器地址，用于电子邮件系统根据收信人的邮件后缀定位邮件服务器，系统将根据MX记录的优先级将邮件转发到对应的邮件服务器上。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“MX：将域名指向邮件服务器地址”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，一般设置为@或mail。如主机记录设置为@，邮箱地址是xxx@example.com；如主机记录设置为mail，邮箱地址为xxx@mail.example.com。&lt;/li>
+&lt;li>记录值：可以设置域名和IP地址。&lt;/li>
+&lt;li>MX优先级：数值越低，优先级越高，将优先转发到优先级高的记录值对应的邮箱服务器。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建srv记录">新建SRV记录&lt;/h4>
+&lt;p>SRV记录用来标识某台服务器使用了某个服务，常见于微软系统的目录管理。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“SRV：记录提供特定服务的服务器”。&lt;/li>
+&lt;li>主机记录：格式为服务的名字.协议的类型，例如_sip._tcp。&lt;/li>
+&lt;li>记录值：格式为“优先级 权重 端口 目标地址”，每项以空格隔开。例如0 5 5060 sipserver.example.com。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建ptr记录">新建PTR记录&lt;/h4>
+&lt;p>PTR反向解析将IP地址映射到域名上。仅PrivateZone类型的DNS解析域名支持该类型。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“PTR：用于地址反解到域名”。&lt;/li>
+&lt;li>主机记录：填写反向解析记录的名称。将需要反解析的IP地址反向输入，如IP地址为1.2.3.4，则输入4.3.2.1。&lt;/li>
+&lt;li>记录值：设置私网IP地址对应的内网域名，只能填写一个域名。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建txt记录">新建TXT记录&lt;/h4>
+&lt;p>TXT记录用于对域名进行标识和说明，用于做SPF记录（反垃圾邮件）。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建记录对话框。&lt;/li>
+&lt;li>配置以下信息：
+&lt;ul>
+&lt;li>记录类型：选择“TXT：通常做SPF记录（反垃圾邮件）”。&lt;/li>
+&lt;li>主机记录：一般为子域名的前缀，如创建www.example.com，主机记录输入www；如需实现example.com，则主机记录输入@。&lt;/li>
+&lt;li>记录值：没有固定的格式。TXT记录通常是用来做SPF反垃圾邮件的。最典型的SPF格式的TXT记录例子为 “v=spf1 a mx ~all”，表示只有这个域名的A记录和MX记录中的IP地址有权限使用这个域名发送邮件。&lt;/li>
+&lt;li>TTL（Time to live）：DNS记录在DNS服务器的缓存时间。用户解析域名后，域名与IP地址将会在缓存中保存ttl时间，用户在ttl时间内再次访问域名，将直接返回IP地址，如TTL到期则重新解析域名。数值越小，修改记录生效时间越快。默认为5分钟。&lt;/li>
+&lt;li>解析线路：设置记录在不同平台的解析方式，如不设置，即使用默认线路。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>&lt;strong>举例说明&lt;/strong>：&lt;/p>
+&lt;p>如解析线路设置了腾讯云-运营商-中国联通、AWS-加权-权重。&lt;/p>
+&lt;ul>
+&lt;li>当该条记录同步到腾讯云时，解析线路为中国联通。表示只有中国联通的用户访问域名才会返回设置的记录值，其他运营商的用户则无法访问网站。此时还需要添加一条腾讯云默认线路。&lt;/li>
+&lt;li>当该条记录同步到AWS时，解析线路为加权-权重。表示该条记录将根据设置的权重比例响应查询等。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="修改">修改&lt;/h3>
+&lt;p>该功能用于修改解析记录。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改菜单项。&lt;/li>
+&lt;li>修改相关信息，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h3 id="启用">启用&lt;/h3>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的解析记录，使其可以正常提供服务。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击&amp;quot;禁用&amp;quot;状态的记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用解析记录。&lt;/li>
+&lt;/ol>
+&lt;h3 id="禁用">禁用&lt;/h3>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的解析记录。禁用状态的解析记录无法使用。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击&amp;quot;启用&amp;quot;状态的记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用解析记录。&lt;/li>
+&lt;/ol>
+&lt;h3 id="克隆">克隆&lt;/h3>
+&lt;p>该功能用于基于当前解析记录创建新的记录。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;克隆&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出克隆对话框。&lt;/li>
+&lt;li>配置相关信息，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建新的域名。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除-1">删除&lt;/h3>
+&lt;p>该功能用于删除解析记录。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在记录列表选择一个或多个记录，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看记录详情">查看记录详情&lt;/h3>
+&lt;p>该功能用于查看记录的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“记录”页签，进入记录页面。&lt;/li>
+&lt;li>单击记录名称，进入记录详情页面。&lt;/li>
+&lt;li>查看以下信息：包括云上ID、ID、名称、记录类型、记录值、TTL、启用状态、创建时间、更新时间、备注。&lt;/li>
+&lt;/ol>
+&lt;h2 id="关联vpc管理">关联VPC管理&lt;/h2>
+&lt;p>该功能用于管理PrivateZone类型的DNS解析域名关联VPC。&lt;/p>
+&lt;h3 id="关联vpc-1">关联VPC&lt;/h3>
+&lt;p>该功能用于将PrivateZone类型的解析域名关联到VPC。仅域名状态可用时才支持该操作。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击“PrivateZone”类型的域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“关联VPC”页签，进入关联VPC页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;关联VPC&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联VPC对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>区域：设置区域，并通过区域过滤VPC。可通过城市、平台快速过滤筛选出合适区域。&lt;/li>
+&lt;li>VPC：选择要关联的VPC，关联后将会把DNS解析域名同步到VPC所在平台账号中。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="解绑vpc">解绑VPC&lt;/h3>
+&lt;p>该功能用于解除域名与VPC的绑定，解绑后将同步删除缓存记录及公有云平台对应的解析域名等。&lt;/p>
+&lt;p>&lt;strong>单个解绑&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击“PrivateZone”类型的域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“关联VPC”页签，进入关联VPC页面。&lt;/li>
+&lt;li>单击VPC右侧操作列 &lt;strong>&lt;em>&amp;ldquo;解绑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量解绑&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击“PrivateZone”类型的域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“关联VPC”页签，进入关联VPC页面。&lt;/li>
+&lt;li>在VPC列表中选择一个或多个VPC，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;解绑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="缓存列表管理">缓存列表管理&lt;/h2>
+&lt;p>缓存记录即表示DNS解析域名本地与公有云的映射关系。&lt;/p>
+&lt;p>&lt;strong>缓存列表来源&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>PrivateZone类型的DNS解析关联VPC后将会为对应平台产生一条缓存记录。&lt;/li>
+&lt;li>PublicZone类型的DNS解析通过新建缓存功能为对应平台产生一条缓存记录。&lt;/li>
+&lt;/ul>
+&lt;h3 id="新建缓存">新建缓存&lt;/h3>
+&lt;p>该功能用于将PublicZone类型的DNS解析同步到公有云平台。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“缓存列表”页签，进入缓存列表页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建缓存对话框。&lt;/li>
+&lt;li>选择平台和对应平台的云订阅。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将DNS解析域名同步到对应公有云平台的指定账号下。&lt;/li>
+&lt;/ol>
+&lt;h3 id="释放缓存">释放缓存&lt;/h3>
+&lt;p>该功能用于删除缓存，删除缓存后将会同步删除公有云平台上的DNS解析域名等。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“缓存列表”页签，进入缓存列表页面。&lt;/li>
+&lt;li>单击缓存右侧操作列 &lt;strong>&lt;em>&amp;ldquo;释放缓存&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看缓存操作日志">查看缓存操作日志&lt;/h3>
+&lt;p>该功能用于查看本地的DNS解析域名同步到公有云的操作日志，用于排查问题等。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“缓存列表”页签，进入缓存列表页面。&lt;/li>
+&lt;li>单击缓存名称项，进入缓存详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入缓存操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看DNS解析相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在DNS解析页面，单击域名名称项，进入DNS解析详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: IPv6网关</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/ipv6/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/networkservice/ipv6/</guid><description>
+&lt;p>IPv6网关（IPv6 Gateway）是专有网络（VPC）的一个IPv6互联网流量网关，目前仅支持阿里飞天云。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/网络服务/IPv6网关&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入IPv6网关页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/network/ipv6.png" alt="">&lt;/p>
+&lt;h2 id="查看ipv6网关详情">查看IPv6网关详情&lt;/h2>
+&lt;p>该功能用于查看IPv6网关的信息。&lt;/p>
+&lt;ol>
+&lt;li>在IPv6网关页面，单击IPv6网关名称项，进入IPv6网关详情页面。&lt;/li>
+&lt;li>查看IPv6网关信息，包括云上ID、ID、名称、状态、域、项目、VPC、规格、平台、区域、创建时间、更新时间、备注。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看IPv6网关相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在IPv6网关详情页面，单击&amp;quot;操作日志&amp;quot;页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

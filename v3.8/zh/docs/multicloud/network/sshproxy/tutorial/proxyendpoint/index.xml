@@ -1,0 +1,87 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+SSH代理节点</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/</link><description>Recent content in SSH代理节点 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 16 Dec 2021 15:50:52 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建代理节点</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/create/</link><pubDate>Thu, 16 Dec 2021 15:50:56 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/create/</guid><description>
+&lt;h3 id="虚拟机配置要求">虚拟机配置要求&lt;/h3>
+&lt;ul>
+&lt;li>目前只支持Linux操作系统的虚拟机作为SSH代理节点。&lt;/li>
+&lt;li>请确保虚拟机处于运行中状态；&lt;/li>
+&lt;li>请确保虚拟机支持通过平台免密登录；虚拟机能被平台免密登录，则要求虚拟机与平台网络通（即通过EIP、NAT网关或SSH代理等方式使虚拟机与平台网络通）以及虚拟机中存在平台的公钥文件。&lt;/li>
+&lt;li>请检查虚拟机的sshd配置，GatewayPorts是clientspecified，若该项值为no，则只允许绑定127.0.0.1的地址，使remote forward无法正常使用，造成安装监控Agent的虚拟机无法向平台上报监控数据等。&lt;/li>
+&lt;/ul>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;p>该功能用于新建代理节点。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/SSH代理服务/SSH代理节点&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入SSH代理节点页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建SSH代理节点页面。&lt;/li>
+&lt;li>在选择虚拟机页面设置以下参数：
+&lt;ul>
+&lt;li>域：设置SSH代理节点所属域，并通过域过滤可选的虚拟机。&lt;/li>
+&lt;li>名称：设置SSH代理节点的名称。&lt;/li>
+&lt;li>备注：设置SSH代理节点的备注信息。&lt;/li>
+&lt;li>区域：通过平台、区域过滤VPC。&lt;/li>
+&lt;li>网络：通过VPC、网络过滤虚拟机。&lt;/li>
+&lt;li>虚拟机：通过上面的筛选条件过滤出符合条件的虚拟机，并支持在搜索框中通过名称和IP搜索虚拟机，请确保所选的虚拟机符合&lt;a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">虚拟机配置要求&lt;/a>，如没有合适的虚拟机，可以单击“新建”超链接，跳转到虚拟机列表页面创建符合需求的虚拟机。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>选择好虚拟机后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始探测虚拟机的免密登录状态。
+&lt;ul>
+&lt;li>如虚拟机可免密登录，可直接单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始创建虚拟机。&lt;/li>
+&lt;li>如虚拟机不可免密登录，请先点击列表操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看探测免密登录失败的具体原因。
+&lt;ul>
+&lt;li>如报错原因中提示“none publickey”或因为ssh端口不是默认端口而导致无法免密登录时，可通过设置免密登录功能，将虚拟机设置为免密登录状态。设置免密登录方式配置参数如下：
+&lt;ul>
+&lt;li>SSH端口：修改虚拟机的SSH端口，将通过该端口免密登录到虚拟机。&lt;/li>
+&lt;li>设置方式：支持密钥、密码、脚本等方式将平台的公钥上传到虚拟机上。&lt;/li>
+&lt;li>当设置方式为“密钥”时，请使用root用户或具有使用sudo免密权限的用户以其私钥，请确保可以通过用户名和私钥通过ssh连接到对应虚拟机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始设置并探测虚拟机的免密登录状态是否变为免密登录。&lt;/li>
+&lt;li>当设置方式为“密码”时，请使用root用户或具有使用sudo免密权限的用户以其密码，请确保可以通过用户名和密码通过ssh连接到对应虚拟机。单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始设置并探测虚拟机的免密登录状态是否变为免密登录。&lt;/li>
+&lt;li>当设置方式为“脚本”时，请请使用root或具有sudo权限的用户在虚拟机中执行以下脚本，执行完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始设置并探测虚拟机的免密登录状态是否变为免密登录。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如报错原因中提示“network error”，则需要返回上一步选择其他虚拟机，或为该虚拟机通过绑定EIP或NAT网关等方式，使其与平台网络可通。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>只有当虚拟机免密登录状态为“可免密登录”时，才支持单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始创建SSH代理节点。&lt;/li>
+&lt;li>在创建SSH代理节点时将会检查虚拟机的sshd配置是否符合虚拟机配置要求，若不符合将会尝试变更虚拟机的sshd配置，因此可能会造成创建ssh代理节点时间过长，若提示超时，请重新单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建SSH代理节点。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 修改端口</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/modify/</link><pubDate>Thu, 16 Dec 2021 15:51:01 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/modify/</guid><description>
+&lt;p>该功能用于修改SSH代理节点的SSH端口。&lt;/p>
+&lt;p>&lt;strong>修改端口&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/SSH代理服务/SSH代理节点&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入SSH代理节点页面。&lt;/li>
+&lt;li>单击SSH代理节点右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改端口&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改端口对话框。&lt;/li>
+&lt;li>修改SSH端口，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量修改端口&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在SSH代理节点列表中选择一个或多个SSH代理节点，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改端口&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改端口对话框。&lt;/li>
+&lt;li>修改SSH端口，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 删除SSH代理节点</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/delete/</link><pubDate>Thu, 16 Dec 2021 15:51:10 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/delete/</guid><description>
+&lt;p>该功能用于删除SSH代理节点，当SSH代理节点下有转发规则时，不允许删除。目前转发规则列表暂未放开。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;网络/SSH代理服务/SSH代理节点&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入SSH代理节点页面。&lt;/li>
+&lt;li>单击SSH代理节点右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在SSH代理节点列表中选择一个或多个SSH代理节点，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看SSH代理节点详情</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/show/</link><pubDate>Thu, 16 Dec 2021 15:51:14 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/show/</guid><description>
+&lt;p>该功能用于查看SSH代理节点的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在SSH代理节点列表，单击SSH代理节点名称项，进入SSH代理节点详情页面。&lt;/li>
+&lt;li>查看以下信息，包括云上ID、ID、名称、状态、域、项目、内网地址、SSH地址、SSH端口、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 查看SSH代理节点操作日志</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/log/</link><pubDate>Thu, 16 Dec 2021 15:51:17 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/network/sshproxy/tutorial/proxyendpoint/log/</guid><description>
+&lt;p>该功能用于查看SSH代理节点相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在SSH代理节点列表，单击SSH代理节点名称项，进入SSH代理节点详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../../../images/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

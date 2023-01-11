@@ -1,0 +1,133 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+数据库</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/db/rds/tutorial/database/</link><description>Recent content in 数据库 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 23 Jun 2021 08:22:33 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.8/zh/docs/multicloud/db/rds/tutorial/database/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 新建数据库</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/db/rds/tutorial/database/create/</link><pubDate>Wed, 23 Jun 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/db/rds/tutorial/database/create/</guid><description>
+&lt;p>该功能用于创建数据库，仅RDS实例状态为 运行中(running) 时才可进行此操作。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>阿里云不支持创建名称为test的数据库。&lt;/li>
+&lt;li>谷歌云RDS不支持为数据库设置账号。&lt;/li>
+&lt;li>腾讯云不支持在界面新建数据库，需要登录到RDS实例上进行数据库的管理操作。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;数据库/RDS/RDS实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入RDS实例页面。&lt;/li>
+&lt;li>单击RDS实例的名称项，进入RDS实例详情页面。&lt;/li>
+&lt;li>单击“数据库管理”页签，进入数据库管理页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出创建数据库对话框。&lt;/li>
+&lt;li>设置以下参数。
+&lt;ul>
+&lt;li>数据库名称：设置数据库名称，数据库名称在实例内必须是唯一的。&lt;/li>
+&lt;li>字符集：字符集是数据库中字母、符号的集合，以及它们的编码规则。&lt;/li>
+&lt;li>账号：选择访问数据库的授权账号。
+&lt;ol>
+&lt;li>在未授权账号中选择一个或多个账号，单击&lt;img src="../../images/database/%3E.png" alt="">图标添加到已授权的账号。&lt;/li>
+&lt;li>在已授权的账号中，设置账号对数据库的读写或只读权限。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc dbinstance-database-create database2 f39bc936-32dd-4151-8ca0-09834318b482 --character-set utf8
++--------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> account &lt;span style="color:#000;font-weight:bold">|&lt;/span> qx-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> account_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> f88fb1c0-73d4-4c56-8315-20f7dfba3447 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> brand &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_delete &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_update &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> character_set &lt;span style="color:#000;font-weight:bold">|&lt;/span> utf8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> cloud_env &lt;span style="color:#000;font-weight:bold">|&lt;/span> public &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> cloudregion &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> cloudregion_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> b7f8f44e-4fae-42b7-87cd-cb21f47da032 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-24T06:47:06.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> dbinstance &lt;span style="color:#000;font-weight:bold">|&lt;/span> test-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> dbinstance_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> f39bc936-32dd-4151-8ca0-09834318b482 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> deleted &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> environment &lt;span style="color:#000;font-weight:bold">|&lt;/span> InternationalCloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 667e37a0-eacf-420b-82e2-5bb21a418d6c &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> imported_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-24T06:47:06.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_emulated &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager &lt;span style="color:#000;font-weight:bold">|&lt;/span> qx-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5af29c01-3f83-4a52-875c-1336e559b0f5 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_project &lt;span style="color:#000;font-weight:bold">|&lt;/span> qx-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_project_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> dccd3be610c342e9812e64258ca12769 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> name &lt;span style="color:#000;font-weight:bold">|&lt;/span> database2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> a9a365125abf43c580ba98e5640b5c51 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> provider &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region_ext_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> cn-beijing &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region_external_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun/cn-beijing &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> b7f8f44e-4fae-42b7-87cd-cb21f47da032 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">source&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> creating &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> a9a365125abf43c580ba98e5640b5c51 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> update_version &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> updated_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-24T06:47:06.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc &lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc-h &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc_ext_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc-2zewan71fq5dxmy1ozq0k &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> c3652c98-ebc6-4c71-85a0-5eccc8583104 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------+--------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 删除数据库</title><link>https://www.cloudpods.org//v3.8/zh/docs/multicloud/db/rds/tutorial/database/delete/</link><pubDate>Wed, 23 Jun 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org//v3.8/zh/docs/multicloud/db/rds/tutorial/database/delete/</guid><description>
+&lt;p>该功能用于删除数据库。&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;数据库/RDS/RDS实例&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入RDS实例页面。&lt;/li>
+&lt;li>单击RDS实例的名称项，进入RDS实例详情页面。&lt;/li>
+&lt;li>单击“数据库管理”页签，进入数据库管理页面。&lt;/li>
+&lt;li>单击数据库右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除RDS实例数据库&lt;/span>
+$ climc dbinstance-database-delete 667e37a0-eacf-420b-82e2-5bb21a418d6c
++--------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> account &lt;span style="color:#000;font-weight:bold">|&lt;/span> qx-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> account_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> f88fb1c0-73d4-4c56-8315-20f7dfba3447 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> brand &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_delete &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_update &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> character_set &lt;span style="color:#000;font-weight:bold">|&lt;/span> utf8 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> cloud_env &lt;span style="color:#000;font-weight:bold">|&lt;/span> public &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> cloudregion &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> cloudregion_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> b7f8f44e-4fae-42b7-87cd-cb21f47da032 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-24T06:47:06.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> dbinstance &lt;span style="color:#000;font-weight:bold">|&lt;/span> test-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> dbinstance_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> f39bc936-32dd-4151-8ca0-09834318b482 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> deleted &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> environment &lt;span style="color:#000;font-weight:bold">|&lt;/span> InternationalCloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 667e37a0-eacf-420b-82e2-5bb21a418d6c &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> imported_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-24T06:47:06.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_emulated &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager &lt;span style="color:#000;font-weight:bold">|&lt;/span> qx-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5af29c01-3f83-4a52-875c-1336e559b0f5 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_project &lt;span style="color:#000;font-weight:bold">|&lt;/span> qx-aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> manager_project_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> dccd3be610c342e9812e64258ca12769 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> name &lt;span style="color:#000;font-weight:bold">|&lt;/span> database2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> a9a365125abf43c580ba98e5640b5c51 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> provider &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun 华北2（北京） &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region_ext_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> cn-beijing &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region_external_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> Aliyun/cn-beijing &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> b7f8f44e-4fae-42b7-87cd-cb21f47da032 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">source&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> deleting &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> a9a365125abf43c580ba98e5640b5c51 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> update_version &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> updated_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-06-24T06:51:00.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc &lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc-h &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc_ext_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc-2zewan71fq5dxmy1ozq0k &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> vpc_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> c3652c98-ebc6-4c71-85a0-5eccc8583104 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------+--------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

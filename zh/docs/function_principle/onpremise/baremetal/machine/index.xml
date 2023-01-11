@@ -1,0 +1,64 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+物理机相关操作</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/</link><description>Recent content in 物理机相关操作 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 07 Feb 2022 19:02:52 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 查看物理机列表</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/list/</link><pubDate>Tue, 08 Feb 2022 10:17:18 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/list/</guid><description>
+&lt;h3 id="列表">列表&lt;/h3>
+&lt;h3 id="查询物理机">查询物理机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># list baremetal 记录&lt;/span>
+climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># list 已经安装系统的物理机&lt;/span>
+climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span> --occupied
+&lt;span style="color:#8f5902;font-style:italic"># list 未安装系统的物理机&lt;/span>
+climc host-list --baremetal &lt;span style="color:#204a87">true&lt;/span> --empty
+&lt;span style="color:#8f5902;font-style:italic"># 查询物理机详情，包括硬件信息，机房信息&lt;/span>
+climc host-show &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="获取物理机登录信息">获取物理机登录信息&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-logininfo &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 远程终端</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/console/</link><pubDate>Mon, 07 Feb 2022 19:11:16 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/console/</guid><description>
+&lt;p>该功能支持使用SOL（Serial over LAN）和ssh远程连接到物理机。SOL即通过串口进行远程连接。连接之后需要使用初始账号列中的用户名和密码进行登录。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>若用户启用了MFA，打开远程终端需要先进行MFA验证。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;big>&lt;strong>界面操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;ol>
+&lt;li>在左侧导航栏，选择 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/物理机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入物理机页面。&lt;/li>
+&lt;li>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SOL远程终端&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，通过SOL方式远程连接物理机。&lt;/li>
+&lt;li>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，与物理机建立web SSH连接。&lt;/li>
+&lt;li>若物理机上的22端口被其他应用占用，ssh服务端口为其他端口时，可选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;SSH IP地址:自定义端口&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出的对话框框中设置端口号，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮与物理机建立web SSH连接。&lt;/li>
+&lt;li>单击物理机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;远程终端&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;Java控制台&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，下载并打开jnlp文件，连接物理机。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc webconsole-baremetal &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 启用/禁用</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/enable/</link><pubDate>Mon, 07 Feb 2022 19:11:22 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/enable/</guid><description>
+&lt;h3 id="启用">启用&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用物理机&lt;/span>
+$ climc host-enable --baremetal &lt;span style="color:#204a87">true&lt;/span> &amp;lt;id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="禁用">禁用&lt;/h3>
+&lt;p>该功能用于禁用”启用“状态的物理机，禁用状态的物理机不能创建裸金属服务器。&lt;/p>
+&lt;p>&lt;big>&lt;strong>Climc命令行&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用物理机&lt;/span>
+climc host-disable --baremetal &lt;span style="color:#204a87">true&lt;/span> &amp;lt;id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 开/关机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/start/</link><pubDate>Mon, 07 Feb 2022 19:12:10 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/start/</guid><description>
+&lt;h3 id="开机">开机&lt;/h3>
+&lt;p>该功能用于将关机状态的物理机开机。&lt;/p>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-start &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="关机">关机&lt;/h3>
+&lt;p>该功能用于将运行状态的物理机关机，当物理机已分配给裸金属使用时，不支持关机操作。&lt;/p>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-stop &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 进入/退出维护模式</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/maintain/</link><pubDate>Mon, 07 Feb 2022 19:12:28 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/maintain/</guid><description>
+&lt;h3 id="进入维护模式">进入维护模式&lt;/h3>
+&lt;p>该功能用于将已分配裸金属设备的物理机进入离线系统（PXE引导系统），管理员在离线系统可以进行更改分区、重做RAID、更改密码等操作。未分配的物理机默认就处于离线系统。&lt;/p>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-maintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="退出维护模式">退出维护模式&lt;/h3>
+&lt;p>该功能用于退出维护模式。&lt;/p>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-unmaintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 删除</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/delete/</link><pubDate>Mon, 07 Feb 2022 19:12:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/delete/</guid><description>
+&lt;p>该功能用于删除物理机，未分配给裸金属设备且禁用状态的物理机才可以删除。&lt;/p>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-delete &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

@@ -772,7 +772,7 @@ $ sudo setserial -g /dev/ttyUSB&lt;span style="color:#ce5c00;font-weight:bold">[
 &lt;pre>&lt;code>climc server-add-extra-options &amp;lt;sid&amp;gt; chardev tty,path=/dev/ttyUSB0,id=hostusbserial
 climc server-add-extra-options &amp;lt;sid&amp;gt; device pci-serial,chardev=hostusbserial
 &lt;/code>&lt;/pre>&lt;p>重启该虚拟机，在虚拟机详情页面查看命令行参数中是否增加了以上参数。&lt;/p></description></item><item><title>Docs: 迁移磁盘存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/change-disk-storge/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/change-disk-storge/</guid><description>
-&lt;p>在 v3.8.4 版本后可以把虚拟机的磁盘迁移到另一个存储，应用场景如下：&lt;/p>
+&lt;p>在 v3.9.4 版本后可以把虚拟机的磁盘迁移到另一个存储，应用场景如下：&lt;/p>
 &lt;ul>
 &lt;li>Ceph RBD 磁盘迁移到本地存储&lt;/li>
 &lt;li>本地磁盘迁移到 Ceph 存储&lt;/li>
@@ -780,7 +780,6 @@ climc server-add-extra-options &amp;lt;sid&amp;gt; device pci-serial,chardev=hos
 &lt;/ul>
 &lt;p>另外限制条件如下：&lt;/p>
 &lt;ul>
-&lt;li>虚拟机必须是关机状态，运行状态迁移磁盘存储功能还未实现&lt;/li>
 &lt;li>互相迁移的两个存储必须挂载到虚拟机所在的宿主机&lt;/li>
 &lt;/ul>
 &lt;p>假设环境中一台名叫 x86-node01-11-10-1-180-11 的宿主机分别挂载了一个 Ceph 存储和一个本地存储，用下面的命令可以查训到这台宿主机上挂载的存储：&lt;/p>

@@ -934,7 +934,15 @@ onecloud-operator-6967685b4-6p2qx 1/1 Running &lt;span style="color:#0000cf;font
 &lt;h3 id="宿主机的host服务启动失败且报错fail-to-get-network-infono-networks该怎么解决">宿主机的Host服务启动失败，且报错“Fail to get network info：no networks”，该怎么解决？&lt;/h3>
 &lt;p>该问题一般是没有为宿主机注册网络，需要在云管平台为宿主机创建一个IP子网或使用Climc命令在控制节点创建一个网络。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-create bcast0 host02 10.168.222.226 10.168.222.226 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> --gateway 10.168.222.1
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 高可用维护</title><link>https://www.cloudpods.org/zh/docs/ops/ha/</link><pubDate>Tue, 08 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="宿主机mac改变会导致host服务离线需要更改宿主机在平台注册的mac地址具体步骤如下">宿主机MAC改变会导致Host服务离线，需要更改宿主机在平台注册的MAC地址，具体步骤如下&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>例如，宿主机IP地址为100.91.1.22，其MAC从18:9b:a5:81:4f:17变为18:9b:a5:81:4f:16&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 092231af-eebc-456f-8a21-3ab7c944f20c为宿主机id，97e29a73-6615-4d5b-8b67-96bb13b80b90为宿主机所在二层网络的id&lt;/span>
+$ climc host-remove-netif 092231af-eebc-456f-8a21-3ab7c944f20c 18:9b:a5:81:4f:17
+$ climc host-add-netif --ip 100.91.1.22 092231af-eebc-456f-8a21-3ab7c944f20c 97e29a73-6615-4d5b-8b67-96bb13b80b90 18:9b:a5:81:4f:16 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 高可用维护</title><link>https://www.cloudpods.org/zh/docs/ops/ha/</link><pubDate>Tue, 08 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/</guid><description>
 &lt;h2 id="高可用vip的主动切换">高可用VIP的主动切换&lt;/h2>
 &lt;p>高可用集群通过Keepalived来维护主从节点的切换，平时VIP在主节点，由主节点提供服务。在主节点宕机情况下，会自动切换到备节点，由备节点提供服务。&lt;/p>
 &lt;p>在平时运维工作中，存在需要主动切换主从节点的情况，例如要对主节点执行关机维护任务。&lt;/p>

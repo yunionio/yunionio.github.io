@@ -1499,7 +1499,7 @@ $ /opt/yunion/bin/ocadm cluster update --version v3.8.17 --wait
 $ kubectl -n onecloud get pods -w
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 修改OC更新集群状态</title><link>https://www.cloudpods.org/zh/docs/setup/oc-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/oc-update/</guid><description>
 &lt;p>cloudpods-operator会在Kubernetes集群中注入CRD资源oc，该CRD定义了一个服务集群的状态，可以通过修改oc来更改集群的状态，达到IaC的效果。&lt;/p>
-&lt;p>1、修改集群整体状态&lt;/p>
+&lt;h2 id="1修改集群整体状态">1、修改集群整体状态&lt;/h2>
 &lt;p>主要几个参数：&lt;/p>
 &lt;ul>
 &lt;li>disableResourceManagement: true|false&lt;/li>
@@ -1541,9 +1541,7 @@ $ kubectl -n onecloud get pods -w
 &lt;li>zone: &lt;string>&lt;/li>
 &lt;/ul>
 &lt;p>当前可用区，默认为 zone0&lt;/p>
-&lt;ol start="2">
-&lt;li>修改单个组件的属性&lt;/li>
-&lt;/ol>
+&lt;h2 id="2-修改单个组件的属性">2. 修改单个组件的属性&lt;/h2>
 &lt;p>每个组件都可以设置如下属性：&lt;/p>
 &lt;ul>
 &lt;li>disable: true|false&lt;/li>
@@ -2400,7 +2398,68 @@ db_checksum_skip_init: &lt;span style="color:#204a87">true&lt;/span>
 ...
 &lt;span style="color:#8f5902;font-style:italic"># 重启 keystone 服务&lt;/span>
 $ kubectl -n onecloud rollout restart deployment default-keystone
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 隐藏功能配置</title><link>https://www.cloudpods.org/zh/docs/setup/feature-config/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/feature-config/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 前端使用 HTTP</title><link>https://www.cloudpods.org/zh/docs/setup/web-use-http/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/web-use-http/</guid><description>
+&lt;p>平台部署后默认打开了 TLS 服务端(单向)认证，使用 HTTPS 协议进行浏览器访问前端界面。本文介绍如何配置使用 HTTP 协议访问前端。&lt;/p>
+&lt;h2 id="编辑-onecloudcluster-spec">编辑 onecloudcluster spec&lt;/h2>
+&lt;p>首先需要编辑 oc.spec.web.useHTTP 属性，该属性默认为 false ，需要设置为 true ，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit oc -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>搜 useHTTP 关键字，进行如下编辑：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff"> spec:
+web:
+&lt;span style="color:#800080;font-weight:bold">@@ -1122,7 +1122,7 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> key: node-role.kubernetes.io/master
+- effect: NoSchedule
+key: node-role.kubernetes.io/controlplane
+&lt;span style="color:#a40000">- useHTTP: false
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ useHTTP: true
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> webconsole:
+affinity:
+nodeAffinity:
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="删除旧的-web-configmap">删除旧的 web configmap&lt;/h2>
+&lt;p>web 组件的 configmap 其实是一个 nginx 配置，该配置不会重新生成，需要删除后由 operator 新建，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除 web 组件的 configmap&lt;/span>
+$ kubectl delete configmap -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get configmap -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v console &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+configmap &lt;span style="color:#4e9a06">&amp;#34;default-web&amp;#34;&lt;/span> deleted
+&lt;span style="color:#8f5902;font-style:italic"># 等待 15s 后，该 configmap 会新建，查看生成的内容&lt;/span>
+$ kubectl get configmap -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get configmap -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v console &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+NAME DATA AGE
+default-web &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 28s
+&lt;span style="color:#8f5902;font-style:italic"># 查看其中是否有 80 端口配置，有的话就没有问题了&lt;/span>
+$ kubectl get configmap -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get configmap -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v console &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#39;listen 80&amp;#39;&lt;/span>
+listen &lt;span style="color:#0000cf;font-weight:bold">80&lt;/span> default_server&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="重启-web-组件">重启 web 组件&lt;/h2>
+&lt;p>更新完 web 组件的 configmap 后，需要重启 web 组件的 deployment ，命令为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启 web deployment&lt;/span>
+$ kubectl rollout restart deployment -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v console &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+deployment.extensions/default-web restarted
+&lt;span style="color:#8f5902;font-style:italic"># 等待 pod 变为 Running&lt;/span>
+$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -v console
+default-web-5bfb6c578b-mdh9w 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 58s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ingress">更新 ingress&lt;/h2>
+&lt;p>web 组件的 service 是使用 ingress 暴露出去的，ingress 默认也不会刷新，需要删除再次创建，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl delete ingress -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get ingress -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+ingress.extensions &lt;span style="color:#4e9a06">&amp;#34;default-web&amp;#34;&lt;/span> deleted
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看重建的 ingress 规则，已经路由到 80 端口即可：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get ingress -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get ingress -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep web &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -i port
+onecloud.yunion.io/last-applied-configuration: &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;rules&amp;#34;:[{&amp;#34;http&amp;#34;:{&amp;#34;paths&amp;#34;:[{&amp;#34;backend&amp;#34;:{&amp;#34;serviceName&amp;#34;:&amp;#34;default-web&amp;#34;,&amp;#34;servicePort&amp;#34;:80},&amp;#34;path&amp;#34;:&amp;#34;/&amp;#34;}]}}],&amp;#34;tls&amp;#34;:[{&amp;#34;secretName&amp;#34;:&amp;#34;default-certs&amp;#34;}]}&amp;#39;&lt;/span>
+servicePort: &lt;span style="color:#0000cf;font-weight:bold">80&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置-traefik-ingress-controller">配置 traefik ingress controller&lt;/h2>
+&lt;p>如果是使用 helm 部署的集群，就不用执行该步骤了，ingress controller 的实现和具体的 k8s 部署平台有关，现在 web 服务已经是使用 HTTP 协议了。&lt;/p>
+&lt;p>下面的步骤仅适用于使用 ocboot 部署的平台，需要设置 traefik ingress controller ，把 http 重定向到 https 这个配置关掉，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit configmaps -n kube-system traefik-ingress-lb
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注释掉 entryPoints.http.redirect 配置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#800080;font-weight:bold">@@ -14,8 +14,8 @@
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> [entryPoints]
+[entryPoints.http]
+address = &amp;#34;:80&amp;#34;
+&lt;span style="color:#a40000">- [entryPoints.http.redirect]
+&lt;/span>&lt;span style="color:#a40000">- entryPoint = &amp;#34;https&amp;#34;
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ #[entryPoints.http.redirect]
+&lt;/span>&lt;span style="color:#00a000">+ #entryPoint = &amp;#34;https&amp;#34;
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>重启 traefik ingress controller：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl delete pods -n kube-system &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik-ingress-controller &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+pod &lt;span style="color:#4e9a06">&amp;#34;traefik-ingress-controller-xkmct&amp;#34;&lt;/span> deleted
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此 HTTP 所有配置完成。&lt;/p></description></item><item><title>Docs: 隐藏功能配置</title><link>https://www.cloudpods.org/zh/docs/setup/feature-config/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/feature-config/</guid><description>
 &lt;p>由 ocboot 部署的 Cloudpods 是基于 Cloudpods 开源代码构建的社区免费版。这个版本方便用户体验 Cloudpods 的功能。&lt;/p>
 &lt;p>Cloudpods 自2017年开始开发，有较长时间积累。但代码量大，功能繁多，有部分代码已经较长时间没有迭代维护。因此，我们在社区免费版的前端选择性地隐藏具备以下特性的部分功能：&lt;/p>
 &lt;ol>

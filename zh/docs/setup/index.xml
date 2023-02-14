@@ -1440,8 +1440,8 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;p>使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p>
 &lt;ol>
-&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 release/3.9 分支&lt;/li>
-&lt;li>使用 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 进行大版本升级&lt;/li>
+&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 v3.9.6 tag&lt;/li>
+&lt;li>使用 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 里面的 &lt;code>./ocboot.py upgrade&lt;/code> 命令进行版本升级&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看当前版本">查看当前版本&lt;/h2>
 &lt;p>可以使用 kubectl 查看当前集群的版本&lt;/p>
@@ -1457,9 +1457,9 @@ $ python3 -m pip install --upgrade ansible paramiko
 &lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
 $ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git pull
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch
 $ git checkout v3.9.6
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-cloudpods-服务">更新 Cloudpods 服务&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="升级-cloudpods-服务">升级 Cloudpods 服务&lt;/h2>
 &lt;p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p>
 &lt;ol>
 &lt;li>本机能够 ssh 远程登录 PRIMARY_MASTER_HOST&lt;/li>

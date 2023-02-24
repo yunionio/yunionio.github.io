@@ -1242,6 +1242,27 @@ $ git checkout v3.9.7
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加节点">添加节点&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 添加节点&lt;/span>
 $ ./ocboot.py add-node 10.168.26.216 10.168.222.140
+&lt;span style="color:#8f5902;font-style:italic"># 默认情况是不允许虚拟机作为计算节点的，如果需要目标虚拟机作为计算节点，需要设置 --enable-host-on-vm 参数&lt;/span>
+$ ./ocboot.py add-node --enable-host-on-vm 10.168.26.216 10.168.222.140
+&lt;span style="color:#8f5902;font-style:italic"># 其他选项，使用 &amp;#39;--help&amp;#39; 参考帮助&lt;/span>
+$ ./ocboot.py add-node --help
+usage: ocboot.py add-node &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--user SSH_USER&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--key-file SSH_PRIVATE_FILE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--port SSH_PORT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--node-port SSH_NODE_PORT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--enable-host-on-vm&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+FIRST_MASTER_HOST TARGET_NODE_HOSTS &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>TARGET_NODE_HOSTS ...&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+positional arguments:
+FIRST_MASTER_HOST onecloud cluster primary master host, e.g., 10.1.2.56
+TARGET_NODE_HOSTS target nodes ip added into cluster
+optional arguments:
+-h, --help show this &lt;span style="color:#204a87">help&lt;/span> message and &lt;span style="color:#204a87">exit&lt;/span>
+--user SSH_USER, -u SSH_USER
+primary master host ssh user &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: root&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--key-file SSH_PRIVATE_FILE, -k SSH_PRIVATE_FILE
+primary master ssh private key file &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: /home/lzx/.ssh/id_rsa&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--port SSH_PORT, -p SSH_PORT
+primary master host ssh port &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: 22&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--node-port SSH_NODE_PORT, -n SSH_NODE_PORT
+worker node host ssh port &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: 22&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--enable-host-on-vm
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令会使用 ansible-playbook 把对应的计算节点加入进来。&lt;/p>
 &lt;h3 id="启用计算节点宿主机">启用计算节点(宿主机)&lt;/h3>
 &lt;p>等计算节点添加完成后，需要启用刚才上报的计算节点，只有启用的宿主机才能运行虚拟机。&lt;/p>

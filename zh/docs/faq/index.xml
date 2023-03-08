@@ -330,6 +330,8 @@ $ climc server-purge &amp;lt;server_id&amp;gt;
 &lt;p>通过ssh远程连接控制节点，执行以下命令：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> sh &lt;span style="color:#8f5902;font-style:italic"># 进入climc容器执行如下命令&lt;/span>
 $ /opt/yunion/scripts/tools/clean_host.sh &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果该宿主机是从物理机转换过来的，还需要重启 baremetal-agent 服务更新记录：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl rollout restart deployment -n onecloud default-baremetal-agent
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="为什么物理服务器baremetal无法被云管平台纳管">为什么物理服务器Baremetal无法被云管平台纳管？&lt;/h2>
 &lt;p>请检查并确保物理服务器满足以下配置项：&lt;/p>
 &lt;ul>

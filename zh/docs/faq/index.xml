@@ -198,6 +198,11 @@ $ ./upgrade.sh
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">API_VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>V2 &lt;span style="color:#8f5902;font-style:italic">#脚本使用V2版本的API，所以需要显式声明&lt;/span>
 $ &lt;span style="color:#204a87">cd&lt;/span> /opt/yunion/scripts/tools/
 $ ./clean_provider.sh &amp;lt;provider_id_or_name&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何设置openstack的虚拟机免密登陆">如何设置OpenStack的虚拟机免密登陆？&lt;/h2>
+&lt;p>在云管平台中需要把OpenStack虚拟机所在的VPC中direct值设置为true，然后在平台中设置免密登陆成功，再安装监控agent。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ &lt;span style="color:#204a87">source&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ocadm cluster rcadmin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+$ climc server-show 虚拟机名称 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep vpc_id &lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机所在vpc的id&lt;/span>
+$ climc vpc-update --direct vpc_id &lt;span style="color:#8f5902;font-style:italic"># vpc_id为上述查询的值&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源同步不下来问题排查</title><link>https://www.cloudpods.org/zh/docs/faq/sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/sync/</guid><description>
 &lt;h2 id="检查账号权限">检查账号权限&lt;/h2>
 &lt;ul>

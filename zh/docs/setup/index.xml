@@ -408,7 +408,7 @@ cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EO
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: $PRIMARY_IP
 &lt;/span>&lt;span style="color:#4e9a06"> use_local: false
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.9.7&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.9.8&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: $DB_IP
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: &amp;#34;$DB_USER&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: &amp;#34;$DB_PSWD&amp;#34;
@@ -1106,7 +1106,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
 &lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.7
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.8
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156
@@ -1238,7 +1238,7 @@ $ python3 -m pip install --upgrade ansible paramiko
 $ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch
-$ git checkout v3.9.7
+$ git checkout v3.9.8
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加节点">添加节点&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 添加节点&lt;/span>
 $ ./ocboot.py add-node 10.168.26.216 10.168.222.140
@@ -1450,7 +1450,7 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;p>使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p>
 &lt;ol>
-&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 v3.9.7 tag&lt;/li>
+&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 v3.9.8 tag&lt;/li>
 &lt;li>使用 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 里面的 &lt;code>./ocboot.py upgrade&lt;/code> 命令进行版本升级&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看当前版本">查看当前版本&lt;/h2>
@@ -1468,7 +1468,7 @@ $ python3 -m pip install --upgrade ansible paramiko
 $ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch
-$ git checkout v3.9.7
+$ git checkout v3.9.8
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="升级-cloudpods-服务">升级 Cloudpods 服务&lt;/h2>
 &lt;p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p>
 &lt;ol>
@@ -1477,11 +1477,11 @@ $ git checkout v3.9.7
 &lt;/ol>
 &lt;p>如果没有设置免密码登录，请使用 &lt;em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em> 命令把公钥下发到自己环境对应的节点。&lt;/p>
 &lt;p>升级的版本号可以到 &lt;a href="../../development/changelog/release-3.9/">CHANGELOG release/3.9 页面&lt;/a> 查询。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务升级到 v3.9.7 版本&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务升级到 v3.9.8 版本&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 需要本机能够使用 ssh 密钥登录上去&lt;/span>
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.9.7
+$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.9.8
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以使用 `./ocboot.py upgrade --help` 查看其它可选参数&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如:&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># --user 可以指定其它 ssh 用户&lt;/span>
@@ -1495,13 +1495,13 @@ $ kubectl get pods -n onecloud --watch
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;ul>
-&lt;li>一般小版本降级没有问题，比如从 v3.9.7 降级到 v3.9.0&lt;/li>
-&lt;li>跨版本降级可能会有问题，比如从 v3.9.7 降级到 v3.8.13&lt;/li>
+&lt;li>一般小版本降级没有问题，比如从 v3.9.8 降级到 v3.9.0&lt;/li>
+&lt;li>跨版本降级可能会有问题，比如从 v3.9.8 降级到 v3.8.13&lt;/li>
 &lt;/ul>
 &lt;p>如果遇到问题请到 &lt;a href="https://github.com/yunionio/cloudpods/issues">GitHub 提 issue&lt;/a> 或者 &lt;a href="https://www.cloudpods.org/zh/docs/contact">联系我们&lt;/a> 获取帮助。
 &lt;/div>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 降级的原理是修改各个服务的 image version&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.9.7，然后想要降级到 v3.8.17&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.9.8，然后想要降级到 v3.8.17&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.8.17&lt;/span>
 $ /opt/yunion/bin/ocadm cluster update --version v3.8.17 --wait
 &lt;span style="color:#8f5902;font-style:italic"># 降级会重新拉取新的镜像，可以再开一个窗口&lt;/span>

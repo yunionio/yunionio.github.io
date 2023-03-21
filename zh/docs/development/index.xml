@@ -200,7 +200,12 @@ sudo yum install -y libcephfs-devel librbd-devel librados-devel
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">wget -q -O- &lt;span style="color:#4e9a06">&amp;#39;https://download.ceph.com/keys/release.asc&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo apt-key add -
 &lt;span style="color:#204a87">echo&lt;/span> deb https://download.ceph.com/debian-luminous/ &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>lsb_release -sc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> main &lt;span style="color:#000;font-weight:bold">|&lt;/span> sudo tee /etc/apt/sources.list.d/ceph.list
 apt-get update &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> apt-get install -y libcephfs-dev librbd-dev librados-dev
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div></description></item><item><title>Docs: 提交贡献代码</title><link>https://www.cloudpods.org/zh/docs/development/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/contrib/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;h3 id="4-如何更新cloudpods后端代码仓库的vendor目录的代码">4. 如何更新cloudpods后端代码仓库的vendor目录的代码？&lt;/h3>
+&lt;p>cloupods依赖的第三方代码静态维护在vendor目录中。更新了cloudmux等依赖仓库的代码后，进入cloudpods仓库，执行如下命令更新vendor的代码：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">make mod
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="5-如何解决在cherrypick时出现的vendor代码的冲突">5. 如何解决在cherrypick时出现的vendor代码的冲突？&lt;/h3>
+&lt;p>首先解决解决go.mod和go.sum的代码冲突，然后执行 make mod 刷新vendor里的代码。最后提交go.mod，go.sum以及vendor的所有变更。&lt;/p></description></item><item><title>Docs: 提交贡献代码</title><link>https://www.cloudpods.org/zh/docs/development/contrib/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/contrib/</guid><description>
 &lt;h2 id="fork-仓库">Fork 仓库&lt;/h2>
 &lt;p>访问 &lt;a href="https://github.com/yunionio/cloudpods">https://github.com/yunionio/cloudpods&lt;/a> ，将仓库 fork 到自己的 github 用户下。&lt;/p>
 &lt;h2 id="clone-源码">Clone 源码&lt;/h2>

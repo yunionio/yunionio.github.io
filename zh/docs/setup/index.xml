@@ -1416,14 +1416,14 @@ $ climc agent-list
 &lt;p>可以在启用 baremetal-agent 的节点中选择节点禁止 baremetal-agent 调度到该节点。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 切换到企业版/开源版</title><link>https://www.cloudpods.org/zh/docs/setup/ce-ee-switch/</link><pubDate>Wed, 12 Feb 2020 12:55:46 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/ce-ee-switch/</guid><description>
-&lt;p>默认情况下部署好的版本是 &lt;strong>开源版本(CE: Community Edition)&lt;/strong>，可以使用 &lt;code>ocadm cluster update&lt;/code> 命令切换成 &lt;strong>企业版本(EE: Enterprise Edition)&lt;/strong>。&lt;/p>
+&lt;p>默认情况下部署好的版本是 &lt;strong>开源版本(CE: Community Edition)&lt;/strong>，可以到ocboot所在路径（通常建议安装路径为&lt;code>/opt/ocboot&lt;/code>），执行 &lt;code>python3 ocboot.py ee &amp;lt;IP&amp;gt;&lt;/code> 命令切换成 &lt;strong>企业版本(EE: Enterprise Edition)&lt;/strong>。其中，&lt;code>&amp;lt;IP&amp;gt;&lt;/code>为管理节点的IPv4地址。&lt;/p>
 &lt;h2 id="切换操作">切换操作&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到企业版&lt;/span>
-$ ocadm cluster update --use-ee --wait
+$ python3 ocboot.py ee &amp;lt;IP&amp;gt;
 &lt;span style="color:#8f5902;font-style:italic"># 切换到开源版的 web 前端&lt;/span>
-$ ocadm cluster update --use-ce --wait
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>ocadm cluster update --use-ee/--use-ce&lt;/code> 命令会更新替换当前的 default-web deployment&lt;/p>
-&lt;p>待所有pod启动后，由于开源版和企业版的前端分别依赖不同的 default-web configmap，直接切换过去会导致 default-web configmap 没有更新，web前端无法访问，因为需要删除web服务的nginx configmap，并重启 web 服务。&lt;/p>
+$ python3 ocboot.py ce &amp;lt;IP&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上述切换命令会更新替换当前的 &lt;code>default-web deployment&lt;/code>，并删除对应的&lt;code>configmap&lt;/code>，重启&lt;code>web&lt;/code>服务。&lt;/p>
+&lt;p>如果web服务不正常，您也可以自行手工执行下面的操作，来确保web服务的彻底更新，或直接联系管理员：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除 default-web 的 configmap 文件&lt;/span>
 $ kubectl delete configmap -n onecloud default-web
 &lt;span style="color:#8f5902;font-style:italic"># 重启 default-web 服务&lt;/span>

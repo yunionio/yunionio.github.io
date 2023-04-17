@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 12 Feb 2020 12:55:46 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
+安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 14 Apr 2023 16:03:30 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
 &lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10 (arm64) 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -2047,7 +2047,46 @@ api_server: https://foo.bar.com
 &lt;span style="color:#204a87;font-weight:bold">proxy_read_timeout&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">86400&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;span style="color:#000;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 多可用区服务配置</title><link>https://www.cloudpods.org/zh/docs/setup/multi-zone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/multi-zone/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 系统自动备份</title><link>https://www.cloudpods.org/zh/docs/setup/auto-backup/</link><pubDate>Fri, 14 Apr 2023 16:03:30 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/auto-backup/</guid><description>
+&lt;h2 id="自动备份云管系统的数据库k8s-配置etcd-快照">自动备份云管系统的数据库、K8s 配置、etcd 快照&lt;/h2>
+&lt;p>本命令为指定的系统增加自动备份云管系统的数据库、K8s 配置、etcd 快照的功能。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">usage: ocboot.py auto-backup &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--user SSH_USER&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--key-file SSH_PRIVATE_FILE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--port SSH_PORT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--backup-path BACKUP_PATH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--light&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--max-backups MAX_BACKUPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--max-disk-percentage MAX_DISK_PERCENTAGE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+TARGET_NODE_HOSTS &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>TARGET_NODE_HOSTS ...&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+positional arguments:
+TARGET_NODE_HOSTS target nodes
+optional arguments:
+-h, --help show this &lt;span style="color:#204a87">help&lt;/span> message and &lt;span style="color:#204a87">exit&lt;/span>
+--user SSH_USER, -u SSH_USER
+target host ssh user &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: root&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--key-file SSH_PRIVATE_FILE, -k SSH_PRIVATE_FILE
+target host ssh private key file &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default:
+/root/.ssh/id_rsa&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--port SSH_PORT, -p SSH_PORT
+target host host ssh port &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: 22&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+--backup-path BACKUP_PATH
+backup path, default: /opt/yunion/backup
+--light ignore yunionmeter and yunionlogger database&lt;span style="color:#000;font-weight:bold">;&lt;/span> ignore
+tables start with &lt;span style="color:#4e9a06">&amp;#39;opslog&amp;#39;&lt;/span> and &lt;span style="color:#4e9a06">&amp;#39;task&amp;#39;&lt;/span>.
+--max-backups MAX_BACKUPS
+how many backups to keep. default: &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
+--max-disk-percentage MAX_DISK_PERCENTAGE
+the max usage percentage of the disk on which the
+backup will be &lt;span style="color:#204a87;font-weight:bold">done&lt;/span> allowed to perform backup. the
+backup job will not work when the disk&lt;span style="color:#a40000">&amp;#39;&lt;/span>s usage is
+above the threshold. default: 75&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>%&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面介绍各个参数的作用和注意事项&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>TARGET_NODE_HOSTS&lt;/code>，此处填写需要部署自动备份的&lt;strong>控制节点&lt;/strong>的IP。如果有多个控制节点，只需输入其中之一即可。&lt;/li>
+&lt;li>&lt;code>--user&lt;/code>, &lt;code>--key-file&lt;/code>, &lt;code>--port&lt;/code>这些参数是登录备份机器的ssh配置。一般默认用户名&lt;code>root&lt;/code>、端口号&lt;code>22&lt;/code>。如果自定义，可以在&lt;code>$HOME/.ssh/config&lt;/code>里配置。请确保当前机器可以免密登录到所输入的&lt;code>TARGET_NODE_HOSTS&lt;/code>。&lt;/li>
+&lt;li>&lt;code>--backup-path&lt;/code>，备份路径。默认为&lt;code>/opt/yunion/backup&lt;/code>。&lt;/li>
+&lt;li>&lt;code>--max-disk-percentage&lt;/code>允许的最大磁盘使用率。默认为&lt;code>75%&lt;/code>。备份过程会检测所输入的&lt;code>--backup-path&lt;/code>所在磁盘的使用率。如果已经达到允许的最大磁盘使用率，就会停止备份，以免备份文件打满磁盘。&lt;/li>
+&lt;li>&lt;code>--light&lt;/code>是否为轻量备份。默认为&lt;code>否&lt;/code>，即，全量备份。轻量备份与全量备份的区别是某些（通常可以自由删除的）业务日志。建议日常只选轻量备份，以节约磁盘、加速备份过程。&lt;/li>
+&lt;li>&lt;code>--max-backups&lt;/code>保留的备份次数。默认保留最新的10次备份。&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 多可用区服务配置</title><link>https://www.cloudpods.org/zh/docs/setup/multi-zone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/multi-zone/</guid><description>
 &lt;p>平台有个可用区(zone)的概念，可以理解为对应实际环境中的机房，刚部署完服务后会有一个默认的可用区 zone0 。&lt;/p>
 &lt;p>云平台的物理机管理服务(baremetal-agent), VMware管理服务(esxi-agent)以及虚拟机管理服务(host)是可用区级别的服务，如果实际环境中的服务器，物理机或者管理的 VMware 集群位于不同的机房，需要创建多个可用区，然后在不同的可用区部署这些服务。&lt;/p>
 &lt;p>接下来的文档介绍如何在多个可用区部署这些服务。&lt;/p>

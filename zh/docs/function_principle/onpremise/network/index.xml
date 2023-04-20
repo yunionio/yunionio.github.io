@@ -101,6 +101,7 @@
 &lt;p>平台内置私有云提供VPC网络功能，并支持将经典网络的IP子网网段作为弹性公网IP池使用，供VPC内的虚拟机与外界访问等。&lt;/p></description></item><item><title>Docs: 典型网络配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/examples/</guid><description>
 &lt;h2 id="单网口经典网络计算节点单个网口虚拟机使用多vlan经典网络">（单网口经典网络）计算节点单个网口，虚拟机使用多VLAN经典网络&lt;/h2>
 &lt;p>这种场景下，每个计算节点只有一个网口(可以为Bonding)，既做管理口，也做业务口。虚拟机之间的业务流量是由宿主机对接的三层交换机转发。&lt;/p>
+&lt;img src="../singleport.png" width="400">
 &lt;h3 id="vpc配置">VPC配置&lt;/h3>
 &lt;p>采用&lt;em>Default&lt;/em> VPC&lt;/p>
 &lt;h3 id="二层网络配置">二层网络配置&lt;/h3>
@@ -116,6 +117,7 @@
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.168.20.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="宿主机管理口使用非1的vlan-id并且交换机不支持设置trunk口的默认vlan-id这种情况如何配置">宿主机管理口使用非1的VLAN ID，并且交换机不支持设置TRUNK口的默认VLAN ID，这种情况如何配置？&lt;/h4>
+&lt;img src="../singleportvlan.png" width="400">
 &lt;p>这种情况需要为宿主机设置一个VLAN子接口，宿主机使用这个VLAN子接口作为管理口，并且虚拟机交换机需要桥接到主接口上。下面以宿主机主接口为bond0，宿主机管理口的VLAN ID为3001为示例说明：&lt;/p>
 &lt;p>1、在宿主机配置VLAN子接口 bond0.3001，配置如下：&lt;/p>
 &lt;pre>&lt;code># /etc/sysconfig/network-scripts/ifcfg-bond0.3001

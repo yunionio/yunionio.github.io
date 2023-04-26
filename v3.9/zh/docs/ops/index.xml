@@ -1,0 +1,1085 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+运维手册</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/</link><description>Recent content in 运维手册 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 10 Nov 2021 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/ops/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件介绍</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/component/</link><pubDate>Wed, 10 Nov 2021 19:02:10 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/component/</guid><description>
+&lt;p>Cloudpods 平台部署在Kubernetes上，平台服务将支持容器化方式部署运行在Kubernetes集群。下面将介绍下平台的组件服务。&lt;/p>
+&lt;h3 id="onecloud-operator">onecloud-operator&lt;/h3>
+&lt;p>Onecloud-operator组件为集群控制器，实现集群服务的自动配置，部署和运行监控。&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： onecloud-operator&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： onecloud-operator-xxx&lt;/li>
+&lt;li>&lt;strong>配置&lt;/strong>：&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 配置operator&lt;/span>
+$ kubectl edit oc -n onecloud
+&lt;span style="color:#8f5902;font-style:italic"># 查看operator的配置&lt;/span>
+$ kubectl get oc -n onecloud -o yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>自动部署平台服务，包括初始化配置、创建管理对应k8s资源。&lt;/li>
+&lt;li>升级回滚：更新/回滚任意服务的版本。&lt;/li>
+&lt;li>资源清理：当平台服务集群删除后，释放对应的资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="web">web&lt;/h3>
+&lt;p>前端服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-web&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-web-xxx&lt;/li>
+&lt;li>&lt;strong>configmap&lt;/strong>：default-web&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>放置前端代码&lt;/li>
+&lt;li>Nignx相关配置&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="apigateway">apigateway&lt;/h3>
+&lt;p>api网关组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-apigateway&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-apigateway-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>提供web前端API&lt;/li>
+&lt;li>认证和权限的认证入口&lt;/li>
+&lt;li>License控制等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="keystone">keystone&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-keystone&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-keystone-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>认证&lt;/li>
+&lt;li>资源归属project和domain&lt;/li>
+&lt;li>权限：角色（role），权限（policy）&lt;/li>
+&lt;li>服务目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="region">region&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-region&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-region-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>云控制器&lt;/li>
+&lt;li>计算、网络、存储、数据库等云资源等管理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="scheduler">scheduler&lt;/h3>
+&lt;p>资源调度组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-scheduler&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-scheduler-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：资源调度&lt;/li>
+&lt;/ul>
+&lt;h3 id="glance">glance&lt;/h3>
+&lt;p>镜像服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-glance&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-glance-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：镜像管理&lt;/li>
+&lt;/ul>
+&lt;h3 id="baremetal">baremetal&lt;/h3>
+&lt;p>物理机管理服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-baremetal&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-baremetal-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>提裸金属管理Agent&lt;/li>
+&lt;li>提供PXEboot&lt;/li>
+&lt;li>提供DHCP&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="host">host&lt;/h3>
+&lt;p>宿主机服务组件&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-host-xxx&lt;/li>
+&lt;li>&lt;strong>Daemonset&lt;/strong>：default-host&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：私有云宿主机上的Agent&lt;/li>
+&lt;li>&lt;strong>容器&lt;/strong>：host服务下有三个容器，host、ovn-controller、sdnagent
+&lt;ul>
+&lt;li>host：
+&lt;ul>
+&lt;li>虚拟机生命周期管理
+&lt;ul>
+&lt;li>通过qemu启用停止虚拟机&lt;/li>
+&lt;li>通过qemu monitor对虚拟机进行其他操作&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>存储管理和磁盘生命周期管理
+&lt;ul>
+&lt;li>本地盘和共享存储（ceph,nfs等）磁盘的CURD操作&lt;/li>
+&lt;li>存储信息探测&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>DHCP Server
+&lt;ul>
+&lt;li>作为DHCP Server为虚拟机分配IP&lt;/li>
+&lt;li>作为DHCP relay server转发物理机PXE启动时候的DHCP请求&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>GPU设备探测与初始化
+&lt;ul>
+&lt;li>初始化即为GPU设备绑定vfio驱动&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>宿主机初始化与信息探测&lt;/li>
+&lt;li>监控数据采集&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>ovn-controller：虚拟机vpc网络管理，连接southbound，将southbound中的flows转换成ovs流表规则。&lt;/li>
+&lt;li>sdnagent：虚拟机经典网络管理。
+&lt;ul>
+&lt;li>流表管理&lt;/li>
+&lt;li>虚拟机网卡QoS&lt;/li>
+&lt;li>防火墙&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="host-image">host-image&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-host-image-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：提供读取镜像内容api，配合fuse可远程挂载磁盘&lt;/li>
+&lt;/ul>
+&lt;h3 id="host-deployer">host-deployer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-host-deployer-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>： 虚拟机创建时部署相关操作
+&lt;ul>
+&lt;li>虚拟机镜像操作系统识别、系统初始化。&lt;/li>
+&lt;li>分区扩容、格式化文件系统等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="vpcagent">vpcagent&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-vpcagent&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-vpcagent-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：ovn的vpc配置管理&lt;/li>
+&lt;/ul>
+&lt;h3 id="esxiagent">esxiagent&lt;/h3>
+&lt;p>VMware管理Agent&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-esxiagent&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-esxiagent-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：VMware管理Agent代理&lt;/li>
+&lt;/ul>
+&lt;h3 id="cloudmon">cloudmon&lt;/h3>
+&lt;p>监控采集服务&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-cloudmon&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-cloudmon-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：
+&lt;ul>
+&lt;li>ping检测：5分钟一次探测被占用的IP地址。&lt;/li>
+&lt;li>usage数据采集&lt;/li>
+&lt;li>VMware、OpenStack、公有云等平台监控数据采集&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="meter">meter&lt;/h3>
+&lt;p>计费计量服务&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Deployment&lt;/strong>： default-meter&lt;/li>
+&lt;li>&lt;strong>Pod&lt;/strong>： default-meter-xxx&lt;/li>
+&lt;li>&lt;strong>功能&lt;/strong>：计费计量功能&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 组件pod常用运维命令</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/commonops/</link><pubDate>Wed, 10 Nov 2021 18:54:59 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/commonops/</guid><description>
+&lt;h3 id="查看组件pod运行情况">查看组件pod运行情况&lt;/h3>
+&lt;p>系统组件都以 k8s pod的形式运行，通过以下命令查看平台的系统组件以及运行情况等。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># -n表示namespace的意思，目前我们的服务都部署在onecloud namespace下，查看所有组件的pod的运行情况&lt;/span>
+$ kubectl get pods -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># -o wide查看pod的更多详细信息，比如运行在哪个节点上&lt;/span>
+$ kubectl get pods -n onecloud -o wide
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定pod资源的详细信息，如查看region组件的pod的详细信息&lt;/span>
+$ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
+$ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
+$ kubectl -n onecloud delete pods default-host-xxxxx
+$ kubectl rollout restart daemonset -n onecloud default-host
+&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
+$ kubectl rollout restart deployment -n onecloud default-web
+&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
+$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
+&lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，平台服务都以default开头&lt;/span>
+$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
+&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
+$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
+&lt;p>平台所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以region服务为例更新其configmaps配置信息&lt;/span>
+$ kubectl edit configmaps default-region -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改完成后，重启服务&lt;/span>
+$ kubectl -n onecloud rollout restart deployment default-region
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
+&lt;p>查看持久化服务日志，请参考&lt;a href="../backendlogs">持久化后端日志&lt;/a>&lt;/p>
+&lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先需要找到region服务所在pod&lt;/span>
+$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region服务容器的日志，其中-f表示follow，即持续输出日志，类似于journalctl的 -f；--since 5m 表示查看近5分钟的日志信息。按CTRL+C退出日志输出&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> -f --since 5m
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region容器日志，将最近5分钟的所有日志到region.log&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> --since 5m &amp;gt; region.log
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 若有些服务有两个容器，如host服务有名称为host和host-image的容器，此时查看容器命令时需要加&amp;#39;-c&amp;#39; 指定查看哪个容器的日志&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#000">$host_pod_name&lt;/span> -c host-image -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看平台版本信息">查看平台版本信息&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 其中onecloudcluster 可以简写成oc；default为OneCloudCluster的名称；-o yaml即以yaml形式输出onecloudcluster类型资源的API对象。&lt;/span>
+$ kubectl get onecloudcluster -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep version
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看mysql账户密码信息">查看MySQL账户密码信息&lt;/h3>
+&lt;p>采用默认部署数据库的方式，在平台部署完成后需要通过以下命令获取连接MySql的用户名和密码。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看MySQL的配置连接信息，其中oc为onecloudcluster；default为oc的名称；grep -A 4即属于匹配后4行数据。&lt;/span>
+$ kubectl get oc -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看oc的的api对象信息">查看OC的的API对象信息&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看OC的运行情况&lt;/span>
+$ kubectl get onecloudcluster -n onecloud
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以yaml文件的形式查看OC的API对象信息，该信息中包含集群的所有配置信息。&lt;/span>
+$ kubeclt get oc -n onecloud -o yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="其它常用管理命令">其它常用管理命令&lt;/h3>
+&lt;p>kubectl更多命令请参考kubectl官方文档。
+&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">https://kubernetes.io/zh/docs/reference/kubectl/&lt;/a>&lt;/p></description></item><item><title>Docs: 排查pod异常</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/poderror/</link><pubDate>Wed, 10 Nov 2021 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/poderror/</guid><description>
+&lt;h3 id="确认pod状态">确认Pod状态&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置默认命名空间，后续执行相关命令时可以不带“-n onecloud” &lt;/span>
+$ kubectl config set-context --current --namespace&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud
+&lt;span style="color:#8f5902;font-style:italic"># 查看 pod 状态&lt;/span>
+$ kubectl get pod
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="检查pod相关事件">检查pod相关事件&lt;/h3>
+&lt;p>当查看到 pod 状态不是 running 状态时，可以通过 describe 命令查看更多信
+息。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 举例为查看 host 服务的 pod 的事件信息&lt;/span>
+$ kubectl describe pod default-host-z8j5r
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看日志">查看日志&lt;/h3>
+&lt;p>可以通过检查日志来查看应用程序是否正常运行。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看 host 服务的日志信息&lt;/span>
+$ kubectl logs default-host-z8j5r -c host -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="pod常见错误及处理方法">Pod常见错误及处理方法&lt;/h3>
+&lt;h4 id="pod---crashloopbackoff状态">Pod - CrashLoopBackOff状态&lt;/h4>
+&lt;p>CrashLoopBackOff 状态说明容器曾经启动了，但又异常退出。此时可以先查看
+一下容器的日志。通过 kubectl logs 命令可以发现一些容器退出的原因:&lt;/p>
+&lt;ul>
+&lt;li>通过查看日志发现是脏数据导致的&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@test ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic">#kubectl get pod | grep region&lt;/span>
+default-region-75bc7d474f-rjpkm 0/1
+CrashLoopBackOff &lt;span style="color:#0000cf;font-weight:bold">12&lt;/span> 2d20h
+default-region-dns-88s7z 1/1 Running
+&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2d20h
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@test ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl logs default-region-75bc7d474f￾rjpkm | less&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>I &lt;span style="color:#0000cf;font-weight:bold">200618&lt;/span> 16:13:32
+appsrv.&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>*Application&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.ServeHTTP&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>appsrv.go:237&lt;span style="color:#ce5c00;font-weight:bold">)]&lt;/span>
+hlgxXm4i2qF10tkBXu3rAVrCC-w&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">200&lt;/span> b5e0b2 GET
+/networks?admin&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">delete&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>all&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">details&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>filter.0&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>updated_at.
+ge%28%272020-06-
+03+07%3A56%3A04%27%29&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>filter.1&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>manager_id.isnullorempty%28%29&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>fil
+ter.2&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>external_id.isnullorempty%28%29&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">limit&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>1024&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">offset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">order&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>a
+sc&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>order_by.0&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>updated_at&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">pending_delete&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>all &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>10.105.232.12:55236&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+34.50ms
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>F &lt;span style="color:#0000cf;font-weight:bold">200618&lt;/span> 16:13:32 models.&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>*SGuest&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.GetDriver&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guests.go:557&lt;span style="color:#ce5c00;font-weight:bold">)]&lt;/span>
+Unsupported hypervisor Aliyun
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>pod 中对应的配置文件中格式不对&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/configmaperror.png" alt="">&lt;/p>
+&lt;h4 id="pod---evicted状态">Pod - Evicted状态&lt;/h4>
+&lt;p>出现这种情况，多见于系统内存或硬盘资源不足。通过“kubectl describe命令”查看异常pod。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@test-interface ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl describe -n onecloud pod default-ovn-north-7689f47894-tqp2g&lt;/span>
+Name: default-ovn-north-7689f47894-tqp2g
+Namespace: onecloud
+Priority: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+Node: test-interface/
+Start Time: Fri, &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Mar &lt;span style="color:#0000cf;font-weight:bold">2020&lt;/span> 18:38:27 +0800
+Labels: &lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ovn-north
+app.kubernetes.io/component&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ovn-north
+app.kubernetes.io/instance&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud-cluster-8p2p
+app.kubernetes.io/managed-by&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud-operator
+app.kubernetes.io/name&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud-cluster
+pod-template-hash&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>7689f47894
+Annotations: cni.projectcalico.org/podIP: 10.40.180.212/32
+onecloud.yunion.io/last-applied-configuration:
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;volumes&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">[{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;certs&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;secret&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;secretName&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;default-certs&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;items&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">[{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;key&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;ca.crt&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;path&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;ca.crt&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;key&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;service.crt&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;path&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;...
+&lt;/span>&lt;span style="color:#4e9a06">Status: Failed
+&lt;/span>&lt;span style="color:#4e9a06">Reason: Evicted
+&lt;/span>&lt;span style="color:#4e9a06">Message: The node was low on resource: ephemeral-storage. Container ovn-north was using 109956Ki, which exceeds its request of 0.
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="pod---imagepullbackoff状态">Pod - ImagePullBackOff状态&lt;/h4>
+&lt;p>通常是镜像名称配置错误或者私有镜像的密钥配置错误导致。通过“kubectl describe命令”查看异常pod。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">Events:
+Type Reason Age From Message
+---- ------ ---- ---- -------
+Normal Scheduled 35s default-scheduler Successfully assigned onecloud/default-region-85ff9dcd5-mh8cl to yunion320
+Normal Pulling 34s kubelet, yunion320 Pulling image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.1&amp;#34;&lt;/span>
+Normal Pulled 33s kubelet, yunion320 Successfully pulled image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.1&amp;#34;&lt;/span>
+Normal Created 33s kubelet, yunion320 Created container init
+Normal Started 33s kubelet, yunion320 Started container init
+Normal Pulling 15s &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>x2 over 28s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> kubelet, yunion320 Pulling image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;#34;&lt;/span>
+Warning Failed 15s &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>x2 over 28s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> kubelet, yunion320 Failed to pull image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;#34;&lt;/span>: rpc error: &lt;span style="color:#000">code&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> Unknown &lt;span style="color:#000">desc&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> Error response from daemon: manifest &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2 not found: manifest unknown: manifest unknown
+Warning Failed 15s &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>x2 over 28s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> kubelet, yunion320 Error: ErrImagePull
+Normal BackOff 3s kubelet, yunion320 Back-off pulling image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;#34;&lt;/span>
+Warning Failed 3s kubelet, yunion320 Error: ImagePullBackOff
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="pod---pending状态">Pod - Pending状态&lt;/h4>
+&lt;p>Pending状态，这个状态意味着，Pod的yaml文件已经提交给Kubernetes，API对象已经被创建并保存在Etcd 当中。但是，这个Pod里有些容器因为某种原因而不能被顺利创建。&lt;/p>
+&lt;ul>
+&lt;li>调度不成功（可以通过 kubectl describe pod 命令查看到当前 Pod 的事件，进而判断为什么没有调度）。&lt;/li>
+&lt;li>可能原因： 资源不足（集群内所有的 Node 都不满足该 Pod 请求的 CPU、内存、GPU 等资源）；&lt;/li>
+&lt;li>HostPort 已被占用（通常推荐使用 Service 对外开放服务端口）。&lt;/li>
+&lt;/ul>
+&lt;h4 id="pod---error状态">Pod - Error状态&lt;/h4>
+&lt;p>通常处于 Error 状态说明 Pod 启动过程中发生了错误。常见的原因包括：&lt;/p>
+&lt;ul>
+&lt;li>依赖的 ConfigMap、Secret 或者 PV 等不存在；&lt;/li>
+&lt;li>请求的资源超过了管理员设置的限制，比如超过了 LimitRange 等；&lt;/li>
+&lt;li>违反集群的安全策略，比如违反了 PodSecurityPolicy 等；&lt;/li>
+&lt;li>容器无权操作集群内的资源，比如开启 RBAC 后，需要为 ServiceAccount 配置角色绑定;&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 排查Pod内DNS异常</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/dnserror/</link><pubDate>Fri, 02 Dec 2022 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/dnserror/</guid><description>
+&lt;p>经常遇到Pod内服务报DNSError的错误，例如：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;error&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;class&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;DNSError&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;code&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">499&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;details&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Post \&amp;#34;https://default-kevstone:30357/v3/auth/tokens\&amp;#34;: dial tcp: lookup default-kevstone: i/o timeout&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这类错误一般意味着Pod之间的网络通信有问题。因为Pod之间通信一般最先要进行对端的DNS解析，由于到达coredns的Pod网络不通，导致DNS解析错误，因此最先暴露出来的是DNSError的错误。&lt;/p>
+&lt;h2 id="基本原理">基本原理&lt;/h2>
+&lt;p>Pod内通过集群的coredns进行域名解析。CoreDNS配置了10.96.0.10的service IP。访问coredns时，首先由kubeproxy实现service IP到Pod IP的NAT转换，如果Pod在本节点，则直接访问Pod。否则通过tunl0以IP-in-IP隧道发送到对端Pod所在节点，进而解封装投递到目标Pod。&lt;/p>
+&lt;p>Cloudpods 在每个节点采用IPVS作为Service IP到Pod IP的NAT转换。需确保节点的IPVS规则表有对应10.96.0.10的NAT规则。&lt;/p>
+&lt;p>Cloudpods 采用calico作为容器网络的插件，采用IP-in-IP隧道作为Pod之间报文的封装。在每个节点上都有一个tunl0的虚拟网络接口，该接口作为该节点IP-in-IP隧道的端点。Pod的IP从10.40.0.0/16随机分配。每个节点上都会为集群中其他节点的Pod所在的/26网段（含64个IP地址）配置通过tunl0且下一跳为该Pod所在节点IP的静态路由。如果缺少对应Pod的路由，则也会出现Pod之间网络不通。&lt;/p>
+&lt;h2 id="原因排查">原因排查&lt;/h2>
+&lt;h3 id="service-ip-nat问题">Service IP NAT问题&lt;/h3>
+&lt;p>在无法DNS解析Pod所在节点执行如下命令，确认IPVS的转发表内有相应的表项：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ipvsadm -Ln &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> 10.96.0.10
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>正常应该有三个表项：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">TCP 10.96.0.10:53 rr
+-&amp;gt; 10.40.52.149:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+-&amp;gt; 10.40.52.171:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+TCP 10.96.0.10:9153 rr
+-&amp;gt; 10.40.52.149:9153 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+-&amp;gt; 10.40.52.171:9153 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+UDP 10.96.0.10:53 rr
+-&amp;gt; 10.40.52.149:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">6930&lt;/span>
+-&amp;gt; 10.40.52.171:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">6859&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="路由问题">路由问题&lt;/h3>
+&lt;p>如果上一步确认无误，在无法DNS解析Pod所在节点查看到达coredns的Pod IP的路由是否存在，假设coredns的节点IP为上述10.40.52.149和10.40.52.171，则执行如下命令确认相应路由是否存在：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ip route &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 10.40.52
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>正确输出如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">10.40.52.128/26 via 10.41.1.21 dev tunl0 proto bird onlink
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里 10.41.1.21 应该是coredns Pod所在节点的IP&lt;/p>
+&lt;h3 id="端口问题">端口问题&lt;/h3>
+&lt;p>如上一步确认无误，则Pod的报文能够正确通过tunl0经过ip-in-ip隧道发出，则需要确认calico使用哪个端口发送ip-in-ip报文。&lt;/p>
+&lt;p>执行如下命令，查看calico-node的配置&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n kube-system edit daemonset calico-node
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意 IP_AUTODETECTION_METHOD，如果为can-reach=&lt;ip>，则calico选用可以访问该ip的端口来发送ip-in-ip报文，请确认该接口是正确的接口。并且calico从对端接口报文的接口和发送接口是一致的。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">containers&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">env&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">IP_AUTODETECTION_METHOD&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">value&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">can-reach=10.61.1.254&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>默认集群配置的 IP_AUTODETECTION_METHOD 为 can-reach=&amp;lt;primary_master_ip&amp;gt; ，比如上面例子中的 10.61.1.254 应该就是第一个 K8s 控制节点的 IP 。&lt;/p>
+&lt;p>IP_AUTODETECTION_METHOD 还可以配置为其他的值，可以参考 calico 官方文档：&lt;a href="https://projectcalico.docs.tigera.io/reference/node/configuration#ip-autodetection-methods">Configuring calico/node/Manifest&lt;/a>。&lt;/p>
+&lt;p>其中常用的配置可以设置成：&lt;code>IP_AUTODETECTION_METHOD=kubernetes-internal-ip&lt;/code>，这个就会使用 K8s 节点的 Status.Addresses 作为ip-in-ip 发送的端口。&lt;/p>
+&lt;h3 id="链路问题">链路问题&lt;/h3>
+&lt;p>如上一步确认无误，则需要确认calico的报文能够正常发送到对端节点，可通过tcpdump在源和目的节点抓包确认。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 格式为&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># tcpdump -i &amp;lt;if_of_calico_node&amp;gt; -nnn &amp;#34;ip proto 4&amp;#34; and host &amp;lt;ip_of_dst_node&amp;gt;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 比如要在控制节点的 br0 上抓来自于计算节点(IP: 10.130.0.13) 的 ip-in-ip 包，命令如下：&lt;/span>
+$ tcpdump -i br0 -nnn &lt;span style="color:#4e9a06">&amp;#34;ip proto 4&amp;#34;&lt;/span> and host 10.130.0.13
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="常见故障原因">常见故障原因&lt;/h2>
+&lt;h3 id="节点路由问题">节点路由问题&lt;/h3>
+&lt;p>由于节点路由配置不一致，导致节点发送和接收ip-in-ip报文的端口IP不一致，导致双方无法通信&lt;/p>
+&lt;h3 id="内核问题">内核问题&lt;/h3>
+&lt;p>特定内核在开启GSO之后会导致ip-in-ip报文丢弃，可尝试通过下面的命令关闭网卡相关特性，看是否解决问题：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 假设 k8s 节点之间通过 eth0 网卡通信&lt;/span>
+$ ethtool --offload eth0 rx off tx off
+$ ethtool -K eth0 gso off
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 调整Kubernetes节点驱逐的阈值</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/eviction_threshold/</link><pubDate>Mon, 05 Dec 2022 10:34:27 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/eviction_threshold/</guid><description>
+&lt;p>Kubernetes 有一个节点驱逐的机制，比如当节点的根分区使用空间大于 85% 就会把节点变成 NotReady 状态，然后驱逐上面的 Pod 。下面介绍如何调整节点的相关配置的阈值，可根据自己的环境适当调整。&lt;/p>
+&lt;h2 id="调整-kubelet-阈值配置">调整 kubelet 阈值配置&lt;/h2>
+&lt;p>kubelet 所有的配置参数写在了文件 &lt;code>/var/lib/kubelet/config.yaml&lt;/code>，阈值相关的参数如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#800080;font-weight:bold">@@ -34,10 +34,10 @@ enforceNodeAllocatable:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> eventBurst: 10
+eventRecordQPS: 5
+# 驱逐相关参数
+evictionHard:
+&lt;span style="color:#a40000">- imagefs.available: 15%
+&lt;/span>&lt;span style="color:#a40000">- memory.available: 1024Mi
+&lt;/span>&lt;span style="color:#a40000">- nodefs.available: 15%
+&lt;/span>&lt;span style="color:#a40000">- nodefs.inodesFree: 15%
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ imagefs.available: 5% # 当容器镜像所在目录的空闲容量小于 5% 的时候触发，imagefs 为 docker 所在目录，配置为 `/opt/docker`
+&lt;/span>&lt;span style="color:#00a000">+ memory.available: 100Mi # 当内存不够 100Mi 的时候触发
+&lt;/span>&lt;span style="color:#00a000">+ nodefs.available: 5% # 当根分区可用容量不够 5% 的时候触发
+&lt;/span>&lt;span style="color:#00a000">+ nodefs.inodesFree: 5% # 当根分区 inodes 不够 5% 的时候触发
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> evictionPressureTransitionPeriod: 5m0s
+failSwapOn: true
+fileCheckFrequency: 20s
+&lt;span style="color:#800080;font-weight:bold">@@ -45,8 +45,8 @@ hairpinMode: promiscuous-bridge
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 20s
+&lt;span style="color:#a40000">-imageGCHighThresholdPercent: 85
+&lt;/span>&lt;span style="color:#a40000">-imageGCLowThresholdPercent: 80
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+imageGCHighThresholdPercent: 95 # 当硬盘存储使用率超过imageGCHighThresholdPercent时，会触发Image GC，直到硬盘存储使用率低于imageGCLowThresholdPercent
+&lt;/span>&lt;span style="color:#00a000">+imageGCLowThresholdPercent: 90
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>调整完 &lt;code>/var/lib/kubelet/config.yaml&lt;/code> 后，重启 kubelet:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl restart kubelet
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/backendlogs/</guid><description>
+&lt;p>Cloudpods平台自&lt;code>3.7.6&lt;/code>版本后，operator服务 结合 kubeserver 会默认部署 grafana 和 loki 提供查看后端服务日志的功能。&lt;/p>
+&lt;p>查看日志只用登录 grafana 即可，默认的 grafana 访问方式是以 ingress 的方式暴露服务。&lt;/p>
+&lt;h3 id="访问grafana">访问Grafana&lt;/h3>
+&lt;ol>
+&lt;li>访问Grafana的地址默认为 &lt;code>https://控制节点IP地址/grafana&lt;/code>，默认登录密码为&lt;code>admin / admin@123&lt;/code>。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="../images/grafanahome.png" alt="">&lt;/p>
+&lt;ol start="2">
+&lt;li>点击上图中的2 explore 按钮，进入Loki日志查询页面。如在该页面可查询某节点的host pod日志等。在查询条件中输入&lt;code>{app=&amp;quot;host&amp;quot;,hostname=&amp;quot;testhost&amp;quot;}&lt;/code>，在下方将会显示出该节点上的host pod日志。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="../images/explore.png" alt="">&lt;/p>
+&lt;h3 id="查询条件">查询条件&lt;/h3>
+&lt;p>loki 的日志服务查询是按标签进行过滤的，常用的标签 &amp;ldquo;app&amp;rdquo; 对应服务的名称，&amp;ldquo;hostname&amp;rdquo; 对应 pod 所在的机器，“container_name&amp;quot; 对应容器名称。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如要查看 &amp;#34;ovn-north&amp;#34; 容器的日志&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">container_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;ovn-north&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看节点 test 上的 host 服务日志&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>,hostname&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看 baremetal 服务日志&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;baremetal-agent&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多使用方法请参考 &lt;a href="https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md">https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md&lt;/a>&lt;/p>
+&lt;h3 id="使用举例">使用举例&lt;/h3>
+&lt;p>如查询region服务过去3小时的日志。&lt;/p>
+&lt;p>查询条件可设置为&lt;code>{app=&amp;quot;region&amp;quot;}&lt;/code>，时间过滤设置为“Last 3 hours” 。&lt;/p>
+&lt;p>&lt;img src="../images/explore-region.png" alt="">&lt;/p></description></item><item><title>Docs: 清理日志</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/log/</link><pubDate>Wed, 08 Dec 2021 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/log/</guid><description>
+&lt;h3 id="清理服务日志">清理服务日志&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看具体服务的分表日志&lt;/span>
+$ climc logs-show --service &amp;lt;service_type&amp;gt; splitable
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/logtable2.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除超过6个月的分表&lt;/span>
+$ climc logs-purge-splitable --service &amp;lt;service_type&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/deletelogtable2.png" alt="">&lt;/p>
+&lt;h3 id="清理数据库日志">清理数据库日志&lt;/h3>
+&lt;p>在部署日志的服务器上执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置自动清除binlog的保留时间&lt;/span>
+$ vi /etc/my.cnf
+&lt;span style="color:#000">expire_logs_days&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/binlog.png" alt="">&lt;/p></description></item><item><title>Docs: 清理无用镜像</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/clearimage/</link><pubDate>Wed, 08 Dec 2021 19:12:33 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/clearimage/</guid><description>
+&lt;h3 id="清理无用docker镜像">清理无用docker镜像&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 清理docker image&lt;/span>
+$ docker system prune --all --force --volumes
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="清理平台镜像">清理平台镜像&lt;/h3>
+&lt;p>以下为平台镜像、镜像缓存、快照的存放目录，当存储不足时，用户可手动删除对应资源。&lt;/p>
+&lt;ul>
+&lt;li>镜像默认上传到控制节点目录：/opt/cloud/workspace/data/glance/images，可通过镜像ID查找对应的镜像文件，并进行删除。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/image.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>镜像缓存到宿主机的缓存目录：/opt/cloud/workspace/disks/image_cache，可通过镜像ID查找对应的镜像缓存并进行删除。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/imagecache.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>宿主机上虚拟机快照目录：/opt/cloud/workspace/disks/snapshots，可通过硬盘ID搜索对应的快照文件进行删除。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/snapshot.png" alt="">&lt;/p></description></item><item><title>Docs: Ocadm部署工具常用命令</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/ocadm/</link><pubDate>Wed, 10 Nov 2021 15:43:09 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/ocadm/</guid><description>
+&lt;p>部署管理工具ocadm类似于Kubernetes集群中的kubeadm工具，下面介绍ocadm的常用命令.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建集群 &lt;/span>
+$ ocadm cluster create
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看集群认证信息&lt;/span>
+$ ocadm cluster rcadmin
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将本地镜像源切换到阿里云镜像源&lt;/span>
+$ ocadm cluster update --image-repository registry.cn-beijing.aliyuncs.com/yunionio --wait
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将产品升级或回滚到指定版本，当系统镜像源为阿里云镜像源的情况下才可以使用下面的命令升级&lt;/span>
+$ ocadm cluster update --version &lt;span style="color:#000">$version&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的host服务&lt;/span>
+$ ocadm node disable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用节点的host服务&lt;/span>
+$ ocadm node enable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的controller服务&lt;/span>
+$ ocadm node disable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用节点的controller服务&lt;/span>
+$ ocadm node enable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用Baremetal服务&lt;/span>
+$ ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 如在node1主机上启用baremetal服务，并监听br0网卡。&lt;/span>
+$ ocadm baremetal &lt;span style="color:#204a87">enable&lt;/span> --node node1 --listen-interface br0
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在First Node节点获取加入节点的token信息&lt;/span>
+$ ocadm token create
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在First Node查看token信息&lt;/span>
+$ ocadm token list
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到开源版前端，ce(community edition)为开源版前端；&lt;/span>
+$ ocadm cluster update --use-ce --wait
+&lt;span style="color:#8f5902;font-style:italic"># 切换到商业版前端，ee(enterprise edition)为商业版前端 &lt;/span>
+$ ocadm cluster update --use-ee --wait
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用itsm组件&lt;/span>
+$ ocadm component &lt;span style="color:#204a87">enable&lt;/span> itsm
+&lt;span style="color:#8f5902;font-style:italic"># 禁用itsm组件&lt;/span>
+$ ocadm component disable itsm
+&lt;span style="color:#8f5902;font-style:italic"># 安装失败时清理环境，请谨慎使用该命令&lt;/span>
+$ ocadm reset --force
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 手动安装监控Agent</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/agent/</link><pubDate>Thu, 09 Dec 2021 10:23:16 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/agent/</guid><description>
+&lt;h3 id="前提条件">前提条件&lt;/h3>
+&lt;p>虚拟机监控Agent采集的监控数据需要上报到平台的InfluxDB数据库中，因此需要获取InfluxDB地址的对外地址，并需要判断虚拟机是否可以直接连接到InfluxDB数据库。&lt;/p>
+&lt;ul>
+&lt;li>若虚拟机可以直接连接InfluxDB数据库，则直接安装监控Agent，配置telegraf采集的监控指标即可&lt;/li>
+&lt;li>若虚拟机无法直接连接到InfluxDB数据库，需要配置SSH代理节点，建立虚拟机与InfluxDB数据库的连接后，再安装监控Agent，配置telegraf采集的监控指标。&lt;/li>
+&lt;/ul>
+&lt;h4 id="获取influxdb地址">获取InfluxDB地址&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取InfluxDB的对外地址及端口号&lt;/span>
+$ climc endpoint-list -service Influxdb
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/getinfluxdb.png" alt="">&lt;/p>
+&lt;h4 id="配置ssh代理节点">配置SSH代理节点&lt;/h4>
+&lt;ol>
+&lt;li>查询虚拟机所在VPC或IP子网下是否存在SSH代理节点。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查询虚拟机所在VPC下是否存在SSH代理节点&lt;/span>
+$ climc proxy-endpoint-list --vpc-id &amp;lt;vpc的ID&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 若VPC下IP子网之间网络隔离，则需要查询虚拟机所在IP子网下是否存在SSH代理节点&lt;/span>
+$ climc proxy-endpoint-list --network-id &amp;lt;IP子网的ID&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>若虚拟机所在网络下存在SSH代理节点，则忽略新建SSH代理节点的步骤，直接在SSH代理节点下配置到InfluxDB的remote规则，使监控数据可以上报到InfluxDB。&lt;/li>
+&lt;/ol>
+&lt;h4 id="新建ssh代理节点">新建SSH代理节点&lt;/h4>
+&lt;p>若虚拟机所在网络无法直接与平台的InfluxDB数据库进行通信，则需要在虚拟机所在VPC或IP子网中选择一台Linux操作系统的虚拟机作为SSH代理节点。虚拟机需要满足以下配置要求&lt;/p>
+&lt;p>&lt;strong>虚拟机配置要求&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>目前只支持Linux操作系统的虚拟机作为SSH代理节点。&lt;/li>
+&lt;li>请确保虚拟机处于运行中状态；&lt;/li>
+&lt;li>请确保虚拟机支持通过平台免密登录；虚拟机能被平台免密登录，则要求虚拟机与平台网络通（即通过EIP、NAT网关或SSH代理等方式使虚拟机与平台网络通）以及虚拟机中存在平台的公钥文件。&lt;/li>
+&lt;li>请检查虚拟机的sshd配置，GatewayPorts是clientspecified，若该项值为no，则只允许绑定127.0.0.1的地址，使remote forward无法正常使用，造成安装监控Agent的虚拟机无法向平台上报监控数据等。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>操作步骤&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在SSH代理节点页面#，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建SSH代理节点页面。&lt;/li>
+&lt;li>在选择虚拟机页面设置以下参数：
+&lt;ul>
+&lt;li>域：设置SSH代理节点所属域，并通过域过滤可选的虚拟机。&lt;/li>
+&lt;li>名称：设置SSH代理节点的名称。&lt;/li>
+&lt;li>区域：通过平台、区域过滤VPC。&lt;/li>
+&lt;li>网络：通过VPC、网络过滤虚拟机。&lt;/li>
+&lt;li>虚拟机：通过上面的筛选条件过滤出符合条件的虚拟机，并支持在搜索框中通过名称和IP搜索虚拟机，，如没有合适的虚拟机，可以单击“新建”超链接，跳转到虚拟机列表页面创建符合需求的虚拟机。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>选择好虚拟机后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始探测虚拟机的免密登录状态。
+&lt;ul>
+&lt;li>如虚拟机可免密登录，可直接单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始创建虚拟机。&lt;/li>
+&lt;li>如虚拟机不可免密登录，请先点击列表操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看探测免密登录失败的具体原因。
+&lt;ul>
+&lt;li>如报错原因中提示“none publickey”，可通过设置免密登录功能，将虚拟机设置为免密登录状态。设置免密登录方式配置参数如下：
+&lt;ul>
+&lt;li>设置方式：支持密钥、密码、脚本等方式将平台的公钥上传到虚拟机上。&lt;/li>
+&lt;li>当设置方式为“密钥”时，请使用root用户或具有使用sudo免密权限的用户以其私钥，请确保可以通过用户名和私钥通过ssh连接到对应虚拟机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始设置并探测虚拟机的免密登录状态是否变为免密登录。&lt;/li>
+&lt;li>当设置方式为“密码”时，请使用root用户或具有使用sudo免密权限的用户以其密码，请确保可以通过用户名和密码通过ssh连接到对应虚拟机。单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始设置并探测虚拟机的免密登录状态是否变为免密登录。&lt;/li>
+&lt;li>当设置方式为“脚本”时，请请使用root或具有sudo权限的用户在虚拟机中执行以下脚本，执行完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始设置并探测虚拟机的免密登录状态是否变为免密登录。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如报错原因中提示“network error”，则需要返回上一步选择其他虚拟机，或为该虚拟机通过绑定EIP或NAT网关等方式，使其与平台网络可通。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>只有当虚拟机免密登录状态为“可免密登录”时，才支持单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始创建SSH代理节点。&lt;/li>
+&lt;li>在创建SSH代理节点时将会检查虚拟机的sshd配置是否符合虚拟机配置要求，若不符合将会尝试变更虚拟机的sshd配置，因此可能会造成创建ssh代理节点时间过长，若提示超时，请重新单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建SSH代理节点。&lt;/li>
+&lt;/ol>
+&lt;h4 id="配置remote规则">配置Remote规则&lt;/h4>
+&lt;p>后续在配置telegraf文件时，需要配置的InfluxDB的地址为“ssh代理节点的地址:&amp;lt;映射绑定的端口号&amp;gt;”&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在ssh代理节点上配置到InfluxDB的remote规则，使监控数据可以上报到平台的InfluxDB数据库。&lt;/span>
+$ climc proxy-forward-create --proxy-endpoint-id &amp;lt;ssh代理节点的ID&amp;gt; --type remote --remote-addr &amp;lt;influxdb的IP地址&amp;gt; --remote-port &amp;lt;InfluxDB的端口号&amp;gt; --bind-port-req &amp;lt;映射绑定的端口号&amp;gt; &amp;lt;remote规则的名称&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 下面举例介绍如何创建对应的remote规则，即将10.127.100.2:30086地址映射为10.0.9.254:30086，后续telegraf配置中的InfluxDB地址“https://10.0.9.254:30086”&lt;/span>
+$ climc proxy-forward-create --proxy-endpoint-id dba57f12-4f9f-4d60-8789-7dc0fe4efc6a --type remote --remote-addr 10.127.100.2 --remote-port &lt;span style="color:#0000cf;font-weight:bold">30086&lt;/span> --bind-port-req &lt;span style="color:#0000cf;font-weight:bold">30086&lt;/span> remote-influxdb
++-------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------------------+--------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> bind_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.9.254 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> bind_port &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30086&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> bind_port_req &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_delete &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> can_update &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> created_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-12-09T06:30:32.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> deleted &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> freezed &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 3268655c-b816-4e4c-8250-88c67773ecff &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_emulated &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_system &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> last_seen_timeout &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">117&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> name &lt;span style="color:#000;font-weight:bold">|&lt;/span> remote-influxdb &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> pending_deleted &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">false&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_src &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">local&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> proxy_agent &lt;span style="color:#000;font-weight:bold">|&lt;/span> proxyagent0 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> proxy_agent_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 330e097e-59e4-4c65-8414-05d6d945e1c0 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> proxy_endpoint &lt;span style="color:#000;font-weight:bold">|&lt;/span> helanzhu &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> proxy_endpoint_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> dba57f12-4f9f-4d60-8789-7dc0fe4efc6a &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> remote_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.127.100.2 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> remote_port &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30086&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> status &lt;span style="color:#000;font-weight:bold">|&lt;/span> init &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 55bb511b62bf47dc86e82c731005ba10 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">type&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> remote &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> update_version &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> updated_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2021-12-09T06:30:32.000000Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------------------+--------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装监控agent">安装监控Agent&lt;/h3>
+&lt;p>监控Agent安装包：&lt;a href="https://yunioniso.oss-cn-beijing.aliyuncs.com/rpms/telegraf/">下载路径&lt;/a>&lt;/p>
+&lt;p>不同操作系统的安装包名称不同，请根据具体系统下载对应的Agent安装包。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>OS&lt;/th>
+&lt;th>Arch&lt;/th>
+&lt;th>Package Name&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>RedHat&lt;/td>
+&lt;td>x86_64&lt;/td>
+&lt;td>telegraf-1.19.2-yn~fe11a96b-0.x86_64.rpm&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RedHat&lt;/td>
+&lt;td>arm64&lt;/td>
+&lt;td>telegraf-1.19.2-yn~fe11a96b-0.aarch64.rpm&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Debian&lt;/td>
+&lt;td>x86_64&lt;/td>
+&lt;td>telegraf_1.19.2-yn~fe11a96b-0_amd64.deb&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Debian&lt;/td>
+&lt;td>arm64&lt;/td>
+&lt;td>telegraf_1.19.2-yn~fe11a96b-0_arm64.deb&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Windows&lt;/td>
+&lt;td>x86_64&lt;/td>
+&lt;td>telegraf-1.19.2-yn~3bc1d95c_windows_amd64.zip&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Windows&lt;/td>
+&lt;td>X86&lt;/td>
+&lt;td>telegraf-1.19.2-yn~3bc1d95c_windows_i386.zip&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="下载监控agent安装包">下载监控Agent安装包&lt;/h4>
+&lt;p>下面用 $Package 代表具体安装包名称，请在使用时进行替换。&lt;/p>
+&lt;p>&lt;strong>Linux&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将安装包下载到/tmp目录&lt;/span>
+$ wget https://yunioniso.oss-cn-beijing.aliyuncs.com/rpms/telegraf/&lt;span style="color:#000">$Package&lt;/span> -P /tmp
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Windows&lt;/strong>&lt;/p>
+&lt;p>手动下载&lt;code>/$Package&lt;/code>并解压到指定目录，比如&lt;code>C:\\telegraf&lt;/code>下&lt;/p>
+&lt;h4 id="准备配置文件">准备配置文件&lt;/h4>
+&lt;p>准备监控Agent的配置文件&lt;/p>
+&lt;p>&lt;strong>Linux&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在tmp目录下新建telegraf配置文件&lt;/span>
+$ touch /tmp/telegraf.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Windows&lt;/strong>&lt;/p>
+&lt;p>在&lt;code>C:\\telegraf&lt;/code>目录下新建&lt;code>telegraf.conf&lt;/code>文件。&lt;/p>
+&lt;p>telegraf配置文件主要包括以下内容：&lt;/p>
+&lt;h5 id="global_tags">global_tags&lt;/h5>
+&lt;p>global_tags里包含虚拟机的ID、名称、宿主机、域、项目、区域、可用区、平台等信息，请根据虚拟机的具体信息，修改global_tags里的内容，后续返回的监控信息中也将会带上这些标签，因此在监控查询中可以通过一些条件查询虚拟机的监控信息。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>global_tags&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">zone_ext_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">os_type&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Linux&amp;#34;&lt;/span>
+&lt;span style="color:#000">scaling_group_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">host_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;3bce9607-2597-469f-8d9b-977345456739&amp;#34;&lt;/span>
+&lt;span style="color:#000">vm_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;5b966ffa-1b4a-4648-8c6a-7617bb7bb76e&amp;#34;&lt;/span>
+&lt;span style="color:#000">zone_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;3032cb4d-558a-4833-88e6-7b5bcabb47d1&amp;#34;&lt;/span>
+&lt;span style="color:#000">cloudregion&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Beijing&amp;#34;&lt;/span>
+&lt;span style="color:#000">domain_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>
+&lt;span style="color:#000">zone&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;YunionHQ&amp;#34;&lt;/span>
+&lt;span style="color:#000">region_ext_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">tenant&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>
+&lt;span style="color:#000">tenant_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">brand&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;OneCloud&amp;#34;&lt;/span>
+&lt;span style="color:#000">host&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;office-03-host01&amp;#34;&lt;/span>
+&lt;span style="color:#000">vm_name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;test-agent&amp;#34;&lt;/span>
+&lt;span style="color:#000">status&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;running&amp;#34;&lt;/span>
+&lt;span style="color:#000">cloudregion_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>
+&lt;span style="color:#000">project_domain&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="agent配置信息">agent配置信息&lt;/h5>
+&lt;p>包括采集监控、虚拟机名称等相关配置，除虚拟机名称外，其他参数建议保持默认。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Configuration for telegraf agent&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>agent&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">interval&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;10s&amp;#34;&lt;/span>
+&lt;span style="color:#000">debug&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#000">hostname&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;test-agent.test.io&amp;#34;&lt;/span>
+&lt;span style="color:#000">round_interval&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">flush_interval&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;10s&amp;#34;&lt;/span>
+&lt;span style="color:#000">flush_jitter&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0s&amp;#34;&lt;/span>
+&lt;span style="color:#000">collection_jitter&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0s&amp;#34;&lt;/span>
+&lt;span style="color:#000">metric_batch_size&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
+&lt;span style="color:#000">metric_buffer_limit&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">10000&lt;/span>
+&lt;span style="color:#000">quiet&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#000">logfile&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">omit_hostname&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="outputs">OUTPUTS&lt;/h5>
+&lt;p>用于设置将监控数据传输到数据库地址，平台使用InfluxDB，数据库名称为telegraf，平台数据库的地址默认为“https://控制节点IP地址:30086”，具体平台InfluxDB数据库地址请参考&lt;a href="#%E8%8E%B7%E5%8F%96influxdb%E5%9C%B0%E5%9D%80">获取InfluxDB地址&lt;/a>步骤。&lt;/p>
+&lt;ul>
+&lt;li>如果虚拟机可以直接连接到平台，urls地址可以直接设置为数据的访问地址；&lt;/li>
+&lt;li>如果虚拟机不可以直接连接到平台，则需要通过代理的方式，该urls地址为代理地址，即为: &amp;ldquo;http://&amp;lt;ssh代理节点的地址&amp;gt;:&amp;lt;remote规则的映射端口号&amp;gt;&amp;quot;。&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic">#################################################################&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># OUTPUTS #&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>outputs.influxdb&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">urls&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;https://192.168.12.251:30086&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">database&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;telegraf&amp;#34;&lt;/span>
+&lt;span style="color:#000">insecure_skip_verify&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="inputs">INPUTS&lt;/h5>
+&lt;p>主要用于设置采集的监控指标，建议保持默认。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash"> &lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># INPUTS #&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.cpu&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">percpu&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">totalcpu&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">collect_cpu_time&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#000">report_active&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.disk&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">ignore_fs&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;tmpfs&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;devtmpfs&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;overlay&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;squashfs&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;iso9660&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.diskio&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">skip_serial_number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.kernel&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.kernel_vmstat&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.mem&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.processes&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.swap&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.system&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.net&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.netstat&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.nstat&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.ntpq&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">dns_lookup&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.internal&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">collect_memstats&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="telegraf配置文件举例">telegraf配置文件举例&lt;/h5>
+&lt;p>以下为完整的telegraf举例文件，用户可参考进行配置&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic">### MANAGED BY ansible-telegraf ANSIBLE ROLE ###&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>global_tags&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">zone_ext_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">os_type&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;windows&amp;#34;&lt;/span>
+&lt;span style="color:#000">scaling_group_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">host_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;3bce9607-2597-469f-8d9b-977345456739&amp;#34;&lt;/span>
+&lt;span style="color:#000">vm_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;5b966ffa-1b4a-4648-8c6a-7617bb7bb76e&amp;#34;&lt;/span>
+&lt;span style="color:#000">zone_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;3032cb4d-558a-4833-88e6-7b5bcabb47d1&amp;#34;&lt;/span>
+&lt;span style="color:#000">cloudregion&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Beijing&amp;#34;&lt;/span>
+&lt;span style="color:#000">domain_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>
+&lt;span style="color:#000">zone&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;YunionHQ&amp;#34;&lt;/span>
+&lt;span style="color:#000">region_ext_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">tenant&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;system&amp;#34;&lt;/span>
+&lt;span style="color:#000">tenant_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">brand&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;OneCloud&amp;#34;&lt;/span>
+&lt;span style="color:#000">host&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;office-03-host01&amp;#34;&lt;/span>
+&lt;span style="color:#000">vm_name&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;test-agent&amp;#34;&lt;/span>
+&lt;span style="color:#000">status&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;running&amp;#34;&lt;/span>
+&lt;span style="color:#000">cloudregion_id&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default&amp;#34;&lt;/span>
+&lt;span style="color:#000">project_domain&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Default&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Configuration for telegraf agent&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>agent&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">interval&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;10s&amp;#34;&lt;/span>
+&lt;span style="color:#000">debug&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#000">hostname&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;test-agent.test.io&amp;#34;&lt;/span>
+&lt;span style="color:#000">round_interval&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">flush_interval&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;10s&amp;#34;&lt;/span>
+&lt;span style="color:#000">flush_jitter&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0s&amp;#34;&lt;/span>
+&lt;span style="color:#000">collection_jitter&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0s&amp;#34;&lt;/span>
+&lt;span style="color:#000">metric_batch_size&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
+&lt;span style="color:#000">metric_buffer_limit&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">10000&lt;/span>
+&lt;span style="color:#000">quiet&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#000">logfile&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000">omit_hostname&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># OUTPUTS #&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 本例中是通过SSH代理的方式将监控数据转发到INfluxDB数据库。&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>outputs.influxdb&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">urls&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;https://192.168.12.251:50041&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">database&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;telegraf&amp;#34;&lt;/span>
+&lt;span style="color:#000">insecure_skip_verify&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># INPUTS #&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.cpu&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">percpu&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">totalcpu&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">collect_cpu_time&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#000">report_active&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.disk&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">ignore_fs&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;tmpfs&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;devtmpfs&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;overlay&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;squashfs&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;iso9660&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.diskio&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">skip_serial_number&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.kernel&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.kernel_vmstat&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.mem&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.processes&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.swap&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.system&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.net&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.netstat&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.nstat&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.ntpq&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">dns_lookup&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span>inputs.internal&lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span>
+&lt;span style="color:#000">name_prefix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;agent_&amp;#34;&lt;/span>
+&lt;span style="color:#000">collect_memstats&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># PROCESSORS #&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">##################################################################&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="手动安装监控agent">手动安装监控Agent&lt;/h4>
+&lt;p>&lt;strong>RedHat/CentOS&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装&lt;/span>
+rpm -ivh /tmp/&lt;span style="color:#000">$Package&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 更换配置文件&lt;/span>
+mv /tmp/telegraf.conf /etc/telegraf/telegraf.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Debian/Ubuntu&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装&lt;/span>
+dpkg -i /tmp/&lt;span style="color:#000">$Package&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 更换配置文件&lt;/span>
+mv /tmp/telegraf.conf /etc/telegraf/telegraf.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Windows&lt;/strong>&lt;/p>
+&lt;p>安装Windows版本监控Agent时需要指定上面步骤的telegraf配置文件，例如&lt;code>C:\\telegraf\telegraf.conf&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">C:&lt;span style="color:#4e9a06">\\&lt;/span>telegraf&lt;span style="color:#4e9a06">\t&lt;/span>elegraf.exe --config &lt;span style="color:#4e9a06">&amp;#34;C:\\telegraf\telegraf.conf&amp;#34;&lt;/span> --service install
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="启动telegraf服务">启动telegraf服务&lt;/h4>
+&lt;p>&lt;strong>Linux&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启动服务&lt;/span>
+systemctl start telegraf
+&lt;span style="color:#8f5902;font-style:italic"># 查看服务&lt;/span>
+systemctl status telegraf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Windows&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启动服务&lt;/span>
+sc start telegraf
+&lt;span style="color:#8f5902;font-style:italic"># 查看服务&lt;/span>
+sc query telegraf
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 将其他KVM平台虚拟机镜像迁移到平台</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/migrate/</link><pubDate>Thu, 11 Nov 2021 15:58:12 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/migrate/</guid><description>
+&lt;ol>
+&lt;li>通过libvirt导出虚拟机的镜像（.qcow2文件）。&lt;/li>
+&lt;li>将镜像上传至一个http服务器中。&lt;/li>
+&lt;li>使用Cloudpods镜像服务器导入镜像。&lt;/li>
+&lt;li>通过镜像创建虚拟机。&lt;/li>
+&lt;li>若原来的虚拟机挂载了云硬盘，可按照以下方式迁移：
+&lt;ul>
+&lt;li>与上述操作类似，需要先将数据盘生成镜像，同理导入，Cloudpods使用该镜像创建数据云盘，再将云硬盘挂载到虚拟机即可。&lt;/li>
+&lt;li>先在Cloudpods中创建一个相同大小的云硬盘，找到对应的路径，将原云盘数据直接复制到新的路径下，最后再挂载到虚拟机上。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 暂停集群服务</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/halt_cluster/</link><pubDate>Tue, 22 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/halt_cluster/</guid><description>
+&lt;p>在运维维护集群过程中，例如维护集群数据库等，需要暂停集群服务。本文介绍如何不影响虚拟机正常运行的前提下暂停 Cloudpods 服务的方法。&lt;/p>
+&lt;h2 id="停止服务">停止服务&lt;/h2>
+&lt;h3 id="停止平台服务">停止平台服务&lt;/h3>
+&lt;p>平台服务由 operator 管理，可以通过给 operator 添加 &amp;lsquo;-stop-services&amp;rsquo; 启动参数，停止大部分控制服务。为了不影响虚拟机的正常运行，部分控制服务应保持继续运行，比如：default-ovn-north、default-influxdb和default-host。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit deployment -n onecloud onecloud-operator
+template:
+metadata:
+creationTimestamp: null
+labels:
+k8s-app: onecloud-operator
+spec:
+containers:
+- command:
+- /bin/onecloud-controller-manager
+- -stop-services &lt;span style="color:#8f5902;font-style:italic"># 改这个地方，加上 &amp;#39;-stop-services&amp;#39; 参数&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后 operator 会重建，开始删除控制服务，最终还保留的 pod 如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n onecloud
+NAME READY STATUS RESTARTS AGE
+default-etcd-swbzmncg2x 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 16d
+default-host-xqwr6 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 19h
+default-influxdb-7476dbb84c-6qhqm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10d
+default-ovn-north-67b97ffcfd-54lvp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10d
+onecloud-operator-6967685b4-6p2qx 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 80s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="恢复服务">恢复服务&lt;/h2>
+&lt;p>删除 onecloud-operator deployment command 里面的 &amp;lsquo;-stop-services&amp;rsquo; 启动参数，operator 会重建之前删除的服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl edit deployment -n onecloud onecloud-operator
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Host服务问题排查</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/hosterror/</link><pubDate>Thu, 11 Nov 2021 15:59:40 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/hosterror/</guid><description>
+&lt;h3 id="宿主机安装host服务完成后默认处于禁用状态需要启用后使用宿主机启用方法如下">宿主机安装Host服务完成后，默认处于禁用状态，需要启用后使用。宿主机启用方法如下：&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>在云管平台的宿主机列表中启用该宿主机；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在控制节点使用climc命令启用该宿主机；&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-enable id
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h3 id="host服务为什么会变成离线">Host服务为什么会变成离线？&lt;/h3>
+&lt;p>region的HostPingDetectionTask将超过3分钟未收到ping的host服务置为offline，并将宿主机上的虚拟机状态设置为unknown。&lt;/p>
+&lt;h3 id="宿主机的host服务启动失败且报错fail-to-get-network-infono-networks该怎么解决">宿主机的Host服务启动失败，且报错“Fail to get network info：no networks”，该怎么解决？&lt;/h3>
+&lt;p>该问题一般是没有为宿主机注册网络，需要在云管平台为宿主机创建一个IP子网或使用Climc命令在控制节点创建一个网络。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-create bcast0 host02 10.168.222.226 10.168.222.226 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> --gateway 10.168.222.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="宿主机mac改变会导致host服务离线需要更改宿主机在平台注册的mac地址具体步骤如下">宿主机MAC改变会导致Host服务离线，需要更改宿主机在平台注册的MAC地址，具体步骤如下&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>例如，宿主机IP地址为100.91.1.22，其MAC从18:9b:a5:81:4f:17变为18:9b:a5:81:4f:16&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 092231af-eebc-456f-8a21-3ab7c944f20c为宿主机id，97e29a73-6615-4d5b-8b67-96bb13b80b90为宿主机所在二层网络的id&lt;/span>
+$ climc host-remove-netif 092231af-eebc-456f-8a21-3ab7c944f20c 18:9b:a5:81:4f:17
+$ climc host-add-netif --ip 100.91.1.22 092231af-eebc-456f-8a21-3ab7c944f20c 97e29a73-6615-4d5b-8b67-96bb13b80b90 18:9b:a5:81:4f:16 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 高可用维护</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/ha/</link><pubDate>Tue, 08 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/ha/</guid><description>
+&lt;h2 id="高可用vip的主动切换">高可用VIP的主动切换&lt;/h2>
+&lt;p>高可用集群通过Keepalived来维护主从节点的切换，平时VIP在主节点，由主节点提供服务。在主节点宕机情况下，会自动切换到备节点，由备节点提供服务。&lt;/p>
+&lt;p>在平时运维工作中，存在需要主动切换主从节点的情况，例如要对主节点执行关机维护任务。&lt;/p>
+&lt;p>可以通过修改调低主节点的keepalived的优先级并重启keepalived实例的方式主动实现主从切换。&lt;/p>
+&lt;p>控制服务的VIP切换的keepavlied配置文件位于 /etc/kubernetes/manifests/keepalived.yaml&lt;/p>
+&lt;p>数据库服务的VIP切换的keepalived配置文件位于 /etc/keepalived/keepalived.conf&lt;/p>
+&lt;p>EIP网关的VIP切换的keepalvied配置文件位于 /etc/keepalived/eipgw.conf&lt;/p>
+&lt;h2 id="高可用节点下线维护步骤">高可用节点下线维护步骤&lt;/h2>
+&lt;ol>
+&lt;li>如果有VIP，将VIP主动切换到备节点&lt;/li>
+&lt;li>如果有虚拟机，迁移虚拟机到其他宿主机&lt;/li>
+&lt;li>将容器从该节点驱逐&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl cordon &amp;lt;node&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>将kubelet，docker等服务设置为不自动启动&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl disable kubelet docker keepalived maraidb
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>停止容器&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">docker stop
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
+&lt;li>停止所有服务&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl stop kubelet docker keepalived maraidb
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
+&lt;li>维护节点&lt;/li>
+&lt;/ol>
+&lt;h2 id="高可用节点恢复上线步骤">高可用节点恢复上线步骤&lt;/h2>
+&lt;ol>
+&lt;li>如果有数据库，先启动数据库&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start mariadb
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>检查数据库主从同步状态&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">show slave status&lt;span style="color:#4e9a06">\G&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果有问题，则需优先解决数据库主从同步问题。&lt;/p>
+&lt;ol start="3">
+&lt;li>启动docker&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start docker
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>启动kubelet&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start kubelet
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>如果修改了keepavlied的优先级，恢复keepalived的优先级。启动keepalived&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start keepalived
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
+&lt;li>恢复Kubenetes调度&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl uncordon &amp;lt;node&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
+&lt;li>恢复以上服务的开机自动启动&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl &lt;span style="color:#204a87">enable&lt;/span> kubelet docker keepalived maraidb
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: MySQL双主同步恢复</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/mysql_ha_recovery/</link><pubDate>Tue, 22 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/mysql_ha_recovery/</guid><description>
+&lt;p>高可用部署场景中，MySQL采用双主自动同步的高可用模式，通过keepalived在双主节点上切换VIP，实现MySQL双主集群对外的高可用服务。和传统的MySQL主从同步相比，可以实现服务在两个节点的自动无缝切换。&lt;/p>
+&lt;p>本文介绍在MySQL双主数据同步出现异常，恢复双主数据同步的步骤方法。&lt;/p>
+&lt;p>MySQL双主实际可以理解为两个MySQL实例互为主备，是基于传统的MySQL主从同步基础上发展而来。因此实现两个MySQL实例的双主同步，实际可以分解为两个步骤：&lt;/p>
+&lt;p>1）实现节点1为主，节点2为备的主从同步
+2）实现节点2为主，节点1为备的主从同步&lt;/p>
+&lt;h2 id="查看同步状态">查看同步状态&lt;/h2>
+&lt;p>分别以两个MySQL实例的真实IP登录MySQL，执行&lt;/p>
+&lt;pre>&lt;code>SHOW SLAVE STATUS\G
+&lt;/code>&lt;/pre>&lt;p>查看两个从实例的状态，如果出现报错，则说明同步异常，需要修复。&lt;/p>
+&lt;h2 id="修复双主同步的步骤">修复双主同步的步骤&lt;/h2>
+&lt;h3 id="停止集群服务">停止集群服务&lt;/h3>
+&lt;p>为保险起见，首先要停止集群服务，避免再向数据库中写入数据。暂停集群服务的步骤请参见 https://www.cloudpods.org//v3.9/zh/docs/ops/halt_cluster/ 。&lt;/p>
+&lt;p>下面需要确定哪个节点是当前的主节点，&lt;em>MySQL的VIP所在节点就是主节点&lt;/em>。&lt;/p>
+&lt;h3 id="停止当前从节点的keepalived">停止当前从节点的keepalived&lt;/h3>
+&lt;p>停止当前从节点的keepalived，以防止MySQL VIP的自动主从切换。&lt;/p>
+&lt;p>在从节点执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl stop keepalived
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="主节点操作">主节点操作&lt;/h3>
+&lt;p>首先需要停止数据库的主从同步。&lt;/p>
+&lt;p>首先登入当前主节点的MySQL，执行如下命令停止主节点和从节点的主从同步。&lt;/p>
+&lt;pre>&lt;code>STOP SLAVE;
+RESET SLAVE;
+&lt;/code>&lt;/pre>&lt;p>然后重置主节点的MASTER Status，并锁表&lt;/p>
+&lt;pre>&lt;code>RESET MASTER;
+FLUSH TABLES WITH READ LOCK;
+SHOW MASTER STATUS;
+&lt;/code>&lt;/pre>&lt;p>输出如下：&lt;/p>
+&lt;pre>&lt;code>MariaDB [(none)]&amp;gt; SHOW MASTER STATUS;
++------------------+-----------+--------------+------------------+
+| File | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+-----------+--------------+------------------+
+| mysql-bin.000001 | 98 | | |
++------------------+-----------+--------------+------------------+
+1 row in set (0.00 sec)
+&lt;/code>&lt;/pre>&lt;p>记录下MASTER的bin-log文件名称和位置。&lt;/p>
+&lt;p>然后退出MySQL，执行mysqldump将主节点的数据导出：&lt;/p>
+&lt;pre>&lt;code>mysqldump -u root -p --all-databases &amp;gt; /a/path/mysqldump.sql
+&lt;/code>&lt;/pre>&lt;p>再登入主节点MySQL，解锁READ LOCK。&lt;/p>
+&lt;pre>&lt;code>UNLOCK TABLES;
+&lt;/code>&lt;/pre>&lt;h3 id="从节点操作">从节点操作&lt;/h3>
+&lt;p>再登入当前从节点的MySQL，执行如下命名停止从节点的主从同步。&lt;/p>
+&lt;pre>&lt;code>STOP SLAVE;
+&lt;/code>&lt;/pre>&lt;p>退出MySQL，将主节点dump的数据导入从节点数据库：&lt;/p>
+&lt;pre>&lt;code>mysql -uroot -p &amp;lt; mysqldump.sql
+&lt;/code>&lt;/pre>&lt;p>然后再登入MySQL，恢复从节点的主从同步。&lt;/p>
+&lt;pre>&lt;code>RESET SLAVE;
+CHANGE MASTER TO MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=98;
+START SLAVE;
+&lt;/code>&lt;/pre>&lt;p>此时检查从节点的SLAVE同步状态：&lt;/p>
+&lt;pre>&lt;code>SHOW SLAVE STATUS\G
+&lt;/code>&lt;/pre>&lt;p>确保结果包含如下状态，则说明从节点的主从同步正常。&lt;/p>
+&lt;pre>&lt;code>Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+&lt;/code>&lt;/pre>&lt;h3 id="恢复主节点的slave状态">恢复主节点的SLAVE状态&lt;/h3>
+&lt;p>在从节点MySQL执行（注意这里不需要再锁表）。&lt;/p>
+&lt;pre>&lt;code>RESET MASTER;
+SHOW MASTER STATUS;
+&lt;/code>&lt;/pre>&lt;p>输出如下：&lt;/p>
+&lt;pre>&lt;code>MariaDB [(none)]&amp;gt; SHOW MASTER STATUS;
++------------------+-----------+--------------+------------------+
+| File | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+-----------+--------------+------------------+
+| mysql-bin.000001 | 740 | | |
++------------------+-----------+--------------+------------------+
+1 row in set (0.00 sec)
+&lt;/code>&lt;/pre>&lt;p>记录从节点的MASTER日志文件和位置。&lt;/p>
+&lt;p>在主节点MySQL执行如下命令恢复对从节点的主从同步&lt;/p>
+&lt;pre>&lt;code>CHANGE MASTER TO MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=740;
+START SLAVE;
+&lt;/code>&lt;/pre>&lt;p>此时检查主节点的SLAVE同步状态：&lt;/p>
+&lt;pre>&lt;code>SHOW SLAVE STATUS\G
+&lt;/code>&lt;/pre>&lt;p>确保结果包含如下状态，则说明主节点的主从同步正常。&lt;/p>
+&lt;pre>&lt;code>Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+&lt;/code>&lt;/pre>&lt;h3 id="恢复从节点keepalived">恢复从节点keepalived&lt;/h3>
+&lt;p>在从节点执行如下命令恢复从节点的keepalived&lt;/p>
+&lt;pre>&lt;code>systemctl start keepalived
+&lt;/code>&lt;/pre>&lt;h3 id="恢复服务">恢复服务&lt;/h3>
+&lt;p>在控制节点，参考 https://www.cloudpods.org//v3.9/zh/docs/ops/halt_cluster/ 恢复onecloud-operator容器运行，恢复所有服务组件。&lt;/p>
+&lt;p>至此，配置完成。&lt;/p></description></item><item><title>Docs: 命令行工具</title><link>https://www.cloudpods.org//v3.9/zh/docs/ops/climc/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/ops/climc/</guid><description/></item></channel></rss>

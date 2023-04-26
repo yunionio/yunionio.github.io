@@ -18,7 +18,8 @@
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="新建虚拟机">新建虚拟机&lt;/h2>
-&lt;p>该功能支持在本地IDC、私有云或公有云平台上创建一个或多个虚拟机。若平台中启用了主机申请流程，用户在配置新建虚拟机参数后，将发起主机申请的工单申请，等待工单审核完成后，才会开始自动部署虚拟机。若平台未启用主机申请流程，可直接新建虚拟机。&lt;/p>
+&lt;p>该功能支持在本地IDC、私有云或公有云平台上创建一个或多个虚拟机。&lt;/p>
+&lt;p>若平台中启用了主机申请流程，用户在配置新建虚拟机参数后，将发起主机申请的工单申请，等待工单审核完成后，才会开始自动部署虚拟机。若平台未启用主机申请流程，可直接新建虚拟机。（工单仅企业版支持）&lt;/p>
 &lt;h3 id="前提条件">前提条件&lt;/h3>
 &lt;ul>
 &lt;li>本地IDC：要求基础资源中存在启用状态的Cloudpods平台宿主机，或云管平台已对接VMware平台，基础资源中存在启用状态的VMware平台的宿主机。&lt;/li>
@@ -94,7 +95,7 @@
 &lt;/li>
 &lt;li>指定云订阅（公有云）：将使用指定的云订阅在公有云平台上创建虚拟机。将根据云订阅过滤镜像、VPC和IP子网等。&lt;/li>
 &lt;li>CPU架构：目前支持x86和ARM架构。仅Cloudpods平台支持ARM架构，其他平台默认只支持x86架构。&lt;/li>
-&lt;li>是否配置GPU：是否为虚拟机配置GPU卡，启用该项后，还需要选择具体GPU卡。&lt;/li>
+&lt;li>是否配置GPU：是否为虚拟机配置GPU卡，启用该项后，还需要选择GPU类型和具体的GPU卡，设置图形GPU后，镜像会过滤出UEFI。&lt;/li>
 &lt;li>CPU核数、内存：设置虚拟机的规格。并可以根据虚拟机规格等选择可用套餐。&lt;/li>
 &lt;li>套餐：虚拟机套餐为虚拟机CPU、内存规格的组合搭配，不同套餐价格不同。若CPU核数、内存规格选择不限，会展示所有的套餐。其中本地IDC和私有云套餐可通过云管平台进行维护，用户创建私有云平台的虚拟机时可以选择本地IDC的套餐或私有云平台的套餐。公有云套餐信息同步对应公有云平台上信息。
 &lt;div class="alert alert-warning" role="alert">
@@ -2909,6 +2910,12 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;ol>
 &lt;li>单击反亲和组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出绑定主机对话框。&lt;/li>
 &lt;li>选择需要绑定的虚拟机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="绑定vip">绑定VIP&lt;/h2>
+&lt;p>该功能用于为反亲和组绑定VIP，绑定后，VIP可以用于在该反亲和组包含的虚拟机之间使用。详情参考：&lt;a href="../../../../function_principle/onpremise/network/vpc/vpcvip">虚拟IP（VIP）&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>单击反亲和组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;添加VIP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出添加VIP对话框。&lt;/li>
+&lt;li>IP地址选择自动分配或这顶IP后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
 &lt;h2 id="启用">启用&lt;/h2>
 &lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的反亲和组。只有反亲和组处于&amp;quot;启用&amp;quot;状态才可以被用户选择使用。&lt;/p>

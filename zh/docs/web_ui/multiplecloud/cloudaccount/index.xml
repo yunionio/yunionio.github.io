@@ -1874,6 +1874,31 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置相关参数。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建Proxmox平台的账号。&lt;/li>
 &lt;/ol>
+&lt;h3 id="新建h3c账号">新建H3C账号&lt;/h3>
+&lt;p>该功能用于纳管H3C账号。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为H3C，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：H3C云账号的名称。&lt;/li>
+&lt;li>备注：H3C云账号的备注。&lt;/li>
+&lt;li>接入地址：H3C平台的控制台的地址。&lt;/li>
+&lt;li>端口：H3C控制台的访问端口，默认为11000。&lt;/li>
+&lt;li>账号、密码：即登录H3C控制台的账号和密码。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效，默认关闭。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，资源标签根据资源标签匹配并修改资源归属项目，项目标签根据项目标签匹配并修改项目映射关系，从而修改资源归属项目&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置相关参数。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建H3C平台的账号。&lt;/li>
+&lt;/ol>
 &lt;h3 id="新建s3账号">新建S3账号&lt;/h3>
 &lt;p>S3即Simple Storage service。在创建S3账号之前需要先部署基于S3协议的对象存储服务器，如MinIO等，MinIO的安装部署&lt;a href="https://min.io/download#/linux">参考链接&lt;/a>。&lt;/p>
 &lt;ol>

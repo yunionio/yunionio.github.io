@@ -95,7 +95,7 @@
 &lt;/li>
 &lt;li>指定云订阅（公有云）：将使用指定的云订阅在公有云平台上创建虚拟机。将根据云订阅过滤镜像、VPC和IP子网等。&lt;/li>
 &lt;li>CPU架构：目前支持x86和ARM架构。仅Cloudpods平台支持ARM架构，其他平台默认只支持x86架构。&lt;/li>
-&lt;li>是否配置GPU：是否为虚拟机配置GPU卡，启用该项后，还需要选择具体GPU卡。&lt;/li>
+&lt;li>是否配置GPU：是否为虚拟机配置GPU卡，启用该项后，还需要选择GPU类型和具体的GPU卡，设置图形GPU后，镜像会过滤出UEFI。&lt;/li>
 &lt;li>CPU核数、内存：设置虚拟机的规格。并可以根据虚拟机规格等选择可用套餐。&lt;/li>
 &lt;li>套餐：虚拟机套餐为虚拟机CPU、内存规格的组合搭配，不同套餐价格不同。若CPU核数、内存规格选择不限，会展示所有的套餐。其中本地IDC和私有云套餐可通过云管平台进行维护，用户创建私有云平台的虚拟机时可以选择本地IDC的套餐或私有云平台的套餐。公有云套餐信息同步对应公有云平台上信息。
 &lt;div class="alert alert-warning" role="alert">
@@ -174,7 +174,7 @@
 &lt;li>当设置调度标签为A，策略为禁止使用时，系统将会排除本地存储A，选择本地存储B为虚拟机系统盘提供存储。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>指定块存储：用户在管理后台视图下支持为磁盘指定块存储，并支持查看存储的使用情况等，目前仅VMware平台支持。&lt;/li>
+&lt;li>指定块存储：用户在管理后台视图下支持为磁盘指定块存储，并支持查看存储的使用情况等，目前仅VMware和Cloudpods平台支持。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>数据盘：可选项，可根据需求添加多块数据盘，设置磁盘的类型、介质及容量大小。磁盘可选类型同系统盘。仅第一块数据盘支持选择磁盘类型，后续添加的数据盘类型同第一块数据盘。
@@ -220,6 +220,7 @@
 &lt;li>VMware虚拟机不支持VPC网络，仅可以选择default经典网络。&lt;/li>
 &lt;li>仅Cloudpods虚拟机可以选择default经典网络和VPC网络。&lt;/li>
 &lt;li>只有Cloudpods平台虚拟机支持最多添加8个网络，其他平台仅支持一个网络。&lt;/li>
+&lt;li>仅Cloudpods虚拟机可以配置透传网卡。&lt;/li>
 &lt;/ul>
 &lt;/div>
 &lt;ul>
@@ -471,6 +472,8 @@
 &lt;th>Nutanix&lt;/th>
 &lt;th>BingoCloud&lt;/th>
 &lt;th>inCloud Sphere&lt;/th>
+&lt;th>Proxmox&lt;/th>
+&lt;th>H3C&lt;/th>
 &lt;th>阿里云&lt;/th>
 &lt;th>AWS&lt;/th>
 &lt;th>Azure&lt;/th>
@@ -493,10 +496,12 @@
 &lt;td>运行&lt;/td>
 &lt;td>运行&lt;/td>
 &lt;td>运行&lt;/td>
-&lt;td>支持&lt;/td>
+&lt;td>运行&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
-&lt;td>支持&lt;/td>
+&lt;td>运行&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>运行&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -521,6 +526,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>支持EIP、运行&lt;/td>
 &lt;td>支持EIP、运行&lt;/td>
 &lt;td>支持EIP、运行&lt;/td>
@@ -555,6 +562,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>重装系统&lt;/td>
@@ -569,6 +578,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>运行、关机&lt;/td>
 &lt;td>运行、关机&lt;/td>
 &lt;td>运行、关机&lt;/td>
@@ -593,6 +604,8 @@
 &lt;td>关机&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>关机&lt;/td>
 &lt;td>关机&lt;/td>
 &lt;td>运行、关机&lt;/td>
@@ -625,6 +638,8 @@
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;/tr>
@@ -638,6 +653,8 @@
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -675,6 +692,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>创建相同配置&lt;/td>
@@ -688,21 +707,25 @@
 &lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
-&lt;td>不支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>绑定GPU卡&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -747,10 +770,14 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>设置磁盘速度&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -795,6 +822,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>绑定物理CPU&lt;/td>
@@ -819,9 +848,13 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>到期释放&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
@@ -867,10 +900,14 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>加入反亲和组&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -908,10 +945,12 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
-&lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -929,13 +968,15 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
-&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -948,6 +989,8 @@
 &lt;td>运行&lt;/td>
 &lt;td>运行&lt;/td>
 &lt;td>关机&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -977,6 +1020,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>关机&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>运行&lt;/td>
@@ -990,6 +1035,8 @@
 &lt;/tr>
 &lt;tr>
 &lt;td>设置免密登录&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
@@ -1032,6 +1079,8 @@
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -1045,6 +1094,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -1083,6 +1134,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>关联安全组（个数）&lt;/td>
@@ -1094,6 +1147,8 @@
 &lt;td>5&lt;/td>
 &lt;td>5&lt;/td>
 &lt;td>5&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -1121,6 +1176,8 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
 &lt;td>支持&lt;/td>
@@ -1134,6 +1191,8 @@
 &lt;/tr>
 &lt;tr>
 &lt;td>公网IP转EIP&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -1179,10 +1238,14 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>添加/删除备份机&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -1227,10 +1290,40 @@
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>V2V迁移&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>快速恢复&lt;/td>
 &lt;td>支持&lt;/td>
+&lt;td>不支持&lt;/td>
+&lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
 &lt;td>不支持&lt;/td>
@@ -1385,33 +1478,47 @@
 &lt;/ol>
 &lt;h3 id="实例设置">实例设置&lt;/h3>
 &lt;h4 id="修改属性">修改属性&lt;/h4>
-&lt;p>该功能用于修改虚拟机的启动介质、引导方式等。&lt;/p>
+&lt;p>该功能用于修改虚拟机的引导方式、远程终端协议等。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>目前仅Cloudpods平台上虚拟机支持修改属性。&lt;/li>
+&lt;li>配置更改后需要重启主机才能生效。&lt;/li>
+&lt;/ul>
+&lt;/div>
 &lt;p>&lt;strong>单个虚拟机修改属性&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
-&lt;li>修改虚拟机是否启用删除保护，禁用删除保护后，可删除虚拟机。启用删除保护后，无法删除虚拟机。&lt;/li>
-&lt;li>修改虚拟机的启动介质，选择从硬盘、光驱、网络启动虚拟机。
+&lt;li>设置引导方式、远程终端协议、显卡型号、主机型号、Daemon虚拟机。
 &lt;ul>
-&lt;li>如挂载ISO后，可选择从光驱启动虚拟机，并进行安装操作系统的操作。&lt;/li>
-&lt;li>如系统盘已有操作系统，可选择通过硬盘启动虚拟机等。&lt;/li>
-&lt;li>如设备需要通过网络从远端服务器下载镜像启动，则需要选择通过网络启动虚拟机。&lt;/li>
+&lt;li>引导方式默认BIOS，ARM架构只支持UEFI引导方式。&lt;/li>
+&lt;li>远程终端协议默认VNC，支持选择SPICE。&lt;/li>
+&lt;li>显卡型号默认Standard，支持选择QXL。&lt;/li>
+&lt;li>主机型号默认PC，支持选择Q35。&lt;/li>
+&lt;li>Daemon虚拟机默认关闭，打开后，当这台虚拟机的宿主机开机后，会立即启动这台虚拟机。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>修改虚拟机的引导方式，目前仅Cloudpods平台上虚拟机支持修改，且ARM架构只支持UEFI引导方式。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;p>&lt;strong>批量修改属性&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>在虚拟机列表中选择一个或多个虚拟机，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
-&lt;li>修改虚拟机的启动介质，选择从硬盘、光驱、网络启动虚拟机。
+&lt;li>设置引导方式、远程终端协议、显卡型号、主机型号、Daemon虚拟机。
 &lt;ul>
-&lt;li>如挂载ISO后，可选择从光驱启动虚拟机，并进行安装操作系统的操作。&lt;/li>
-&lt;li>如系统盘已有操作系统，可选择通过硬盘启动虚拟机等。&lt;/li>
-&lt;li>如设备需要通过网络从远端服务器下载镜像启动，则需要选择通过网络启动虚拟机。&lt;/li>
+&lt;li>引导方式默认BIOS，ARM架构只支持UEFI引导方式。&lt;/li>
+&lt;li>远程终端协议默认VNC，支持选择SPICE。&lt;/li>
+&lt;li>显卡型号默认Standard，支持选择QXL。&lt;/li>
+&lt;li>主机型号默认PC，支持选择Q35。&lt;/li>
+&lt;li>Daemon虚拟机默认关闭，打开后，当这台虚拟机的宿主机开机后，会立即启动这台虚拟机。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>修改虚拟机的引导方式，目前仅Cloudpods平台上虚拟机支持修改，且ARM架构只支持UEFI引导方式。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="修改启动顺序">修改启动顺序&lt;/h4>
+&lt;p>该功能用于修改系统启动操作系统的顺序。&lt;/p>
+&lt;ol>
+&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-修改启动顺序&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改启动顺序对话框。&lt;/li>
+&lt;li>移动磁盘或光驱的顺序，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;h4 id="重装系统">重装系统&lt;/h4>
 &lt;p>该功能用于为虚拟机更换系统。&lt;/p>
@@ -1531,7 +1638,6 @@
 &lt;ul>
 &lt;li>仅Cloudpods平台支持绑定、解绑GPU卡功能。&lt;/li>
 &lt;li>当宿主机上存在空闲的GPU设备时，宿主机上的虚拟机才可以绑定GPU卡。&lt;/li>
-&lt;li>虚拟机关机状态才可以绑定、解绑GPU卡。&lt;/li>
 &lt;li>批量绑定GPU卡操作仅支持关联同种型号的GPU卡，批量解绑会取消所有已关联的GPU卡。&lt;/li>
 &lt;li>目前仅管理员支持设置GPU功能。&lt;/li>
 &lt;/ul>
@@ -1587,7 +1693,7 @@
 &lt;/div>
 &lt;ol>
 &lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;实例设置-更换块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更换块存储对话框。&lt;/li>
-&lt;li>选择要更换的块存储，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>选择要更换的块存储，选择是否删除源磁盘，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
 &lt;h4 id="绑定物理cpu">绑定物理CPU&lt;/h4>
 &lt;p>该功能用于虚拟机绑定物理CPU。&lt;/p>
@@ -2022,6 +2128,30 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将虚拟机迁移到其他宿主机上面。&lt;/li>
 &lt;/ol>
+&lt;h4 id="v2v迁移">V2V迁移&lt;/h4>
+&lt;p>该功能用于将纳管的VMware主机迁移到内置Cloudpods私有云主机。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>VMware主机需要处于关机状态。&lt;/li>
+&lt;li>Cloudpods内置私有云的宿主机和VMware的ESXi宿主机之间网络需要可以互相访问。&lt;/li>
+&lt;li>VMware主机对接的经典网络IP子网在Cloudpods私有云中也需要能分配给虚拟机使用。&lt;/li>
+&lt;li>在Cloudpods平台创建和VMware主机同配置的虚拟机，并且将VMware主机的虚拟网卡卸载，挂载到新建的Cloudpods虚拟机上，创建虚拟磁盘，并且将VMware主机的磁盘作为KVM虚拟机磁盘的backing file，启动Cloudpods虚拟机，远程挂载VMware主机的磁盘，作为Cloudpods虚拟机的磁盘的backing file，启动成功后，Cloudpods虚拟机的磁盘内容为VMware虚拟机的磁盘，网络IP是VMware主机的IP。同时，将VMware主机设置为Freeze状态，禁止VMware主机启动，启动后，开始磁盘数据同步，会将Cloudpods虚拟磁盘底层的VMware虚拟机磁盘数据同步到Cloudpods虚拟机的上层磁盘文件，磁盘数据同步完成后，Cloudpods虚拟机不再依赖VMware虚拟机。&lt;/li>
+&lt;li>磁盘数据同步完成后，可以删除原来的VMware虚拟机，完成迁移。&lt;/li>
+&lt;li>如果迁移失败，则需要删除Cloudpods虚拟机(需确保在回收站清理)。删除后，会自动将虚拟网卡挂载回VMware虚拟机，并且解除VMware主机Freeze状态。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个虚拟机V2V迁移&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在虚拟机页面，单击虚拟机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;高可用-V2V迁移&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出V2V迁移对话框。&lt;/li>
+&lt;li>迁移类型默认迁移至KVM平台，选择宿主机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将VMware主机迁移到内置Cloudpods私有云主机。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量V2V迁移&lt;/strong>&lt;/p>
+&lt;p>可以选择在不同宿主机的虚拟机V2V迁移到同一个宿主机上。&lt;/p>
+&lt;ol>
+&lt;li>在虚拟机列表中选择一个或多个虚拟机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;高可用-V2V迁移&amp;rdquo;&lt;/em>&lt;/strong> 菜单项项，弹出V2V迁移对话框。&lt;/li>
+&lt;li>迁移类型默认迁移至KVM平台，选择宿主机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，将VMware主机迁移到内置Cloudpods私有云主机。&lt;/li>
+&lt;/ol>
 &lt;h4 id="快速恢复">快速恢复&lt;/h4>
 &lt;p>该功能用于使宿主机离线的虚拟机可以正常使用。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -2117,9 +2247,9 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;li>详情页面顶部菜单项支持对虚拟机进行管理操作等。&lt;/li>
 &lt;li>查看以下信息。
 &lt;ul>
-&lt;li>基本信息：包括ID、名称、状态、域、项目、主机名、CPU架构、标签、agent安装状态、关联密钥、平台、计费方式、区域、可用区、云账号、创建时间、更新时间、备注；&lt;/li>
-&lt;li>配置信息：包括操作系统、IP地址、MAC地址、系统镜像、宿主机、安全组、VPC、CPU、内存、系统盘、数据盘、ISO、GPU、备份机的宿主机、Daemon虚拟机、最大带宽、监控地址等；&lt;/li>
-&lt;li>加密：加密密钥、密钥算法、密钥持有者等&lt;/li>
+&lt;li>基本信息：包括ID、名称、状态、电源状态、域、项目、主机名、CPU架构、标签、agent安装状态、关联密钥、平台、计费方式、区域、可用区、云账号、创建时间、更新时间、备注；&lt;/li>
+&lt;li>配置信息：包括操作系统、IP地址、MAC地址、系统镜像、宿主机、安全组、VPC、CPU、内存、系统盘、数据盘、ISO、GPU、Daemon虚拟机、最大带宽、监控地址等；&lt;/li>
+&lt;li>加密：加密密钥、密钥算法、密钥持有者等；&lt;/li>
 &lt;li>主备机设置：备份机的宿主机、备份机的宿主机状态、备份机状态、备份机同步状态；&lt;/li>
 &lt;li>其他设置：支持开启或关闭删除保护。&lt;/li>
 &lt;/ul>
@@ -2146,6 +2276,14 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;li>单击“网络”页签，进入网络页面。&lt;/li>
 &lt;li>单击网卡列表上方 &lt;strong>&lt;em>&amp;ldquo;添加网卡&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出添加网卡对话框。&lt;/li>
 &lt;li>设置VPC和IP子网，如需指定静态IP，可单击 &lt;strong>&lt;em>&amp;ldquo;手动配置IP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置IP地址，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h3 id="配置透传网卡">配置透传网卡&lt;/h3>
+&lt;p>该功能用于为虚拟机配置透传网卡，目前仅Cloudpods平台的虚拟机支持。&lt;/p>
+&lt;ol>
+&lt;li>在虚拟机页面，单击虚拟机名称项，进入虚拟机详情页面。&lt;/li>
+&lt;li>单击“网络”页签，进入网络页面。&lt;/li>
+&lt;li>单击网卡列表上方 &lt;strong>&lt;em>&amp;ldquo;添加网卡&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出添加网卡对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;配置透传网卡&amp;rdquo;&lt;/em>&lt;/strong> 按钮，设置透传网卡，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
 &lt;h3 id="修改带宽">修改带宽&lt;/h3>
 &lt;p>该功能用于修改网卡的带宽限制。目前仅支持Cloudpods平台、VMware平台、ZStack平台、OpenStack平台。&lt;/p>
@@ -2209,7 +2347,7 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;ul>
 &lt;li>基础监控：默认获取的监控信息。
 &lt;ul>
-&lt;li>支持查看近1小时、近1天、近1周、近1月、近3月、近6月的性能监控信息，支持设置时间粒度，时间粒度大小与查看的时长有关。&lt;/li>
+&lt;li>支持查看近1小时、近6小时、近12小时、近1周、近1月的性能监控信息，支持设置时间粒度，时间粒度大小与查看的时长有关,支持聚合函数过滤，聚合函数包含最小值、最大值、平均值。&lt;/li>
 &lt;li>监控指标包括CPU使用率、内存使用率、网络入流量、网络出流量、磁盘使用率、磁盘读速率、磁盘写速率，其中内存使用率和磁盘使用率指标需要安装Agent后查看。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -2283,6 +2421,48 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="虚拟机定时任务设置">虚拟机定时任务设置&lt;/h2>
+&lt;p>该功能用于新建虚拟机开机、关机、重启和同步的定时任务。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在虚拟机页面，单击虚拟机名称项，进入虚拟机详情页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击“定时任务”页签，进入定时任务页面。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>配置以下参数：&lt;/p>
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建定时任务时需要指定定时任务所属的项目。&lt;/li>
+&lt;li>名称：设置定时任务的名称。&lt;/li>
+&lt;li>备注：设置定时任务的备注。&lt;/li>
+&lt;li>触发频率：支持选择单次、每天、每周、每月。
+&lt;ul>
+&lt;li>当选择“单次”时，设置具体的触发时间。&lt;/li>
+&lt;li>当选择“每天”时，设置每天具体的触发时间，并设置有效时间。定时任务在有效时间内生效。&lt;/li>
+&lt;li>当选择“每周”时，选择具体触发星期、触发时间，并设置有效时间。定时任务在有效时间内生效。&lt;/li>
+&lt;li>当选择“每月”时，选择具体的触发日期、触发时间，并设置有效时间。定时任务在有效时间内生效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>资源类型：目前仅支持虚拟机。&lt;/li>
+&lt;li>操作动作：目前仅支持开机、关机、重启、同步。&lt;/li>
+&lt;li>关联资源：选择执行定时任务的虚拟机。单击输入框，在弹出的对话框中选择虚拟机，选择完成后，单击 &lt;strong>&lt;em>&amp;ldquo;选择&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建定时任务。&lt;/p>
+&lt;ul>
+&lt;li>触发时间：触发频率选择单次，需要设置一个具体的时间提醒一次；触发频率选择每天，需要设置一个每天触发的时间和当前任务的有效时间；触发频率选择每周，需要设置触发的具体星期、触发的具体时间和当前任务的有效时间；需要设置触发的具体日期、触发的具体时间和当前任务的有效时间。&lt;/li>
+&lt;li>有效时间：定时任务的有效时间，需要设置一个开始时间和结束时间。&lt;/li>
+&lt;li>资源类型：默认为虚拟机。&lt;/li>
+&lt;li>操作动作：支持选择开机、关机、重启、同步。&lt;/li>
+&lt;li>关联资源：选择具体的虚拟机资源，支持多选。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/p>
 &lt;/li>
 &lt;/ol>
 &lt;h2 id="查看虚拟机操作日志">查看虚拟机操作日志&lt;/h2>
@@ -2789,6 +2969,12 @@ $ cat /proc/cpuinfo | grep microcode
 &lt;ol>
 &lt;li>单击反亲和组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出绑定主机对话框。&lt;/li>
 &lt;li>选择需要绑定的虚拟机，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="绑定vip">绑定VIP&lt;/h2>
+&lt;p>该功能用于为反亲和组绑定VIP，绑定后，VIP可以用于在该反亲和组包含的虚拟机之间使用。详情参考：&lt;a href="../../../../function_principle/onpremise/network/vpc/vpcvip">虚拟IP（VIP）&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>单击反亲和组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;添加VIP&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出添加VIP对话框。&lt;/li>
+&lt;li>IP地址选择自动分配或这顶IP后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
 &lt;h2 id="启用">启用&lt;/h2>
 &lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的反亲和组。只有反亲和组处于&amp;quot;启用&amp;quot;状态才可以被用户选择使用。&lt;/p>

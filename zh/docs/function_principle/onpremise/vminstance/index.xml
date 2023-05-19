@@ -1886,7 +1886,58 @@ RemainAfterExit=yes
 ExecStart=/usr/lib/systemd/oc-hugetlb-reserve-pages.sh
 [Install]
 WantedBy=sysinit.targe
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 调试QEMU参数</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/customize/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/customize/</guid><description>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 自定义PCI设备类型</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/custom-pci-devices/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/custom-pci-devices/</guid><description>
+&lt;p>cloudpods 平台已经支持透传 GPU, USB, SR-IOV NIC 等类型的设备，对于这些类型之外的设备通过自定义 PCI 设备类型的方式来支持。&lt;/p>
+&lt;h2 id="获取-pci-设备-vendor_id-与-device_id">获取 PCI 设备 vendor_id 与 device_id&lt;/h2>
+&lt;p>添加自定义PCI设备类型之前需要获取设备的 vendor_id 和 device_id&lt;/p>
+&lt;pre>&lt;code>登陆到有改设备的宿主机执行 lspci找到对应的 pci 设备的 地址：
+eg:
+$ lspci
+00:00.0 Host bridge: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 DMI2 (rev 04)
+00:01.0 PCI bridge: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 PCI Express Root Port 1a (rev 04)
+00:02.0 PCI bridge: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 PCI Express Root Port 2a (rev 04)
+00:03.0 PCI bridge: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 PCI Express Root Port 3a (rev 04)
+00:05.0 System peripheral: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 VTd/Memory Map/Misc (rev 04)
+00:05.2 System peripheral: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 IIO RAS (rev 04)
+00:05.4 PIC: Intel Corporation Xeon E7 v2/Xeon E5 v2/Core i7 IOAPIC (rev 04)
+00:11.0 PCI bridge: Intel Corporation C600/X79 series chipset PCI Express Virtual Root Port (rev 06)
+00:16.0 Communication controller: Intel Corporation C600/X79 series chipset MEI Controller #1 (rev 05)
+00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (Lewisville) (rev 06)
+00:1a.0 USB controller: Intel Corporation C600/X79 series chipset USB2 Enhanced Host Controller #2 (rev 06)
+00:1b.0 Audio device: Intel Corporation C600/X79 series chipset High Definition Audio Controller (rev 06)
+00:1c.0 PCI bridge: Intel Corporation C600/X79 series chipset PCI Express Root Port 3 (rev b6)
+00:1c.4 PCI bridge: Intel Corporation C600/X79 series chipset PCI Express Root Port 5 (rev b6)
+00:1d.0 USB controller: Intel Corporation C600/X79 series chipset USB2 Enhanced Host Controller #1 (rev 06)
+00:1e.0 PCI bridge: Intel Corporation 82801 PCI Bridge (rev a6)
+00:1f.0 ISA bridge: Intel Corporation C600/X79 series chipset LPC Controller (rev 06)
+00:1f.2 RAID bus controller: Intel Corporation C600/X79 series chipset SATA RAID Controller (rev 06)
+00:1f.3 SMBus: Intel Corporation C600/X79 series chipset SMBus Host Controller (rev 06)
+02:00.0 VGA compatible controller: NVIDIA Corporation GK107GL [Quadro K420] (rev a1)
+根据 pci 地址获取 vendor_id 与 device_id:
+lspci -n -s &amp;lt;PCI_ADDR&amp;gt;
+eg:
+lspci -n -s 02:00.0
+02:00.0 0300: 10de:0ff3 (rev a1)
+10de 为 vendor_id, 0ff3 为 device_id
+&lt;/code>&lt;/pre>&lt;h2 id="添加自定义-pci-设备类型">添加自定义 PCI 设备类型&lt;/h2>
+&lt;p>在云平台创建自定义pci设备类型&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc isolated-device-model-create
+Usage: climc isolated-device-model-create &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--hosts HOSTS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;MODEL&amp;gt; &amp;lt;DEV_TYPE&amp;gt; &amp;lt;VENDOR_ID&amp;gt; &amp;lt;DEVICE_ID&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># --hosts 为需要探测扫描 PCI 设备的宿主机，如果未填可重启 host-agent 生效。如果宿主机数量较多建议直接重启 host-agent&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># &amp;lt;MODEL&amp;gt; 为 PCI 设备型号&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># &amp;lt;DEV_TYPE&amp;gt; 为设备类型，如 NPU。对于已经支持的设备类型 USB, GPU-HPC, GPU-VGA, NIC 等不能再次创建。&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># &amp;lt;VENDOR_ID&amp;gt; &amp;lt;DEVICE_ID&amp;gt; 为厂商ID和设备ID&lt;/span>
+eg:
+climc isolated-device-model-create --hosts host1 Atlas-800 NPU 1a03 &lt;span style="color:#0000cf;font-weight:bold">2000&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>添加自定义 PCI 设备类型完成后，可以在创建虚机选择自定义设备类型。&lt;/p>
+&lt;pre>&lt;code>climc server-create --isolated-device 'Atlas-800' ......
+&lt;/code>&lt;/pre>&lt;p>查看自定义 PCI 设备类型列表&lt;/p>
+&lt;pre>&lt;code>climc isolated-device-model-list
+&lt;/code>&lt;/pre>&lt;h2 id="宿主机禁用-custom-pci-devices">宿主机禁用 custom pci devices&lt;/h2>
+&lt;p>在 /etc/yunion/host.conf 中添加&lt;/p>
+&lt;ul>
+&lt;li>disable_custom_device: true&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 调试QEMU参数</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/customize/</link><pubDate>Fri, 19 Jul 2019 18:32:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/customize/</guid><description>
 &lt;p>本文介绍如何调试 Cloudpods KVM虚拟机的配置参数。&lt;/p>
 &lt;h2 id="hahahugoshortcode-s1-hbhb-kvm虚拟机的配置存储位置一般在宿主机的-optcloudworkspaceservers-下该位置可以修改-etcyunionhostconf-的-servers_path">Cloudpods KVM虚拟机的配置存储位置一般在宿主机的 /opt/cloud/workspace/servers 下，该位置可以修改 /etc/yunion/host.conf 的 servers_path&lt;/h2>
 &lt;p>在 servers 目录下，每个虚拟机ID的目录存储了该虚拟机相关的配置文件，主要的文件有：&lt;/p>

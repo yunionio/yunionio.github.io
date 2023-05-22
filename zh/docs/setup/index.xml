@@ -1,6 +1,6 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
 安装部署</title><link>https://www.cloudpods.org/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 14 Apr 2023 16:03:30 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/intro/</guid><description>
-&lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10 (arm64) 上运行，待部署组件/服务如下:&lt;/p>
+&lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10 (x86_64 或 arm64) 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -408,7 +408,7 @@ cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EO
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: $PRIMARY_IP
 &lt;/span>&lt;span style="color:#4e9a06"> use_local: false
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.9.9&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.10.1&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: $DB_IP
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: &amp;#34;$DB_USER&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: &amp;#34;$DB_PSWD&amp;#34;
@@ -1106,7 +1106,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
 &lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.9
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.10.1
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156
@@ -1235,10 +1235,10 @@ $ yum install -y python3-pip
 $ python3 -m pip install --upgrade pip setuptools wheel
 $ python3 -m pip install --upgrade ansible paramiko
 &lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch
-$ git checkout v3.9.9
+$ git checkout v3.10.1
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加节点">添加节点&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 添加节点&lt;/span>
 $ ./ocboot.py add-node 10.168.26.216 10.168.222.140
@@ -1455,14 +1455,14 @@ $ kubectl rollout restart deployment -n onecloud default-web
 &lt;p>总体来说，升级的步骤如下:&lt;/p>
 &lt;p>使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 工具进行升级，这个工具主要是调用 ansible 来升级集群里面的所有节点。&lt;/p>
 &lt;ol>
-&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 v3.9.9 tag&lt;/li>
+&lt;li>使用 git 拉取最新的 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 代码，切换到 v3.10.1 tag&lt;/li>
 &lt;li>使用 &lt;a href="https://github.com/yunionio/ocboot">ocboot&lt;/a> 里面的 &lt;code>./ocboot.py upgrade&lt;/code> 命令进行版本升级&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看当前版本">查看当前版本&lt;/h2>
 &lt;p>可以使用 kubectl 查看当前集群的版本&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.8.17&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl 获得当前集群的版本为 v3.9.10&lt;/span>
 $ kubectl -n onecloud get onecloudclusters default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
-v3.8.17
+v3.9.10
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="拉取-ocboot-工具">拉取 ocboot 工具&lt;/h2>
 &lt;p>如果本地已经有 ocboot 工具可以跳过此步，只用把代码更新到对应的分支。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
@@ -1470,10 +1470,10 @@ $ yum install -y python3-pip
 $ python3 -m pip install --upgrade pip setuptools wheel
 $ python3 -m pip install --upgrade ansible paramiko
 &lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更新-ocboot-代码">更新 ocboot 代码&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git fetch
-$ git checkout v3.9.9
+$ git checkout v3.10.1
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="升级-cloudpods-服务">升级 Cloudpods 服务&lt;/h2>
 &lt;p>更新服务的原理是通过本机 ssh 免密码远程登录到集群的第一个控制节点，获取所有节点的信息后，然后通过 ansible 执行 playbook 更新，所以有以下要求：&lt;/p>
 &lt;ol>
@@ -1481,12 +1481,12 @@ $ git checkout v3.9.9
 &lt;li>PRIMARY_MASTER_HOST 能够 ssh 免密码登录集群中的其它节点&lt;/li>
 &lt;/ol>
 &lt;p>如果没有设置免密码登录，请使用 &lt;em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em> 命令把公钥下发到自己环境对应的节点。&lt;/p>
-&lt;p>升级的版本号可以到 &lt;a href="../../development/changelog/release-3.9/">CHANGELOG release/3.9 页面&lt;/a> 查询。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务升级到 v3.9.9 版本&lt;/span>
+&lt;p>升级的版本号可以到 &lt;a href="../../development/changelog/release-3.10/">CHANGELOG release/3.10 页面&lt;/a> 查询。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 ocboot 相关服务升级到 v3.10.1 版本&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 该步骤会因为拉取 docker 镜像等待较长时间，请耐心等待&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST 是指部署集群的第一个节点的 ip 地址&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 需要本机能够使用 ssh 密钥登录上去&lt;/span>
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.9.9
+$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.10.1
 &lt;span style="color:#8f5902;font-style:italic"># 另外可以使用 `./ocboot.py upgrade --help` 查看其它可选参数&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如:&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># --user 可以指定其它 ssh 用户&lt;/span>
@@ -1500,15 +1500,15 @@ $ kubectl get pods -n onecloud --watch
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;ul>
-&lt;li>一般小版本降级没有问题，比如从 v3.9.9 降级到 v3.9.0&lt;/li>
-&lt;li>跨版本降级可能会有问题，比如从 v3.9.9 降级到 v3.8.13&lt;/li>
+&lt;li>一般小版本降级没有问题，比如从 v3.10.1 降级到 v3.10.0&lt;/li>
+&lt;li>跨版本降级可能会有问题，比如从 v3.10.1 降级到 v3.9.10&lt;/li>
 &lt;/ul>
 &lt;p>如果遇到问题请到 &lt;a href="https://github.com/yunionio/cloudpods/issues">GitHub 提 issue&lt;/a> 或者 &lt;a href="https://www.cloudpods.org/zh/docs/contact">联系我们&lt;/a> 获取帮助。
 &lt;/div>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 降级的原理是修改各个服务的 image version&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.9.9，然后想要降级到 v3.8.17&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.8.17&lt;/span>
-$ /opt/yunion/bin/ocadm cluster update --version v3.8.17 --wait
+&lt;span style="color:#8f5902;font-style:italic"># 比如现在的版本是 v3.10.1，然后想要降级到 v3.9.10&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.9.10&lt;/span>
+$ /opt/yunion/bin/ocadm cluster update --version v3.9.10 --wait
 &lt;span style="color:#8f5902;font-style:italic"># 降级会重新拉取新的镜像，可以再开一个窗口&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 使用下面的命令查看每个 pod 的更新情况&lt;/span>
 $ kubectl -n onecloud get pods -w
@@ -2407,7 +2407,9 @@ pod &lt;span style="color:#4e9a06">&amp;#34;traefik-ingress-controller-xkmct&amp
 &lt;h2 id="使用-climc-打开隐藏功能特性">使用 climc 打开隐藏功能特性&lt;/h2>
 &lt;p>比如在 3.9 版本中，我们默认隐藏了 k8s 容器集群管理、京东公有云管理等功能；默认打开了常用的阿里云、AWS 等公有云管理功能。用户可以通过 climc 命令行工具根据自身需要打开或者关闭对应的功能。&lt;/p>
 &lt;h3 id="举例">举例&lt;/h3>
-&lt;p>子命令的格式和参数如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看所有支持的功能特性&lt;/span>
+$ climc --help &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep feature-config
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>子命令的格式和参数如下：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc feature-config-&lt;span style="color:#000">$feature&lt;/span> --switch &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>on&lt;span style="color:#000;font-weight:bold">|&lt;/span>off&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># $feature: 表示具体的功能名，比如: k8s, s3, jdcloud 等&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># on: 表示打开&lt;/span>
@@ -2551,6 +2553,11 @@ $ climc feature-config-jdcloud --switch off
 &lt;td>k8s&lt;/td>
 &lt;td>K8S 容器集群管理&lt;/td>
 &lt;td>feature-config-k8s&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>proxmox&lt;/td>
+&lt;td>PVE虚拟化管理&lt;/td>
+&lt;td>feature-config-proxmox&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table></description></item><item><title>Docs: 更换节点IP</title><link>https://www.cloudpods.org/zh/docs/setup/changeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/changeip/</guid><description>

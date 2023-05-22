@@ -1,0 +1,256 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+VPC网络</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/</link><description>Recent content in VPC网络 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 部署EIP网关</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/eipgwhowto/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/eipgwhowto/</guid><description>
+&lt;p>当用户环境使用VPC网络时，由于VPC网络是一块网络隔离的地址空间，在VPC网络中的虚拟机如果需要与外部通信，需要绑定弹性公网IP（EIP）。EIP是经典网络可路由访问的一段IP地址。EIP网关负责将EIP和VPC的虚拟机IP进行IP地址转换（NAT），实现外部通过EIP访问VPC内的虚拟机IP。&lt;/p>
+&lt;p>系统部署后，默认不部署EIP网关。需要手工部署。本节介绍如何部署EIP网关。&lt;/p>
+&lt;h2 id="eip网关网络要求">EIP网关网络要求&lt;/h2>
+&lt;p>EIP网关是VPC网络和外部网络（underlay网络）的交换节点，因此在需要在underlay网络进行正确配置，确保源和目的地址为EIP地址池的流量能够通过EIP网关，这样才能起到EIP网关的作用。&lt;/p>
+&lt;img src="../eipgwnet.png" width="700">
+&lt;p>EIP网关的网络要求如下：&lt;/p>
+&lt;p>1）EIP网关的IP或EIP在underlay网络中是EIP地址池IP的下一跳（Nexthop），也就是underlay网络中，目的地址为EIP地址池的流量都需要经过EIP网关&lt;/p>
+&lt;ol start="2">
+&lt;li>EIP网关能够通过underlay网络访问所有的宿主机的sdn_encap_ip（默认为宿主机的管理IP）&lt;/li>
+&lt;/ol>
+&lt;h2 id="在计算节点部署eip网关">在计算节点部署EIP网关&lt;/h2>
+&lt;p>EIP网关需要依赖ovn-controller, sdnagent等软件包，这些软件包都已经在计算节点部署好了，因此在计算节点部署EIP网关，在网络配置正确的前提下，可以比较容易实现EIP网关配置。&lt;/p>
+&lt;h3 id="单节点eip网关">单节点EIP网关&lt;/h3>
+&lt;p>这是最简单的场景，选择一台符合EIP网关网络要求的计算节点，修改该节点的 /etc/yunion/host.conf，将 sdn_enable_eip_man 设置为 true，重启该计算节点的 default-host pod，即可生效。&lt;/p>
+&lt;h3 id="主备高可用eip网关">主备高可用EIP网关&lt;/h3>
+&lt;p>在该场景，则需要使用ansible脚本实现自动化部署。&lt;/p>
+&lt;p>部署之前，需要为两台计算节点申请一个VIP。&lt;/p>
+&lt;p>Ansible脚本位于&lt;a href="https://github.com/yunionio/sdnagent">sdnagent代码仓库&lt;/a>的 build/sdnagent/root/usr/share/sdnagent/ansible/ 目录下。&lt;/p>
+&lt;p>将inventory文件复制一份，根据实际的环境，调整其中的变量值&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#000">sdnagent_rpm sdnagent.rpm在当前机器中的位置. keepalived将从目标机器配置的yum仓库中直接部署&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_region &amp;#34;oc_&amp;#34;前缀的变量用于向keystone认证，访问API服务。可以从default-climc pod&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_auth_url 通过&amp;#34;env | grep ^OS_&amp;#34;命令获得相应的值&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_project&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_user&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">oc_admin_password&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_router_id keepalived的virtual router id值。主备必须相同。若环境中有其他keepalived部署，必须不能冲突&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_priority keepalived实例的priority，数值大的为MASTER，小的为BACKUP&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_interface keepalived进行VRRP通信的网卡，这里为计算节点的管理网卡，一般为br0&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000">vrrp_vip keepalived实例间相互通告的vip，可用作访问eip的下一跳地址&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>inventory配置好以后，执行ansible playbook&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ansible-playbook -i a-inventory playbook.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="在非计算节点部署eip网关">在非计算节点部署EIP网关&lt;/h2>
+&lt;p>EIP网关也可部署到非计算节点的单独的宿主机或者虚拟机中，只要满足EIP的网络要求即可。&lt;/p>
+&lt;p>需要使用ISO中的.rpm安装包预先安装、配置好网关所需组件。以下对这部分进行描述。&lt;/p>
+&lt;p>以3.8为例，所需安装的包的名字和所在位置如下&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># https://iso.yunion.cn/3.8/rpms/packages/kernel&lt;/span>
+linux-firmware
+kernel-lt
+&lt;span style="color:#8f5902;font-style:italic"># https://iso.yunion.cn/3.8/rpms/packages/host&lt;/span>
+kmod-openvswitch
+unbound
+openvswitch
+openvswitch-ovn-common
+openvswitch-ovn-host
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装完内核之后，需要重启机器使之效&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启动openvswitch&lt;/span>
+systemctl &lt;span style="color:#204a87">enable&lt;/span> --now openvswitch
+&lt;span style="color:#8f5902;font-style:italic"># 配置ovn&lt;/span>
+&lt;span style="color:#000">ovn_encap_ip&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>xx &lt;span style="color:#8f5902;font-style:italic"># 隧道外层IP地址，EIP网关用它与其它计算节点通信&lt;/span>
+&lt;span style="color:#000">ovn_north_addr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>yy:32242 &lt;span style="color:#8f5902;font-style:italic"># ovn北向数据库的地址，yy一般选择某台宿主机ip地址；端口默认为32242，对应k8s default-ovn-north service中的端口号&lt;/span>
+ovs-vsctl &lt;span style="color:#204a87">set&lt;/span> Open_vSwitch . &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-bridge&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>brvpc &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-encap-type&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>geneve &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-encap-ip&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$ovn_encap_ip&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;span style="color:#4e9a06">&lt;/span> external_ids:ovn-remote&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;tcp:&lt;/span>&lt;span style="color:#000">$ovn_north_addr&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 启动ovn-controller&lt;/span>
+systemctl &lt;span style="color:#204a87">enable&lt;/span> --now ovn-controller
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署结束后，应当可以看到至少一个名为brvpc的openvswitch网桥，ovs-vsctl show命令的输出中可以看到名为ovn-xx，类型为geneve的隧道port，remote-ip指向计算节点的ovn-encap-ip。&lt;/p>
+&lt;p>以上ovs的配置，可以使用如下命令查看配置是否正确：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl list Open_vSwitch
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后，用上述部署两台计算节点的ansible脚本进行部署。&lt;/p>
+&lt;p>样例inventory的hosts描述了两台主机用作主备高可用，如果无需高可用，可将其中的一个主机描述删除，仅部署一台。&lt;/p></description></item><item><title>Docs: MTU</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/mtu/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/mtu/</guid><description>
+&lt;p>VPC网络是一个虚拟网络，通过隧道技术在物理网络上构建，因此每个VPC网络报文需要在头部预留出一定的空间给隧道协议使用，这个预留字节数在 pkg/apis/compute/vpcs_ovn.go 的常量 VPC_OVN_ENCAP_COST 定义，默认值为60字节。(注意：3.8版本之前默认值为58字节)。同时，物理网络的MTU一般是1500字节，因此VPC内虚拟机的MTU默认是1440字节。本文介绍在默认情况下，1440字节MTU对应用的影响和解决方案。同时，也介绍如何设置将VPC虚拟机的MTU调整为1500。&lt;/p>
+&lt;h2 id="1440字节mtu对虚拟机应用的影响">1440字节MTU对虚拟机应用的影响&lt;/h2>
+&lt;p>目前看对绝大部分应用，MTU设置是透明的，没有影响。除了以下应用：&lt;/p>
+&lt;h3 id="docker">Docker&lt;/h3>
+&lt;p>从用户反馈看，当虚拟机的MTU为1440时，Docker内运行的应用会受到影响。&lt;/p>
+&lt;p>对于常规Docker应用，需要修改 /etc/docker/daemon.json ，添加如下配置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">&amp;#34;mtu&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1440&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，重启Docker容器。&lt;/p>
+&lt;p>注意：云平台默认会自动注入该配置。&lt;/p>
+&lt;h3 id="docker-compose">Docker Compose&lt;/h3>
+&lt;p>以上修改只会设置Docker的默认网桥docker0的MTU。对于使用Docker Compose的应用，Docker Compose会为每个应用创建一个网桥。需要在每个Docker Compose的配置文件 docker-compose.yml 中添加如下的配置，使得每个Docker Compose添加的网桥MTU也被正确设置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#000">...&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">default&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">driver&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">bridge&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">driver_opts&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">com.docker.network.driver.mtu&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1440&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，需要重建Docker Compose应用，使得该应用对应网桥的MTU设置为1440。&lt;/p>
+&lt;p>具体请参考这篇文章：https://mlohr.com/docker-mtu/&lt;/p>
+&lt;h2 id="设置虚拟机mtu">设置虚拟机MTU&lt;/h2>
+&lt;p>以下介绍如何设置平台参数，使得虚拟机可以使用自定义的MTU值，例如使用1500字节的MTU。&lt;/p>
+&lt;h3 id="控制节点配置">控制节点配置&lt;/h3>
+&lt;p>云平台定义了一个全局的配置 ovn_underlay_mtu 用于设置云平台底层承载VPC流量的物理网络的MTU，该值默认为1500。需要修改该值为 虚拟机MTU + VPC_OVN_ENCAP_COST。例如虚拟机MTU为1500，则 ovn_underlay_mtu = 1560。&lt;/p>
+&lt;p>需要修改如下服务的配置文件的 ovn_underlay_mtu 参数：&lt;/p>
+&lt;ol>
+&lt;li>修改 region 服务的 ovn_underlay_mtu&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc service-config-edit region2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，无需重启服务，立即生效。&lt;/p>
+&lt;ol start="2">
+&lt;li>修改 vpcagent 服务的 ovn_underlay_mtu&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud edit configmaps default-vpcagent
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后，需要重启 vpcagent 服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud rollout restart deployments default-vpcagent
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="计算节点设置">计算节点设置&lt;/h3>
+&lt;ol>
+&lt;li>修改网卡MTU&lt;/li>
+&lt;/ol>
+&lt;p>首先需要将计算节点ovn_encap_ip对应的物理网卡的MTU值设置为 ovn_underlay_mtu 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ip link &lt;span style="color:#204a87">set&lt;/span> eth0 mtu &lt;span style="color:#0000cf;font-weight:bold">1560&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里 eth0 为物理网卡的名称。&lt;/p>
+&lt;p>如果该物理网卡加入了Openvswitch的网桥，则同时需要执行如下命令，将ovs网桥的MTU也设置为跟物理网卡一致：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl &lt;span style="color:#204a87">set&lt;/span> int br0 &lt;span style="color:#000">mtu_request&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1560&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里br0是eth0加入的ovs网桥。&lt;/p>
+&lt;p>同时，需要将改MTU值持久化，这样下次服务器重启的时候自动生效。&lt;/p>
+&lt;p>在CentOS系统，持久化方法为:&lt;/p>
+&lt;p>修改 /etc/sysconfig/network-scripts/ifcfg-eth0，增加 MTU=1560 的配置。&lt;/p>
+&lt;p>以上修改需要针对每个计算节点进行。&lt;/p>
+&lt;ol start="2">
+&lt;li>修改 sdnagent 服务的 ovn_underlay_mtu&lt;/li>
+&lt;/ol>
+&lt;p>需要修改每个计算节点的配置文件 /etc/yunion/host.conf。设置 ovn_underlay_mtu。&lt;/p>
+&lt;ol start="3">
+&lt;li>重启生效&lt;/li>
+&lt;/ol>
+&lt;p>以上修改完成后，需要重启default-host容器生效。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl -n onecloud rollout restart daemonsets default-host
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="eip网关设置">EIP网关设置&lt;/h3>
+&lt;p>如果EIP网关复用计算节点，则无需配置。如果EIP网关独立部署，则同样需要设置 eip网关的 sdnagent 配置文件 (/etc/yunion/sdnagent.conf) 的 ovn_underlay_mtu 设置。&lt;/p>
+&lt;p>修改完成后，需要重启 yunion-sdnagent-eipgw 服务。&lt;/p></description></item><item><title>Docs: 虚拟IP（VIP）</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/vpcvip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/network/vpc/vpcvip/</guid><description>
+&lt;p>Cloudpods现已支持在VPC内或经典网络的IP子网分配虚拟IP给一组虚拟机共享，通过keepalived等高可用软件实现在VIP这组虚拟机之间的漂移，keepalived检测服务在主机上的状态，自动地将虚拟IP设置在服务可用的优先级最高的虚拟机的网卡上。&lt;/p>
+&lt;h2 id="模型概念">模型概念&lt;/h2>
+&lt;p>在资源模型上，VIP绑定到一个反亲和组（instancegroup）。可以通过前端，或者climc的命令，为一个反亲和组绑定一个VIP。绑定后，该VIP可以用于在该反亲和组包含的虚拟机之间使用。&lt;/p>
+&lt;p>同时，VIP通常是为了对外提供服务。对于VPC内的虚拟机，为了允许VPC外能够访问VIP提供的服务，平台允许给VIP绑定EIP。绑定后，VPC外可以通过该EIP访问VIP绑定的服务。&lt;/p>
+&lt;h2 id="climc命令">climc命令&lt;/h2>
+&lt;h3 id="为反亲和组绑定一个vip">为反亲和组绑定一个VIP。&lt;/h3>
+&lt;p>限制：&lt;/p>
+&lt;ol>
+&lt;li>目前一个反亲和组只能绑定一个VIP。&lt;/li>
+&lt;li>如果反亲和组没有虚拟机成员，则可以指定待绑定的VIP的IP子网。绑定后，则该反亲和组只能添加该IP子网下的虚拟机。且这些虚拟机只能有一个虚拟网卡。&lt;/li>
+&lt;li>如果反亲和组已经有虚拟机成员，反亲和组能绑定VIP的前提是反亲和组内的所有虚拟机都加入同一个VPC下的IP子网，并且这些虚拟机都只有一个虚拟网卡。反亲和组绑定的VIP将从这个IP子网内分配。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc instancegroup-attachnetwork &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--ip-addr IP_ADDR&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--alloc-dir ALLOC_DIR&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--reserved&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--require-designated-ip&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--network-id NETWORK_ID&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;instancegroup&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="为vpc内反亲和组绑定eip">为VPC内反亲和组绑定EIP&lt;/h3>
+&lt;p>限制：&lt;/p>
+&lt;ol>
+&lt;li>一个反亲和组只能绑定一个EIP，并且该反亲和组需要已经绑定了VIP之后，才能绑定EIP。绑定后EIP自动映射到对应的VIP。&lt;/li>
+&lt;/ol>
+&lt;p>分为两种情况，一种是自动申请一个EIP，绑定到反亲和组；一种是将已有的EIP绑定到反亲和组。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc instancegroup-create-eip &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--bandwidth BANDWIDTH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--bgp-type BGP_TYPE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--auto-dellocate&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--ip-addr IP_ADDR&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--charge-type CHARGE_TYPE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;instancegroup&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc instancegroup-associate-eip &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--ip-addr IP_ADDR&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--eip-id EIP_ID&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;instancegroup&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="为vpc内反亲和组解绑eip">为VPC内反亲和组解绑EIP&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc instancegroup-dissociate-eip &amp;lt;instancegroup&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="为反亲和组解绑vip">为反亲和组解绑VIP&lt;/h3>
+&lt;p>限制：&lt;/p>
+&lt;ol>
+&lt;li>只有反亲和组没有绑定EIP的前提下，才能解绑该反亲和组的EIP&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc instancegroup-detachnetwork &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--ip-addr IP_ADDR&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="应用举例">应用举例&lt;/h3>
+&lt;p>现要部署一套主备的nginx集群，申请两台虚拟机nginx-master和nginx-slave，在同一个IP子网 192.168.4.0/22下，IP分别为192.168.7.247/22和192.168.7.248/22。&lt;/p>
+&lt;p>创建反亲和组nginx，将nginx-master和nginx-slave加入。&lt;/p>
+&lt;p>为反亲和组nginx绑定VIP 192.168.7.246/22。&lt;/p>
+&lt;p>ningx-master配置如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo yum install -y nginx keepalived
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改/etc/keepalived/keepalived.conf如下：&lt;/p>
+&lt;pre>&lt;code>global_defs {
+notification_email {
+notify@example.cn
+}
+notification_email_from sns-lvs@example.cn
+smtp_server smtp.example.cn
+smtp_connection_timeout 30
+router_id nginx_master # 设置nginx master的id，在一个网络应该是唯一的
+}
+vrrp_script chk_http_port {
+script &amp;quot;/root/check_httpd.sh&amp;quot; #最后手动执行下此脚本，以确保此脚本能够正常执行
+interval 2 #（检测脚本执行的间隔，单位是秒）
+weight 2
+}
+vrrp_instance VI_1 {
+state MASTER # 指定keepalived的角色，MASTER为主，BACKUP为备
+interface eth0 # 当前进行vrrp通讯的网络接口卡(当前centos的网卡)
+virtual_router_id 66 # 虚拟路由编号，主从要一直
+priority 100 # 优先级，数值越大，获取处理请求的优先级越高
+advert_int 1 # 检查间隔，默认为1s(vrrp组播周期秒数)
+authentication {
+auth_type PASS
+auth_pass 1111
+}
+track_script {
+chk_http_port #（调用检测脚本）
+}
+virtual_ipaddress {
+192.168.7.246/22 # 定义虚拟ip(VIP)，可多设，每行一个
+}
+}
+&lt;/code>&lt;/pre>&lt;p>nginx-slave配置如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo yum install -y nginx keepalived
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改/etc/keepalived/keepalived.conf如下：&lt;/p>
+&lt;pre>&lt;code>global_defs {
+notification_email {
+notify@example.cn
+}
+notification_email_from sns-lvs@example.com
+smtp_server smtp.example.cn
+smtp_connection_timeout 30
+router_id nginx_slave # 设置nginx master的id，在一个网络应该是唯一的
+}
+vrrp_script chk_http_port {
+script &amp;quot;/root/check_httpd.sh&amp;quot; #最后手动执行下此脚本，以确保此脚本能够正常执行
+interval 2 #（检测脚本执行的间隔，单位是秒）
+weight 2
+}
+vrrp_instance VI_1 {
+state BACKUP # 指定keepalived的角色，MASTER为主，BACKUP为备
+interface eth0 # 当前进行vrrp通讯的网络接口卡(当前centos的网卡)
+virtual_router_id 66 # 虚拟路由编号，主从要一直
+priority 99 # 优先级，数值越大，获取处理请求的优先级越高
+advert_int 1 # 检查间隔，默认为1s(vrrp组播周期秒数)
+authentication {
+auth_type PASS
+auth_pass 1111
+}
+track_script {
+chk_http_port #（调用检测脚本）
+}
+virtual_ipaddress {
+192.168.7.246/22 # 定义虚拟ip(VIP)，可多设，每行一个
+}
+}
+&lt;/code>&lt;/pre>&lt;p>在nginx-master和nginx-slave上的/root/check_httpd.sh内容如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic">#!/bin/bash
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000">A&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>ps -C nginx --no-header &lt;span style="color:#000;font-weight:bold">|&lt;/span>wc -l&lt;span style="color:#4e9a06">`&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> &lt;span style="color:#000">$A&lt;/span> -eq &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+systemctl restart nginx &lt;span style="color:#8f5902;font-style:italic">#重启nginx&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span> &lt;span style="color:#4e9a06">`&lt;/span>ps -C nginx --no-header &lt;span style="color:#000;font-weight:bold">|&lt;/span>wc -l&lt;span style="color:#4e9a06">`&lt;/span> -eq &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">then&lt;/span> &lt;span style="color:#8f5902;font-style:italic">#nginx重启失败&lt;/span>
+&lt;span style="color:#204a87">exit&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">else&lt;/span>
+&lt;span style="color:#204a87">exit&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">else&lt;/span>
+&lt;span style="color:#204a87">exit&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上配置完成后，分别在nginx-master和nginx-slave重启nginx和keepavlied服务。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl restart nginx keepalived
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此时，可以在nginx-master上通过ip addr查看到eth0增加了附属VIP 192.168.7.246/22。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@nginx-master ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># ip addr show dev eth0&lt;/span>
+2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span style="color:#0000cf;font-weight:bold">1440&lt;/span> qdisc pfifo_fast state UP group default qlen &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
+link/ether 00:24:b1:6d:9b:7d brd ff:ff:ff:ff:ff:ff
+inet 192.168.7.247/22 brd 192.168.7.255 scope global dynamic eth0
+valid_lft 94550864sec preferred_lft 94550864sec
+inet 192.168.7.246/22 scope global secondary eth0
+valid_lft forever preferred_lft forever
+inet6 fe80::224:b1ff:fe6d:9b7d/64 scope link
+valid_lft forever preferred_lft forever
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，为反亲和组nginx绑定一个EIP，则可以在VPC外通过该EIP访问nginx集群。&lt;/p></description></item></channel></rss>

@@ -88,7 +88,7 @@ $ python3 -m pip install --upgrade ansible
 &lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
 &lt;p>部署的工具是 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> , 然后根据需要部署机器的配置， 利用 ansbile 远程登录到待部署的机器安装配置 Cloudpods 服务，以下操作都在本地环境上进行操作。操作步骤如下:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="快速部署">快速部署&lt;/h3>
 &lt;p>可以直接执行run.py来快速部署一个AllInOne的Cloudpods实例，其中&amp;lt;host_ip&amp;gt;为部署所在主机的主IP地址。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -129,7 +129,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的端口
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 版本
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.9.9
+&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.10.1
 &lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
 &lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户密码
@@ -464,4 +464,106 @@ $ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt
 &lt;span style="color:#8f5902;font-style:italic"># 然后查看 /tmp/operator.log 里面有没有相关错误&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 查看 operator 日志当中有没有 requeuing 关键字，一般错误会反馈到这里&lt;/span>
 $ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep operator &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep requeuing
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Docker Compose 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/docker-compose/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/docker-compose/</guid><description>
+&lt;h2 id="前提">前提&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;p>该方案通过 Docker Compose 部署 Cloudpods 多云管理版本，该方式部署的是 All in One 环境，即所有的多云管理服务都使用容器运行在一个节点。&lt;/p>
+&lt;p>该部署方法仅适用于多云管理功能的使用，比如管理公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)，无法使用内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)&lt;/p>
+&lt;p>如果需要使用内置私有云，请使用 &lt;a href="../allinone">All in One 安装&lt;/a> 的方式部署。&lt;/p>
+&lt;/div>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;h3 id="机器配置要求">机器配置要求&lt;/h3>
+&lt;ul>
+&lt;li>最低配置要求: CPU 4核, 内存 8GiB, 存储 100GiB&lt;/li>
+&lt;li>docker 版本: ce-23.0.2
+&lt;ul>
+&lt;li>docker 建议安装最新的 ce 版本，新版本已经包含 docker-compose 插件&lt;/li>
+&lt;li>docker 需要开启容器网络以及 iptables&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="安装配置-docker">安装配置 docker&lt;/h3>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+如果您的环境已经安装了新版本的 docker ，可以跳过改步骤。
+&lt;/div>
+&lt;p>下面以 CentOS 7 安装 docker 举例，如果是其他发行版请自行参考官方文档安装：&lt;a href="https://docs.docker.com/engine/install/">Install Docker Engine&lt;/a> 。&lt;/p>
+&lt;p>国内用户安装 docker-ce 可以使用 aliyun 的仓库，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装必要的一些系统工具&lt;/span>
+$ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+&lt;span style="color:#8f5902;font-style:italic"># 添加软件源信息&lt;/span>
+$ sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;span style="color:#8f5902;font-style:italic"># 更新并安装 docker-ce 以及 compose 插件&lt;/span>
+$ sudo yum makecache fast
+$ sudo yum -y install docker-ce docker-ce-cli docker-compose-plugin
+&lt;span style="color:#8f5902;font-style:italic"># 开启 docker 服务&lt;/span>
+$ sudo systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="运行-cloudpods-cmp">运行 Cloudpods CMP&lt;/h2>
+&lt;p>Docker Compose 环境准备好后，就可以使用 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 里面的 docker-compose.yml 配置文件启动服务了，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
+$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;span style="color:#8f5902;font-style:italic"># 进入 compose 目录&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> compose
+$ ls -alh docker-compose.yml
+&lt;span style="color:#8f5902;font-style:italic"># 运行服务&lt;/span>
+$ docker compose up
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>等服务启动完成后，就可以登陆 &lt;em>https://&amp;lt;本机ip&amp;gt;&lt;/em> 访问前端服务，默认登陆用户密码为：admin 和 admin@123 。&lt;/p>
+&lt;h2 id="操作说明">操作说明&lt;/h2>
+&lt;h3 id="1-服务放到后台运行">1. 服务放到后台运行&lt;/h3>
+&lt;p>可以使用 &amp;lsquo;-d/&amp;ndash;detach&amp;rsquo; 参数把所有服务放到后台运行，命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 所有服务放到后台运行&lt;/span>
+$ docker compose up -d
+&lt;span style="color:#8f5902;font-style:italic"># 服务放到后台后，可以通过 logs 自命令查看输出日志&lt;/span>
+$ docker compose logs -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-登陆-climc-命令行容器">2. 登陆 climc 命令行容器&lt;/h3>
+&lt;p>如果要使用命令行工具对平台做操作，可以使用下面的方法进入容器：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ docker &lt;span style="color:#204a87">exec&lt;/span> -ti compose-climc-1 bash
+Welcome to Cloud Shell :-&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> You may execute climc and other &lt;span style="color:#204a87">command&lt;/span> tools in this shell.
+Please &lt;span style="color:#204a87">exec&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;climc&amp;#39;&lt;/span> to get started
+&lt;span style="color:#8f5902;font-style:italic"># source 认证信息&lt;/span>
+bash-5.1# &lt;span style="color:#204a87">source&lt;/span> /etc/yunion/rcadmin
+bash-5.1# climc user-list
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-查看服务配置和持久化数据">3. 查看服务配置和持久化数据&lt;/h3>
+&lt;p>所有服务的持久化数据都是存储在 &lt;em>ocboot/compose/data&lt;/em> 目录下面的，所有配置都是自动生成的，一般不需要手动修改，下面对各个目录做说明：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree data
+data
+├── etc
+│   ├── nginx
+│   │   └── conf.d
+│   │   └── default.conf &lt;span style="color:#8f5902;font-style:italic"># 前端 nginx 配置&lt;/span>
+│   └── yunion
+│   ├── *.conf &lt;span style="color:#8f5902;font-style:italic"># cloudpods 各个服务配置&lt;/span>
+│   ├── pki &lt;span style="color:#8f5902;font-style:italic"># 证书目录&lt;/span>
+│   ├── rcadmin &lt;span style="color:#8f5902;font-style:italic"># 命令行认证信息&lt;/span>
+├── opt
+│   └── cloud
+│   └── workspace
+│   └── data
+│   └── glance &lt;span style="color:#8f5902;font-style:italic"># 镜像服务存储的镜像目录&lt;/span>
+└── var
+└── lib
+├── influxdb &lt;span style="color:#8f5902;font-style:italic"># influxdb 持久化数据目录&lt;/span>
+└── mysql &lt;span style="color:#8f5902;font-style:italic"># mysql 数据库持久化数据目录&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-删除所有容器">4. 删除所有容器&lt;/h3>
+&lt;p>所有服务的持久化数据都是存储在 &lt;em>ocboot/compose/data&lt;/em> 目录下面的，删除容器不会丢失数据，下次直接用 &lt;em>docker compose up&lt;/em> 重启即可，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除服务&lt;/span>
+$ docker compose down
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="常见问题">常见问题&lt;/h2>
+&lt;h3 id="1-docker-服务没有打开-iptables-和-bridge-导致容器网路无法创建">1. docker 服务没有打开 iptables 和 bridge 导致容器网路无法创建&lt;/h3>
+&lt;p>默认情况下，启动 docker 服务是默认打开 iptables 的，如果在 &lt;em>/etc/docker/daemon.json&lt;/em> 里面设置了 &amp;ldquo;bridge: none&amp;rdquo; 和 &amp;ldquo;iptables: false&amp;rdquo; 则无法使用 docker compose 功能。&lt;/p>
+&lt;p>在运行 docker compose 之前请确保打开了 bridge 和 iptables 功能。&lt;/p>
+&lt;h3 id="2-docker-composeyml-包含了很多服务是怎么生成的">2. docker-compose.yml 包含了很多服务，是怎么生成的？&lt;/h3>
+&lt;p>Cloudpods CMP 多云管理版本包含了很多服务，如果一个一个手写 compose 的配置会非常复杂，所以在 ocboot 里面有个 &lt;em>generate-compose.py&lt;/em> 的脚本，负责生成 docker-compose.yml 文件，可以使用下面命令生成 compose 配置文件：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ python3 generate-compose.py &amp;gt; compose/docker-compose.yml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-如何升级服务">3. 如何升级服务?&lt;/h3>
+&lt;p>通过 docker compose 升级很方便，只用更新 docker-compose.yml 配置文件。&lt;/p>
+&lt;p>比如 &lt;em>ocboot/compose/docker-compose.yml&lt;/em> 更新了，就可以通过 git pull 最新的代码，然后重新启动就可以了，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 使用 git pull 更新&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ocboot
+$ git pull
+&lt;span style="color:#8f5902;font-style:italic"># 重启 compose 服务&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> compose
+$ docker compose down
+$ docker compose up -d
 &lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

@@ -877,7 +877,21 @@ ElasticSearchManager,
 $ make cmd/testcli
 &lt;span style="color:#8f5902;font-style:italic"># 通过命令调试接口&lt;/span>
 $ ./_output/bin/testcli --debug region-list
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加各个资源接口实现">添加各个资源接口实现&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>在对接各个云平台时，一般云平台会提供对应的golang sdk，这里尽量仅使用提供的sdk的认证部分, 其余部分可通过REST API文档自行设计, 这样做有以下好处
+&lt;ul>
+&lt;li>摆脱golang sdk限制&lt;/li>
+&lt;li>可以统一处理err错误，例如后面要用到的cloudprovider.ErrNotFound错误&lt;/li>
+&lt;li>方便实现云账号只读同步及代理&lt;/li>
+&lt;li>轻量, 部分云平台的sdk用了大量指针, 仅仅指针判断会增加很多不必要的代码&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;h3 id="添加各个资源接口实现">添加各个资源接口实现&lt;/h3>
 &lt;p>资源的实现类似于数的生长，自根到枝到叶, 越发扩散，region类似于树根, region底下有vpc, zone&amp;hellip;, zone底下有host, storage&amp;hellip;可依照这个顺序依次实现对应资源的接口&lt;/p>
 &lt;ul>
 &lt;li>添加各个资源的shell命令&lt;/li>

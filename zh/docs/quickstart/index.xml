@@ -185,7 +185,9 @@ Password: admin@123
 &lt;/li>
 &lt;li>
 &lt;p>在控制节点查看host pod日志信息。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看host pod状态&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 先确保启用host-agent，否则不会有host的pod，启用host-agent命令如下&lt;/span>
+$ &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> node in &lt;span style="color:#4e9a06">`&lt;/span>kubectl get nodes &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;NR&amp;gt;1 {print $1}&amp;#39;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span> ocadm node enable-host-agent --node &lt;span style="color:#000">$node&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 查看host pod状态&lt;/span>
 $ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep host
 &lt;span style="color:#8f5902;font-style:italic"># 查看host的日志&lt;/span>
 $ kubectl logs -n onecloud default-host-xxxxxx -c host -f

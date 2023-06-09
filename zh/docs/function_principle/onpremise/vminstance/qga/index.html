@@ -142,7 +142,7 @@ systemctl enable --now qemu-guest-agent
 centos7 下 blacklist 配置是在 /etc/sysconfig/qemu-ga 下面
 $ cat /etc/sysconfig/qemu-ga | grep BLACKLIST_RPC
 BLACKLIST_RPC=guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush,guest-exec,guest-exec-status
-</code></pre><h3 id=windows-安装启动>windows 安装启动</h3><p>windows 需要挂载 virtio-win 的 iso, 打开 iso 找到 guest-agent 目录 安装对应的 guest-agent.</p><h2 id=使用介绍>使用介绍</h2><p>执行 qga 命令需要确保虚机为 running(运行中) 的状态。若虚机内 guest-agent 未安装，则执行的命令会超时失败。</p><h3 id=执行任意-qga-命令>执行任意 qga 命令</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ climc server-qga-command  --help
+</code></pre><h3 id=windows-安装启动>windows 安装启动</h3><p>windows 需要挂载 <a href=https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/>virtio-win</a> 的 iso, 打开 iso 找到 guest-agent 目录 安装对应的 guest-agent.</p><h2 id=使用介绍>使用介绍</h2><p>执行 qga 命令需要确保虚机为 running(运行中) 的状态。若虚机内 guest-agent 未安装，则执行的命令会超时失败。</p><h3 id=执行任意-qga-命令>执行任意 qga 命令</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ climc server-qga-command  --help
 Usage: climc server-qga-command <span style=color:#ce5c00;font-weight:700>[</span>--help<span style=color:#ce5c00;font-weight:700>]</span> &lt;ID&gt; &lt;COMMAND&gt;
 
 Qga-Command server

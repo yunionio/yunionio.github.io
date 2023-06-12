@@ -180,9 +180,6 @@ Password: admin@123
 &lt;p>Cloudpods自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。&lt;/p>
 &lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 Cloudpods 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
 &lt;p>&lt;img src="../images/cloudaccount.png" alt="多云管理">&lt;/p>
-&lt;h2 id="all-in-one-部署视频">All in One 部署视频&lt;/h2>
-&lt;p>本视频主要用来帮助大家了解如何使用 ocboot 部署工具快速以 All in One 的方式部署 Cloudpods 服务，链接如下：&lt;/p>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV19g411e7Eh/">https://www.bilibili.com/video/BV19g411e7Eh/&lt;/a>&lt;/p>
 &lt;h2 id="faq">FAQ&lt;/h2>
 &lt;h3 id="1-在-all-in-one-部署完成后宿主机列表没有宿主机">1. 在 All in One 部署完成后宿主机列表没有宿主机？&lt;/h3>
 &lt;p>如下图所示，若发现环境部署完成后宿主机列表中没有宿主机，可按照以下方式进行排查&lt;/p>
@@ -192,18 +189,16 @@ Password: admin@123
 &lt;p>请确认部署用的yaml文件中是否有&lt;code>as_host: true&lt;/code>配置项，若没有，则表示该节点只作为控制节点使用，不作为计算节点使用，因此宿主机列表中没有宿主机是正常的；&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>在控制节点查看host pod日志信息。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 先确保启用host-agent，否则不会有host的pod，启用host-agent命令如下&lt;/span>
-$ &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> node in &lt;span style="color:#4e9a06">`&lt;/span>kubectl get nodes &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;NR&amp;gt;1 {print $1}&amp;#39;&lt;/span>&lt;span style="color:#4e9a06">`&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">do&lt;/span> ocadm node enable-host-agent --node &lt;span style="color:#000">$node&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">done&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 查看host pod状态&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep host
-&lt;span style="color:#8f5902;font-style:italic"># 查看host的日志&lt;/span>
-$ kubectl logs -n onecloud default-host-xxxxxx -c host -f
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>(1). 若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/p>
+&lt;p>在控制节点排查 host 问题，请参考：&lt;a href="../../function_principle/onpremise/host/troubleshooting/">Host服务问题排障技巧&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
+&lt;/ol>
 &lt;pre>&lt;code># 创建包含宿主机网段的IP子网
 $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
-&lt;p>(2). 若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/p>
+&lt;ol start="2">
+&lt;li>若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/li>
+&lt;/ol>
 &lt;p>&lt;img src="../images/hostnameerror.png" alt="">&lt;/p>
 &lt;/li>
 &lt;/ol>

@@ -17,6 +17,14 @@
 &lt;/ul>
 &lt;h2 id="查看宿主机列表">查看宿主机列表&lt;/h2>
 &lt;p>该功能用于查看宿主机列表的信息。&lt;/p>
+&lt;ol>
+&lt;li>在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入宿主机页面。&lt;/li>
+&lt;li>查看以下参数：
+&lt;ul>
+&lt;li>启用状态：表示宿主机是否能用于创建虚拟机，只有启用状态的宿主机可以创建虚拟机。&lt;/li>
+&lt;li>状态：宿主机的运行状态。&lt;/li>
+&lt;li>服务：服务即宿主机上的host服务，用于管理虚拟机。在线表示host服务正常运行，离线表示host服务异常或未运行。&lt;/li>
+&lt;li>创建时间：宿主机的创建时间。
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 &lt;p>Cloudpods平台宿主机host服务离线的以下情况：&lt;/p>
@@ -27,16 +35,25 @@
 私有云平台宿主机服务离线情况可能有宿主机关机或相关服务异常等。&lt;/li>
 &lt;/ul>
 &lt;/div>
-&lt;ol>
-&lt;li>在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入宿主机页面。&lt;/li>
-&lt;li>查看以下参数：
-&lt;ul>
-&lt;li>基本信息：包括云上ID、ID、名称、状态、域、主机名、标签、共享范围、平台、启用状态、IP、MAC地址、服务、#VM、调度标签、host版本、硬件虚拟化、ISO启动、透传设备数量、区域、可用区、云账号、云订阅、创建时间、更新时间、备注。&lt;/li>
-&lt;li>品牌信息：包括名称、型号、序列号。&lt;/li>
-&lt;li>CPU信息：包括物理CPU、插槽数、超售比、虚拟CPU、当前超售比率、描述、CPU架构、透传设备预留、预留核。&lt;/li>
-&lt;li>内存信息：包括物理容量、超售比、当前超售比率、系统预留、透传设备预留。&lt;/li>
-&lt;li>存储信息：包括根分区容量、存储池容量、类型、当前超售比率、无效存储、透传设备预留。&lt;/li>
-&lt;li>网络接口：包括网络接口信息，包含IP、MAC地址、子网掩码、类型、速率。&lt;/li>
+&lt;/li>
+&lt;li>标签：宿主机上绑定的标签。&lt;/li>
+&lt;li>IP：宿主机的管理IP。&lt;/li>
+&lt;li>#VM：宿主机上的虚拟机数量。&lt;/li>
+&lt;li>CPU架构：包括x86和ARM架构。宿主机和宿主机上的虚拟机CPU架构一致。如x86架构的宿主机只能创建x86架构的虚拟机。&lt;/li>
+&lt;li>物理CPU：宿主机上的物理CPU总数量及宿主机上运行状态的虚拟机CPU核数占宿主机物理CPU的百分比。&lt;/li>
+&lt;li>物理内存：宿主机上的物理内存总量及宿主机上运行状态的虚拟机内存容量占宿主机物理内存容量的百分比。&lt;/li>
+&lt;li>物理存储：宿主机上的物理存储总量及已分配的存储容量占存储总量的百分比。&lt;/li>
+&lt;li>品牌：宿主机的品牌&lt;/li>
+&lt;li>型号：宿主机的型号。&lt;/li>
+&lt;li>SN：序列号等。&lt;/li>
+&lt;li>调度标签：宿主机的调度标签，绑定调度标签的宿主机将按照调度策略调度创建虚拟机。&lt;/li>
+&lt;li>平台：宿主机的平台。&lt;/li>
+&lt;li>云账号：宿主机归属的云账号&lt;/li>
+&lt;li>共享范围：宿主机的共享状态范围，宿主机是域资源，共享范围分为私有、多域共享、全局共享。&lt;/li>
+&lt;li>所属域：宿主机归属的域。&lt;/li>
+&lt;li>区域：宿主机所在的区域。&lt;/li>
+&lt;li>IPMI：IPMI信息，可通过IPMI信息远程连接宿主机。&lt;/li>
+&lt;li>初始账号：通过ssh连接宿主机使用的用户名和密码信息。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ol>
@@ -1017,20 +1034,19 @@ $ climc service-config --config &lt;span style="color:#000">convert_hypervisor_d
 &lt;/ul>
 &lt;/li>
 &lt;/ol></description></item><item><title>Docs: 透传设备</title><link>https://www.cloudpods.org/zh/docs/web_ui/computing/resources/gpu/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/computing/resources/gpu/</guid><description>
-&lt;p>透传设备包括GPU、USB、SR-IOV、NIC等类型的设备，GPU设备主要用于图形处理、深度计算等应用场景。云管平台提供GPU透传功能支持在虚拟机上使用GPU设备。当用户需要使用GPU设备时，为虚拟机绑定GPU卡，目前虚拟机只支持绑定虚拟机所在宿主机上的GPU设备。当用户不再需要使用GPU设备时，可以取消虚拟机与GPU设备的绑定，GPU设备可以分配给宿主机上的其他虚拟机使用。对于这些类型之外的设备通过自定义 PCI 设备类型的方式来支持。&lt;/p>
+&lt;p>GPU设备主要用于图形处理、深度计算等应用场景。云管平台提供GPU透传功能支持在虚拟机上使用GPU设备。当用户需要使用GPU设备时，为虚拟机绑定GPU卡，目前虚拟机只支持绑定虚拟机所在宿主机上的GPU设备。当用户不再需要使用GPU设备时，可以取消虚拟机与GPU设备的绑定，GPU设备可以分配给宿主机上的其他虚拟机使用。&lt;/p>
 &lt;p>透传设备页面仅显示宿主机上的GPU，物理机上的GPU设备不会在此显示，只有当物理机转换成宿主机后，GPU透传设备将会在此页面显示。&lt;/p>
-&lt;p>SR-IOV网卡是一种基于物理硬件的虚拟化技术，可以提高物理 I/O 设备（常见的是网络适配器）的性能与可扩展性。SR-IOV网卡允许在虚拟机之间高效共享 PCIe 设备，由于 SR-IOV 技术是基于硬件实现的，可以使虚拟机获得与宿主机媲美的 I/O 性能。&lt;/p>
-&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/透传设备&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入透传设备页面。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;主机/基础资源/GPU透传&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入GPU透传页面。&lt;/p>
 &lt;p>&lt;img src="../../../images/computing/gpu1.png" alt="">&lt;/p>
 &lt;h2 id="关联虚拟机">关联虚拟机&lt;/h2>
-&lt;p>该功能用于将GPU等透传设备绑定到虚拟机使用，也支持在创建虚拟机时绑定GPU等透传设备。要求关联的虚拟机与GPU等透传设备在同一台宿主机，且虚拟机处于关机状态。&lt;/p>
+&lt;p>该功能用于将GPU设备绑定到虚拟机使用，也支持在创建虚拟机时绑定GPU卡。要求关联的虚拟机与GPU设备在同一台宿主机，且虚拟机处于关机状态。&lt;/p>
 &lt;ol>
 &lt;li>单击透传设备右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联虚拟机对话框。&lt;/li>
 &lt;li>选择宿主机上的虚拟机，默认勾选设置成功后自动启动，即关联虚拟机后自动启动虚拟机。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;h2 id="取消关联虚拟机">取消关联虚拟机&lt;/h2>
-&lt;p>该功能用于取消虚拟机与GPU等透传设备的绑定，取消关联虚拟机的GPU等透传设备可以分配给其他虚拟机使用。虚拟机在关机状态下才可以取消关联。&lt;/p>
+&lt;p>该功能用于取消虚拟机与GPU设备的绑定，取消关联虚拟机的GPU设备可以分配给其他虚拟机使用。虚拟机在关机状态下才可以取消关联。&lt;/p>
 &lt;p>&lt;strong>取消关联虚拟机&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>单击透传设备右侧操作列 &lt;strong>&lt;em>&amp;ldquo;取消关联虚拟机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
@@ -1083,26 +1099,4 @@ GPU卡预留的资源是宿主机CPU、内存、存储超售后的预留的资�
 &lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;/ol>
-&lt;h2 id="自定义透传设备类型">自定义透传设备类型&lt;/h2>
-&lt;p>Cloudpods平台已经支持透传 GPU、USB、SR-IOV、NIC等类型的设备，该功能用于对这些类型之外的设备通过自定义PCI设备类型的方式来支持。&lt;/p>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">说明&lt;/h4>
-&lt;ul>
-&lt;li>只有绑定了宿主机的透传设备才会展示在透传设备列表。&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;ol>
-&lt;li>在透传设备页面，单击顶部“透传设备类型”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建透传设备类型页面。&lt;/li>
-&lt;li>配置以下参数：
-&lt;ul>
-&lt;li>设备类型：设备的类型，如GPU、NPU、USB等。&lt;/li>
-&lt;li>设备型号：设备的型号。&lt;/li>
-&lt;li>设备VendorID：设备的VendorID，添加自定义PCI设备类型之前需要获取。方法请参考&lt;a href="../../../../function_principle/onpremise/vminstance/custom-pci-devices/">自定义PCI设备类型&lt;/a>&lt;/li>
-&lt;li>设备DeviceID：设备的DeviceID，添加自定义PCI设备类型之前需要获取。方法请参考&lt;a href="../../../../function_principle/onpremise/vminstance/custom-pci-devices/">自定义PCI设备类型&lt;/a>&lt;/li>
-&lt;li>宿主机：选择宿主机后，相应宿主机会自动上报相应透传设备，未选择设备需重启host服务生效。&lt;/li>
-&lt;li>热插拔：默认关闭，透传设备是否支持热插拔由设备本身决定，验证后再选择是否启用热插拔。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol></description></item></channel></rss>

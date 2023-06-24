@@ -2093,7 +2093,23 @@ above the threshold. default: 75&lt;span style="color:#ce5c00;font-weight:bold">
 &lt;li>&lt;code>--max-disk-percentage&lt;/code>允许的最大磁盘使用率。默认为&lt;code>75%&lt;/code>。备份过程会检测所输入的&lt;code>--backup-path&lt;/code>所在磁盘的使用率。如果已经达到允许的最大磁盘使用率，就会停止备份，以免备份文件打满磁盘。&lt;/li>
 &lt;li>&lt;code>--light&lt;/code>是否为轻量备份。默认为&lt;code>否&lt;/code>，即，全量备份。轻量备份与全量备份的区别是某些（通常可以自由删除的）业务日志。建议日常只选轻量备份，以节约磁盘、加速备份过程。&lt;/li>
 &lt;li>&lt;code>--max-backups&lt;/code>保留的备份次数。默认保留最新的10次备份。&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 多可用区服务配置</title><link>https://www.cloudpods.org/zh/docs/setup/multi-zone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/multi-zone/</guid><description>
+&lt;/ul>
+&lt;h2 id="手工恢复备份的数据库和k8s配置">手工恢复备份的数据库和k8s配置&lt;/h2>
+&lt;p>ssh登陆控制节点，进入备份目录，以2023-05-28的备份为例，恢复命令如下&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cd /opt/yunion/backup/&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller backup&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># tar -xzvf onecloud.bkup.20230528-000001.tar.gz&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller backup&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cd 20230528-000001/&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># ll&lt;/span>
+total &lt;span style="color:#0000cf;font-weight:bold">181548&lt;/span>
+-rw------- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">185819168&lt;/span> May &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> 00:00 etcd_snapshot_20230528-000001.db
+-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">74493&lt;/span> May &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> 00:00 oc.20230528-000001.yml
+-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">3241&lt;/span> May &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> 00:00 onecloud-operator.20230528-000001.yml
+&lt;span style="color:#8f5902;font-style:italic"># 恢复数据库&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># pv onecloud.sql.20230528-000001.gz | gunzip | mysql -uroot -p$MYSQL_PASSWD -h $MYSQL_HOST&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 恢复k8s各组件服务&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl apply -f oc.20230528-000001.yml&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl apply -f onecloud-operator.20230528-000001.yml&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 多可用区服务配置</title><link>https://www.cloudpods.org/zh/docs/setup/multi-zone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/multi-zone/</guid><description>
 &lt;p>平台有个可用区(zone)的概念，可以理解为对应实际环境中的机房，刚部署完服务后会有一个默认的可用区 zone0 。&lt;/p>
 &lt;p>云平台的物理机管理服务(baremetal-agent), VMware管理服务(esxi-agent)以及虚拟机管理服务(host)是可用区级别的服务，如果实际环境中的服务器，物理机或者管理的 VMware 集群位于不同的机房，需要创建多个可用区，然后在不同的可用区部署这些服务。&lt;/p>
 &lt;p>接下来的文档介绍如何在多个可用区部署这些服务。&lt;/p>

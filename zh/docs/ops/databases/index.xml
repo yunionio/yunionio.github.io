@@ -74,7 +74,7 @@ general_log_file=/var/log/mariadb/mariadb.log
 &lt;/code>&lt;/pre>&lt;p>查看两个从实例的状态，如果出现报错，则说明同步异常，需要修复。&lt;/p>
 &lt;h2 id="修复双主同步的步骤">修复双主同步的步骤&lt;/h2>
 &lt;h3 id="停止集群服务">停止集群服务&lt;/h3>
-&lt;p>为保险起见，首先要停止集群服务，避免再向数据库中写入数据。暂停集群服务的步骤请参见 https://www.cloudpods.org/zh/docs/ops/halt_cluster/ 。&lt;/p>
+&lt;p>为保险起见，首先要停止集群服务，避免再向数据库中写入数据。暂停集群服务的步骤请参见 https://www.cloudpods.org/zh/docs/ops/k8s/halt_cluster/ 。&lt;/p>
 &lt;p>下面需要确定哪个节点是当前的主节点，&lt;em>MySQL的VIP所在节点就是主节点&lt;/em>。&lt;/p>
 &lt;h3 id="停止当前从节点的keepalived">停止当前从节点的keepalived&lt;/h3>
 &lt;p>停止当前从节点的keepalived，以防止MySQL VIP的自动主从切换。&lt;/p>
@@ -141,5 +141,5 @@ Slave_SQL_Running: Yes
 &lt;p>在从节点执行如下命令恢复从节点的keepalived&lt;/p>
 &lt;pre>&lt;code>systemctl start keepalived
 &lt;/code>&lt;/pre>&lt;h3 id="恢复服务">恢复服务&lt;/h3>
-&lt;p>在控制节点，参考 https://www.cloudpods.org/zh/docs/ops/halt_cluster/ 恢复onecloud-operator容器运行，恢复所有服务组件。&lt;/p>
+&lt;p>在控制节点，参考 https://www.cloudpods.org/zh/docs/ops/k8s/halt_cluster/ 恢复onecloud-operator容器运行，恢复所有服务组件。&lt;/p>
 &lt;p>至此，配置完成。&lt;/p></description></item></channel></rss>

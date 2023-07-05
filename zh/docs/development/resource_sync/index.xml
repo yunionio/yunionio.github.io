@@ -827,7 +827,7 @@ ElasticSearchManager,
 &lt;li>为了屏蔽各个云的差异, 我们分离出 &lt;a href="https://github.com/yunionio/cloudmux">Cloudmux&lt;/a> 仓库, 将各个云的资源操作统一放到这个仓库里面&lt;/li>
 &lt;li>每一类资源都在 &lt;a href="https://github.com/yunionio/cloudmux/blob/master/pkg/cloudprovider/resources.go">Resource&lt;/a> 可以找到对应的接口&lt;/li>
 &lt;li>对于每一个云来说基本实现&lt;strong>Resource&lt;/strong>里面定义的接口，就完成了80%的云平台接入&lt;/li>
-&lt;li>这里的实现文件列表为 pkg/multicloud/testcloud/&lt;/li>
+&lt;li>资源接口的实现文件列表对应路径应该在 pkg/multicloud/testcloud/ 中&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
@@ -836,7 +836,7 @@ ElasticSearchManager,
 &lt;li>云账号接入类似于资源接口, 接口定义在&lt;a href="https://github.com/yunionio/cloudmux/blob/master/pkg/cloudprovider/cloudprovider.go">ICloudProvider&lt;/a>, 需要实现&lt;strong>ICloudProviderFactory&lt;/strong>和&lt;strong>ICloudProvider&lt;/strong>&lt;/li>
 &lt;li>&lt;strong>ICloudProviderFactory&lt;/strong> 是校验云账号及云账号属性的接口&lt;/li>
 &lt;li>&lt;strong>ICloudProvider&lt;/strong> 是云账号真正获取及操作云平台资源的入口&lt;/li>
-&lt;li>这里的实现文件在 pkg/multicloud/testcloud/provider/&lt;/li>
+&lt;li>云账号接入的实现文件对应路径应该在 pkg/multicloud/testcloud/provider/ 中&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>
@@ -892,7 +892,7 @@ $ ./_output/bin/testcli --debug region-list
 &lt;/ul>
 &lt;/div>
 &lt;h3 id="添加各个资源接口实现">添加各个资源接口实现&lt;/h3>
-&lt;p>资源的实现类似于数的生长，自根到枝到叶, 越发扩散，region类似于树根, region底下有vpc, zone&amp;hellip;, zone底下有host, storage&amp;hellip;可依照这个顺序依次实现对应资源的接口&lt;/p>
+&lt;p>资源的实现类似于树的生长，自根到枝到叶, 越发扩散，region类似于树根, region底下有vpc, zone&amp;hellip;, zone底下有host, storage&amp;hellip;可依照这个顺序依次实现对应资源的接口&lt;/p>
 &lt;ul>
 &lt;li>添加各个资源的shell命令&lt;/li>
 &lt;li>根据资源接口定义实现各个资源相应的接口&lt;/li>

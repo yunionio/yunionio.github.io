@@ -2860,7 +2860,23 @@ Body:
 {
 &amp;quot;Msg&amp;quot;: &amp;quot;This is a validate message.&amp;quot;
 }
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 监控</title><link>https://www.cloudpods.org/zh/docs/development/monitor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/monitor/</guid><description/></item><item><title>Docs: 贡献文档</title><link>https://www.cloudpods.org/zh/docs/development/docs-dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/docs-dev/</guid><description>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 监控</title><link>https://www.cloudpods.org/zh/docs/development/monitor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/monitor/</guid><description/></item><item><title>Docs: 编排</title><link>https://www.cloudpods.org/zh/docs/development/orchestration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/orchestration/</guid><description>
+&lt;p>平台的编排系统使用了 Helm 这个通用工具来实现，如果不熟悉 Helm 这个工具，可以先参考&lt;a href="https://helm.sh/zh/docs/intro/using_helm/">官方文档&lt;/a>做一些了解。&lt;/p>
+&lt;p>其中有以下3个概念需要理解：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora 的 软件包仓库，只不过它是供 Kubernetes 包所使用的。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Release 是运行在 Kubernetes 集群中的 chart 的实例。一个 chart 通常可以在同一个集群中安装多次。每一次安装都会创建一个新的 release。以 MySQL chart为例，如果你想在你的集群中运行两个数据库，你可以安装该chart两次。每一个数据库都会拥有它自己的 release 和 release name。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="其他说明">其他说明&lt;/h2>
+&lt;p>以下文档所有的 API 都有 climc 命令行工具对应的自命令，通过加上 &amp;lsquo;&amp;ndash;debug&amp;rsquo; 参数可以清楚的看到 HTTP 请求以及相应，加上 &amp;lsquo;&amp;ndash;help&amp;rsquo; 信息参数就可以查看到支持的选项。&lt;/p>
+&lt;p>强烈建议使用 &amp;lsquo;climc &amp;ndash;debug&amp;rsquo; 的方式来执行步骤，然后查看相关 API 来理解相关接口。&lt;/p></description></item><item><title>Docs: 贡献文档</title><link>https://www.cloudpods.org/zh/docs/development/docs-dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/docs-dev/</guid><description>
 &lt;p>Cloudpods 文档使用 markdown 编写，所有内容都放到 &lt;a href="https://github.com/yunionio/docs.git">https://github.com/yunionio/docs.git&lt;/a> 这个仓库里面管理，然后使用 &lt;a href="https://gohugo.io/">hugo&lt;/a> 这个工具把文档转换成 HTML 静态网站，最后发布到 &lt;a href="https://www.cloudpods.org">https://www.cloudpods.org&lt;/a>。&lt;/p>
 &lt;p>本文介绍如何搭建文档编写环境，以及如何贡献文档等注意事项。&lt;/p>
 &lt;h2 id="在网页编辑已有文档">在网页编辑已有文档&lt;/h2>

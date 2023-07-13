@@ -4,7 +4,7 @@
 &lt;p>存储虚拟磁盘的本地目录需要在宿主机的配置文件里显示声明。host服务的配置项 local_image_path 指定本宿主机用来保存虚拟机磁盘的目录。&lt;/p>
 &lt;h2 id="如何添加本地存储目录">如何添加本地存储目录？&lt;/h2>
 &lt;ol>
-&lt;li>修改/etc/yunion/host.conf，在 local_image_path 的字符串数组中添加新的本地磁盘：&lt;/li>
+&lt;li>修改/etc/yunion/host.conf，则 local_image_path 的字符串数组中添加新的本地磁盘：&lt;/li>
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">local_image_path&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">/opt/cloud/workspace/disks&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
@@ -55,59 +55,4 @@ always_recycle_diskfile: true
 &lt;h2 id="冷迁移">冷迁移&lt;/h2>
 &lt;p>TODO&lt;/p>
 &lt;h2 id="热迁移">热迁移&lt;/h2>
-&lt;p>TODO&lt;/p></description></item><item><title>Docs: 使用 LVM 本地存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</guid><description>
-&lt;h2 id="lvm-是什么">LVM 是什么&lt;/h2>
-&lt;p>LVM（Logical Volume Manager）是一种逻辑卷管理器，可以将一个或多个物理存储设备抽象为一个或多个逻辑卷，并将逻辑卷分配给文件系统和其他应用程序使用。&lt;/p>
-&lt;h2 id="cloudpods-如何添加-lvm-存储">cloudpods 如何添加 LVM 存储&lt;/h2>
-&lt;ol>
-&lt;li>修改/etc/yunion/host.conf，在 lvm_volume_groups 的字符串数组中添加新的 VG：&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">lvm_volume_groups&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">storage1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># vgname&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当然需要提前确保这个 VG 是存在的&lt;/p>
-&lt;pre>&lt;code>$ vgs
-VG #PV #LV #SN Attr VSize VFree
-storage1 1 1 0 wz--n- &amp;lt;200.00g &amp;lt;170.00g
-&lt;/code>&lt;/pre>&lt;ol start="2">
-&lt;li>重启host服务&lt;/li>
-&lt;/ol>
-&lt;p>host服务重启后，稍等片刻，查看宿主机的存储列表，就能看到这个新的存储注册上来了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc storage-list --host &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>eg:&lt;/p>
-&lt;pre>&lt;code>climc storage-list --host 12880086-034d-46b0-89ca-6d4f51d2de6a
-+--------------------------------------+--------------------------------------+----------+----------------------+--------+--------------+-------------+---------+--------------+
-| ID | Name | Capacity | Actual_capacity_used | Status | Storage_type | Medium_type | Enabled | public_scope |
-+--------------------------------------+--------------------------------------+----------+----------------------+--------+--------------+-------------+---------+--------------+
-| 86259ab3-cf7b-4f19-8fd6-0c49094638aa | host_192.168.222.102_lvm_storage_0 | 204796 | 0 | online | lvm | rotate | true | none |
-+--------------------------------------+--------------------------------------+----------+----------------------+--------+--------------+-------------+---------+--------------+
-&lt;/code>&lt;/pre>&lt;h2 id="如何创建一个-vg">如何创建一个 VG&lt;/h2>
-&lt;p>以下是一个简要的流程：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 如: /dev/sdb 是可以给虚机使用的磁盘，首先创建 PV.&lt;/span>
-pvcreate /dev/sdb
-&lt;span style="color:#8f5902;font-style:italic"># storage1 则是我们创建的 VG.&lt;/span>
-vgcreate storage1 /dev/sdb
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何删除-lvm-存储">如何删除 LVM 存储&lt;/h2>
-&lt;p>和删除本地存储的步骤类似：&lt;/p>
-&lt;ol>
-&lt;li>需要确保所有的虚拟磁盘都被删除，特别需要留意被伪删除的磁盘，以及被标记为系统资源的磁盘:&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看所有的磁盘，包括不再执行命令用户所在项目下的所有磁盘，以及被标记为系统资源的磁盘&lt;/span>
-climc disk-list --storage &amp;lt;storage_id&amp;gt; --scope system --system
-&lt;span style="color:#8f5902;font-style:italic"># 查看所有的未删除的磁盘&lt;/span>
-climc disk-list --storage &amp;lt;storage_id&amp;gt; --scope system --system --pending-delete
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
-&lt;li>解除存储和宿主机的关联关系：&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-storage-detach &amp;lt;host_id&amp;gt; &amp;lt;storage_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
-&lt;li>删除存储&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc storage-delete &amp;lt;storage_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>
-&lt;p>到宿主机，修改 /etc/yunion/host.conf，将该存储所在路径从 lvm_volume_groups 删除&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>重启host服务&lt;/p>
-&lt;/li>
-&lt;/ol></description></item></channel></rss>
+&lt;p>TODO&lt;/p></description></item></channel></rss>

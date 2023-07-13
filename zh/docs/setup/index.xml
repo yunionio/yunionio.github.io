@@ -1998,7 +1998,7 @@ Password: admin@123
 &lt;p>分别创建 aarch64 和 x86_64 架构的虚拟机后，可以在虚拟机的列表页面看到每台虚拟机的 CPU 架构，截图如下:&lt;/p>
 &lt;p>&lt;img src="../images/vm-hybrid-list.png" alt="虚拟机列表页面">&lt;/p></description></item><item><title>Docs: 更换前端证书</title><link>https://www.cloudpods.org/zh/docs/setup/config-ssl-certs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/config-ssl-certs/</guid><description>
 &lt;p>默认部署完成后，访问前端界面，浏览器会提示不安全的 SSL 连接，原因是前端默认使用的是自签发的证书。本文介绍如何使用自定义证书替换掉前端默认的证书。&lt;/p>
-&lt;h2 id="操作步骤">操作步骤&lt;/h2>
+&lt;h2 id="更换前端证书操作步骤">更换前端证书操作步骤&lt;/h2>
 &lt;p>假设已经准备好的证书文件为：&lt;code>cert.pem&lt;/code> 和 &lt;code>cert.key&lt;/code>，域名为 &lt;code>foo.bar.com&lt;/code> 。&lt;/p>
 &lt;h3 id="1-将证书导入-kubernetes-集群">1. 将证书导入 kubernetes 集群&lt;/h3>
 &lt;p>kubernetes 使用 secret 这种资源保存证书内容，然后前端服务使用 ingress 引用对应的证书，提供 HTTPS 连接。为了使用自定证书，需要先把证书保存到集群。&lt;/p>
@@ -2021,7 +2021,41 @@ tls:
 default:
 api_server: https://foo.bar.com
 ...
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后就可以通过 &lt;code>https://foo.bar.com&lt;/code> 访问前端了。&lt;/p></description></item><item><title>Docs: nginx配置</title><link>https://www.cloudpods.org/zh/docs/setup/behindnginx/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/behindnginx/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置完成后就可以通过 &lt;code>https://foo.bar.com&lt;/code> 访问前端了。&lt;/p>
+&lt;h2 id="更改前端https-443端口为其它端口的方法步骤">更改前端HTTPS 443端口为其它端口的方法步骤&lt;/h2>
+&lt;p>假设平台登陆地址为https://10.127.90.221，更改443端口为8443&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编辑 traefik-ingress-lb 的configmap，找到address = &amp;#34;:443&amp;#34;，把443改为8443&lt;/span>
+$ kubectl edit cm -n kube-system traefik-ingress-lb
+&lt;span style="color:#8f5902;font-style:italic"># Please edit the object below. Lines beginning with a &amp;#39;#&amp;#39; will be ignored,&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># and an empty file will abort the edit. If an error occurs while saving this file will be&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># reopened with the relevant failures.&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic">#&lt;/span>
+apiVersion: v1
+data:
+traefik.toml: &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000">logLevel&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;info&amp;#34;&lt;/span>
+&lt;span style="color:#000">insecureSkipVerify&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;span style="color:#000">defaultEntryPoints&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;http&amp;#34;&lt;/span>, &lt;span style="color:#4e9a06">&amp;#34;https&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>api&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">entryPoint&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;traefik&amp;#34;&lt;/span>
+&lt;span style="color:#000">dashboard&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>kubernetes&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.traefik&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">address&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;:8091&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.http&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;:80&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.http.redirect&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">entryPoint&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;https&amp;#34;&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>entryPoints.https&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;span style="color:#000">address&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;:8443&amp;#34;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 重启traefik-ingress-controller的pods&lt;/span>
+$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep traefik-ingress &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>xargs kubectl delete pods -n kube-system
+&lt;span style="color:#8f5902;font-style:italic"># 等新的traefik-ingress-controller pods状态为Running，修改8443端成功&lt;/span>
+$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep traefik-ingress
+traefik-ingress-controller-49fmk 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 42s
+&lt;span style="color:#8f5902;font-style:italic"># 浏览器输入https://10.127.90.221:8443访问控制台，ip为原控制台的地址&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: nginx配置</title><link>https://www.cloudpods.org/zh/docs/setup/behindnginx/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/behindnginx/</guid><description>
 &lt;p>部署完成后，如果要通过nginx将Cloudpods的前端暴露到外网访问，nginx的推荐配置如下。注意需要专门为websocket的流量增加转发规则。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8f5902;font-style:italic"># vi: ft=nginx
 &lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">server&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>

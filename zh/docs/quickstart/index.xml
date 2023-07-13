@@ -111,139 +111,17 @@ $ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="c
 &lt;h4 class="alert-heading">注意&lt;/h4>
 如果待部署的主机是一台虚拟机，默认是不会在虚拟机里面部署内置私有云虚拟化相关组件的，如果需要在虚拟机里面使用内置私有云（相当于嵌套虚拟化），请使用&lt;a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE%E9%83%A8%E7%BD%B2">自定义配置部署&lt;/a>。
 &lt;/div>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
+&lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">中国大陆&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">其他地区&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
 $ ./run.py &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
+&lt;p>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py &amp;lt;host_ip&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这种方式其实是自动在当前目录生成一个名为config-allinone-current.yaml的配置文件，基于该配置文件的参数来执行部署。&lt;/p>
-&lt;h3 id="自定义配置部署">自定义配置部署&lt;/h3>
-&lt;p>也可以我们手工编辑一个配置文件，基于该配置文件，采用run.py来实现部署。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 编写 config-allinone.yml 文件&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
-&lt;/span>&lt;span style="color:#4e9a06"># mariadb_node 表示需要部署 mariadb 服务的节点
-&lt;/span>&lt;span style="color:#4e9a06">mariadb_node:
-&lt;/span>&lt;span style="color:#4e9a06"> # 待部署节点 ip
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> # 待部署节点登录用户
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # mariadb 的用户
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # mariadb 用户密码
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 Cloudpods 服务的节点
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # 数据库连接地址
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> # 数据库用户
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # 数据库密码
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的 ip
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的端口
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 版本
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.10.3
-&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
-&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods 登录用户密码
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_user_password: admin@123
-&lt;/span>&lt;span style="color:#4e9a06"> # 该节点作为 Cloudpods 私有云计算节点
-&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
-&lt;/span>&lt;span style="color:#4e9a06"> # 虚拟机强行作为 Cloudpods 内置私有云计算节点（默认为 false）。开启此项时，请确保as_host: true
-&lt;/span>&lt;span style="color:#4e9a06"> as_host_on_vm: true
-&lt;/span>&lt;span style="color:#4e9a06"> # 设置镜像仓库，如果待部署的机器处于海外，可以用 dockerhub 的镜像仓库：docker.io/yunion
-&lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunion
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py ./config-allinone.yml&lt;/code> 部署集群了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开始部署&lt;/span>
-$ ./run.py ./config-allinone.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="部署完成">部署完成&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">....
-&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
-Initialized successfully!
-Web page: https://10.168.26.216
-User: admin
-Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
-&lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
-&lt;h2 id="开始使用cloudpods">开始使用Cloudpods&lt;/h2>
-&lt;h3 id="创建第一台虚拟机">创建第一台虚拟机&lt;/h3>
-&lt;p>通过如下三步创建出第一台虚拟机：&lt;/p>
-&lt;h4 id="1-导入镜像">1. 导入镜像&lt;/h4>
-&lt;p>浏览位于 &lt;a href="https://cloud.centos.org/centos/7/images/">CentOS 7云主机镜像&lt;/a> ，选择一个GenericCloud 镜像，拷贝镜像URL。&lt;/p>
-&lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>系统镜像&lt;/code>，选择 &lt;code>上传&lt;/code>。输入镜像名称，选择 &lt;code>输入镜像URL&lt;/code>，粘贴上述CentOS 7镜像URL，选择 &lt;code>确定&lt;/code>。&lt;/p>
-&lt;p>可以访问 &lt;a href="https://docs.openstack.org/image-guide/obtain-images.html">https://docs.openstack.org/image-guide/obtain-images.html&lt;/a> 获得更多的虚拟机镜像。&lt;/p>
-&lt;h4 id="2-创建网络vpc和ip子网">2. 创建网络（VPC和IP子网）&lt;/h4>
-&lt;p>[新建VPC] 在 &lt;code>网络&lt;/code> 菜单，选择 &lt;code>VPC&lt;/code> 子菜单，选择 &lt;code>新建&lt;/code>。输入名称，例如 &lt;code>vpc0&lt;/code>，选择目标网段，例如 &lt;code>192.168.0.0/16&lt;/code>。点击 &lt;code>新建&lt;/code>。&lt;/p>
-&lt;p>[新建IP子网] VPC创建完成后，选择 &lt;code>IP子网&lt;/code> 子菜单，选择 &lt;code>新建&lt;/code>。输入名称，例如 &lt;code>vnet0&lt;/code>，选择VPC为刚才创建的VPC &lt;code>vpc0&lt;/code>，选择可用区，输入 &lt;code>子网网段&lt;/code>，例如 &lt;code>192.168.100.0/24&lt;/code>。点击 &lt;code>新建&lt;/code>。&lt;/p>
-&lt;p>&lt;a href="../../function_principle/onpremise/network/examples">典型网络配置&lt;/a>提供了几种常见的宿主机网络配置，请参考。&lt;/p>
-&lt;h4 id="3-创建虚拟机">3. 创建虚拟机&lt;/h4>
-&lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>虚拟机&lt;/code>，选择 &lt;code>新建&lt;/code>。在此界面输入主机名，选择镜像和IP子网，创建虚拟机。&lt;/p>
-&lt;h3 id="导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源&lt;/h3>
-&lt;p>Cloudpods自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。&lt;/p>
-&lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 Cloudpods 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
-&lt;p>&lt;img src="../images/cloudaccount.png" alt="多云管理">&lt;/p>
-&lt;h2 id="faq">FAQ&lt;/h2>
-&lt;h3 id="1-在-all-in-one-部署完成后宿主机列表没有宿主机">1. 在 All in One 部署完成后宿主机列表没有宿主机？&lt;/h3>
-&lt;p>如下图所示，若发现环境部署完成后宿主机列表中没有宿主机，可按照以下方式进行排查&lt;/p>
-&lt;p>&lt;img src="../images/nohost.png" alt="">&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>请确认部署用的yaml文件中是否有&lt;code>as_host: true&lt;/code>配置项，若没有，则表示该节点只作为控制节点使用，不作为计算节点使用，因此宿主机列表中没有宿主机是正常的；&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>在控制节点排查 host 问题，请参考：&lt;a href="../../function_principle/onpremise/host/troubleshooting/">Host服务问题排障技巧&lt;/a>&lt;/p>
-&lt;ol>
-&lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
-&lt;/ol>
-&lt;pre>&lt;code># 创建包含宿主机网段的IP子网
-$ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
-&lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
-&lt;ol start="2">
-&lt;li>若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="../images/hostnameerror.png" alt="">&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="2-在-all-in-one-中找不到虚拟机界面">2. 在 All in One 中找不到虚拟机界面？&lt;/h3>
-&lt;p>All in One 部署的节点会部署 Cloudpods host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 Cloudpods 环境中没有启用宿主机。&lt;/p>
-&lt;p>请到 &lt;code>管理后台&lt;/code> 界面，点击 &lt;code>主机/基础资源/宿主机&lt;/code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>如果要使用 Cloudpods 私有云虚拟机，需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
-&lt;/div>
-&lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
-&lt;h3 id="3-修改节点的-hostname-有些服务启动失败">3. 修改节点的 hostname ，有些服务启动失败&lt;/h3>
-&lt;p>k8s 管理节点，依赖于 hostname，请改回去。&lt;/p>
-&lt;h3 id="4-如何重装">4. 如何重装&lt;/h3>
-&lt;ol>
-&lt;li>
-&lt;p>执行 &lt;code>kubeadm reset -f&lt;/code> 删除 kubernetes 集群&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>重新运行 ocboot 的脚本&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>等待运行完毕，使用&lt;code>kubectl edit deployment onecloud-operator -n onecloud&lt;/code>加入下列参数，然后保存关闭。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="../images/oo_syncuser.png" alt="">&lt;/p>
-&lt;ol start="4">
-&lt;li>第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li>
-&lt;/ol>
-&lt;h3 id="5-其它问题">5. 其它问题？&lt;/h3>
-&lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: Kubernetes Helm 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
+&lt;/div>&lt;/div></description></item><item><title>Docs: Kubernetes Helm 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>

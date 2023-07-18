@@ -193,98 +193,7 @@ $ kubectl get oc -n onecloud -o yaml
 &lt;li>&lt;strong>Deployment&lt;/strong>： default-meter&lt;/li>
 &lt;li>&lt;strong>Pod&lt;/strong>： default-meter-xxx&lt;/li>
 &lt;li>&lt;strong>功能&lt;/strong>：计费计量功能&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 组件pod常用运维命令</title><link>https://www.cloudpods.org/zh/docs/ops/commonops/</link><pubDate>Wed, 10 Nov 2021 18:54:59 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/commonops/</guid><description>
-&lt;h3 id="查看组件pod运行情况">查看组件pod运行情况&lt;/h3>
-&lt;p>系统组件都以 k8s pod的形式运行，通过以下命令查看平台的系统组件以及运行情况等。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># -n表示namespace的意思，目前我们的服务都部署在onecloud namespace下，查看所有组件的pod的运行情况&lt;/span>
-$ kubectl get pods -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># -o wide查看pod的更多详细信息，比如运行在哪个节点上&lt;/span>
-$ kubectl get pods -n onecloud -o wide
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定pod资源的详细信息，如查看region组件的pod的详细信息&lt;/span>
-$ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
-$ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
-$ kubectl -n onecloud delete pods default-host-xxxxx
-$ kubectl rollout restart daemonset -n onecloud default-host
-&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
-$ kubectl rollout restart deployment -n onecloud default-web
-&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
-&lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，平台服务都以default开头&lt;/span>
-$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
-&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
-$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
-&lt;p>平台所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以region服务为例更新其configmaps配置信息&lt;/span>
-$ kubectl edit configmaps default-region -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改完成后，重启服务&lt;/span>
-$ kubectl -n onecloud rollout restart deployment default-region
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
-&lt;p>查看持久化服务日志，请参考&lt;a href="../backendlogs">持久化后端日志&lt;/a>&lt;/p>
-&lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先需要找到region服务所在pod&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region服务容器的日志，其中-f表示follow，即持续输出日志，类似于journalctl的 -f；--since 5m 表示查看近5分钟的日志信息。按CTRL+C退出日志输出&lt;/span>
-$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> -f --since 5m
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region容器日志，将最近5分钟的所有日志到region.log&lt;/span>
-$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> --since 5m &amp;gt; region.log
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 若有些服务有两个容器，如host服务有名称为host和host-image的容器，此时查看容器命令时需要加&amp;#39;-c&amp;#39; 指定查看哪个容器的日志&lt;/span>
-$ kubectl logs -n onecloud &lt;span style="color:#000">$host_pod_name&lt;/span> -c host-image -f
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看平台版本信息">查看平台版本信息&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 其中onecloudcluster 可以简写成oc；default为OneCloudCluster的名称；-o yaml即以yaml形式输出onecloudcluster类型资源的API对象。&lt;/span>
-$ kubectl get onecloudcluster -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep version
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看mysql账户密码信息">查看MySQL账户密码信息&lt;/h3>
-&lt;p>采用默认部署数据库的方式，在平台部署完成后需要通过以下命令获取连接MySql的用户名和密码。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看MySQL的配置连接信息，其中oc为onecloudcluster；default为oc的名称；grep -A 4即属于匹配后4行数据。&lt;/span>
-$ kubectl get oc -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看oc的的api对象信息">查看OC的的API对象信息&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看OC的运行情况&lt;/span>
-$ kubectl get onecloudcluster -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以yaml文件的形式查看OC的API对象信息，该信息中包含集群的所有配置信息。&lt;/span>
-$ kubeclt get oc -n onecloud -o yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="其它常用管理命令">其它常用管理命令&lt;/h3>
-&lt;p>kubectl更多命令请参考kubectl官方文档。
-&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">https://kubernetes.io/zh/docs/reference/kubectl/&lt;/a>&lt;/p></description></item><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org/zh/docs/ops/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/backendlogs/</guid><description>
-&lt;p>Cloudpods平台自&lt;code>3.7.6&lt;/code>版本后，operator服务 结合 kubeserver 会默认部署 grafana 和 loki 提供查看后端服务日志的功能。&lt;/p>
-&lt;p>查看日志只用登录 grafana 即可，默认的 grafana 访问方式是以 ingress 的方式暴露服务。&lt;/p>
-&lt;h3 id="访问grafana">访问Grafana&lt;/h3>
-&lt;ol>
-&lt;li>访问Grafana的地址默认为 &lt;code>https://控制节点IP地址/grafana&lt;/code>，默认登录密码为&lt;code>admin / admin@123&lt;/code>。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="../images/grafanahome.png" alt="">&lt;/p>
-&lt;ol start="2">
-&lt;li>点击上图中的2 explore 按钮，进入Loki日志查询页面。如在该页面可查询某节点的host pod日志等。在查询条件中输入&lt;code>{app=&amp;quot;host&amp;quot;,hostname=&amp;quot;testhost&amp;quot;}&lt;/code>，在下方将会显示出该节点上的host pod日志。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="../images/explore.png" alt="">&lt;/p>
-&lt;h3 id="查询条件">查询条件&lt;/h3>
-&lt;p>loki 的日志服务查询是按标签进行过滤的，常用的标签 &amp;ldquo;app&amp;rdquo; 对应服务的名称，&amp;ldquo;hostname&amp;rdquo; 对应 pod 所在的机器，“container_name&amp;quot; 对应容器名称。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如要查看 &amp;#34;ovn-north&amp;#34; 容器的日志&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">container_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;ovn-north&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 查看节点 test 上的 host 服务日志&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>,hostname&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 查看 baremetal 服务日志&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;baremetal-agent&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多使用方法请参考 &lt;a href="https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md">https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md&lt;/a>&lt;/p>
-&lt;h3 id="使用举例">使用举例&lt;/h3>
-&lt;p>如查询region服务过去3小时的日志。&lt;/p>
-&lt;p>查询条件可设置为&lt;code>{app=&amp;quot;region&amp;quot;}&lt;/code>，时间过滤设置为“Last 3 hours” 。&lt;/p>
-&lt;p>&lt;img src="../images/explore-region.png" alt="">&lt;/p></description></item><item><title>Docs: 清理日志</title><link>https://www.cloudpods.org/zh/docs/ops/log/</link><pubDate>Wed, 08 Dec 2021 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/</guid><description>
-&lt;h3 id="清理服务日志">清理服务日志&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看具体服务的分表日志&lt;/span>
-$ climc logs-show --service &amp;lt;service_type&amp;gt; splitable
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/logtable2.png" alt="">&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除超过6个月的分表&lt;/span>
-$ climc logs-purge-splitable --service &amp;lt;service_type&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/deletelogtable2.png" alt="">&lt;/p>
-&lt;h3 id="清理数据库日志">清理数据库日志&lt;/h3>
-&lt;p>在部署日志的服务器上执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置自动清除binlog的保留时间&lt;/span>
-$ vi /etc/my.cnf
-&lt;span style="color:#000">expire_logs_days&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/binlog.png" alt="">&lt;/p></description></item><item><title>Docs: 清理无用镜像</title><link>https://www.cloudpods.org/zh/docs/ops/clearimage/</link><pubDate>Wed, 08 Dec 2021 19:12:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/clearimage/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 清理无用镜像</title><link>https://www.cloudpods.org/zh/docs/ops/clearimage/</link><pubDate>Wed, 08 Dec 2021 19:12:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/clearimage/</guid><description>
 &lt;h3 id="清理无用docker镜像">清理无用docker镜像&lt;/h3>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 清理docker image&lt;/span>
 $ docker system prune --all --force --volumes
@@ -742,7 +651,7 @@ sc query telegraf
 &lt;h3 id="host服务为什么会变成离线">Host服务为什么会变成离线？&lt;/h3>
 &lt;p>region的HostPingDetectionTask将超过3分钟未收到ping的host服务置为offline，并将宿主机上的虚拟机状态设置为unknown。&lt;/p>
 &lt;h3 id="宿主机的host服务启动失败且报错fail-to-get-network-infono-networks该怎么解决">宿主机的Host服务启动失败，且报错“Fail to get network info：no networks”，该怎么解决？&lt;/h3>
-&lt;p>该问题一般是没有为宿主机注册网络，需要在云管平台为宿主机创建一个IP子网或使用Climc命令在控制节点创建一个网络。&lt;/p>
+&lt;p>该问题一般是没有为宿主机网卡的IP地址注册IP子网，云平台根据此信息判断宿主机对接的二层网络信息。为解决这个问题，需要在云管平台为宿主机创建一个包含宿主机IP地址的IP子网或使用climc命令在控制节点创建一个网络。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-create bcast0 host02 10.168.222.226 10.168.222.226 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> --gateway 10.168.222.1
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="宿主机mac改变会导致host服务离线需要更改宿主机在平台注册的mac地址具体步骤如下">宿主机MAC改变会导致Host服务离线，需要更改宿主机在平台注册的MAC地址，具体步骤如下&lt;/h3>
 &lt;ul>
@@ -752,66 +661,27 @@ sc query telegraf
 $ climc host-remove-netif 092231af-eebc-456f-8a21-3ab7c944f20c 18:9b:a5:81:4f:17
 $ climc host-add-netif --ip 100.91.1.22 092231af-eebc-456f-8a21-3ab7c944f20c 97e29a73-6615-4d5b-8b67-96bb13b80b90 18:9b:a5:81:4f:16 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 高可用维护</title><link>https://www.cloudpods.org/zh/docs/ops/ha/</link><pubDate>Tue, 08 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/</guid><description>
-&lt;h2 id="高可用vip的主动切换">高可用VIP的主动切换&lt;/h2>
-&lt;p>高可用集群通过Keepalived来维护主从节点的切换，平时VIP在主节点，由主节点提供服务。在主节点宕机情况下，会自动切换到备节点，由备节点提供服务。&lt;/p>
-&lt;p>在平时运维工作中，存在需要主动切换主从节点的情况，例如要对主节点执行关机维护任务。&lt;/p>
-&lt;p>可以通过修改调低主节点的keepalived的优先级并重启keepalived实例的方式主动实现主从切换。&lt;/p>
-&lt;p>控制服务的VIP切换的keepavlied配置文件位于 /etc/kubernetes/manifests/keepalived.yaml&lt;/p>
-&lt;p>数据库服务的VIP切换的keepalived配置文件位于 /etc/keepalived/keepalived.conf&lt;/p>
-&lt;p>EIP网关的VIP切换的keepalvied配置文件位于 /etc/keepalived/eipgw.conf&lt;/p>
-&lt;h2 id="高可用节点下线维护步骤">高可用节点下线维护步骤&lt;/h2>
-&lt;ol>
-&lt;li>如果有VIP，将VIP主动切换到备节点&lt;/li>
-&lt;li>如果有虚拟机，迁移虚拟机到其他宿主机&lt;/li>
-&lt;li>将容器从该节点驱逐&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl cordon &amp;lt;node&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>将kubelet，docker等服务设置为不自动启动&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl disable kubelet docker keepalived maraidb
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
-&lt;li>停止容器&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">docker stop
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
-&lt;li>停止所有服务&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl stop kubelet docker keepalived maraidb
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
-&lt;li>维护节点&lt;/li>
-&lt;/ol>
-&lt;h2 id="高可用节点恢复上线步骤">高可用节点恢复上线步骤&lt;/h2>
-&lt;ol>
-&lt;li>如果有数据库，先启动数据库&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start mariadb
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
-&lt;li>检查数据库主从同步状态&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">show slave status&lt;span style="color:#4e9a06">\G&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果有问题，则需优先解决数据库主从同步问题。&lt;/p>
-&lt;ol start="3">
-&lt;li>启动docker&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start docker
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>启动kubelet&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start kubelet
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
-&lt;li>如果修改了keepavlied的优先级，恢复keepalived的优先级。启动keepalived&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl start keepalived
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
-&lt;li>恢复Kubenetes调度&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl uncordon &amp;lt;node&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
-&lt;li>恢复以上服务的开机自动启动&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl &lt;span style="color:#204a87">enable&lt;/span> kubelet docker keepalived maraidb
+&lt;/ul>
+&lt;h3 id="宿主机网卡刚开始没有做bonding做了bonding之后如何不重启宿主机变更配置">宿主机网卡刚开始没有做bonding，做了bonding之后，如何不重启宿主机变更配置？&lt;/h3>
+&lt;p>假设刚开始宿主机用物理网卡 eth0 作为管理网网卡接入云平台，其IP地址为192.168.201.20。对应/etc/yunion/host.conf配置为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/192.168.201.20&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>云平台部署完成后，管理员将 eth0 和 eth1 绑定设置为 bond0，IP地址仍然是 192.168.201.20，则需要修改 /etc/yunion/host.conf 配置为：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">bond0/br0/192.168.201.20&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>由于openvswitch会记忆配置在ovsdb中，此时，网桥br0已经将eth0加入，如果不做配置，则br0依然还会将eth0加入网桥。因此需要手动将eth0从br0删除：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl del-port br0 eth0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此时，为了让配置生效，比较简便的方法是重启宿主机。&lt;/p>
+&lt;p>如果宿主机不方便重启，则需要手动执行以下操作：&lt;/p>
+&lt;p>1、拉起bond0&lt;/p>
+&lt;p>首先确保bond0的配置(/etc/sysconfig/network-scripts/ifcfg-bond0,ifcfg-eth0,ifcfg-eth1)已经正确配置。重启网络：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl restart network
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>2、清除bond0上的IP地址&lt;/p>
+&lt;p>重启网络后，IP地址配置在bond0上，同时br0上也有同样的IP地址。则需要清除bond0的IP：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ifconfig bond0 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>3、将eth0从br0移除，并将bond0加入br0&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl del-port br0 eth0
+ovs-vsctl add-port br0 bond0
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 命令行工具</title><link>https://www.cloudpods.org/zh/docs/ops/climc/</link><pubDate>Thu, 11 Jul 2019 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/climc/</guid><description>
 &lt;p>云平台的命令行管理工具是 &lt;code>climc&lt;/code>, 可以通过该工具向后端各个服务发送API请求, 实现对资源的操控。&lt;/p>
 &lt;p>发音 / klaɪmsiː / 谐音: 克莱姆C&lt;/p>
@@ -822,4 +692,65 @@ $ climc host-add-netif --ip 100.91.1.22 092231af-eebc-456f-8a21-3ab7c944f20c 97e
 &lt;p>Pod与Pod之间的容器网络采用的是Calico网络插件，如何排查Pod网络问题，请参考 &lt;a href="./dnserror">排查Pod网络问题&lt;/a>&lt;/p>
 &lt;p>Kubernetes设计了驱逐容器(Eviction)的机制，在宿主机CPU，内存和存储被占用达到一定阈值后，Kubernetes会主动停止容器。这个机制对于无状态服务是有益的，能够提前规避因为宿主机资源不足导致的服务降级。但是对于有状态服务，例如每台宿主机的host服务，则该机制会放大资源不足的危害，本来只是资源不足导致可能的服务能力降级，却因为Eviction机制变为彻底的服务不可用。因此，我们应尽量避免Kubernetes触发Eviction。&lt;a href="./eviction_threshold">调整Kubernetes节点驱逐的阈值&lt;/a>介绍了调整Kubenetes容器集群的Eviction机制的方法。&lt;/p>
 &lt;p>Kubernetes并不具备systemd停止和启动服务的控制能力，&lt;a href="./halt_cluster.md">暂停集群服务&lt;/a>介绍了通过operator暂停和恢复服务的方法。&lt;/p></description></item><item><title>Docs: 数据库维护</title><link>https://www.cloudpods.org/zh/docs/ops/databases/</link><pubDate>Wed, 10 Nov 2021 14:45:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/databases/</guid><description>
-&lt;p>Cloudpods采用MySQL作为主要数据库，本文介绍数据库运维相关的内容。&lt;/p></description></item></channel></rss>
+&lt;p>Cloudpods采用MySQL作为主要数据库，本文介绍数据库运维相关的内容。&lt;/p></description></item><item><title>Docs: 前端组件运维</title><link>https://www.cloudpods.org/zh/docs/ops/nginx/</link><pubDate>Wed, 28 Jun 2023 14:45:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/nginx/</guid><description>
+&lt;p>本节介绍 Cloudpods 前端运维相关的内容。&lt;/p></description></item><item><title>Docs: 日志运维</title><link>https://www.cloudpods.org/zh/docs/ops/log/</link><pubDate>Wed, 28 Jun 2023 14:45:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/</guid><description>
+&lt;p>本节介绍 Cloudpods 日志运维相关的内容。&lt;/p></description></item><item><title>Docs: 高可用</title><link>https://www.cloudpods.org/zh/docs/ops/ha/</link><pubDate>Wed, 28 Jun 2023 14:45:50 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/</guid><description>
+&lt;p>本节介绍 Cloudpods 高可用相关的运维内容。&lt;/p></description></item><item><title>Docs: 更换节点IP</title><link>https://www.cloudpods.org/zh/docs/ops/changeip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/changeip/</guid><description>
+&lt;p>本文介绍更换集群控制节点和计算节点IP的方法步骤.&lt;/p>
+&lt;p>由于Kubernetes的节点IP无法动态更换，更换后必须重新部署Kubelet服务，因此更换节点IP后，需要将节点上Kubelet实例重置，并重新部署节点。&lt;/p>
+&lt;p>下面分几种情况讨论：&lt;/p>
+&lt;h2 id="allinone节点更换ip">AllInOne节点更换IP&lt;/h2>
+&lt;h3 id="1-清理kubelet">1. 清理Kubelet&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm reset -f
+$ kubeadm reset -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-修改旧的configyml">2. 修改旧的config.yml&lt;/h3>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>如果第一次部署是直接运行的 &lt;code>./run.py $ip&lt;/code> 这种方式，生成的配置文件就在 ocboot 目录下的 config-allinone-current.yml 文件&lt;/li>
+&lt;li>如果第一次部署是用的自定义配置文件，请使用相关配置文件&lt;/li>
+&lt;li>如果第一次部署是用的商业版本 iso 部署的，配置文件在 opt/yunion/upgrade/config.yml 路径&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>下面假设第一次部署运行的命令为 &lt;code>./run.py $ip&lt;/code> 这种形式，所以生成的配置文件在运行 ocboot 目录下的 config-allinone-current.yml 文件。&lt;/p>
+&lt;p>在第一次运行 ocboot 目录下保存有当时部署时使用的 config-allinone-current.yml 配置文件。备份该 yaml 文件，并修改文件，将旧的 IP 地址替换为新的 IP 地址。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cp ./config-allinone-current.yml config.yml
+$ vim config.yml
+&lt;span style="color:#8f5902;font-style:italic"># 修改里面节点的 ip 地址，包括 primary_master_node 下面的 hostname，controlplane_host&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 如果当时部署的 mariadb 也在该节点上，还要修改 mariadb_node 里面的 hostname 以及 primary_master_node 里面的 db_host&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-重新部署">3. 重新部署&lt;/h3>
+&lt;p>使用 ocboot 重新部署 AllInOne 节点&lt;/p>
+&lt;pre>&lt;code>$ ./ocboot.py install config.yml
+&lt;/code>&lt;/pre>&lt;h3 id="4-开启operator-sync-user模式">4. 开启operator sync-user模式&lt;/h3>
+&lt;p>重新部署会重新生成各个服务在mysql的账号的密码，以及各个服务账号的密码。这些信息都存储在数据库中。重新部署之后，新的Kubernetes中configmaps中留下的密码和旧的配置不一致，会导致服务无法正常启动。解决的办法是：修改onecloud-opeartor服务的启动参数，添加-sync-user参数，这样operator会自动更新数据库中保存的密码，确保和Kubernetes的configmaps中的密码一致。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl -n onecloud edit deployment onecloud-operator
+&lt;span style="color:#8f5902;font-style:italic"># 找到 .spec..containers[0].command 路径，添加 &amp;#39;-sync-user&amp;#39; 参数&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后的结果如下图：&lt;/p>
+&lt;p>&lt;img src="../../quickstart/images/oo_syncuser.png" alt="">&lt;/p>
+&lt;h2 id="私有云计算节点更换ip">私有云计算节点更换IP&lt;/h2>
+&lt;p>计算节点更换IP的流程同AllInOne，但是需要在控制节点删除清理该节点信息，包括k8s的node信息和云平台的宿主机信息。删除干净后，再运行上述命令，重置计算节点的Kubenetes，流程如下：&lt;/p>
+&lt;h3 id="1-清理kubelet-1">1. 清理Kubelet&lt;/h3>
+&lt;p>下面命令在计算节点上运行，清理节点上的 kubelet&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ocadm reset -f
+$ kubeadm reset -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-删除-node-信息">2. 删除 node 信息&lt;/h3>
+&lt;p>下面命令在控制节点运行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 假设要删除的节点为 node1&lt;/span>
+$ &lt;span style="color:#000">nodename&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>node1
+$ kubectl delete node &lt;span style="color:#000">$nodename&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-使用-ocboot-重新加入节点">3. 使用 ocboot 重新加入节点&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ./ocboot.py add-node &lt;span style="color:#000">$primary_master_ip&lt;/span> &lt;span style="color:#000">$target_node_ip&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="faq">FAQ&lt;/h2>
+&lt;h3 id="1-计算节点-host-服务运行异常或者平台对应的宿主机记录状态未知怎样查看计算节点上-host-服务的日志">1. 计算节点 host 服务运行异常或者平台对应的宿主机记录状态未知，怎样查看计算节点上 host 服务的日志？&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 先确定有问题的计算节点在当前 k8s 里面的节点名称&lt;/span>
+$ kubectl get nodes
+NAME STATUS ROLES AGE VERSION INTERNAL-IP EXTERNAL-IP
+ceph-01 Ready &amp;lt;none&amp;gt; 127d v1.15.12 192.168.222.111 &amp;lt;none&amp;gt;
+ceph-02 Ready &amp;lt;none&amp;gt; 127d v1.15.12 192.168.222.112 &amp;lt;none&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># 比如现在要查看 ceph-02 上的 host 服务日志，命令如下&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep -v &lt;span style="color:#4e9a06">&amp;#39;image|deployer&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep ceph-02 &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -c host
+&lt;span style="color:#8f5902;font-style:italic"># 然后查看 host 服务里面相应的报错日志&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
+&lt;li>若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/li>
+&lt;/ul></description></item></channel></rss>

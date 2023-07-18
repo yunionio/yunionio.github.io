@@ -703,7 +703,7 @@ sc query telegraf
 &lt;ol>
 &lt;li>通过libvirt导出虚拟机的镜像（.qcow2文件）。&lt;/li>
 &lt;li>将镜像上传至一个http服务器中。&lt;/li>
-&lt;li>使用Cloudpods镜像服务器导入镜像。&lt;/li>
+&lt;li>使用Cloudpods镜像服务器导入系统镜像。&lt;/li>
 &lt;li>通过镜像创建虚拟机。&lt;/li>
 &lt;li>若原来的虚拟机挂载了云硬盘，可按照以下方式迁移：
 &lt;ul>
@@ -711,7 +711,24 @@ sc query telegraf
 &lt;li>先在Cloudpods中创建一个相同大小的云硬盘，找到对应的路径，将原云盘数据直接复制到新的路径下，最后再挂载到虚拟机上。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;/ol></description></item><item><title>Docs: Host服务问题排查</title><link>https://www.cloudpods.org/zh/docs/ops/hosterror/</link><pubDate>Thu, 11 Nov 2021 15:59:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/hosterror/</guid><description>
+&lt;/ol>
+&lt;h2 id="proxmox-示例">Proxmox 示例&lt;/h2>
+&lt;p>登录pve限制台，选中对于主机，在hardware 中查看当前主机hard disk id：
+&lt;img width="992" alt="image" src="https://github.com/yunionio/cloudpods/assets/1650540/eea3492e-e55d-4b95-ba95-45b9feadf41b">&lt;/p>
+&lt;p>以图中 local-lvm:vm-101-disk-0 为例，登录对应宿主机，执行&lt;/p>
+&lt;pre>&lt;code>#pvesm path local-lvm:vm-101-disk-0
+/dev/pve/vm-101-disk-0
+&lt;/code>&lt;/pre>&lt;p>&lt;code>/dev/pve/vm-101-disk-0&lt;/code> 即是我们要迁移的磁盘，停止虚拟机，导出：&lt;/p>
+&lt;pre>&lt;code>#qemu-img convert -c -p -f raw -O qcow2 /dev/pve/vm-101-disk-0 /mnt/vm-101-disk0
+&lt;/code>&lt;/pre>&lt;p>导出镜像位于 /mnt/vm-101-disk-0，由于开启压缩，文件会小一些。&lt;/p>
+&lt;blockquote>
+&lt;p>&amp;lsquo;-c&amp;rsquo; indicates that target image must be compressed (qcow format only)&lt;/p>
+&lt;/blockquote>
+&lt;p>在当前目录，python3 -m http.server 9999 开启http server，或者传到nginx 等http 服务，在cloudpods 系统镜像中，导入镜像，创建虚拟机即可。&lt;/p>
+&lt;p>若虚拟机存在多块磁盘，按上文方式，将多个disk 导出为qcow2，再导入为系统镜像，使用&lt;code>climc guest-image-create&lt;/code> 将多个系统镜像合并创建为主机镜像，&lt;/p>
+&lt;pre>&lt;code>climc guest-image-create &amp;lt;name&amp;gt; --image &amp;lt;id_of_root_image&amp;gt; --image &amp;lt;id_of_data_image&amp;gt; --image ...
+&lt;/code>&lt;/pre>&lt;p>注意严格保证&lt;code>--image&lt;/code>镜像顺序和pve 内顺序一致，ID为导入cloudpods 的系统镜像UUID。&lt;/p>
+&lt;p>创建主机镜像成功后，使用主机镜像创建虚拟机即可，参考：&lt;a href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/glance/guestimage/create/">制作主机镜像&lt;/a>&lt;/p></description></item><item><title>Docs: Host服务问题排查</title><link>https://www.cloudpods.org/zh/docs/ops/hosterror/</link><pubDate>Thu, 11 Nov 2021 15:59:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/hosterror/</guid><description>
 &lt;h3 id="宿主机安装host服务完成后默认处于禁用状态需要启用后使用宿主机启用方法如下">宿主机安装Host服务完成后，默认处于禁用状态，需要启用后使用。宿主机启用方法如下：&lt;/h3>
 &lt;ul>
 &lt;li>

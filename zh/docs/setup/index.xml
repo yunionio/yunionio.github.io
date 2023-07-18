@@ -1350,13 +1350,7 @@ $ climc feature-config-jdcloud --switch off
 &lt;/tbody>
 &lt;/table></description></item><item><title>Docs: 卸载</title><link>https://www.cloudpods.org/zh/docs/setup/uninstall/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/uninstall/</guid><description>
 &lt;p>根据平台安装方式，卸载方式各有不同&lt;/p>
-&lt;h2 id="kubernetes-helm-安装">Kubernetes Helm 安装&lt;/h2>
-&lt;p>使用如下命令卸载：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">TODO
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="docker-compose-安装">Docker Compose 安装&lt;/h2>
-&lt;p>使用如下命令卸载：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">TODO
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="all-in-one-安装">All in One 安装&lt;/h2>
+&lt;h2 id="all-in-one-安装">All in One 安装&lt;/h2>
 &lt;p>All in One 安装本质是在服务器上安装了一个Kubernets集群，进而在集群中部署了Cloudpods。因此卸载Cloupods只需要卸载安装的Kubernetes集群，以及在服务器上安装的相关rpm即可。&lt;/p>
 &lt;p>卸载服务器上的Kubernetes服务:&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ocadm reset --force
@@ -1368,6 +1362,12 @@ systemctl stop yunion-executor &lt;span style="color:#ce5c00;font-weight:bold">&
 systemctl stop openvswitch &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl disable openvswitch
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>进一步地，可以卸载kubelet, yunion-executor, openvswitch等rpm，并清除相关的数据目录：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">rm -fr /etc/kubernetes /var/lib/etcd /opt/yunion /opt/cloud /etc/openvswitch
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="kubernetes-helm-安装">Kubernetes Helm 安装&lt;/h2>
+&lt;p>使用如下命令卸载：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">helm uninstall -n onecloud default
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="docker-compose-安装">Docker Compose 安装&lt;/h2>
+&lt;p>使用如下命令卸载：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">docker compose down
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 下线计算节点</title><link>https://www.cloudpods.org/zh/docs/setup/removehost/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/removehost/</guid><description>
 &lt;p>如果需要将一个计算节点（宿主机）从私有云下线，需要执行以下步骤确保一个计算节点干净下线。&lt;/p>
 &lt;ol>

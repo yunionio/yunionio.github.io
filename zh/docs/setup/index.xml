@@ -1097,54 +1097,7 @@ $ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt
 onecloud-operator-5557d86d74-7s5sl 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2s
 &lt;span style="color:#8f5902;font-style:italic"># 再回退 onecloudcluster 就可以了&lt;/span>
 $ kubectl apply -f oc.yaml
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 升级内核</title><link>https://www.cloudpods.org/zh/docs/setup/update_kernel/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/update_kernel/</guid><description>
-&lt;h2 id="宿主机内核从yn20191203升级yn20201125">宿主机内核从yn20191203升级yn20201125&lt;/h2>
-&lt;p>1、查看内核版本&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># uname -r&lt;/span>
-3.10.0-1062.4.3.el7.yn20191203.x86_64
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>2、升级内核&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># yum install -y kernel-3.10.0-1160.6.1.el7.yn20201125 kernel-devel-3.10.0-1160.6.1.el7.yn20201125 kernel-headers-3.10.0-1160.6.1.el7.yn20201125&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># awk -F\&amp;#39; &amp;#39;$1==&amp;#34;menuentry &amp;#34; {print i++ &amp;#34; : &amp;#34; $2}&amp;#39; /etc/grub2.cfg&lt;/span>
-&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> : CentOS Linux &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>3.10.0-1160.6.1.el7.yn20201125.x86_64&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> : CentOS Linux &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>3.10.0-1062.4.3.el7.yn20191203.x86_64&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-&lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> : CentOS Linux &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>3.10.0-957.12.1.el7.x86_64&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> : CentOS Linux &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>0-rescue-c022f8e6249f48fc92f7743f5f6290c9&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>3、切换新内核&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># vim /etc/default/grub # 把GRUB_DEFAULT改为新内核的序号，GRUB_DEFAULT=0&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># grub2-mkconfig -o /boot/grub2/grub.cfg&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># reboot&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>4、查看新内核版本&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@yunion ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># uname -r&lt;/span>
-3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: RPM Repo</title><link>https://www.cloudpods.org/zh/docs/setup/repo/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/repo/</guid><description>
-&lt;p>本文各个版本RPM REPO的地址&lt;/p>
-&lt;h2 id="310">3.10&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/centos/7/3.10/x86_64/">https://iso.yunion.cn/centos/7/3.10/x86_64/&lt;/a>&lt;/li>
-&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos/7/3.10/aarch64/">https://iso.yunion.cn/centos/7/3.10/aarch64/&lt;/a>&lt;/li>
-&lt;li>银河麒麟 V10 SP2 x86_64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.10/x86_64/">https://iso.yunion.cn/kylin/v10/3.10/x86_64/&lt;/a>&lt;/li>
-&lt;li>银河麒麟 V10 SP2 arm64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.10/aarch64/">https://iso.yunion.cn/kylin/v10/3.10/aarch64/&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="39">3.9&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/centos/7/3.9/x86_64">https://iso.yunion.cn/centos/7/3.9/x86_64&lt;/a>&lt;/li>
-&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos/7/3.9/aarch64">https://iso.yunion.cn/centos/7/3.9/aarch64&lt;/a>&lt;/li>
-&lt;li>银河麒麟 V10 SP2 x86_64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.9/x86_64">https://iso.yunion.cn/kylin/v10/3.9/x86_64&lt;/a>&lt;/li>
-&lt;li>银河麒麟 V10 SP2 arm64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.9/aarch64">https://iso.yunion.cn/kylin/v10/3.9/aarch64&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="38">3.8&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/3.8/">https://iso.yunion.cn/3.8/&lt;/a>&lt;/li>
-&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos-7-aarch/">https://iso.yunion.cn/centos-7-aarch/&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) x86_64: &lt;a href="https://iso.yunion.cn/uos/buster/amd64/3.8/">https://iso.yunion.cn/uos/buster/amd64/3.8/&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.8/">https://iso.yunion.cn/uos/buster/arm64/3.8/&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="37">3.7&lt;/h2>
-&lt;ul>
-&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/3.7">https://iso.yunion.cn/3.7&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) x86_64: &lt;a href="https://iso.yunion.cn/uos/buster/amd64/3.7/">https://iso.yunion.cn/uos/buster/amd64/3.7/&lt;/a>&lt;/li>
-&lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.7/">https://iso.yunion.cn/uos/buster/arm64/3.7/&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 多可用区服务配置</title><link>https://www.cloudpods.org/zh/docs/setup/multi-zone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/multi-zone/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 多可用区服务配置</title><link>https://www.cloudpods.org/zh/docs/setup/multi-zone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/multi-zone/</guid><description>
 &lt;p>平台有个可用区(zone)的概念，可以理解为对应实际环境中的机房，刚部署完服务后会有一个默认的可用区 zone0 。&lt;/p>
 &lt;p>云平台的物理机管理服务(baremetal-agent), VMware管理服务(esxi-agent)以及虚拟机管理服务(host)是可用区级别的服务，如果实际环境中的服务器，物理机或者管理的 VMware 集群位于不同的机房，需要创建多个可用区，然后在不同的可用区部署这些服务。&lt;/p>
 &lt;p>接下来的文档介绍如何在多个可用区部署这些服务。&lt;/p>
@@ -1456,4 +1409,32 @@ options: &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span sty
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl get nodes &lt;span style="color:#8f5902;font-style:italic"># 查找该节点的k8s node名称&lt;/span>
 kubectl delete node &amp;lt;node_name&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: RPM Repo</title><link>https://www.cloudpods.org/zh/docs/setup/repo/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/repo/</guid><description>
+&lt;p>本文各个版本RPM REPO的地址&lt;/p>
+&lt;h2 id="310">3.10&lt;/h2>
+&lt;ul>
+&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/centos/7/3.10/x86_64/">https://iso.yunion.cn/centos/7/3.10/x86_64/&lt;/a>&lt;/li>
+&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos/7/3.10/aarch64/">https://iso.yunion.cn/centos/7/3.10/aarch64/&lt;/a>&lt;/li>
+&lt;li>银河麒麟 V10 SP2 x86_64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.10/x86_64/">https://iso.yunion.cn/kylin/v10/3.10/x86_64/&lt;/a>&lt;/li>
+&lt;li>银河麒麟 V10 SP2 arm64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.10/aarch64/">https://iso.yunion.cn/kylin/v10/3.10/aarch64/&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="39">3.9&lt;/h2>
+&lt;ul>
+&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/centos/7/3.9/x86_64">https://iso.yunion.cn/centos/7/3.9/x86_64&lt;/a>&lt;/li>
+&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos/7/3.9/aarch64">https://iso.yunion.cn/centos/7/3.9/aarch64&lt;/a>&lt;/li>
+&lt;li>银河麒麟 V10 SP2 x86_64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.9/x86_64">https://iso.yunion.cn/kylin/v10/3.9/x86_64&lt;/a>&lt;/li>
+&lt;li>银河麒麟 V10 SP2 arm64: &lt;a href="https://iso.yunion.cn/kylin/v10/3.9/aarch64">https://iso.yunion.cn/kylin/v10/3.9/aarch64&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="38">3.8&lt;/h2>
+&lt;ul>
+&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/3.8/">https://iso.yunion.cn/3.8/&lt;/a>&lt;/li>
+&lt;li>CentOS 7 arm64: &lt;a href="https://iso.yunion.cn/centos-7-aarch/">https://iso.yunion.cn/centos-7-aarch/&lt;/a>&lt;/li>
+&lt;li>Debian 10 (buster) x86_64: &lt;a href="https://iso.yunion.cn/uos/buster/amd64/3.8/">https://iso.yunion.cn/uos/buster/amd64/3.8/&lt;/a>&lt;/li>
+&lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.8/">https://iso.yunion.cn/uos/buster/arm64/3.8/&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="37">3.7&lt;/h2>
+&lt;ul>
+&lt;li>CentOS 7 x86_64: &lt;a href="https://iso.yunion.cn/3.7">https://iso.yunion.cn/3.7&lt;/a>&lt;/li>
+&lt;li>Debian 10 (buster) x86_64: &lt;a href="https://iso.yunion.cn/uos/buster/amd64/3.7/">https://iso.yunion.cn/uos/buster/amd64/3.7/&lt;/a>&lt;/li>
+&lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.7/">https://iso.yunion.cn/uos/buster/arm64/3.7/&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

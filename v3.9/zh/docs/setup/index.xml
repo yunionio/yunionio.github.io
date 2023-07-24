@@ -1,6 +1,6 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
 安装部署</title><link>https://www.cloudpods.org//v3.9/zh/docs/setup/</link><description>Recent content in 安装部署 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 14 Apr 2023 16:03:30 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件概览</title><link>https://www.cloudpods.org//v3.9/zh/docs/setup/intro/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/setup/intro/</guid><description>
-&lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10 (arm64) 上运行，待部署组件/服务如下:&lt;/p>
+&lt;p>Cloudpods目前支持在 CentOS 7 (x86_64 或 arm64) 和 Debian 10/11 (x86_64 或 arm64) 上运行，待部署组件/服务如下:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -1894,13 +1894,13 @@ $ kubectl apply -f oc.yaml
 &lt;li>Debian 10 (buster) arm64: &lt;a href="https://iso.yunion.cn/uos/buster/arm64/3.7/">https://iso.yunion.cn/uos/buster/arm64/3.7/&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: ARM(AArch64) 部署</title><link>https://www.cloudpods.org//v3.9/zh/docs/setup/host-aarch64/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/setup/host-aarch64/</guid><description>
 &lt;h2 id="简介">简介&lt;/h2>
-&lt;p>从 v3.6.10 版本开始，可以将”Cloudpods“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 和 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 。&lt;/p>
+&lt;p>从 v3.6.10 版本开始，可以将”Cloudpods“部署到 ARM(AArch64) 架构的机器上，目前我们适配的 Linux 发行版是 &lt;a href="https://www.debian.org/releases/buster/arm64/">Debian 10(buster)&lt;/a> 和&lt;a href="https://www.debian.org/releases/bullseye/arm64/">Debian 11(bullseye)&lt;/a> 。&lt;/p>
 &lt;p>因为服务是容器化运行在 Kubernetes 之上的，为了在 ARM 架构的机器上运行容器，我们使用了 &lt;a href="https://github.com/docker/buildx/">docker buildx&lt;/a> 和交叉编译的技术编译打包了同时支持 x86_64 和 arm64 的统一容器镜像。这样的可以让 Kubernetes 屏蔽 CPU 架构的差异性，我们制作的支持多架构的容器镜像可以在不同架构的机器上运行服务，实现 X86 和 ARM 机器混合部署的效果。&lt;/p>
 &lt;h2 id="部署">部署&lt;/h2>
-&lt;p>部署方式和原来的 X86 部署并没有太大差别，唯一的区别是我们 X86 上使用的 Linux 发行版是 CentOS 7 ，但在 ARM 架构的机器上需要安装 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 或者 &lt;a href="https://www.chinauos.com/">统信 UOS&lt;/a> 发行版。其它部署方式是一致的，使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 部署工具来统一部署，这个工具里面包含了在 Debian 和 UOS 上部署的 ansible playbook 。&lt;/p>
+&lt;p>部署方式和原来的 X86 部署并没有太大差别，唯一的区别是我们 X86 上使用的 Linux 发行版是 CentOS 7 ，但在 ARM 架构的机器上需要安装 &lt;a href="https://www.debian.org/releases/stable/arm64/">Debian 10(buster)&lt;/a> 或 和&lt;a href="https://www.debian.org/releases/bullseye/arm64/">Debian 11(bullseye)&lt;/a> 发行版。其它部署方式是一致的，使用我们编写的 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> 部署工具来统一部署，这个工具里面包含了在 Debian 上部署的 ansible playbook 。&lt;/p>
 &lt;h3 id="前提条件">前提条件&lt;/h3>
 &lt;ul>
-&lt;li>ARM 机器必须提前安装好 Debian 10 或者 UOS 操作系统&lt;/li>
+&lt;li>ARM 机器必须提前安装好 Debian 10/11 操作系统&lt;/li>
 &lt;li>ARM 机器能够访问公网&lt;/li>
 &lt;li>ARM 机器开启 ssh 服务，保证运行 ocboot 的节点能够免密登录待部署的 ARM 机器&lt;/li>
 &lt;/ul>
@@ -1928,7 +1928,7 @@ $ kubectl apply -f oc.yaml
 &lt;/tr>
 &lt;tr>
 &lt;td>ARM64&lt;/td>
-&lt;td>Debian 10&lt;/td>
+&lt;td>Debian 10/11&lt;/td>
 &lt;td>10.127.100.8&lt;/td>
 &lt;td>root&lt;/td>
 &lt;td>worker_nodes&lt;/td>

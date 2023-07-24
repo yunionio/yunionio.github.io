@@ -1,6 +1,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-块存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/</link><description>Recent content in 块存储 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 25 Jun 2021 10:53:20 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 如何添加和删除本地存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</guid><description>
-&lt;p>本地存储的虚拟机磁盘存储在本地目录里，跟该目录使用的文件系统无关，可以使ext4或者xfs。虚拟磁盘的文件格式采用qcow2格式。默认的存储位置是宿主机的目录 /opt/cloud/workspace/disks。&lt;/p>
+块存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/</link><description>Recent content in 块存储 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 25 Jun 2021 10:53:20 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Ceph存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/ceph/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/ceph/</guid><description>
+&lt;p>Ceph是著名的开源分布式存储，一个存储集群可以同时提供块存储（RBD），对象存储（RadosGw）和文件存储（CephFs）三种接口。本文介绍虚拟机使用Ceph块存储的配置和使用方法。&lt;/p>
+&lt;h2 id="支持ceph版本">支持Ceph版本&lt;/h2>
+&lt;p>平台部署一台宿主机时，会默认安装 ceph-common 包，其中包含了开源版本的 ceph的客户端。安装的 ceph-common 版本如下：&lt;/p>
+&lt;ul>
+&lt;li>CentOS 7: 10.2.5&lt;/li>
+&lt;li>CentOS 8: 12.2.8&lt;/li>
+&lt;li>Kylin V10: 12.2.8&lt;/li>
+&lt;li>Debian 10: 12.2.11&lt;/li>
+&lt;li>Debian 11: 14.2.21&lt;/li>
+&lt;li>OpenEuler 22.03 SP1: 16.2.7&lt;/li>
+&lt;/ul>
+&lt;p>如果用户需要其他版本的 ceph-common，例如用户对接的商用ceph，则需要自行手动在宿主机安装对应的 ceph-common。&lt;/p>
+&lt;h2 id="网络要求">网络要求&lt;/h2>
+&lt;p>需要挂载是用Ceph的宿主机，需要能够直接网络访问Ceph集群。&lt;/p>
+&lt;h2 id="ceph认证">Ceph认证&lt;/h2>
+&lt;p>每次在宿主机执行ceph的命令，会使用存储在storage的ceph秘钥生成临时ceph凭证文件，用于访问ceph存储。不会使用保存在宿主机/etc/ceph的凭证文件。&lt;/p></description></item><item><title>Docs: 本地存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</guid><description>
+&lt;p>本地存储的虚拟机磁盘存储在本地目录里，跟该目录使用的文件系统无关，可以是ext4或者xfs。虚拟磁盘的文件格式采用qcow2格式。默认的存储位置是宿主机的目录 /opt/cloud/workspace/disks。&lt;/p>
 &lt;p>存储虚拟磁盘的本地目录需要在宿主机的配置文件里显示声明。host服务的配置项 local_image_path 指定本宿主机用来保存虚拟机磁盘的目录。&lt;/p>
 &lt;h2 id="如何添加本地存储目录">如何添加本地存储目录？&lt;/h2>
 &lt;ol>
@@ -55,7 +71,7 @@ always_recycle_diskfile: true
 &lt;h2 id="冷迁移">冷迁移&lt;/h2>
 &lt;p>TODO&lt;/p>
 &lt;h2 id="热迁移">热迁移&lt;/h2>
-&lt;p>TODO&lt;/p></description></item><item><title>Docs: 使用 LVM 本地存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</guid><description>
+&lt;p>TODO&lt;/p></description></item><item><title>Docs: 本地LVM存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</guid><description>
 &lt;h2 id="lvm-是什么">LVM 是什么&lt;/h2>
 &lt;p>LVM（Logical Volume Manager）是一种逻辑卷管理器，可以将一个或多个物理存储设备抽象为一个或多个逻辑卷，并将逻辑卷分配给文件系统和其他应用程序使用。&lt;/p>
 &lt;h2 id="cloudpods-如何添加-lvm-存储">cloudpods 如何添加 LVM 存储&lt;/h2>

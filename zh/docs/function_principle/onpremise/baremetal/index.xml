@@ -1,25 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-物理机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/</link><description>Recent content in 物理机 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 10 Jul 2019 10:16:53 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 如何手动更改安装了操作系统的裸金属服务器RAID配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/manual_change_raid/</link><pubDate>Wed, 09 Jun 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/manual_change_raid/</guid><description>
-&lt;h2 id="手动更改安装了操作系统的裸金属服务器的raid配置">手动更改安装了操作系统的裸金属服务器的RAID配置&lt;/h2>
-&lt;p>Cloudpods裸金属管理可以实现在安装操作系统的过程中，自动化地配置RAID配置，支持MegaRaid，HPSmart Array等RAID卡。但是安装完操作系统后，在不重装系统的情况下，无法重新自动配置RAID，例如，给RAID增加磁盘或者更改RAID级别等。这时候就必须通过手动方式进行。本文介绍如何手动更改安装了操作系统的裸金属服务器的RAID配置。&lt;/p>
-&lt;ol>
-&lt;li>将该裸金属服务器重启进入维护模式&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-maintenance &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令将重启物理机，并启动进入网络PXE引导的内存操作系统&lt;/p>
-&lt;ol start="2">
-&lt;li>等引导启动进入内存操作系统后，ssh登入该系统&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-ssh &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
-&lt;li>更改RAID配置&lt;/li>
-&lt;/ol>
-&lt;p>RAID的工具软件位于内存操作系统的/opt目录下，包含MegaRaid, HPSA, SAS, Marvel等RAID的控制工具软件&lt;/p>
-&lt;ol start="4">
-&lt;li>更改RAID配置完成后，重启恢复已安装的操作系统&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-unmaintenance &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机服务</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/principle/</link><pubDate>Fri, 19 Jul 2019 20:28:13 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/principle/</guid><description>
+物理机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/</link><description>Recent content in 物理机 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 10 Jul 2019 10:16:53 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 物理机服务原理</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/principle/</link><pubDate>Fri, 19 Jul 2019 20:28:13 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/principle/</guid><description>
 &lt;h2 id="功能介绍">功能介绍&lt;/h2>
 &lt;p>云平台支持 Baremetal(物理机) 管理，提供的功能如下:&lt;/p>
 &lt;ol>
@@ -141,7 +121,7 @@
 &lt;h3 id="远程访问">远程访问&lt;/h3>
 &lt;p>Baremetal Agent 通过 ipmitool sol 接口提供串口控制界面&lt;/p>
 &lt;h3 id="删除操作系统">删除操作系统&lt;/h3>
-&lt;p>对正在运行操作系统的物理机重启进入 PXE 网络启动，进入 PXE引导系统，调用 &lt;a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/partdestroy.sh">/lib/mos/partdestory.sh&lt;/a> 销毁磁盘分区和相应的 raid 命令销毁 raid 配置&lt;/p></description></item><item><title>Docs: 纳管物理机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_register_redirect/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_register_redirect/</guid><description>
+&lt;p>对正在运行操作系统的物理机重启进入 PXE 网络启动，进入 PXE引导系统，调用 &lt;a href="https://github.com/yunionio/yunionos/blob/master/src/lib/mos/partdestroy.sh">/lib/mos/partdestory.sh&lt;/a> 销毁磁盘分区和相应的 raid 命令销毁 raid 配置&lt;/p></description></item><item><title>Docs: 物理机相关操作</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/</link><pubDate>Mon, 07 Feb 2022 19:02:52 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/</guid><description/></item><item><title>Docs: 纳管物理机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_register_redirect/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_register_redirect/</guid><description>
 &lt;p>Cloudpods平台支持纳管Linux物理服务器并基于物理服务器创建裸金属服务器。&lt;/p>
 &lt;h2 id="启用baremetal服务">启用Baremetal服务&lt;/h2>
 &lt;p>请确保环境中已启用Baremetal服务，Baremetal服务提供PXE Server、DHCP、TFTP、http等功能，用于完成纳管物理机操作并管理物理机。Cloudpods安装完成后默认不启用Baremetal服务，需要用户按照下面命令在环境中的任意节点上启用Baremetal服务。&lt;/p>
@@ -280,7 +260,7 @@ default-baremetal-agent-fb5d4b5f7-2ld8v 1/1 Running &lt;span style="color:#0000c
 &lt;h3 id="托管">托管&lt;/h3>
 &lt;p>该方式适用于已有操作系统的服务器，该方式对网络无要求。执行托管脚本后将使用容器技术在物理服务器中运行PXE引导系统收集服务器信息，而不会影响物理机的原有操作系统。&lt;/p>
 &lt;h2 id="典型组网介绍">典型组网介绍&lt;/h2>
-&lt;p>&lt;img src="../images/networking1.png" alt="">&lt;/p>
+&lt;p>&lt;img src="../../images/networking1.png" alt="">&lt;/p>
 &lt;h3 id="组网说明">组网说明&lt;/h3>
 &lt;ul>
 &lt;li>IPMI网络用于远程访问BMC（Baseboard Management Controller），通过IPMI网络可以远程控制物理服务器的开关机等。&lt;/li>
@@ -542,7 +522,7 @@ $ climc host-create &lt;span style="color:#4e9a06">\
 &lt;ol>
 &lt;li>
 &lt;p>在云管平台单击左上角&lt;img src="../../user/images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;系统配置/全局设置/全局设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入全局设置页面。&lt;/p>
-&lt;p>&lt;img src="../images/autoregister.png" alt="">&lt;/p>
+&lt;p>&lt;img src="../../images/autoregister.png" alt="">&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;编辑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开启自动注册功能。&lt;/p>
@@ -579,40 +559,12 @@ auto_register_baremetal: &lt;span style="color:#204a87">true&lt;/span>
 &lt;/li>
 &lt;li>
 &lt;p>通过ssh等远程连接到物理服务器，在服务器中执行复制的命令。&lt;/p>
-&lt;p>&lt;img src="../images/command.png" alt="">&lt;/p>
+&lt;p>&lt;img src="../../images/command.png" alt="">&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>命令执行过程中需要输入服务器的IPMI用户名、密码以及IPMI IP，设置完成后等待一段时间，物理机会被注册到Cloudpods平台，同时将创建一个与之前物理机同配置的裸金属服务器。&lt;/p>
 &lt;/li>
-&lt;/ol></description></item><item><title>Docs: 裸金属网卡命名</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/nic_persistent_naming/</link><pubDate>Thu, 09 Sep 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/nic_persistent_naming/</guid><description>
-&lt;h2 id="为什么物理机的网卡名称总是命名为en0-en1-">为什么物理机的网卡名称总是命名为en0, en1, &amp;hellip;?&lt;/h2>
-&lt;p>传统的Linux网卡命名规则为按照内核探测网卡的顺序，把网卡依次命名为eth0, eth1, &amp;hellip;。这种命名方式导致的问题时在添加/删除网卡设备后，导致网卡的名称发生变化（例如将eth0的网卡移除，重启之后，原来命名为eth1的网卡会变成eth0）。为了让网卡的名称和内核探测网卡的顺序无关，从systemd/udev v197开始引入了Predictable-Network-Interface-Names的机制，采用网卡的firmware/topology/location信息来命名网卡，例如 eno1， ens1，enp2s0等。具体参见 &lt;a href="https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/">https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/&lt;/a> 。&lt;/p>
-&lt;p>采用新机制避免了因为网卡的检测顺序、增删网卡等导致的网卡名称不持久，但却导致网卡的名称没有规律可循，而云平台初始化裸金属时需要能够明确地配置指定物理机网卡的IP配置。&lt;/p>
-&lt;p>为此，Cloudpods按照PXE引导系统探测网卡的顺序给网卡依次命名为en0, en1, &amp;hellip;&lt;/p>
-&lt;p>为了实现网卡的自定义命名，Cloudpods做了如下操作：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>关闭 Predictable-Network-Interface-Names 机制，需要修改 /etc/default/grub，在内核启动参数添加 &amp;ldquo;net.ifnames=0 biosdevnames=0&amp;rdquo;&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>修改 /etc/udev/rules.d/70-persistent-net.rules ，一次写入网卡的mac和名称映射关系，udev将按照mac对网卡进行命名&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">KERNEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#000">SUBSYSTEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;net&amp;#34;&lt;/span>, &lt;span style="color:#000">ACTION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;add&amp;#34;&lt;/span>, &lt;span style="color:#000">DRIVERS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;?*&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>address&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;00:22:a6:48:39:10&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>type&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>, &lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;en0&amp;#34;&lt;/span>
-&lt;span style="color:#000">KERNEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#000">SUBSYSTEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;net&amp;#34;&lt;/span>, &lt;span style="color:#000">ACTION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;add&amp;#34;&lt;/span>, &lt;span style="color:#000">DRIVERS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;?*&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>address&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;00:22:a6:48:39:11&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>type&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>, &lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;en1&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="物理机更换网卡后的注意事项">物理机更换网卡后的注意事项&lt;/h2>
-&lt;p>物理机如果更换网卡，首先需要同时更新Cloudpods对应物理机的网卡数据，具体操作请参见 &lt;a href="../change_netif">更换网卡&lt;/a> 。&lt;/p>
-&lt;p>同时，由于采用了如上自定义命名网卡的机制，新加入的网卡的mac不在udev的规则中，会出现新网卡的命名不遵循enX的命名规律，导致网卡的IP配置不生效。因此需要采用如下措施修改udev的命名规则：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>手动修改 /etc/udev/rules.d/70-persistent-net.rules&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>如果允许物理机重启，可以执行如下命令，让物理机重启boot进入PXE引导系统，初始化一系列配置文件，包括udev的配置文件：&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-deploy &amp;lt;baremetal_server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 安装操作系统/新建裸金属</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_server/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_server/</guid><description>
+&lt;/ol></description></item><item><title>Docs: 安装操作系统/新建裸金属</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_server/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/create_server/</guid><description>
 &lt;p>目前平台支持通过两个入口创建裸金属。&lt;/p>
 &lt;ul>
 &lt;li>在物理机页面安装操作系统即可基于当前物理机创建裸金属。&lt;/li>
@@ -729,16 +681,26 @@ auto_register_baremetal: &lt;span style="color:#204a87">true&lt;/span>
 &lt;p>命令行格式:&lt;/p>
 &lt;p>&amp;lsquo;(none,raid0,raid1,raid5,raid10):%d:(MegaRaid|HPSARaid|Mpt2SAS|MarvelRaid|Linux|PCIE):(rotate|ssd|hybrid):[0-n]:strip%dk:adapter%d:ra:nora:wt:wb:direct:cachedbadbbu:nocachedbadbbu&amp;rsquo;&lt;/p>
 &lt;/li>
-&lt;/ul></description></item><item><title>Docs: Bonding模式共享BMC网口</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/bonding_shared_bmc_nic/</link><pubDate>Mon, 20 Sep 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/bonding_shared_bmc_nic/</guid><description>
-&lt;h2 id="双网卡bonding模式下共享bmc网口不工作怎么办">双网卡Bonding模式下共享BMC网口不工作怎么办？&lt;/h2>
-&lt;p>为了保证网卡的物理冗余，Bonding是常见的技术手段。Bonding将两个物理网口绑定为一个虚拟的网口，使得任意一个网口失效都不会影响该网口的通信。更多信息请参见 &lt;a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bonding">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bonding&lt;/a> 。开启Bonding后，当物理机通过Bonding网口发送报文时，会按照Bonding配置的模式，以主备或者负载均衡的方式，选择其中一个物理网口发送报文。反之，当交换机向物理机的Bonding网口发送报文时，也会按照规则选择其中一个网口作为实际的接收网口发送报文，接收到的报文在服务器的虚拟Bonding网口进行重组，就好像报文是通过一个网口接收的一样。&lt;/p>
-&lt;p>BMC网口是网络访问物理服务器BMC带外管理服务的网络接口，有两种模式：1）专用网口（dedicated），物理机主板上有一个专门的独立网口用于访问BMC。2）共享模式（shared）：可以通过物理机的板载通信网口（一般是第一个口）访问BMC，这个时候通过第一个口既可以访问物理机的第一个网口，也可以访问BMC，可以理解为第一个网口有两个mac地址，一个是BMC的网口mac，另一个是正常的网口的mac。为了便于部署，节约交换机网口和网线，很多时候会采用共享模式的BMC网口。BMC网口采用专用还是共享模式需要在BMC的控制面板进行设置。&lt;/p>
-&lt;p>当开启了BMC共享网口模式，使用第一个板载物理网口作为共享BMC口，同时又使用第一二个网口bonding的时候，往往会导致BMC网口访问失效。究其原因也比较容易理解：当外部访问BMC网口时，交换机会认为访问BMC的报文也是一个访问物理机的普通报文，会按照发送给物理机bonding网口的逻辑处理，选择其中一个网口发送。但是，由于BMC网口只监听在第一个网口，交换机通过第二个网口发送的报文就无法被BMC接收到。这样BMC无法正常接收报文，导致BMC网络功能无法正常访问。&lt;/p>
-&lt;p>要解决这个问题，原理也比较简单：需要在物理机上联的交换机上做路由策略，将访问BMC的报文必须从指定的第一个网口发送，这样BMC就能接收到完整的报文，从而能够正常通信。&lt;/p>
-&lt;p>然而，配置这样的路由策略比较复杂。&lt;/p>
-&lt;p>庆幸的是，目前一些新型交换机已经为此场景设计了专门的命令，用来解决这个问题。例如，H3C的交换机就增加配置聚合管理VLAN和聚合管理端口的专用命令，如下图所示。&lt;/p>
-&lt;img src="../images/link-aggregation-management.png">
-&lt;p>具体请参见：https://www.h3c.com/cn/d_201903/1157320_30005_0.htm#_Toc4502224&lt;/p></description></item><item><title>Docs: 更改 IP</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_ip_address/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_ip_address/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 物理机更换网卡</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_netif/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_netif/</guid><description>
+&lt;p>云平台会记录物理机的网卡信息，如果实际环境中替换了物理机的网卡，需要手动保持平台里面物理机的网卡信息和实际环境中的一致。&lt;/p>
+&lt;h2 id="删掉物理机网卡">删掉物理机网卡&lt;/h2>
+&lt;p>假设需要移除物理机 bm1 上 mac 为 52:54:00:12:34:56 的网卡，对应操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-remove-netif bm1 52:54:00:12:34:56
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="添加新的网卡">添加新的网卡&lt;/h2>
+&lt;p>手动给物理机添加网卡后，同步平台里面的信息有两种方式，一种是让物理机重新 PXE 启动一次，平台对应的硬件信息就会更新，这种方式适用于物理机上没有安装操作系统或者删除了操作系统的情况。&lt;/p>
+&lt;p>另外一种是使用命令 &lt;code>host-add-netif&lt;/code> 给物理机添加网卡：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 给物理机 bm2 添加 admin 类型的网卡，二层网络为 bcast0 ，MAC 地址为 52:54:00:12:34:56，手动配置 IP 地址为 10.10.10.10&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 网卡顺序为第一张(0)&lt;/span>
+$ climc host-add-netif --ip-addr 10.10.10.10 --type admin bm2 bcast0 52:54:00:12:34:56 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看物理机的网卡：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-network-list --details --host bm2
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Baremetal_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network &lt;span style="color:#000;font-weight:bold">|&lt;/span> IP_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mac_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Nic_Type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> pxe-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.10.10.10 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 52:54:00:12:34:56 &lt;span style="color:#000;font-weight:bold">|&lt;/span> admin &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.2.3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 30:4e:05:26:22:43 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机更改 IP</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_ip_address/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_ip_address/</guid><description>
 &lt;p>云平台里面的物理机会分配 2 个 IP 地址，一个分配给 BMC IPMI 的地址，还有一个是物理机 PXE 启动时候的地址。如果物理机安装操作系统，会在平台生成一条裸金属的记录，裸金属记录也会被分配一个 IP 地址。物理机安装操作系统的时候，在默认没有指定 IP 地址的情况下，裸金属分配的 IP 地址会优先复用对应物理机上的 PXE IP 地址。&lt;/p>
 &lt;p>通常情况下，这些 IP 地址都由云平台记录和管理，不需要手动去更改。但有时候遇到物理网络的变更，可能会手动更改 IPMI 或者操作系统里面的 IP 地址，手动更改相应的 IP 地址后，就需要更新云平台对应的 IP 地址。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
@@ -816,25 +778,71 @@ $ climc server-network-list --server bms --details
 +--------------------------------------+-------+--------------------------------------+---------+-------------------+---------------+
 &lt;span style="color:#8f5902;font-style:italic"># 然后更新裸金属 bms 的 IP 地址，改为 pxe-net 子网里面的 10.168.26.70 地址&lt;/span>
 $ climc server-change-ipaddr bms 52:54:00:12:34:56 pxe-net:10.168.26.70
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 更换网卡</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_netif/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/change_netif/</guid><description>
-&lt;p>云平台会记录物理机的网卡信息，如果实际环境中替换了物理机的网卡，需要手动保持平台里面物理机的网卡信息和实际环境中的一致。&lt;/p>
-&lt;h2 id="删掉物理机网卡">删掉物理机网卡&lt;/h2>
-&lt;p>假设需要移除物理机 bm1 上 mac 为 52:54:00:12:34:56 的网卡，对应操作如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-remove-netif bm1 52:54:00:12:34:56
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="添加新的网卡">添加新的网卡&lt;/h2>
-&lt;p>手动给物理机添加网卡后，同步平台里面的信息有两种方式，一种是让物理机重新 PXE 启动一次，平台对应的硬件信息就会更新，这种方式适用于物理机上没有安装操作系统或者删除了操作系统的情况。&lt;/p>
-&lt;p>另外一种是使用命令 &lt;code>host-add-netif&lt;/code> 给物理机添加网卡：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 给物理机 bm2 添加 admin 类型的网卡，二层网络为 bcast0 ，MAC 地址为 52:54:00:12:34:56，手动配置 IP 地址为 10.10.10.10&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 网卡顺序为第一张(0)&lt;/span>
-$ climc host-add-netif --ip-addr 10.10.10.10 --type admin bm2 bcast0 52:54:00:12:34:56 &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看物理机的网卡：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-network-list --details --host bm2
-+--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> Baremetal_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Host &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Network &lt;span style="color:#000;font-weight:bold">|&lt;/span> IP_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Mac_addr &lt;span style="color:#000;font-weight:bold">|&lt;/span> Nic_Type &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> pxe-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.10.10.10 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 52:54:00:12:34:56 &lt;span style="color:#000;font-weight:bold">|&lt;/span> admin &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> 610a7133-a2f6-4e52-8b12-2067296863a4 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bm2 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 14f56d88-0a70-404f-872e-56949bf0e488 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi-net &lt;span style="color:#000;font-weight:bold">|&lt;/span> 10.0.2.3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 30:4e:05:26:22:43 &lt;span style="color:#000;font-weight:bold">|&lt;/span> ipmi &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-+--------------------------------------+------+--------------------------------------+------------+--------------+-------------------+----------+
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 裸金属网卡命名</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/nic_persistent_naming/</link><pubDate>Thu, 09 Sep 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/nic_persistent_naming/</guid><description>
+&lt;h2 id="为什么物理机的网卡名称总是命名为en0-en1-">为什么物理机的网卡名称总是命名为en0, en1, &amp;hellip;?&lt;/h2>
+&lt;p>传统的Linux网卡命名规则为按照内核探测网卡的顺序，把网卡依次命名为eth0, eth1, &amp;hellip;。这种命名方式导致的问题时在添加/删除网卡设备后，导致网卡的名称发生变化（例如将eth0的网卡移除，重启之后，原来命名为eth1的网卡会变成eth0）。为了让网卡的名称和内核探测网卡的顺序无关，从systemd/udev v197开始引入了Predictable-Network-Interface-Names的机制，采用网卡的firmware/topology/location信息来命名网卡，例如 eno1， ens1，enp2s0等。具体参见 &lt;a href="https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/">https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/&lt;/a> 。&lt;/p>
+&lt;p>采用新机制避免了因为网卡的检测顺序、增删网卡等导致的网卡名称不持久，但却导致网卡的名称没有规律可循，而云平台初始化裸金属时需要能够明确地配置指定物理机网卡的IP配置。&lt;/p>
+&lt;p>为此，Cloudpods按照PXE引导系统探测网卡的顺序给网卡依次命名为en0, en1, &amp;hellip;&lt;/p>
+&lt;p>为了实现网卡的自定义命名，Cloudpods做了如下操作：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>关闭 Predictable-Network-Interface-Names 机制，需要修改 /etc/default/grub，在内核启动参数添加 &amp;ldquo;net.ifnames=0 biosdevnames=0&amp;rdquo;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>修改 /etc/udev/rules.d/70-persistent-net.rules ，一次写入网卡的mac和名称映射关系，udev将按照mac对网卡进行命名&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">KERNEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#000">SUBSYSTEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;net&amp;#34;&lt;/span>, &lt;span style="color:#000">ACTION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;add&amp;#34;&lt;/span>, &lt;span style="color:#000">DRIVERS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;?*&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>address&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;00:22:a6:48:39:10&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>type&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>, &lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;en0&amp;#34;&lt;/span>
+&lt;span style="color:#000">KERNEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#000">SUBSYSTEM&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;net&amp;#34;&lt;/span>, &lt;span style="color:#000">ACTION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;add&amp;#34;&lt;/span>, &lt;span style="color:#000">DRIVERS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;?*&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>address&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;00:22:a6:48:39:11&amp;#34;&lt;/span>, ATTR&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>type&lt;span style="color:#ce5c00;font-weight:bold">}==&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;1&amp;#34;&lt;/span>, &lt;span style="color:#000">NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;en1&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="物理机更换网卡后的注意事项">物理机更换网卡后的注意事项&lt;/h2>
+&lt;p>物理机如果更换网卡，首先需要同时更新Cloudpods对应物理机的网卡数据，具体操作请参见 &lt;a href="../change_netif">更换网卡&lt;/a> 。&lt;/p>
+&lt;p>同时，由于采用了如上自定义命名网卡的机制，新加入的网卡的mac不在udev的规则中，会出现新网卡的命名不遵循enX的命名规律，导致网卡的IP配置不生效。因此需要采用如下措施修改udev的命名规则：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>手动修改 /etc/udev/rules.d/70-persistent-net.rules&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果允许物理机重启，可以执行如下命令，让物理机重启boot进入PXE引导系统，初始化一系列配置文件，包括udev的配置文件：&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-deploy &amp;lt;baremetal_server_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Bonding模式共享BMC网口</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/bonding_shared_bmc_nic/</link><pubDate>Mon, 20 Sep 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/bonding_shared_bmc_nic/</guid><description>
+&lt;h2 id="双网卡bonding模式下共享bmc网口不工作怎么办">双网卡Bonding模式下共享BMC网口不工作怎么办？&lt;/h2>
+&lt;p>为了保证网卡的物理冗余，Bonding是常见的技术手段。Bonding将两个物理网口绑定为一个虚拟的网口，使得任意一个网口失效都不会影响该网口的通信。更多信息请参见 &lt;a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bonding">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bonding&lt;/a> 。开启Bonding后，当物理机通过Bonding网口发送报文时，会按照Bonding配置的模式，以主备或者负载均衡的方式，选择其中一个物理网口发送报文。反之，当交换机向物理机的Bonding网口发送报文时，也会按照规则选择其中一个网口作为实际的接收网口发送报文，接收到的报文在服务器的虚拟Bonding网口进行重组，就好像报文是通过一个网口接收的一样。&lt;/p>
+&lt;p>BMC网口是网络访问物理服务器BMC带外管理服务的网络接口，有两种模式：1）专用网口（dedicated），物理机主板上有一个专门的独立网口用于访问BMC。2）共享模式（shared）：可以通过物理机的板载通信网口（一般是第一个口）访问BMC，这个时候通过第一个口既可以访问物理机的第一个网口，也可以访问BMC，可以理解为第一个网口有两个mac地址，一个是BMC的网口mac，另一个是正常的网口的mac。为了便于部署，节约交换机网口和网线，很多时候会采用共享模式的BMC网口。BMC网口采用专用还是共享模式需要在BMC的控制面板进行设置。&lt;/p>
+&lt;p>当开启了BMC共享网口模式，使用第一个板载物理网口作为共享BMC口，同时又使用第一二个网口bonding的时候，往往会导致BMC网口访问失效。究其原因也比较容易理解：当外部访问BMC网口时，交换机会认为访问BMC的报文也是一个访问物理机的普通报文，会按照发送给物理机bonding网口的逻辑处理，选择其中一个网口发送。但是，由于BMC网口只监听在第一个网口，交换机通过第二个网口发送的报文就无法被BMC接收到。这样BMC无法正常接收报文，导致BMC网络功能无法正常访问。&lt;/p>
+&lt;p>要解决这个问题，原理也比较简单：需要在物理机上联的交换机上做路由策略，将访问BMC的报文必须从指定的第一个网口发送，这样BMC就能接收到完整的报文，从而能够正常通信。&lt;/p>
+&lt;p>然而，配置这样的路由策略比较复杂。&lt;/p>
+&lt;p>庆幸的是，目前一些新型交换机已经为此场景设计了专门的命令，用来解决这个问题。例如，H3C的交换机就增加配置聚合管理VLAN和聚合管理端口的专用命令，如下图所示。&lt;/p>
+&lt;img src="../images/link-aggregation-management.png">
+&lt;p>具体请参见：https://www.h3c.com/cn/d_201903/1157320_30005_0.htm#_Toc4502224&lt;/p></description></item><item><title>Docs: 物理机与宿主机互相转换</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/convert/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/convert/</guid><description>
+&lt;h3 id="转换为宿主机">转换为宿主机&lt;/h3>
+&lt;p>该功能用于将物理机设备转换成宿主机。物理机用于创建裸金属服务器，宿主机用于创建虚拟机。&lt;/p>
+&lt;h4 id="准备工作">准备工作&lt;/h4>
+&lt;ol>
+&lt;li>宿主机即安装了host服务的计算节点，在云管平台上将物理机转换为宿主机时需要使用由我司提供的专门制作的宿主机镜像，镜像可从下面地址获取：
+&lt;ul>
+&lt;li>v3.9 镜像：https://iso.yunion.cn/vm-images/host-convert-v39-20230404.qcow2&lt;/li>
+&lt;li>v3.9 UEFI 镜像(宿主机如果是 UEFI 启动)：https://iso.yunion.cn/vm-images/host-convert-uefi-v39-20230404.qcow2&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>将该镜像上传到管理平台，并记录该镜像的id信息。&lt;/li>
+&lt;li>在控制节点上通过climc命令设置物理机转换宿主机的默认镜像。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置默认镜像的镜像id&lt;/span>
+$ climc service-config --config &lt;span style="color:#000">convert_hypervisor_default_template&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>a9b67435-8c08-4063-8ea6-d885ea26aa79 region2
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>将物理机转换为宿主机时可直接选择磁盘RAID设置参数，进行转换宿主机操作。或通过自定义设置选择宿主机镜像，进行转换宿主机操作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="操作步骤">操作步骤&lt;/h4>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 转换为宿主机&lt;/span>
+climc host-convert-hypervisor
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="回收为物理机">回收为物理机&lt;/h3>
+&lt;p>该功能用于将宿主机回收成物理机。当宿主机类型为KVM且包含IPMI信息时可转为宿主机。物理机用于创建裸金属服务器，宿主机用于创建虚拟机。&lt;/p>
+&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 回收为物理机&lt;/span>
+climc host-undo-convert &amp;lt;host_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机硬件规格要求</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/hardware-requirements/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/hardware-requirements/</guid><description>
 &lt;h2 id="cpu-架构">CPU 架构&lt;/h2>
 &lt;p>x86&lt;/p>
@@ -866,35 +874,7 @@ $ climc host-add-netif --ip-addr 10.10.10.10 --type admin bm2 bcast0 52:54:00:12
 &lt;li>i40e&lt;/li>
 &lt;li>bnx2x&lt;/li>
 &lt;li>bnxt_en&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 物理机与宿主机互相转换</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/convert/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/convert/</guid><description>
-&lt;h3 id="转换为宿主机">转换为宿主机&lt;/h3>
-&lt;p>该功能用于将物理机设备转换成宿主机。物理机用于创建裸金属服务器，宿主机用于创建虚拟机。&lt;/p>
-&lt;h4 id="准备工作">准备工作&lt;/h4>
-&lt;ol>
-&lt;li>宿主机即安装了host服务的计算节点，在云管平台上将物理机转换为宿主机时需要使用由我司提供的专门制作的宿主机镜像，镜像可从下面地址获取：
-&lt;ul>
-&lt;li>v3.9 镜像：https://iso.yunion.cn/vm-images/host-convert-v39-20230404.qcow2&lt;/li>
-&lt;li>v3.9 UEFI 镜像(宿主机如果是 UEFI 启动)：https://iso.yunion.cn/vm-images/host-convert-uefi-v39-20230404.qcow2&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>将该镜像上传到管理平台，并记录该镜像的id信息。&lt;/li>
-&lt;li>在控制节点上通过climc命令设置物理机转换宿主机的默认镜像。&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置默认镜像的镜像id&lt;/span>
-$ climc service-config --config &lt;span style="color:#000">convert_hypervisor_default_template&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>a9b67435-8c08-4063-8ea6-d885ea26aa79 region2
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>将物理机转换为宿主机时可直接选择磁盘RAID设置参数，进行转换宿主机操作。或通过自定义设置选择宿主机镜像，进行转换宿主机操作。&lt;/li>
-&lt;/ol>
-&lt;h4 id="操作步骤">操作步骤&lt;/h4>
-&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 转换为宿主机&lt;/span>
-climc host-convert-hypervisor
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="回收为物理机">回收为物理机&lt;/h3>
-&lt;p>该功能用于将宿主机回收成物理机。当宿主机类型为KVM且包含IPMI信息时可转为宿主机。物理机用于创建裸金属服务器，宿主机用于创建虚拟机。&lt;/p>
-&lt;p>&lt;big>&lt;strong>climc操作&lt;/strong>&lt;/big>&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 回收为物理机&lt;/span>
-climc host-undo-convert &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 物理机相关操作</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/</link><pubDate>Mon, 07 Feb 2022 19:02:52 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/machine/</guid><description/></item><item><title>Docs: 物理机测试方案</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/testcase/</link><pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/testcase/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 物理机测试方案</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/testcase/</link><pubDate>Fri, 19 Jul 2019 20:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/testcase/</guid><description>
 &lt;h2 id="1-环境要求">1. 环境要求&lt;/h2>
 &lt;h3 id="11-物理机设置">1.1 物理机设置&lt;/h3>
 &lt;p>物理机设置要求如下：&lt;/p>
@@ -957,4 +937,24 @@ climc host-undo-convert &amp;lt;host_id&amp;gt;
 &lt;h3 id="23-安装物理机监控agent">2.3 安装物理机监控agent&lt;/h3>
 &lt;p>在“裸金属”服务器的监控面板，安装监控agent，查看物理机是否有监控指标数据。&lt;/p>
 &lt;h3 id="24-删除操作系统">2.4 删除操作系统&lt;/h3>
-&lt;p>删除“裸金属”服务器上安装的操作系统，成为一台“闲置”的物理机&lt;/p></description></item></channel></rss>
+&lt;p>删除“裸金属”服务器上安装的操作系统，成为一台“闲置”的物理机&lt;/p></description></item><item><title>Docs: 如何手动更改安装了操作系统的裸金属服务器RAID配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/manual_change_raid/</link><pubDate>Wed, 09 Jun 2021 22:25:05 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/manual_change_raid/</guid><description>
+&lt;h2 id="手动更改安装了操作系统的裸金属服务器的raid配置">手动更改安装了操作系统的裸金属服务器的RAID配置&lt;/h2>
+&lt;p>Cloudpods裸金属管理可以实现在安装操作系统的过程中，自动化地配置RAID配置，支持MegaRaid，HPSmart Array等RAID卡。但是安装完操作系统后，在不重装系统的情况下，无法重新自动配置RAID，例如，给RAID增加磁盘或者更改RAID级别等。这时候就必须通过手动方式进行。本文介绍如何手动更改安装了操作系统的裸金属服务器的RAID配置。&lt;/p>
+&lt;ol>
+&lt;li>将该裸金属服务器重启进入维护模式&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-maintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令将重启物理机，并启动进入网络PXE引导的内存操作系统&lt;/p>
+&lt;ol start="2">
+&lt;li>等引导启动进入内存操作系统后，ssh登入该系统&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-ssh &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>更改RAID配置&lt;/li>
+&lt;/ol>
+&lt;p>RAID的工具软件位于内存操作系统的/opt目录下，包含MegaRaid, HPSA, SAS, Marvel等RAID的控制工具软件&lt;/p>
+&lt;ol start="4">
+&lt;li>更改RAID配置完成后，重启恢复已安装的操作系统&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-unmaintenance &amp;lt;host_id&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

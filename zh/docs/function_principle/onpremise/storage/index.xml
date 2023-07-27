@@ -4,10 +4,10 @@
 &lt;p>其中，支持的存储访问接口分为以下几类：&lt;/p>
 &lt;ul>
 &lt;li>
-&lt;p>文件接口：虚拟机的磁盘以文件形式存在，QEMU虚拟机通过Posix文件接口来访问虚拟机磁盘文件的内容。磁盘文件格式一般有raw，qcow2两种格式。我们一般采用qcow2的格式的磁盘文件。qcow2格式的磁盘文件相比于raw格式文件有很多优点：1）支持thin provision模式，磁盘文件占用空间按需分配，2）支持快照，3）性能优异。&lt;/p>
+&lt;p>文件接口：虚拟机的磁盘以文件形式存在，QEMU虚拟机通过POSIX文件接口访问虚拟机磁盘内容。磁盘文件格式一般有raw和qcow2两种格式。我们一般采用qcow2的格式的磁盘文件。qcow2格式的磁盘文件相比于raw格式文件有很多优点：1）支持thin provision模式，磁盘文件占用空间按需分配，占用较少；2）支持快照等功能特性，3）相比raw格式，性能不算差。&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>块接口：虚拟机的磁盘就是宿主机上的磁盘设备。虚拟机直接挂载宿主机上的block设备。这些block设备无论是本地还是网络共享的，都会加入到宿主机的LVM VG存储池中，以LVM的逻辑卷提供给QEMU虚拟机。基于KVM的快照实现了虚拟机磁盘的快照。相比文件接口方式，这种方式少了文件系统的开销，有较高的读写性能。&lt;/p>
+&lt;p>块接口：虚拟机的磁盘就是宿主机上的磁盘设备。虚拟机直接挂载宿主机上的block设备。这些block设备无论是本地还是网络共享的，都会加入到宿主机的LVM VG存储池中，以LVM的逻辑卷形式提供给QEMU虚拟机。基于LVM的快照实现了虚拟机磁盘的快照。相比文件接口方式，这种方式少了文件系统的开销，有较高的读写性能。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>自定义接口：文件接口和快接口都是Linux操作系统的标准接口，除此之外，Cloudpods支持的访问虚拟磁盘的接口为Ceph RBD，是Ceph自定义的访问其分布式块设备的接口。&lt;/p>
@@ -20,14 +20,13 @@
 &lt;li>分布式访问：虚拟机磁盘不存储在本地或网络上的具体存储节点上，而是分布式在多个节点上，例如Ceph。&lt;/li>
 &lt;/ul>
 &lt;p>因此，块存储从访问接口和部署架构，分为如下几类。&lt;/p>
-&lt;p>| 部署架构 | 本地访问 | 集中式网络访问 | 去中心分布式访问 |&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>访问接口&lt;/th>
-&lt;th>&lt;/th>
-&lt;th>&lt;/th>
-&lt;th>&lt;/th>
+&lt;th>访问接口\部署架构&lt;/th>
+&lt;th>本地访问&lt;/th>
+&lt;th>集中式网络访问&lt;/th>
+&lt;th>去中心分布式访问&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
@@ -51,18 +50,25 @@
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;h2 id="本地存储">本地存储&lt;/h2>
+&lt;h2 id="支持存储类型">支持存储类型&lt;/h2>
+&lt;h3 id="本地存储">本地存储&lt;/h3>
 &lt;p>本地存储是使用宿主机本地的文件系统存储虚拟机的磁盘文件。是默认支持的块存储。本地存储需要在宿主机的本地配置文件申明，host服务启动后会自动注册和上报状态。具体具体配置和使用方法请参考 &lt;a href="./add-storage">本地存储&lt;/a>。&lt;/p>
-&lt;h2 id="nas">NAS&lt;/h2>
+&lt;h3 id="nas">NAS&lt;/h3>
 &lt;p>NAS存储使用网络挂载的文件系统存储虚拟机的磁盘文件。目前分为两种情况NFS和GPFS。&lt;/p>
-&lt;h3 id="nfs">NFS&lt;/h3>
+&lt;h4 id="nfs">NFS&lt;/h4>
 &lt;p>NFS类型的块存储特指通过NFS协议挂载的网络共享文件系统。这一类存储需要指定共享的服务器IP和共享目录。将宿主机和存储关联后，host服务会自动以NFS协议挂载该存储到宿主机的指定目录，无需提前手动挂载。&lt;/p>
-&lt;h3 id="gpfs">GPFS&lt;/h3>
+&lt;h4 id="gpfs">GPFS&lt;/h4>
 &lt;p>GPFS用于指定用户已经手动提前挂载到宿主机的任意网络共享文件系统，并不仅限于GPFS，还包括OCFS2，GlusterFS等网络文件系统。创建一个GPFS类型的块存储的意义更多是用于将存储的配置信息提供给平台，便于后续使用。跟NFS存储不同，将该存储挂载到宿主机的操作，其作用仅是告知平台该存储在宿主机的访问路径，平台并不会自动执行挂载。只要是用户自己执行挂载的网络文件系统，都可以注册为GPFS类型的块存储。&lt;/p>
-&lt;h2 id="本地lvm">本地LVM&lt;/h2>
+&lt;h3 id="本地lvm">本地LVM&lt;/h3>
 &lt;p>本地LVM是使用宿主机本机的LVM VG分配逻辑卷给虚拟机作为虚拟磁盘的块存储。具体配置和使用方法参考 &lt;a href="./lvm-storage">本机LVM存储&lt;/a>。&lt;/p>
-&lt;h2 id="ceph">Ceph&lt;/h2>
-&lt;p>Ceph是使用Ceph RBD块设备作为虚拟机的虚拟磁盘。具体配置和使用方法参考 &lt;a href="./ceph">Ceph&lt;/a>&lt;/p></description></item><item><title>Docs: 备份存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/backupstorage/</link><pubDate>Tue, 15 Mar 2022 15:55:34 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/backupstorage/</guid><description>
+&lt;h3 id="ceph">Ceph&lt;/h3>
+&lt;p>Ceph是使用Ceph RBD块设备作为虚拟机的虚拟磁盘。具体配置和使用方法参考 &lt;a href="./ceph">Ceph&lt;/a>&lt;/p>
+&lt;h2 id="存储的使用">存储的使用&lt;/h2>
+&lt;h3 id="本地访问存储">本地访问存储&lt;/h3>
+&lt;p>平台默认会为每个宿主机添加一个本地存储，默认位置在 /opt/cloud/workspace/disks。&lt;/p>
+&lt;p>其他本地访问存储，包括文件存储和LVM，需要在对应宿主机修改配置添加，添加后重启host服务生效。&lt;/p>
+&lt;h3 id="网路访问存储">网路访问存储&lt;/h3>
+&lt;p>对于网络访问存储，需要在平台添加存储配置。&lt;em>添加存储后，还需要将该网络存储和对应宿主机关联&lt;/em>。&lt;/p></description></item><item><title>Docs: 备份存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/backupstorage/</link><pubDate>Tue, 15 Mar 2022 15:55:34 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/backupstorage/</guid><description>
 &lt;p>备份存储是存储虚拟机磁盘备份的存储，通过外部挂载方式挂载到平台。目前主要支持NFS存储。&lt;/p>
 &lt;p>磁盘备份是虚拟机的磁盘在某个时间点的快照的备份，主机备份是一台虚拟机所有磁盘的磁盘备份的集合。&lt;/p>
 &lt;p>磁盘备份的获取方式为：先对虚拟机磁盘进行快照，再将快照数据导出为qcow2文件，该文件即为磁盘的备份。&lt;/p>

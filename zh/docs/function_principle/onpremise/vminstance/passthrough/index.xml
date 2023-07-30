@@ -341,7 +341,13 @@ $ climc isolated-device-list --host oc-node-1-192-168-121-21
 &lt;span style="color:#000;font-weight:bold">|&lt;/span> fa3cdbbd-7c54-4d2a-87cd-9362aa590a7d &lt;span style="color:#000;font-weight:bold">|&lt;/span> USB &lt;span style="color:#000;font-weight:bold">|&lt;/span> Adomax Technology Co., Ltd &lt;span style="color:#000;font-weight:bold">|&lt;/span> 001:002 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0627:0001 &lt;span style="color:#000;font-weight:bold">|&lt;/span> 7a11731f-dcc0-41e5-8d64-68eb36defcbe &lt;span style="color:#000;font-weight:bold">|&lt;/span>
 +--------------------------------------+----------+----------------------------+---------+------------------+--------------------------------------+
 *** Total: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Pages: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> Limit: &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Offset: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> Page: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ***
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="指定usb控制器">指定USB控制器&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="webui动态刷新usb设备">WebUI动态刷新USB设备&lt;/h3>
+&lt;p>为了方便用户使用，WebUI会在以下场景自动刷新指定宿主机的透传USB设备列表：&lt;/p>
+&lt;ol>
+&lt;li>访问宿主机-详情-透传设备，会自动刷新指定宿主机的透传设备&lt;/li>
+&lt;li>访问虚拟机-设置USB透传&lt;/li>
+&lt;/ol>
+&lt;h2 id="指定usb控制器">指定USB控制器&lt;/h2>
 &lt;p>默认采用qemu-xhci的USB控制器，该控制器支持版本为USB 3.0，向下兼容2.0。对于老版本的操作系统，例如 Windows Server 2008 R2，不识别USB 3.0的控制器，此时需要改为USB 2.0的控制器 usb-ehci。可以通过一下climc命令行更改虚拟机使用的USB控制器：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-set-qemu-params &amp;lt;sid&amp;gt; --usb-controller-type &amp;lt;usb-ehci&lt;span style="color:#000;font-weight:bold">|&lt;/span>qemu-xhci&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>更改后，请请重启虚拟机。&lt;/p></description></item><item><title>Docs: 串口COM透传</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/passthrough/com-passthrough/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/passthrough/com-passthrough/</guid><description>

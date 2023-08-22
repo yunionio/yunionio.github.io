@@ -1,30 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-VPC网络</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/</link><description>Recent content in VPC网络 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: EIP平台配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/eiphowto/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/eiphowto/</guid><description>
-&lt;h2 id="什么时候需要eip">什么时候需要EIP？&lt;/h2>
-&lt;p>VPC网络给用户提供了一个隔离的虚拟网络，允许用户配置任意地址段的IP子网，实现VPC内的虚拟机之间通过虚拟网络通信。同时，云平台开启了默认的NAT功能，允许VPC内的虚拟机主动访问VPC外部的网络地址。&lt;/p>
-&lt;p>然而，当我们希望外部网络能够主动访问VPC内的虚拟机时，就需要使用EIP。EIP的作用就是将物理网络的一个IP地址唯一地映射到VPC里的一个虚拟IP。当外部网络访问该EIP时，自动将流量转发到EIP对应的VPC内虚拟机，实现外部网络主动访问VPC内虚拟机的效果。&lt;/p>
-&lt;h2 id="eip的平台配置">EIP的平台配置&lt;/h2>
-&lt;p>为了让EIP功能正常工作，管理员需要在平台进行相关的配置，大概分为两步：&lt;/p>
-&lt;h3 id="第一步部署eip网关">第一步：部署EIP网关&lt;/h3>
-&lt;p>具体步骤请参见&lt;a href="./eipgwhowto">部署EIP网关&lt;/a>&lt;/p>
-&lt;p>需要说明的是，如果是AllInOne部署，部署的节点已经默认开启了EIP网关功能。因此，部署完成后，只需要做EIP网段的配置。&lt;/p>
-&lt;h3 id="第二步配置eip网段">第二步：配置EIP网段&lt;/h3>
-&lt;p>管理员需要在平台配置一个或多个EIP网段用于EIP地址的分配。&lt;/p>
-&lt;p>云平台配置EIP网段的方法为，在经典网络（Default VPC）创建一个类型为“EIP”的IP子网。可以在前端创建，也可以在后端用climc命令行创建。创建EIP需要使用经典网络，即选择Default VPC，二层网络可选择任意二层网络。&lt;/p>
-&lt;p>然而，EIP网段不是任意设置的，必须是物理网络中实际可路由的一个IP网段，需要满足如下条件：在物理网络访问EIP网段里任意IP地址的报文都要经过EIP网关。因此需要网络管理员根据EIP网关的网络配置进行相应的配置。&lt;/p>
-&lt;p>针对AllInOne部署配置，一般来说按如下方法配置路由：在AllInOne节点的接入三层交换机，新增一条静态路由，该路由的目的网段为EIP网段，路由下一跳为AllInOne节点的IP地址。为了避免路由冲突，EIP网段应避免和宿主机所在IP网段重叠。&lt;/p>
-&lt;p>例如，AllInOne部署节点IP地址为 192.168.201.20/24，选择EIP网段为 192.168.202.1-254/24，则在AllInOne节点的接入三层交换机上配置一条静态路由：&lt;/p>
-&lt;pre>&lt;code>Network Prefix NextHop
-192.168.202.0/24 192.168.201.20
-&lt;/code>&lt;/pre>&lt;p>同时在云平台上配置一个经典网络IP子网，地址范围为：192.168.202.1-192.168.202.254，子网掩码长度24.&lt;/p>
-&lt;h3 id="验证路由配置">验证路由配置&lt;/h3>
-&lt;p>可以通过如下方法验证EIP路由是否正确配置：&lt;/p>
-&lt;p>在物理网络内需要访问EIP的任意节点发起对EIP的ping，然后在EIP网关抓包，看是否能正确收到ping报文。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">tcpdump -i eth0 -nnn host &amp;lt;eip&amp;gt; and icmp
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用eip">使用EIP&lt;/h2>
-&lt;p>用户使用EIP的流程为：给指定虚拟机分配一个EIP地址，从外部网络访问该EIP即能实现对虚拟机的访问。该操作可以在前端Web UI操作，也可以后端通过climc命令实现。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-create-eip --bandwidth &amp;lt;bw_mb&amp;gt; &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 部署EIP网关</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/eipgwhowto/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/eipgwhowto/</guid><description>
+VPC网络</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/</link><description>Recent content in VPC网络 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 部署EIP网关</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/eipgwhowto/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/eipgwhowto/</guid><description>
 &lt;p>当用户环境使用VPC网络时，由于VPC网络是一块网络隔离的地址空间，在VPC网络中的虚拟机如果需要与外部通信，需要绑定弹性公网IP（EIP）。EIP是经典网络可路由访问的一段IP地址。EIP网关负责将EIP和VPC的虚拟机IP进行IP地址转换（NAT），实现外部通过EIP访问VPC内的虚拟机IP。&lt;/p>
 &lt;p>系统部署后，默认不部署EIP网关。需要手工部署。本节介绍如何部署EIP网关。&lt;/p>
 &lt;h2 id="eip网关网络要求">EIP网关网络要求&lt;/h2>
@@ -88,7 +63,7 @@ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now ovn-controller
 &lt;p>以上ovs的配置，可以使用如下命令查看配置是否正确：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ovs-vsctl list Open_vSwitch
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>部署完成后，用上述部署两台计算节点的ansible脚本进行部署。&lt;/p>
-&lt;p>样例inventory的hosts描述了两台主机用作主备高可用，如果无需高可用，可将其中的一个主机描述删除，仅部署一台。&lt;/p></description></item><item><title>Docs: VPC MTU</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/mtu/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/mtu/</guid><description>
+&lt;p>样例inventory的hosts描述了两台主机用作主备高可用，如果无需高可用，可将其中的一个主机描述删除，仅部署一台。&lt;/p></description></item><item><title>Docs: MTU</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/mtu/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/mtu/</guid><description>
 &lt;p>VPC网络是一个虚拟网络，通过隧道技术在物理网络上构建，因此每个VPC网络报文需要在头部预留出一定的空间给隧道协议使用，这个预留字节数在 pkg/apis/compute/vpcs_ovn.go 的常量 VPC_OVN_ENCAP_COST 定义，默认值为60字节。(注意：3.8版本之前默认值为58字节)。同时，物理网络的MTU一般是1500字节，因此VPC内虚拟机的MTU默认是1440字节。本文介绍在默认情况下，1440字节MTU对应用的影响和解决方案。同时，也介绍如何设置将VPC虚拟机的MTU调整为1500。&lt;/p>
 &lt;h2 id="1440字节mtu对虚拟机应用的影响">1440字节MTU对虚拟机应用的影响&lt;/h2>
 &lt;p>目前看对绝大部分应用，MTU设置是透明的，没有影响。除了以下应用：&lt;/p>
@@ -278,73 +253,4 @@ inet 192.168.7.246/22 scope global secondary eth0
 valid_lft forever preferred_lft forever
 inet6 fe80::224:b1ff:fe6d:9b7d/64 scope link
 valid_lft forever preferred_lft forever
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，为反亲和组nginx绑定一个EIP，则可以在VPC外通过该EIP访问nginx集群。&lt;/p></description></item><item><title>Docs: VPC NAT</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/vpcnat/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/vpcnat/</guid><description>
-&lt;p>VPC网络是一个隔离的虚拟网络，用户可以在VPC网络内按需配置任意IP网段，VPC网络实现同一个VPC内IP子网的互联。&lt;/p>
-&lt;p>VPC内虚拟机需要访问外部网关时，需要通过NAT网关实现对外部网络的访问。如下图所示，当VM访问外部网络时，其流量被VPC转发到NAT网关，NAT网关再将VM发出的报文转发到目的地址，并且同时把IP报文的源地址转换为NAT网关的物理网络IP地址。&lt;/p>
-&lt;img src="../vpcnat.png" width="500">
-&lt;p>{&amp;lt;oem_name&amp;gt;}实现了&lt;em>分布式NAT&lt;/em>的功能，每台宿主机均为一个NAT网关，负责本宿主机上VPC虚拟机访问外网的流量转发。因此，只需要宿主机可以访问外网，则VPC内虚拟机即可访问外网。&lt;/p></description></item><item><title>Docs: VPC原理</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/vpc_internal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/vpc_internal/</guid><description>
-&lt;p>CloudpodsVPC网络的功能基于开源项目 &lt;a href="https://ovn.org">OVN&lt;/a> 实现。&lt;/p>
-&lt;p>从3.10开始，采用ovn版本为 2.12.4。&lt;/p>
-&lt;p>如下图为Cloudpods和ovn的相关组件架构图。&lt;/p>
-&lt;img src="../vpc-ovn.png" width="500">
-&lt;p>各个组件的功能说明如下：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>组件&lt;/th>
-&lt;th>部署位置&lt;/th>
-&lt;th>作用&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>region&lt;/td>
-&lt;td>控制节点&lt;/td>
-&lt;td>云控制器，管理VPC，IP子网，EIP等资源的数据，提供API接口&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>vpcagent&lt;/td>
-&lt;td>控制节点&lt;/td>
-&lt;td>负责将云平台的网络拓扑信息同步转换存储到ovn northdb&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ovn-northd&lt;/td>
-&lt;td>控制节点&lt;/td>
-&lt;td>包含ovn-northdb, ovn-northd和ovn-sourthdb等三个组件，ovn-northd存储虚拟网络面向云平台的北向数据库，ovn-sourthd存储虚拟网络面向底层设备的南向数据库，ovn-northd负责数据格式的翻译和转换&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ovn-controller&lt;/td>
-&lt;td>计算节点&lt;/td>
-&lt;td>从ovn-southdb获取本计算节点（chassis）的网络配置信息，并翻译为流表，注入本地的openvswitch&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>host&lt;/td>
-&lt;td>计算节点&lt;/td>
-&lt;td>云平台的宿主机管理代理程序，跟云控制器通信，负责本机虚拟机的管理，包括信息的同步，配置的管理等&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>sdnagent&lt;/td>
-&lt;td>计算节点&lt;/td>
-&lt;td>负责将虚拟机的配置同步到ovs，实现物理网络和虚拟网络的对接&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ovs&lt;/td>
-&lt;td>计算节点&lt;/td>
-&lt;td>负责管理计算节点的虚拟交换机配置，将流表同步到内核datapath&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ovsdb&lt;/td>
-&lt;td>计算节点&lt;/td>
-&lt;td>负责维护计算节点的虚拟交换机配置信息&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>工作流程简要说明如下：&lt;/p>
-&lt;ol>
-&lt;li>region为云控制器，实现云资源的信息管理，维护VPC，IP子网，虚拟机，EIP等资源的基础信息，以及资源之间的关联关系&lt;/li>
-&lt;li>vpcagent定期从region同步信息，并将云平台的信息转换为ovn-northd的信息，例如，将IP子网转换为ovn的虚拟机交换机，将VPC转换为ovn的虚拟路由器，&lt;/li>
-&lt;li>ovn-northd中的ovn-northdb接收vpcagent的数据更新，ovn-southd接收ovn-controller上报的物理网络信息，将ovn-northd的逻辑网络拓扑信息根据物理网络拓扑，转换为物理网络拓扑信息，保存在ovn-southd。&lt;/li>
-&lt;li>ovn-controller从ovn-southd获取本机的网络配置信息，转换为流表，注入ovs&lt;/li>
-&lt;li>host从region获取本计机运行的虚拟机的配置信息，包括虚拟机的网络接口配置，安全组，带宽限速等，并保存本地。host负责虚拟机的启动停止等。&lt;/li>
-&lt;li>sdnagent从host保存的信息获取每台虚拟机的配置信息，负责经典网络虚拟机的网络网卡配置，安全组实现和网络限速实现，负责VPC网络虚拟机的虚拟网卡设置。&lt;/li>
-&lt;/ol></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，为反亲和组nginx绑定一个EIP，则可以在VPC外通过该EIP访问nginx集群。&lt;/p></description></item></channel></rss>

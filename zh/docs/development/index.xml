@@ -525,7 +525,14 @@ protocol: https
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;p>以下声明语句，User 类型要复杂于 string 类型，但由于 Repository 是 User 的附属品，首先确定 User 才能继而确定 Repository。因此，User 的顺序要优先于 repoName。&lt;/p>
+&lt;p>函数禁止同时返回结果为nil, error也为nil, 例如:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">FetcNicByMac&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mac&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">SNic&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// 禁止有这种返回
+&lt;/span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">SNic&lt;/span>&lt;span style="color:#000;font-weight:bold">{},&lt;/span> &lt;span style="color:#204a87;font-weight:bold">nil&lt;/span>
+&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>以下声明语句，User 类型要复杂于 string 类型，但由于 Repository 是 User 的附属品，首先确定 User 才能继而确定 Repository。因此，User 的顺序要优先于 repoName。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#204a87;font-weight:bold">func&lt;/span> &lt;span style="color:#000">IsRepositoryExist&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">user&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#000">User&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">repoName&lt;/span> &lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">bool&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">error&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>函数的返回值尽量避免使用命名的函数返回值
@@ -2335,6 +2342,7 @@ $ climc project-add-user system svcuser admin
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
+&lt;p>从v3.10.4开始，profiling接口默认不启用。如需要开启，请修改对应服务的选项 enable_app_profiling 为 true，并重启服务。&lt;/p>
 &lt;h3 id="获取调用栈">获取调用栈&lt;/h3>
 &lt;p>可以通过给服务进程发送SIGUSR1信号，触发服务进程打印当前调用栈。该方法有助于发现程序Block的函数调用栈，找到阻塞的函数方法。&lt;/p>
 &lt;table>
@@ -2860,7 +2868,23 @@ Body:
 {
 &amp;quot;Msg&amp;quot;: &amp;quot;This is a validate message.&amp;quot;
 }
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 监控</title><link>https://www.cloudpods.org/zh/docs/development/monitor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/monitor/</guid><description/></item><item><title>Docs: 贡献文档</title><link>https://www.cloudpods.org/zh/docs/development/docs-dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/docs-dev/</guid><description>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 监控</title><link>https://www.cloudpods.org/zh/docs/development/monitor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/monitor/</guid><description/></item><item><title>Docs: 编排</title><link>https://www.cloudpods.org/zh/docs/development/orchestration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/orchestration/</guid><description>
+&lt;p>平台的编排系统使用了 Helm 这个通用工具来实现，如果不熟悉 Helm 这个工具，可以先参考&lt;a href="https://helm.sh/zh/docs/intro/using_helm/">官方文档&lt;/a>做一些了解。&lt;/p>
+&lt;p>其中有以下3个概念需要理解：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora 的 软件包仓库，只不过它是供 Kubernetes 包所使用的。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Release 是运行在 Kubernetes 集群中的 chart 的实例。一个 chart 通常可以在同一个集群中安装多次。每一次安装都会创建一个新的 release。以 MySQL chart为例，如果你想在你的集群中运行两个数据库，你可以安装该chart两次。每一个数据库都会拥有它自己的 release 和 release name。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="其他说明">其他说明&lt;/h2>
+&lt;p>以下文档所有的 API 都有 climc 命令行工具对应的自命令，通过加上 &amp;lsquo;&amp;ndash;debug&amp;rsquo; 参数可以清楚的看到 HTTP 请求以及相应，加上 &amp;lsquo;&amp;ndash;help&amp;rsquo; 信息参数就可以查看到支持的选项。&lt;/p>
+&lt;p>强烈建议使用 &amp;lsquo;climc &amp;ndash;debug&amp;rsquo; 的方式来执行步骤，然后查看相关 API 来理解相关接口。&lt;/p></description></item><item><title>Docs: 贡献文档</title><link>https://www.cloudpods.org/zh/docs/development/docs-dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/docs-dev/</guid><description>
 &lt;p>Cloudpods 文档使用 markdown 编写，所有内容都放到 &lt;a href="https://github.com/yunionio/docs.git">https://github.com/yunionio/docs.git&lt;/a> 这个仓库里面管理，然后使用 &lt;a href="https://gohugo.io/">hugo&lt;/a> 这个工具把文档转换成 HTML 静态网站，最后发布到 &lt;a href="https://www.cloudpods.org">https://www.cloudpods.org&lt;/a>。&lt;/p>
 &lt;p>本文介绍如何搭建文档编写环境，以及如何贡献文档等注意事项。&lt;/p>
 &lt;h2 id="在网页编辑已有文档">在网页编辑已有文档&lt;/h2>

@@ -156,7 +156,66 @@ $ climc service-config-show region2 | grep skip_server_by_sys_tag_keys
 &amp;quot;skip_server_by_sys_tag_keys&amp;quot;: &amp;quot;acs:autoscaling:scalingGroupId&amp;quot;,
 # 若需要同步弹性伸缩组实例，可将此参数改为其他标签
 $ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</guid><description>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 资源项目同步</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/project_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/project_sync/</guid><description>
+&lt;h2 id="基础概念">基础概念&lt;/h2>
+&lt;ul>
+&lt;li>云上项目: 指的是本地项目和云上项目的映射关系&lt;/li>
+&lt;li>同步策略: 指专用于云上资源同步到本地时资源归属的描述&lt;/li>
+&lt;/ul>
+&lt;h2 id="云上同步云下资源归属说明">云上同步云下资源归属说明&lt;/h2>
+&lt;ul>
+&lt;li>云账号未关联同步策略时:
+&lt;ol>
+&lt;li>在本地创建的资源或者更改过项目的资源将不会再同步资源时更改项目归属&lt;/li>
+&lt;li>根据云上项目的映射表找到云上到本地的映射关系更改资源的项目归属&lt;/li>
+&lt;li>若未找到云上项目的映射关系则资源归属到云订阅所在的项目&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>云账号关联同步策略时:
+&lt;ol>
+&lt;li>在本地新建资源或者更改过项目的资源也将会根据同步策略更改资源的归属&lt;/li>
+&lt;li>优先使用同步策略中的设置, 若未匹配则按照云账号未关联同步策略时的2和3进行归属&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="本地到云上的项目同步">本地到云上的项目同步&lt;/h2>
+&lt;p>假设云上项目映射关系如下列表, 且云上项目皆正常可用&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>云上项目&lt;/th>
+&lt;th>优先级&lt;/th>
+&lt;th>本地项目&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>cloud-A&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>local-A&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloud-B&lt;/td>
+&lt;td>3&lt;/td>
+&lt;td>local-B&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloud-C&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>local-B&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloud-D&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>local-C&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>若创建资源时使用了local-A项目, 根据映射表, local-A映射至云上cloud-A项目, 创建资源将归属于云上cloud-A项目&lt;/li>
+&lt;li>若创建资源时使用了local-B项目, 根据映射表, cloud-B cloud-C 都可以选择，但cloud-B优先级最高, 创建资源将归属于云上cloud-B项目&lt;/li>
+&lt;li>若创建资源时使用了local-D项目，未在映射表中找到映射关系，则在云上创建同名的local-D项目，创建的资源将归属于云上的local-D项目&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</guid><description>
 &lt;p>可以通过对应云平台的调用接口验证接口是否可以被正常调用，AccessKey信息是否正确。&lt;/p>
 &lt;ul class="nav nav-tabs" id="tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1-0" role="tab" aria-controls="tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1-0" aria-selected="true">天翼云&lt;/a>&lt;/li>
 &lt;/ul>

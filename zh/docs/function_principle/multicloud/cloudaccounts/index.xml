@@ -49,7 +49,36 @@ $ climc service-config --config &lt;span style="color:#000">cloudaccount_health_
 &lt;li>每个成员账号内都有 Role：OrganizationAccountAccessRole&lt;/li>
 &lt;/ol>
 &lt;p>对于在AWS组织（Organization）下新建的AWS成员账号，都自动有一个Role：OrganizationAccountAccessRole，该role的权限等同于 AdministratorAccess&lt;/p>
-&lt;p>如果是邀请加入的AWS成员账号，则不一定有这个Role，需要手工增加，具体步骤参见：https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role&lt;/p></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
+&lt;p>如果是邀请加入的AWS成员账号，则不一定有这个Role，需要手工增加，具体步骤参见：https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role&lt;/p></description></item><item><title>Docs: Azure 创建订阅设置</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/azure_subscription/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/azure_subscription/</guid><description>
+&lt;h2 id="前置条件">前置条件&lt;/h2>
+&lt;ul>
+&lt;li>Azure账号为国际区账号&lt;/li>
+&lt;li>Azure账号为企业账号&lt;/li>
+&lt;li>平台录入的账号和此文档中的应用程序是同一个&lt;/li>
+&lt;/ul>
+&lt;h2 id="登录azure控制台-开启cloudshell">登录Azure控制台, 开启CloudShell&lt;/h2>
+&lt;p>&lt;img src="../images/az_cloud_shell.png" alt="">&lt;/p>
+&lt;h2 id="获取-enrollment-account-id">获取 enrollment account id&lt;/h2>
+&lt;p>在上面的cloud shell中执行 az billing enrollment-account list, 如下图&lt;/p>
+&lt;p>&lt;img src="../images/az_enrollment_account.png" alt="">&lt;/p>
+&lt;p>这里假设id 为 /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx 保存 以备用&lt;/p>
+&lt;h2 id="获取应用程序id">获取应用程序Id&lt;/h2>
+&lt;p>到Azure Active Directory =&amp;gt; 应用注册中找到使用的应用，并获得 应用程序(客户端) ID, 并在cloud shell执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">az ad sp show --id 7ffdacec-8769-4802-9975-4ba7a2906ec8 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep id
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/az_app_id.png" alt="">&lt;/p>
+&lt;p>获得应用程序Id为 5b744b52-4215-4cc7-b776-429ce447c62c 保存备用&lt;/p>
+&lt;h2 id="赋予应用程序enrollment-account-onwer权限">赋予应用程序enrollment account Onwer权限&lt;/h2>
+&lt;p>打开cloud shell 执行&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">&lt;span style="color:#8f5902;font-style:italic"># 这里的 5b744b52-4215-4cc7-b776-429ce447c62c 是应用程序Id&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx 是 enrollment account id&lt;/span>
+az role assignment create --role Owner --assignee-object-id 5b744b52-4215-4cc7-b776-429ce447c62c --scope /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如图所示即赋权成功
+&lt;img src="../images/az_assign_role.png" alt="">&lt;/p>
+&lt;h2 id="参考文档">参考文档&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/programmatically-create-subscription-preview?tabs=azure-cli">编程创建订阅&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/grant-access-to-create-subscription?tabs=rest%2Crest-2">赋权文档&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
 &lt;h2 id="对接-openstack-后端使用ceph-存储的时候云账户管理经常同步不下相关的ceph-磁盘配置">对接 Openstack 后端使用ceph 存储的时候，云账户管理，经常同步不下相关的ceph 磁盘配置&lt;/h2>
 &lt;p>我们需要在创建磁盘的时候指定相关的ceph 类型。首先检查一下是否指定了volume_backend_name.&lt;/p>
 &lt;p>1、查看cinder配置文件的ceph 指定的name,没有就添加：&lt;/p>

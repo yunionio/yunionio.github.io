@@ -74,10 +74,15 @@ $ climc service-config --config &lt;span style="color:#000">cloudaccount_health_
 az role assignment create --role Owner --assignee-object-id 5b744b52-4215-4cc7-b776-429ce447c62c --scope /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>如图所示即赋权成功
 &lt;img src="../images/az_assign_role.png" alt="">&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+若创建订阅时报 &lt;strong>EntitlementNotFound&lt;/strong> 的错误，需要根据文档到ea上开启&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/ea-portal-administration#enterprise-devtest-offer">创建订阅权限&lt;/a>
+&lt;/div>
 &lt;h2 id="参考文档">参考文档&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/programmatically-create-subscription-preview?tabs=azure-cli">编程创建订阅&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/grant-access-to-create-subscription?tabs=rest%2Crest-2">赋权文档&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/ea-portal-administration#enterprise-devtest-offer">开启创建订阅权限&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
 &lt;h2 id="对接-openstack-后端使用ceph-存储的时候云账户管理经常同步不下相关的ceph-磁盘配置">对接 Openstack 后端使用ceph 存储的时候，云账户管理，经常同步不下相关的ceph 磁盘配置&lt;/h2>
 &lt;p>我们需要在创建磁盘的时候指定相关的ceph 类型。首先检查一下是否指定了volume_backend_name.&lt;/p>

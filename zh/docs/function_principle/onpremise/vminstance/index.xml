@@ -752,7 +752,7 @@ Server migration prefer host id or name
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --skip-cpu-check &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> vm1
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU 检查，并且限制热迁移带宽(最低 100 MB/s)&lt;/li>
+&lt;li>指定 vm1 热迁移到目标宿主机 host1 ，并且绕过 CPU 检查，并且限制热迁移带宽(最高为 100 MB/s)&lt;/li>
 &lt;/ul>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-live-migrate &lt;span style="color:#4e9a06">\
 &lt;/span>&lt;span style="color:#4e9a06">&lt;/span> --prefer-host host1 &lt;span style="color:#4e9a06">\
@@ -1758,4 +1758,51 @@ $ climc servers-import-from-libvirt servers.yaml
 | 84c82f1f-7b25-4260-8996-58d60e79ef7d | office-03-host01 | 6c:0b:84:0c:e8:44 | 192.168.222.3 | running | true | online | 36 | 21 | 7381235 | 3301376 | 7381235 | 4079859 | 0.45 | 128703 | 95232 | 24 | 73 | 3.0416666666666665 | 0.803896575301993 | 8 | 2 | PC0169QS | rotate | cloudpods | hotfix/qj-cleanup-openvswitch-conf(d7f77fff821092421) | [{&amp;quot;id&amp;quot;:&amp;quot;a9c14466-e63d-46c9-80f4-52a14945b9d5&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;container&amp;quot;,&amp;quot;res_name&amp;quot;:&amp;quot;schedtag&amp;quot;},{&amp;quot;id&amp;quot;:&amp;quot;01fa585c-c670-4b2e-83bd-9070ac7a37d7&amp;quot;,&amp;quot;name&amp;quot;:&amp;quot;wcl-test-避免使用&amp;quot;,&amp;quot;res_name&amp;quot;:&amp;quot;schedtag&amp;quot;}] | 7569007 | default | Default | none |
 +--------------------------------------+------------------+-------------------+---------------+---------+---------+-------------+--------+----------------+---------+--------------+-----------------+--------------+---------------------+----------+------------+-----------+------------+--------------------+-------------------+------------------+------------+----------+--------------+-----------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+-----------+----------------+--------------+
 *** Total: 1 ***
-&lt;/code>&lt;/pre></description></item></channel></rss>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 磁盘限速</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/iothrottle/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/iothrottle/</guid><description>
+&lt;p>磁盘限速可以为虚机的每个磁盘限制 IOPS 和 BPS。&lt;/p>
+&lt;h2 id="设置磁盘限速">设置磁盘限速&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取虚机的磁盘 id&lt;/span>
+$ climc server-disk-list --server 8c387da0-2627-4c65-8c8c-0c241eadb5df
++--------------------------------------+--------------------------------------+--------+------------+-------+------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Guest_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Disk_ID &lt;span style="color:#000;font-weight:bold">|&lt;/span> Driver &lt;span style="color:#000;font-weight:bold">|&lt;/span> Cache_mode &lt;span style="color:#000;font-weight:bold">|&lt;/span> Index &lt;span style="color:#000;font-weight:bold">|&lt;/span> Boot_index &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------------------------------+--------+------------+-------+------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> 8c387da0-2627-4c65-8c8c-0c241eadb5df &lt;span style="color:#000;font-weight:bold">|&lt;/span> 229e2063-139a-4750-8842-3a681193d42c &lt;span style="color:#000;font-weight:bold">|&lt;/span> scsi &lt;span style="color:#000;font-weight:bold">|&lt;/span> none &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> -1 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++--------------------------------------+--------------------------------------+--------+------------+-------+------------+
+&lt;span style="color:#8f5902;font-style:italic"># 设置磁盘限速&lt;/span>
+$ climc server-io-throttle --help
+Usage: climc server-io-throttle &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--iops IOPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--bps BPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
+Guest io &lt;span style="color:#204a87">set&lt;/span> throttle
+Positional arguments:
+&amp;lt;ID&amp;gt;
+ID or name of the server
+Optional arguments:
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--iops IOPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+disk iops of throttle, input &lt;span style="color:#000">diskId&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>IOPS
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Print usage and this &lt;span style="color:#204a87">help&lt;/span> message and exit.
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--bps BPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+disk bps of throttle, input &lt;span style="color:#000">diskId&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>BPS
+&lt;span style="color:#8f5902;font-style:italic"># 注意bps 单位为 byte/s&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 设置磁盘 iops 为 10000&lt;/span>
+$ climc server-io-throttle --iops 229e2063-139a-4750-8842-3a681193d42c&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10000&lt;/span> 8c387da0-2627-4c65-8c8c-0c241eadb5df
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果需要取消限速，则设置 iops 和 bps 为 0：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-io-throttle --iops 229e2063-139a-4750-8842-3a681193d42c&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> --bps 229e2063-139a-4750-8842-3a681193d42c&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 8c387da0-2627-4c65-8c8c-0c241eadb5df
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果有多个磁盘需要设置，只需要添加命令行 &amp;ndash;iops &amp;lt;DISK_ID&amp;gt;=iops 或则 &amp;ndash;bps &amp;lt;DISK_ID&amp;gt;=bps, eg:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-io-throttle --iops &amp;lt;DISK_1&amp;gt;&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>iops1 --iops &amp;lt;DISK_2&amp;gt;&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>iops2 --bps &amp;lt;DISK_1&amp;gt;&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>bps1 --bps &amp;lt;DISK_2&amp;gt;&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>bps2 &amp;lt;GUEST_ID&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 虚机开机启动</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/daemon_server/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/daemon_server/</guid><description>
+&lt;p>本节介绍如何设置虚拟机开机启动。虚机的开机启动是通过设置虚机未 daemon 虚机来实现的，如果设置虚机为 daemon 虚机，则每一次 host-agent 启动时会确保改虚机是运行中的状态。&lt;/p>
+&lt;h2 id="设置-daemon-虚机">设置 daemon 虚机&lt;/h2>
+&lt;h3 id="创建虚机时设置-daemon-虚机">创建虚机时设置 daemon 虚机&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-create --is-daemon ...
+&lt;span style="color:#8f5902;font-style:italic"># 查看虚机是否设置为 daemon 虚机&lt;/span>
+$ climc server-show &amp;lt;ID&amp;gt; &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep is_daemon
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> is_daemon &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="设置已有虚机-daemon-模式">设置已有虚机 daemon 模式&lt;/h3>
+&lt;pre>&lt;code>[--is-daemon/--no-daemon]
+$ climc server-update --is-daemon &amp;lt;ID&amp;gt;
+&lt;/code>&lt;/pre>&lt;h2 id="设置新建虚机默认为-daemon-虚机">设置新建虚机默认为 daemon 虚机&lt;/h2>
+&lt;pre>&lt;code># 修改 region 配置 添加 set_kvm_server_as_daemon_on_create: true
+$ climc service-config-edit region2
+# 添加完配置后重启 region
+$ kubectl rollout restart deploy -n onecloud default-region
+&lt;/code>&lt;/pre>&lt;p>完成后新建的虚机默认设置为 daemon 虚机。&lt;/p></description></item></channel></rss>

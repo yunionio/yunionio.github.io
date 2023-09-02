@@ -1361,11 +1361,21 @@ $ climc feature-config-jdcloud --switch off
 ipvsadm --clear
 kubeadm reset --force
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>停止并禁用相关服务：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl stop kubelet &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl disable kubelet
-systemctl stop yunion-executor &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl disable yunion-executor
-systemctl stop openvswitch &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl disable openvswitch
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>进一步地，可以卸载kubelet, yunion-executor, openvswitch等rpm，并清除相关的数据目录：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">rm -fr /etc/kubernetes /var/lib/etcd /opt/yunion /opt/cloud /etc/openvswitch
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl disable --now docker.socket docker kubelet yunion-executor
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>卸载kubelet, yunion-executor等rpm，并清除相关的数据目录：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">rpm -qa &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep kube &lt;span style="color:#000;font-weight:bold">|&lt;/span>xargs -I &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span> yum -y remove &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span>
+rpm -qa &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep yunion &lt;span style="color:#000;font-weight:bold">|&lt;/span>xargs -I &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span> yum -y remove &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span>
+rm -rf /etc/kubernetes/ /var/lib/etcd/ /root/.kube/ /opt/cloud/
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>卸载数据库:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">yum -y remove mariadb*
+rm -rf /var/lib/mysql &lt;span style="color:#8f5902;font-style:italic"># 保留原始数据执行 mv -f /var/lib/mysql /var/lib/mysql.$(date +&amp;#34;%Y%m%d-%H%M&amp;#34;).bak&lt;/span>
+rm -rf /etc/my.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>机器重启，恢复之前的网络:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">reboot
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>卸载openvswitch:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">systemctl disable --now openvswitch
+yum -y remove openvswitch-*
+rm -rf /etc/openvswitch
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="kubernetes-helm-安装">Kubernetes Helm 安装&lt;/h2>
 &lt;p>使用如下命令卸载：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">helm uninstall -n onecloud default

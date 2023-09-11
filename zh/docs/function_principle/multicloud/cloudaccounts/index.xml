@@ -249,7 +249,22 @@ $ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
 &lt;li>若创建资源时使用了local-A项目, 根据映射表, local-A映射至云上cloud-A项目, 创建资源将归属于云上cloud-A项目&lt;/li>
 &lt;li>若创建资源时使用了local-B项目, 根据映射表, cloud-B cloud-C 都可以选择，但cloud-B优先级最高, 创建资源将归属于云上cloud-B项目&lt;/li>
 &lt;li>若创建资源时使用了local-D项目，未在映射表中找到映射关系，则在云上创建同名的local-D项目，创建的资源将归属于云上的local-D项目&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</guid><description>
+&lt;/ul>
+&lt;h2 id="项目自动重命名">项目自动重命名&lt;/h2>
+&lt;p>v3.11版本开始支持此功能, 云上更改名称后,本地项目同时变更名称, 且云上项目删除后, 本地项目会跟随删除(资源不会直接删除)&lt;/p>
+&lt;p>前提条件:&lt;/p>
+&lt;ul>
+&lt;li>云账号开启自动创建项目&lt;/li>
+&lt;li>云账号未绑定同步策略&lt;/li>
+&lt;li>region服务开启自动重名功能(默认关闭)&lt;/li>
+&lt;li>本地项目仅仅映射到某一个云账号的某一个云上项目&lt;/li>
+&lt;/ul>
+&lt;p>region服务开关自动重命名方法:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">&lt;span style="color:#8f5902;font-style:italic"># 关闭自动重名&lt;/span>
+$ climc service-config region2 --config &lt;span style="color:#4e9a06">&amp;#39;enable_auto_rename_project=false&amp;#39;&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 开启自动重命名&lt;/span>
+$ climc service-config region2 --config &lt;span style="color:#4e9a06">&amp;#39;enable_auto_rename_project=true&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</guid><description>
 &lt;p>可以通过对应云平台的调用接口验证接口是否可以被正常调用，AccessKey信息是否正确。&lt;/p>
 &lt;ul class="nav nav-tabs" id="tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1-0" role="tab" aria-controls="tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1-0" aria-selected="true">天翼云&lt;/a>&lt;/li>
 &lt;/ul>

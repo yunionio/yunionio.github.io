@@ -1,10 +1,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-块存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/</link><description>Recent content in 块存储 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 25 Jun 2021 10:53:20 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 本地存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</guid><description>
-&lt;p>本地存储的虚拟机磁盘存储在本地目录里，跟该目录使用的文件系统无关，可以是ext4或者xfs。虚拟磁盘的文件格式采用qcow2格式。默认的存储位置是宿主机的目录 /opt/cloud/workspace/disks。&lt;/p>
+块存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/</link><description>Recent content in 块存储 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 25 Jun 2021 10:53:20 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 如何添加和删除本地存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</guid><description>
+&lt;p>本地存储的虚拟机磁盘存储在本地目录里，跟该目录使用的文件系统无关，可以使ext4或者xfs。虚拟磁盘的文件格式采用qcow2格式。默认的存储位置是宿主机的目录 /opt/cloud/workspace/disks。&lt;/p>
 &lt;p>存储虚拟磁盘的本地目录需要在宿主机的配置文件里显示声明。host服务的配置项 local_image_path 指定本宿主机用来保存虚拟机磁盘的目录。&lt;/p>
 &lt;h2 id="如何添加本地存储目录">如何添加本地存储目录？&lt;/h2>
 &lt;ol>
-&lt;li>修改/etc/yunion/host.conf，在 local_image_path 的字符串数组中添加新的本地磁盘：&lt;/li>
+&lt;li>修改/etc/yunion/host.conf，则 local_image_path 的字符串数组中添加新的本地磁盘：&lt;/li>
 &lt;/ol>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">local_image_path&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">/opt/cloud/workspace/disks&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
@@ -55,141 +55,4 @@ always_recycle_diskfile: true
 &lt;h2 id="冷迁移">冷迁移&lt;/h2>
 &lt;p>TODO&lt;/p>
 &lt;h2 id="热迁移">热迁移&lt;/h2>
-&lt;p>TODO&lt;/p></description></item><item><title>Docs: 本地LVM存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/lvm-storage/</guid><description>
-&lt;h2 id="lvm-是什么">LVM 是什么&lt;/h2>
-&lt;p>LVM（Logical Volume Manager）是一种逻辑卷管理器，可以将一个或多个物理存储设备抽象为一个或多个逻辑卷，并将逻辑卷分配给文件系统和其他应用程序使用。&lt;/p>
-&lt;h2 id="cloudpods-如何添加-lvm-存储">cloudpods 如何添加 LVM 存储&lt;/h2>
-&lt;ol>
-&lt;li>修改/etc/yunion/host.conf，在 lvm_volume_groups 的字符串数组中添加新的 VG：&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">lvm_volume_groups&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">storage1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># vgname&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当然需要提前确保这个 VG 是存在的&lt;/p>
-&lt;pre>&lt;code>$ vgs
-VG #PV #LV #SN Attr VSize VFree
-storage1 1 1 0 wz--n- &amp;lt;200.00g &amp;lt;170.00g
-&lt;/code>&lt;/pre>&lt;ol start="2">
-&lt;li>重启host服务&lt;/li>
-&lt;/ol>
-&lt;p>host服务重启后，稍等片刻，查看宿主机的存储列表，就能看到这个新的存储注册上来了。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc storage-list --host &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>eg:&lt;/p>
-&lt;pre>&lt;code>climc storage-list --host 12880086-034d-46b0-89ca-6d4f51d2de6a
-+--------------------------------------+--------------------------------------+----------+----------------------+--------+--------------+-------------+---------+--------------+
-| ID | Name | Capacity | Actual_capacity_used | Status | Storage_type | Medium_type | Enabled | public_scope |
-+--------------------------------------+--------------------------------------+----------+----------------------+--------+--------------+-------------+---------+--------------+
-| 86259ab3-cf7b-4f19-8fd6-0c49094638aa | host_192.168.222.102_lvm_storage_0 | 204796 | 0 | online | lvm | rotate | true | none |
-+--------------------------------------+--------------------------------------+----------+----------------------+--------+--------------+-------------+---------+--------------+
-&lt;/code>&lt;/pre>&lt;h2 id="如何创建一个-vg">如何创建一个 VG&lt;/h2>
-&lt;p>以下是一个简要的流程：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 如: /dev/sdb 是可以给虚机使用的磁盘，首先创建 PV.&lt;/span>
-pvcreate /dev/sdb
-&lt;span style="color:#8f5902;font-style:italic"># storage1 则是我们创建的 VG.&lt;/span>
-vgcreate storage1 /dev/sdb
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何删除-lvm-存储">如何删除 LVM 存储&lt;/h2>
-&lt;p>和删除本地存储的步骤类似：&lt;/p>
-&lt;ol>
-&lt;li>需要确保所有的虚拟磁盘都被删除，特别需要留意被伪删除的磁盘，以及被标记为系统资源的磁盘:&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看所有的磁盘，包括不再执行命令用户所在项目下的所有磁盘，以及被标记为系统资源的磁盘&lt;/span>
-climc disk-list --storage &amp;lt;storage_id&amp;gt; --scope system --system
-&lt;span style="color:#8f5902;font-style:italic"># 查看所有的未删除的磁盘&lt;/span>
-climc disk-list --storage &amp;lt;storage_id&amp;gt; --scope system --system --pending-delete
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
-&lt;li>解除存储和宿主机的关联关系：&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc host-storage-detach &amp;lt;host_id&amp;gt; &amp;lt;storage_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
-&lt;li>删除存储&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc storage-delete &amp;lt;storage_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>
-&lt;p>到宿主机，修改 /etc/yunion/host.conf，将该存储所在路径从 lvm_volume_groups 删除&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>重启host服务&lt;/p>
-&lt;/li>
-&lt;/ol></description></item><item><title>Docs: Ceph存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/ceph/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/ceph/</guid><description>
-&lt;p>Ceph是著名的开源分布式存储，一个存储集群可以同时提供块存储（RBD），对象存储（RadosGw）和文件存储（CephFs）三种存储接口。本文介绍虚拟机使用Ceph RBD块存储的配置和使用方法。&lt;/p>
-&lt;h2 id="支持ceph版本">支持Ceph版本&lt;/h2>
-&lt;p>平台通过调用部署在宿主机的 ceph 命令来访问Ceph存储。&lt;/p>
-&lt;p>平台部署一台宿主机时，会默认安装开源版本的 ceph-common，其中包含了 ceph 的客户端。&lt;/p>
-&lt;p>各个Linux发行版安装的 ceph-common 版本如下：&lt;/p>
-&lt;ul>
-&lt;li>CentOS 7: 10.2.5&lt;/li>
-&lt;li>CentOS 8: 12.2.8&lt;/li>
-&lt;li>Kylin V10: 12.2.8&lt;/li>
-&lt;li>Debian 10: 12.2.11&lt;/li>
-&lt;li>Debian 11: 14.2.21&lt;/li>
-&lt;li>OpenEuler 22.03 SP1: 16.2.7&lt;/li>
-&lt;/ul>
-&lt;p>如果用户需要其他版本的 ceph-common，或者用户希望使用商用的ceph，则需要自行手动在宿主机安装对应版本的 ceph-common。&lt;/p>
-&lt;p>由于这个机制，导致如下的限制：同一台宿主机只能对接一个版本的Ceph存储。&lt;/p>
-&lt;h2 id="ceph的对接配置">Ceph的对接配置&lt;/h2>
-&lt;h3 id="网络要求">网络要求&lt;/h3>
-&lt;p>挂载使用Ceph存储的宿主机需要能够直接网络访问Ceph集群。&lt;/p>
-&lt;h3 id="配置参数">配置参数&lt;/h3>
-&lt;p>需要准备如下配置参数：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>参数&lt;/th>
-&lt;th>是否可选&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>RbdMonHost&lt;/td>
-&lt;td>必填&lt;/td>
-&lt;td>Ceph集群的monitor服务的IP地址，多个以,号分隔&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>RbdPool&lt;/td>
-&lt;td>必填&lt;/td>
-&lt;td>Ceph Pool名称，一个Pool对应一个Ceph存储实例&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>RbdKey&lt;/td>
-&lt;td>可选&lt;/td>
-&lt;td>Ceph认证key&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>RbdRadosMonOpTimeout&lt;/td>
-&lt;td>可选&lt;/td>
-&lt;td>访问Ceph Monitor的超时时间（秒）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>RbdRadosOsdOpTimeout&lt;/td>
-&lt;td>可选&lt;/td>
-&lt;td>访问Ceph OSD的超时时间（秒）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>RbdClientMountTimeout&lt;/td>
-&lt;td>可选&lt;/td>
-&lt;td>客户端挂载Ceph RBD设备的超时时间（秒）&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="ceph访问凭证">Ceph访问凭证&lt;/h2>
-&lt;p>每次在宿主机执行ceph的命令，如果该存储配置了rbd_key参数，则会使用rbd_key秘钥生成临时ceph凭证文件，用于访问ceph存储。不会使用保存在宿主机/etc/ceph的凭证文件。&lt;/p>
-&lt;h2 id="ceph容量的识别">Ceph容量的识别&lt;/h2>
-&lt;p>平台对接一个Ceph RBD存储后，会周期性从Ceph拉取存储的容量信息。&lt;/p>
-&lt;p>Ceph存储的容量信息通过 ceph df 的命令获取：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># ceph df&lt;/span>
-RAW STORAGE:
-CLASS SIZE AVAIL USED RAW USED %RAW USED
-hdd &lt;span style="color:#0000cf;font-weight:bold">31&lt;/span> TiB &lt;span style="color:#0000cf;font-weight:bold">21&lt;/span> TiB &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span> TiB &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span> TiB 32.72
-TOTAL &lt;span style="color:#0000cf;font-weight:bold">31&lt;/span> TiB &lt;span style="color:#0000cf;font-weight:bold">21&lt;/span> TiB &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span> TiB &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span> TiB 32.72
-POOLS:
-POOL ID PGS STORED OBJECTS USED %USED MAX AVAIL
-cloudpods-test &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">128&lt;/span> 5.0 TiB 1.54M &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span> TiB 31.62 &lt;span style="color:#0000cf;font-weight:bold">11&lt;/span> TiB
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>存储的总容量为对应Pool的 STORED + MAX AVAIL，使用量为对应 Pool 的 STORED&lt;/p></description></item><item><title>Docs: 存储信息采集</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/storage_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/blockstorage/storage_sync/</guid><description>
-&lt;p>一个存储被平台纳管后，平台的周期性采集存储的信息。&lt;/p>
-&lt;h2 id="工作原理">工作原理&lt;/h2>
-&lt;p>块存储的信息采集由宿主机的host服务负责。&lt;/p>
-&lt;p>配置一个存储后，平台会从关联的宿主机中根据一致性Hash算法选择一台MastHost用于这个存储的信息采集。&lt;/p>
-&lt;p>该Host周期性调用GetStorageInfo的接口，获取存储的容量信息&lt;/p>
-&lt;h2 id="采集频率">采集频率&lt;/h2>
-&lt;p>host服务采集存储信息的频率由host的配置项 sync_storage_info_duration_second 控制，默认为每120秒采集一次。&lt;/p></description></item></channel></rss>
+&lt;p>TODO&lt;/p></description></item></channel></rss>

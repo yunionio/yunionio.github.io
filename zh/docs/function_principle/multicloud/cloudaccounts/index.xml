@@ -49,41 +49,7 @@ $ climc service-config --config &lt;span style="color:#000">cloudaccount_health_
 &lt;li>每个成员账号内都有 Role：OrganizationAccountAccessRole&lt;/li>
 &lt;/ol>
 &lt;p>对于在AWS组织（Organization）下新建的AWS成员账号，都自动有一个Role：OrganizationAccountAccessRole，该role的权限等同于 AdministratorAccess&lt;/p>
-&lt;p>如果是邀请加入的AWS成员账号，则不一定有这个Role，需要手工增加，具体步骤参见：https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role&lt;/p></description></item><item><title>Docs: Azure 创建订阅设置</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/azure_subscription/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/azure_subscription/</guid><description>
-&lt;h2 id="前置条件">前置条件&lt;/h2>
-&lt;ul>
-&lt;li>Azure账号为国际区账号&lt;/li>
-&lt;li>Azure账号为企业账号&lt;/li>
-&lt;li>平台录入的账号和此文档中的应用程序是同一个&lt;/li>
-&lt;/ul>
-&lt;h2 id="登录azure控制台-开启cloudshell">登录Azure控制台, 开启CloudShell&lt;/h2>
-&lt;p>&lt;img src="../images/az_cloud_shell.png" alt="">&lt;/p>
-&lt;h2 id="获取-enrollment-account-id">获取 enrollment account id&lt;/h2>
-&lt;p>在上面的cloud shell中执行 az billing enrollment-account list, 如下图&lt;/p>
-&lt;p>&lt;img src="../images/az_enrollment_account.png" alt="">&lt;/p>
-&lt;p>这里假设id 为 /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx 保存 以备用&lt;/p>
-&lt;h2 id="获取应用程序id">获取应用程序Id&lt;/h2>
-&lt;p>到Azure Active Directory =&amp;gt; 应用注册中找到使用的应用，并获得 应用程序(客户端) ID, 并在cloud shell执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">az ad sp show --id 7ffdacec-8769-4802-9975-4ba7a2906ec8 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep id
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/az_app_id.png" alt="">&lt;/p>
-&lt;p>获得应用程序Id为 5b744b52-4215-4cc7-b776-429ce447c62c 保存备用&lt;/p>
-&lt;h2 id="赋予应用程序enrollment-account-onwer权限">赋予应用程序enrollment account Onwer权限&lt;/h2>
-&lt;p>打开cloud shell 执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">&lt;span style="color:#8f5902;font-style:italic"># 这里的 5b744b52-4215-4cc7-b776-429ce447c62c 是应用程序Id&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx 是 enrollment account id&lt;/span>
-az role assignment create --role Owner --assignee-object-id 5b744b52-4215-4cc7-b776-429ce447c62c --scope /providers/Microsoft.Billing/enrollmentAccounts/747ddfe5-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>如图所示即赋权成功
-&lt;img src="../images/az_assign_role.png" alt="">&lt;/p>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">说明&lt;/h4>
-若创建订阅时报 &lt;strong>EntitlementNotFound&lt;/strong> 的错误，需要根据文档到ea上开启&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/ea-portal-administration#enterprise-devtest-offer">创建订阅权限&lt;/a>
-&lt;/div>
-&lt;h2 id="参考文档">参考文档&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/programmatically-create-subscription-preview?tabs=azure-cli">编程创建订阅&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/grant-access-to-create-subscription?tabs=rest%2Crest-2">赋权文档&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/ea-portal-administration#enterprise-devtest-offer">开启创建订阅权限&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
+&lt;p>如果是邀请加入的AWS成员账号，则不一定有这个Role，需要手工增加，具体步骤参见：https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role&lt;/p></description></item><item><title>Docs: Openstack</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/openstack/</guid><description>
 &lt;h2 id="对接-openstack-后端使用ceph-存储的时候云账户管理经常同步不下相关的ceph-磁盘配置">对接 Openstack 后端使用ceph 存储的时候，云账户管理，经常同步不下相关的ceph 磁盘配置&lt;/h2>
 &lt;p>我们需要在创建磁盘的时候指定相关的ceph 类型。首先检查一下是否指定了volume_backend_name.&lt;/p>
 &lt;p>1、查看cinder配置文件的ceph 指定的name,没有就添加：&lt;/p>
@@ -190,81 +156,7 @@ $ climc service-config-show region2 | grep skip_server_by_sys_tag_keys
 &amp;quot;skip_server_by_sys_tag_keys&amp;quot;: &amp;quot;acs:autoscaling:scalingGroupId&amp;quot;,
 # 若需要同步弹性伸缩组实例，可将此参数改为其他标签
 $ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 资源项目同步</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/project_sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/project_sync/</guid><description>
-&lt;h2 id="基础概念">基础概念&lt;/h2>
-&lt;ul>
-&lt;li>云上项目: 指的是本地项目和云上项目的映射关系&lt;/li>
-&lt;li>同步策略: 指专用于云上资源同步到本地时资源归属的描述&lt;/li>
-&lt;/ul>
-&lt;h2 id="云上同步云下资源归属说明">云上同步云下资源归属说明&lt;/h2>
-&lt;ul>
-&lt;li>云账号未关联同步策略时:
-&lt;ol>
-&lt;li>在本地创建的资源或者更改过项目的资源将不会再同步资源时更改项目归属&lt;/li>
-&lt;li>根据云上项目的映射表找到云上到本地的映射关系更改资源的项目归属&lt;/li>
-&lt;li>若未找到云上项目的映射关系则资源归属到云订阅所在的项目&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;li>云账号关联同步策略时:
-&lt;ol>
-&lt;li>在本地新建资源或者更改过项目的资源也将会根据同步策略更改资源的归属&lt;/li>
-&lt;li>优先使用同步策略中的设置, 若未匹配则按照云账号未关联同步策略时的2和3进行归属&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="本地到云上的项目同步">本地到云上的项目同步&lt;/h2>
-&lt;p>假设云上项目映射关系如下列表, 且云上项目皆正常可用&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>云上项目&lt;/th>
-&lt;th>优先级&lt;/th>
-&lt;th>本地项目&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>cloud-A&lt;/td>
-&lt;td>0&lt;/td>
-&lt;td>local-A&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloud-B&lt;/td>
-&lt;td>3&lt;/td>
-&lt;td>local-B&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloud-C&lt;/td>
-&lt;td>2&lt;/td>
-&lt;td>local-B&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>cloud-D&lt;/td>
-&lt;td>0&lt;/td>
-&lt;td>local-C&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;ul>
-&lt;li>若创建资源时使用了local-A项目, 根据映射表, local-A映射至云上cloud-A项目, 创建资源将归属于云上cloud-A项目&lt;/li>
-&lt;li>若创建资源时使用了local-B项目, 根据映射表, cloud-B cloud-C 都可以选择，但cloud-B优先级最高, 创建资源将归属于云上cloud-B项目&lt;/li>
-&lt;li>若创建资源时使用了local-D项目，未在映射表中找到映射关系，则在云上创建同名的local-D项目，创建的资源将归属于云上的local-D项目&lt;/li>
-&lt;/ul>
-&lt;h2 id="项目自动重命名">项目自动重命名&lt;/h2>
-&lt;p>v3.11版本开始支持此功能, 云上更改名称后,本地项目同时变更名称, 且云上项目删除后, 本地项目会跟随删除(资源不会直接删除)&lt;/p>
-&lt;p>前提条件:&lt;/p>
-&lt;ul>
-&lt;li>云账号开启自动创建项目&lt;/li>
-&lt;li>云账号未绑定同步策略&lt;/li>
-&lt;li>region服务开启自动重名功能(默认关闭)&lt;/li>
-&lt;li>本地项目仅仅映射到某一个云账号的某一个云上项目&lt;/li>
-&lt;/ul>
-&lt;p>region服务开关自动重命名方法:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">&lt;span style="color:#8f5902;font-style:italic"># 关闭自动重名&lt;/span>
-$ climc service-config region2 --config &lt;span style="color:#4e9a06">&amp;#39;enable_auto_rename_project=false&amp;#39;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 开启自动重命名&lt;/span>
-$ climc service-config region2 --config &lt;span style="color:#4e9a06">&amp;#39;enable_auto_rename_project=true&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</guid><description>
+&lt;/code>&lt;/pre></description></item><item><title>Docs: 云账号接入问题排查</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</link><pubDate>Mon, 05 Jul 2021 08:22:33 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/cloudaccounts/account/</guid><description>
 &lt;p>可以通过对应云平台的调用接口验证接口是否可以被正常调用，AccessKey信息是否正确。&lt;/p>
 &lt;ul class="nav nav-tabs" id="tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1-0" role="tab" aria-controls="tabset-zhdocsfunction_principlemulticloudcloudaccountsaccount-1-0" aria-selected="true">天翼云&lt;/a>&lt;/li>
 &lt;/ul>

@@ -98,7 +98,7 @@
 &lt;/tr>
 &lt;/tbody>
 &lt;/table></description></item><item><title>Docs: VPC网络</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/vpc/</guid><description>
-&lt;p>平台内置私有云提供VPC网络功能，并支持将经典网络的IP子网网段作为弹性公网IP池使用，供VPC内的虚拟机与外界访问。&lt;/p></description></item><item><title>Docs: 典型网络配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/examples/</guid><description>
+&lt;p>平台内置私有云提供VPC网络功能，并支持将经典网络的IP子网网段作为弹性公网IP池使用，供VPC内的虚拟机与外界访问等。&lt;/p></description></item><item><title>Docs: 典型网络配置</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/examples/</guid><description>
 &lt;h2 id="单网口经典网络计算节点单个网口虚拟机使用多vlan经典网络">（单网口经典网络）计算节点单个网口，虚拟机使用多VLAN经典网络&lt;/h2>
 &lt;p>这种场景下，每个计算节点只有一个网口(可以为Bonding)，既做管理口，也做业务口。虚拟机之间的业务流量是由宿主机对接的三层交换机转发。&lt;/p>
 &lt;img src="../singleport.png" width="400">
@@ -355,29 +355,4 @@ climc tap-service-disable &amp;lt;tap_service_id&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>2、镜像源创建后默认启用状态&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc tap-flow-disable &amp;lt;tap_flow_id&amp;gt;
 climc tap-flow-enable &amp;lt;tap_flow_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 网卡流量限制</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/traffic_limit/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/traffic_limit/</guid><description>
-&lt;p>本节介绍设置网卡流量限制。网卡流量限制分为上行下行流量，只要有一边的流量超标将会切断网卡。网卡流量限制是通过采集网卡收发包监控数据来实现的，采集周期为一分钟，所以可能流量超标了但是还是需要等到流量采集周期到了才会切断网卡。&lt;/p>
-&lt;h2 id="设置流量限制">设置流量限制&lt;/h2>
-&lt;h3 id="创建虚机时设置流量限制">创建虚机时设置流量限制&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-create --network rx-traffic-limit&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>102400000,tx-traffic-limit&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">102400000&lt;/span> ...
-&lt;span style="color:#8f5902;font-style:italic"># tx-traffic-limit为上行，rx-traffic-limit为下行单位均为字节 byte&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 查看网卡详细信息&lt;/span>
-$ climc server-network-show &amp;lt;SERVER_ID&amp;gt; &amp;lt;NETWORK_ID&amp;gt;
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> rx_traffic_limit &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">102400000&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> rx_traffic_used &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-......
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> tx_traffic_limit &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">102400000&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#000;font-weight:bold">|&lt;/span> tx_traffic_used &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># rx_traffic_used/tx_traffic_used 是已使用的网卡流量信息，单位均为字节 byte&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="为网卡单独设置流量限制">为网卡单独设置流量限制&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic">#设置流量限制的接口有两个：&lt;/span>
-$ server-set-nic-traffic-limit
-Usage: climc server-set-nic-traffic-limit &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--tx-traffic-limit TX_TRAFFIC_LIMIT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--rx-traffic-limit RX_TRAFFIC_LIMIT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt; &amp;lt;MAC&amp;gt;
-$ server-reset-nic-traffic-limit
-Usage: climc server-reset-nic-traffic-limit &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--tx-traffic-limit TX_TRAFFIC_LIMIT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--rx-traffic-limit RX_TRAFFIC_LIMIT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt; &amp;lt;MAC&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># server-set-nic-traffic-limit 设置网卡流量上限，不重置已使用的流量&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># server-reset-nic-traffic-limit 设置网卡流量上限的同时重置已使用的流量&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 参数中 MAC 为网卡的 mac 地址&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 设置完成查看网卡信息&lt;/span>
-$ climc server-network-show &amp;lt;SERVER_ID&amp;gt; &amp;lt;NETWORK_ID&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>网卡流量到达上限后会切断网卡，需要调用这两个接口设置更高的流量上限或者重置网卡已使用的流量来恢复网卡。&lt;/p></description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

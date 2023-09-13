@@ -32,10 +32,14 @@
 &lt;li>账号类型：目前支持对接公共云和金融云的阿里云账号。&lt;/li>
 &lt;li>密钥ID/密码：通过Access Key验证方式对接阿里云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">阿里云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
-&lt;li>自动同步：设置是否自动同步阿里云平台上的信息，并设置自动同步的时间。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -101,94 +105,104 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">权限备注&lt;/th>
 &lt;th style="text-align:left">只读权限&lt;/th>
-&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;th style="text-align:left">读写权限&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">管理所有阿里云资源的权限&lt;/td>
 &lt;td style="text-align:left">ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AdministratorAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">虚拟机, 安全组, 镜像, 磁盘, 快照&lt;/td>
+&lt;td style="text-align:left">管理云服务器服务(ECS)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunECSReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunECSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表&lt;/td>
+&lt;td style="text-align:left">管理专有网络(VPC)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunVPCReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunVPCFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">Eip&lt;/td>
+&lt;td style="text-align:left">管理弹性公网IP(EIP)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunEIPReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunEIPFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性网卡&lt;/td>
+&lt;td style="text-align:left">管理ECS弹性网卡的权限&lt;/td>
 &lt;td style="text-align:left">AliyunVPCNetworkIntelligenceReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunECSNetworkInterfaceManagementAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">管理对象存储服务(OSS)权限&lt;/td>
 &lt;td style="text-align:left">AliyunOSSReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunOSSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAT&lt;/td>
+&lt;td style="text-align:left">管理NAT网关(NAT Gateway)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunNATGatewayReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunNATGatewayFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">负载均衡&lt;/td>
-&lt;td style="text-align:left">AliyunSLBReadOnlyAccess&lt;br>AliyunALBFullAccess&lt;/td>
-&lt;td style="text-align:left">AliyunSLBFullAccess&lt;br>AliyunALBFullAccess&lt;/td>
+&lt;td style="text-align:left">管理应用型负载均衡服务(ALB)的权限&lt;/td>
+&lt;td style="text-align:left">AliyunALBReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunALBFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">管理负载均衡服务(SLB)的权限&lt;/td>
+&lt;td style="text-align:left">AliyunSLBReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunSLBFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">管理云数据库服务(RDS)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunRDSReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunRDSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">管理云数据库Redis版(Kvstore)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunKvstoreReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunKvstoreFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">管理操作审计(ActionTrail)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunActionTrailFullAccess&lt;/td>
 &lt;td style="text-align:left">AliyunActionTrailFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">管理文件存储服务(NAS)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunNASReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunNASFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">管理云盾应用防火墙(WAF)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunYundunWAFReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunYundunWAFFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">管理访问控制(RAM)的权限，即管理用户以及授权的权限&lt;/td>
 &lt;td style="text-align:left">AliyunRAMReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunRAMFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">DNS&lt;/td>
-&lt;td style="text-align:left">AliyunDNSReadOnlyAccess&lt;br>AliyunPubDNSFullAccess&lt;/td>
-&lt;td style="text-align:left">AliyunDNSFullAccess&lt;br>AliyunPubDNSFullAccess&lt;/td>
+&lt;td style="text-align:left">管理公共DNS(PubDNS)的权限&lt;/td>
+&lt;td style="text-align:left">AliyunPubDNSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunPubDNSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">账单,余额,费用&lt;/td>
+&lt;td style="text-align:left">管理云解析(DNS)的权限&lt;/td>
+&lt;td style="text-align:left">AliyunDNSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AliyunDNSFullAccess&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:left">管理企业财务管理(EFC)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunFinanceConsoleReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunFinanceConsoleFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">管理云监控(CloudMonitor)的权限&lt;/td>
 &lt;td style="text-align:left">AliyunCloudMonitorReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AliyunCloudMonitorFullAccess&lt;/td>
 &lt;/tr>
@@ -246,10 +260,15 @@
 &lt;li>账号类型：目前支持对接全球区和中国区的AWS云账号。&lt;/li>
 &lt;li>密钥ID/密码：对接AWS平台的密钥ID和密码信息。具体请参考&lt;a href="#aws%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">AWS相关参数获取方式&lt;/a>。如需纳管AWS组织账户，请参考&lt;a href="#%E5%A6%82%E4%BD%95%E7%BA%B3%E7%AE%A1aws-organizations%E7%BB%84%E7%BB%87%E8%B4%A6%E6%88%B7">如何纳管AWS Organization组织账户&lt;/a>。其中AWS Organization关联的组织账号将会以云订阅的形式展示。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
-&lt;li>自动同步：设置是否自动同步AWS平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
@@ -299,84 +318,79 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">权限备注&lt;/th>
 &lt;th style="text-align:left">只读权限&lt;/th>
-&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;th style="text-align:left">读写权限&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">管理所有AWS资源的权限&lt;/td>
 &lt;td style="text-align:left">ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AdministratorAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">虚拟机, 磁盘, 安全组, 镜像, 快照, 磁盘, 镜像&lt;/td>
+&lt;td style="text-align:left">管理云服务器服务(Amazon EC2)的权限&lt;/td>
 &lt;td style="text-align:left">AmazonEC2ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AmazonEC2FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">项目&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡,EIP, NAT&lt;/td>
+&lt;td style="text-align:left">管理专有网络(Amazon VPC)的权限&lt;/td>
 &lt;td style="text-align:left">AmazonVPCReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AmazonVPCFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">管理对象存储(Amazon S3)的权限&lt;/td>
 &lt;td style="text-align:left">AmazonS3ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AmazonS3FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">管理负载均衡服务(ELB)的权限&lt;/td>
 &lt;td style="text-align:left">ElasticLoadBalancingReadOnly&lt;/td>
 &lt;td style="text-align:left">ElasticLoadBalancingFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">管理云数据库服务(Amazon RDS)的权限&lt;/td>
 &lt;td style="text-align:left">AmazonRDSReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AmazonRDSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">管理云缓存(Amazon ElastiCache)的权限&lt;/td>
 &lt;td style="text-align:left">AmazonElastiCacheReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AmazonElastiCacheFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">管理操作审计(AWS CloudTrail)的权限&lt;/td>
 &lt;td style="text-align:left">AWSCloudTrailReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AWSCloudTrail_FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">管理文件存储服务(Amazon EFS)的权限&lt;/td>
 &lt;td style="text-align:left">AmazonElasticFileSystemReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AmazonElasticFileSystemFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">管理应用防火墙(WAF)的权限&lt;/td>
 &lt;td style="text-align:left">AWSWAFReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AWSWAFFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">管理身份和访问管理(IAM)的权限&lt;/td>
 &lt;td style="text-align:left">IAMReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">IAMFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">DNS&lt;/td>
-&lt;td style="text-align:left">AmazonRoute53DomainsReadOnlyAccess&lt;/td>
-&lt;td style="text-align:left">AmazonRoute53DomainsFullAccess&lt;/td>
+&lt;td style="text-align:left">管理云域名系统(Amazon Route 53)的权限&lt;/td>
+&lt;td style="text-align:left">AmazonRoute53ReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">AmazonRoute53FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">账单,费用&lt;/td>
+&lt;td style="text-align:left">管理计费和成本的权限&lt;/td>
 &lt;td style="text-align:left">AWSBillingReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">Billing&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">管理云监控(Amazon CloudWatch)的权限&lt;/td>
 &lt;td style="text-align:left">CloudWatchReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">CloudWatchFullAccess&lt;/td>
 &lt;/tr>
@@ -510,10 +524,15 @@
 &lt;li>账号类型：目前支持对接全球区、中国区、美国政务区、德国区的Azure云账号。&lt;/li>
 &lt;li>租户（Tenant）ID/客户端ID/客户端密码请参考&lt;a href="#azure%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">Azure相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>开启免密登录：启用该项后，系统成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。目前仅Azure全球区支持免密登录的功能，此外还需要在Azure平台上做一下必要配置，具体请参考&lt;a href="#%E9%85%8D%E7%BD%AEazure-external-identies">配置Azure External Identies&lt;/a>以及&lt;a href="#%E8%AE%BE%E7%BD%AEchrome%E6%B5%8F%E8%A7%88%E5%99%A8">设置Chrome浏览器&lt;/a>。&lt;/li>
-&lt;li>自动同步：设置是否自动同步Azure平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;li>开启免密登录：启用该项后，系统成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。目前仅Azure全球区支持免密登录的功能，需要账号类型选择全球区才可以显示此项。此外还需要在Azure平台上做一下必要配置，具体请参考&lt;a href="#%E9%85%8D%E7%BD%AEazure-external-identies">配置Azure External Identies&lt;/a>以及&lt;a href="#%E8%AE%BE%E7%BD%AEchrome%E6%B5%8F%E8%A7%88%E5%99%A8">设置Chrome浏览器&lt;/a>。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
@@ -632,74 +651,64 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">权限备注&lt;/th>
 &lt;th style="text-align:left">只读权限&lt;/th>
-&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;th style="text-align:left">读写权限&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">管理所有资源的权限&lt;/td>
 &lt;td style="text-align:left">Reader&lt;/td>
 &lt;td style="text-align:left">Owner&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">虚拟机, 磁盘, 安全组, 镜像, 快照, 磁盘, 镜像, 负载均衡&lt;/td>
+&lt;td style="text-align:left">管理虚拟机资源的权限&lt;/td>
 &lt;td style="text-align:left">-&lt;/td>
 &lt;td style="text-align:left">Virtual Machine Contributor&lt;br>Classic Virtual Machine Contributor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">项目&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡,EIP, NAT, WAF&lt;/td>
+&lt;td style="text-align:left">管理网络资源的权限&lt;/td>
 &lt;td style="text-align:left">-&lt;/td>
 &lt;td style="text-align:left">Network Contributor,&lt;br>Classic Network Contributor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">管理对象存储的权限&lt;/td>
 &lt;td style="text-align:left">Storage Blob Data Reader&lt;/td>
 &lt;td style="text-align:left">Storage Blob Data Owner&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">管理云数据库的权限&lt;/td>
 &lt;td style="text-align:left">Cloud SQL Viewer&lt;/td>
 &lt;td style="text-align:left">Cloud SQL Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">管理Redis的权限&lt;/td>
 &lt;td style="text-align:left">Redis Enterprise Cloud Viewer&lt;/td>
 &lt;td style="text-align:left">Redis Enterprise Cloud Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">管理文件存储的权限&lt;/td>
 &lt;td style="text-align:left">Storage File Data SMB Share Reader&lt;/td>
 &lt;td style="text-align:left">Storage File Data SMB Share Contributor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">WAF&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">管理资源策略和角色的权限&lt;/td>
 &lt;td style="text-align:left">-&lt;/td>
 &lt;td style="text-align:left">Graph Owner&lt;br>Resource Policy Contributor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">管理DNS的权限&lt;/td>
 &lt;td style="text-align:left">-&lt;/td>
 &lt;td style="text-align:left">DNS Zone Contributor&lt;br>Private DNS Zone Contributor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">账单,费用&lt;/td>
+&lt;td style="text-align:left">管理账单费用的权限&lt;/td>
 &lt;td style="text-align:left">Billing Reader&lt;br>Cost Management Reader&lt;/td>
 &lt;td style="text-align:left">Cost Management Contributor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">监控,操作日志&lt;/td>
+&lt;td style="text-align:left">管理监控的权限&lt;/td>
 &lt;td style="text-align:left">Monitoring Reader&lt;/td>
 &lt;td style="text-align:left">Monitoring Contributor&lt;/td>
 &lt;/tr>
@@ -726,10 +735,14 @@
 &lt;li>账号类型：目前支持对接中国区的华为云账号。&lt;/li>
 &lt;li>密钥ID/密码：对接华为云平台的密钥ID和密码信息。具体请参考&lt;a href="#%E5%8D%8E%E4%B8%BA%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">华为云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
-&lt;li>自动同步：设置是否自动同步腾讯云平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -780,99 +793,99 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">权限备注&lt;/th>
 &lt;th style="text-align:left">只读权限&lt;/th>
-&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;th style="text-align:left">读写权限&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:left">所有功能总和&lt;/td>
-&lt;td style="text-align:left">Tenant Guest&lt;br>IAM ReadOnlyAccess&lt;/td>
-&lt;td style="text-align:left">Tenant Administrator&lt;br>Security Administrator&lt;/td>
+&lt;td style="text-align:left">管理所有华为云资源的权限(除IAM权限)&lt;/td>
+&lt;td style="text-align:left">Tenant Guest&lt;/td>
+&lt;td style="text-align:left">Tenant Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">虚拟机&lt;/td>
+&lt;td style="text-align:left">管理弹性云服务器的权限&lt;/td>
 &lt;td style="text-align:left">ECS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">ECS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">磁盘, 快照&lt;/td>
+&lt;td style="text-align:left">管理云硬盘的权限&lt;/td>
 &lt;td style="text-align:left">EVS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">EVS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">项目&lt;/td>
+&lt;td style="text-align:left">管理企业项目管理服务的权限&lt;/td>
 &lt;td style="text-align:left">EPS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">EPS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">镜像&lt;/td>
+&lt;td style="text-align:left">管理镜像服务的权限&lt;/td>
 &lt;td style="text-align:left">IMS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">IMS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, 弹性网卡,EIP,安全组&lt;/td>
+&lt;td style="text-align:left">管理虚拟私有云的权限&lt;/td>
 &lt;td style="text-align:left">VPC ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">VPC FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAT&lt;/td>
+&lt;td style="text-align:left">管理NAT网关服务的权限&lt;/td>
 &lt;td style="text-align:left">NAT ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">NAT FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">管理对象存储服务的权限&lt;/td>
 &lt;td style="text-align:left">OBS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">OBS Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">管理弹性负载均衡服务的权限&lt;/td>
 &lt;td style="text-align:left">ELB ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">ELB FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">管理关系型数据库服务的权限&lt;/td>
 &lt;td style="text-align:left">RDS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">RDS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">管理分布式缓存服务的权限&lt;/td>
 &lt;td style="text-align:left">DCS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">DCS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">管理云审计服务的权限&lt;/td>
 &lt;td style="text-align:left">CTS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">CTS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">管理弹性文件服务的权限&lt;br>管理弹性文件服务SFS Turbo的权限&lt;/td>
 &lt;td style="text-align:left">SFS ReadOnlyAccess&lt;br>SFS Turbo ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">SFS FullAccess&lt;br>SFS Turbo FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">WAF&lt;/td>
+&lt;td style="text-align:left">管理web应用防火墙服务的权限&lt;/td>
 &lt;td style="text-align:left">WAF ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">WAF FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">管理统一身份认证服务的权限&lt;/td>
 &lt;td style="text-align:left">IAM ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">Security Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">管理云解析服务的权限&lt;/td>
 &lt;td style="text-align:left">DNS ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">DNS FullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">账单,余额,费用&lt;/td>
+&lt;td style="text-align:left">管理费用中心(BSS)的权限&lt;/td>
 &lt;td style="text-align:left">BSS Operator&lt;/td>
 &lt;td style="text-align:left">BSS Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">管理云监控服务的权限&lt;/td>
 &lt;td style="text-align:left">CES ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">CES FullAccess&lt;/td>
 &lt;/tr>
@@ -918,10 +931,14 @@
 &lt;li>名称：腾讯云平台的名称。&lt;/li>
 &lt;li>APP ID/密钥ID/密码：腾讯云账号的APP ID与账号ID有唯一对应关系。对接腾讯云平台的APP ID/密钥ID/密码。具体请参考&lt;a href="#%E8%85%BE%E8%AE%AF%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">腾讯云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
 &lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
-&lt;li>自动同步：设置是否自动同步腾讯云平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -952,84 +969,84 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">权限备注&lt;/th>
 &lt;th style="text-align:left">只读权限&lt;/th>
-&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;th style="text-align:left">读写权限&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">管理所有腾讯云资源的权限&lt;/td>
 &lt;td style="text-align:left">ReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">AdministratorAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">虚拟机, 安全组, 镜像, 磁盘, 快照&lt;/td>
+&lt;td style="text-align:left">管理云服务器(CVM)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudCVMReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudCVMFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡&lt;/td>
+&lt;td style="text-align:left">管理私有网络(VPC)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudVPCReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudVPCFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">Eip&lt;/td>
+&lt;td style="text-align:left">管理弹性IP(EIP)的权限&lt;/td>
 &lt;td style="text-align:left">-&lt;/td>
 &lt;td style="text-align:left">QcloudEIPFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">管理对象存储(COS)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudCOSReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudCOSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">负载均衡&lt;/td>
+&lt;td style="text-align:left">管理负载均衡(CLB)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudCLBReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudCLBFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">管理云数据库MariaDB的权限&lt;br>管理云数据库CDB的权限&lt;br>管理云数据库SQL Server的权限&lt;br>管理云数据库PostgreSQL的权限&lt;/td>
 &lt;td style="text-align:left">QcloudMariaDBReadOnlyAccess&lt;br>QcloudCDBReadOnlyAccess&lt;br>QcloudSQLServerReadOnlyAccess&lt;br>QcloudPostgreSQLReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudMariaDBFullAccess&lt;br>QcloudCDBFullAccess&lt;br>QcloudSQLServerFullAccess&lt;br>QcloudPostgreSQLFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">管理云数据库Redis的权限&lt;/td>
 &lt;td style="text-align:left">QcloudRedisReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudRedisFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">管理云审计(CloudAudit)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudAuditReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudAuditFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAS&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">管理文件存储(CFS)的权限&lt;/td>
+&lt;td style="text-align:left">QcloudCFSReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudCFSFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">WAF&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
+&lt;td style="text-align:left">管理web应用防火墙以及获取SSL证书列表的权限&lt;/td>
+&lt;td style="text-align:left">QcloudWAFReadOnlyAccess&lt;/td>
+&lt;td style="text-align:left">QcloudWAFFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">管理用户与权限(CAM)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudCamReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudCamFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">管理私有域解析(Private DNS)的权限&lt;br>管理DNSPod的权限&lt;/td>
 &lt;td style="text-align:left">QcloudDNSPodReadOnlyAccess&lt;br>QcloudPrivateDNSReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudPrivateDNSFullAccess&lt;br>QcloudDNSPodFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">账单,余额,费用&lt;/td>
+&lt;td style="text-align:left">管理账户内财务相关内容的权限&lt;/td>
 &lt;td style="text-align:left">-&lt;/td>
 &lt;td style="text-align:left">QCloudFinanceFullAccess&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">管理云监控(Monitor)的权限&lt;/td>
 &lt;td style="text-align:left">QcloudMonitorReadOnlyAccess&lt;/td>
 &lt;td style="text-align:left">QcloudMonitorFullAccess&lt;/td>
 &lt;/tr>
@@ -1045,9 +1062,14 @@
 &lt;li>公钥/私钥：获取方式具体请参考&lt;a href="#ucloud%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">UCloud相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>project_id：当使用UCloud子账号时，必须配置该项。使用主账号时无需配置该项。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步UCloud平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
@@ -1105,9 +1127,13 @@
 &lt;li>名称：谷歌云的云账号名称。&lt;/li>
 &lt;li>project_id、private_key_id、private_key、client_email等参数具体可参考&lt;a href="#google%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">Google相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步Google平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1239,79 +1265,69 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:left">功能&lt;/th>
+&lt;th style="text-align:left">权限备注&lt;/th>
 &lt;th style="text-align:left">只读权限&lt;/th>
-&lt;th style="text-align:left">可读可写权限&lt;/th>
+&lt;th style="text-align:left">读写权限&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:left">所有功能总和&lt;/td>
+&lt;td style="text-align:left">管理谷歌云所有资源的权限&lt;/td>
 &lt;td style="text-align:left">Viewer&lt;/td>
 &lt;td style="text-align:left">Editor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">虚拟机, 磁盘, 安全组, 镜像, 快照, 磁盘, 镜像, 负载均衡&lt;/td>
+&lt;td style="text-align:left">管理云服务器的权限&lt;/td>
 &lt;td style="text-align:left">Compute Viewer&lt;/td>
 &lt;td style="text-align:left">Compute Editor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">项目&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:left">Vpc, Vpc对等连接, 路由表, NAT, 弹性网卡,EIP, NAT&lt;/td>
+&lt;td style="text-align:left">管理网络资源的权限&lt;/td>
 &lt;td style="text-align:left">Compute Network Viewer&lt;/td>
 &lt;td style="text-align:left">Compute Network Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">对象存储&lt;/td>
+&lt;td style="text-align:left">管理对象存储资源的权限&lt;/td>
 &lt;td style="text-align:left">Storage Legacy Bucket Reader&lt;br>Storage Object Viewer&lt;/td>
 &lt;td style="text-align:left">Storage Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">RDS&lt;/td>
+&lt;td style="text-align:left">管理云数据库的权限&lt;/td>
 &lt;td style="text-align:left">Cloud SQL Viewer&lt;/td>
 &lt;td style="text-align:left">Cloud SQL Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">弹性缓存&lt;/td>
+&lt;td style="text-align:left">管理Redis的权限&lt;/td>
 &lt;td style="text-align:left">Redis Enterprise Cloud Viewer&lt;/td>
 &lt;td style="text-align:left">Redis Enterprise Cloud Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">操作日志&lt;/td>
+&lt;td style="text-align:left">管理日志的权限&lt;/td>
 &lt;td style="text-align:left">Logs Viewer&lt;/td>
 &lt;td style="text-align:left">Logging Admin&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">NAS&lt;/td>
+&lt;td style="text-align:left">管理文件存储的权限&lt;/td>
 &lt;td style="text-align:left">Cloud Filestore Viewer&lt;/td>
 &lt;td style="text-align:left">Cloud Filestore Editor&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">WAF&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;td style="text-align:left">-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:left">IAM&lt;/td>
+&lt;td style="text-align:left">管理项目中所有自定义角色的权限&lt;/td>
 &lt;td style="text-align:left">Role Viewer&lt;/td>
 &lt;td style="text-align:left">Role Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">DNS&lt;/td>
+&lt;td style="text-align:left">管理DNS的权限&lt;/td>
 &lt;td style="text-align:left">DNS Reader&lt;/td>
 &lt;td style="text-align:left">DNS Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">账单,费用&lt;/td>
+&lt;td style="text-align:left">管理账户账单的权限&lt;/td>
 &lt;td style="text-align:left">Billing Account Viewer&lt;/td>
 &lt;td style="text-align:left">Billing Account Administrator&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:left">监控&lt;/td>
+&lt;td style="text-align:left">管理监控的权限&lt;/td>
 &lt;td style="text-align:left">Monitoring Viewer&lt;/td>
 &lt;td style="text-align:left">Monitoring Admin&lt;/td>
 &lt;/tr>
@@ -1382,9 +1398,13 @@
 &lt;li>账号类型：目前支持对接全球区和中国区的天翼云账号。&lt;/li>
 &lt;li>密钥ID、密码获取方式：目前无法直接使用天翼云官网界面上申请的密钥信息，需要用户联系天翼云技术支持获取Access Key Id和Secret Access Key信息，并需要在天翼云上配置ip白名单。如用户不清楚如何获取，可直接联系运维人员寻求帮助。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步天翼云平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1402,9 +1422,13 @@
 &lt;li>名称：移动云的云账号名称。&lt;/li>
 &lt;li>密钥ID、密码：获取方式具体请参考&lt;a href="#%E7%A7%BB%E5%8A%A8%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">移动云相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步天翼云平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1449,9 +1473,13 @@
 &lt;li>名称：京东云的云账号名称。&lt;/li>
 &lt;li>密钥ID、密码：获取方式具体请参考&lt;a href="#%E4%BA%AC%E4%B8%9C%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">京东相关参数获取方式&lt;/a>。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步京东平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1478,6 +1506,186 @@
 &lt;p>&lt;img src="../../../../faq/image/jdaksk.png" alt="">&lt;/p>
 &lt;/li>
 &lt;/ol>
+&lt;h3 id="新建百度云账号">新建百度云账号&lt;/h3>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为百度云，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：百度云平台的名称。&lt;/li>
+&lt;li>密钥ID/密码：通过Access Key验证方式对接百度云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#%E7%99%BE%E5%BA%A6%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">百度云相关参数获取方式&lt;/a>。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置同步资源区域页面，该配置可在云账号详情页-订阅-区域进行修改（默认同步所有区域）。如在Cloudpods平台默认同步所有区域，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>配置成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：账单文件访问信息（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入账单文件访问信息页面配置云账号的账单参数以便用户可以在费用中查看云账号的账单信息。账单文件访问信息页面选填，如不需要在Cloudpods平台查看云账号账单信息，可直接单击 &lt;strong>&lt;em>跳过&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中查看账单信息等，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，并进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。&lt;/li>
+&lt;li>百度云账单通过API获取，因此在该页面只需要配置以下参数。
+&lt;ul>
+&lt;li>立即采集账单：Cloudpods平台默认每天凌晨4点自动采集账单。开启该项后，配置完账单文件访问信息后，将会立即采集账单。&lt;/li>
+&lt;li>时间范围：当启用立即采集账单后，支持设置时间范围，立即采集时间范围内的账单，请确保在选择的时间范围内有账单数据。建议采集1~6个月内的账单，否则会因为数据太多，造成系统压力多大影响日常采集账单的任务。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建百度云账号。&lt;/li>
+&lt;/ol>
+&lt;h4 id="百度云相关参数获取方式">百度云相关参数获取方式&lt;/h4>
+&lt;h5 id="如何获取百度云api密钥">如何获取百度云API密钥&lt;/h5>
+&lt;ol>
+&lt;li>
+&lt;p>使用主账号登录百度云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &lt;strong>&lt;em>&amp;ldquo;安全认证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项进入Access Key页面。
+&lt;img src="../../../../faq/image/baidu-accesskeys.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在Access Key页面，可以查看已存在的Access Key信息，也可以单击 &lt;strong>&lt;em>&amp;ldquo;创建AccessKey&amp;rdquo;&lt;/em>&lt;/strong> 按钮新建用户AccessKey，新建Access Key时百度云会向账号联系人手机发送验证码，验证通过后才可以创建AccessKey。
+&lt;img src="../../../../faq/image/baidu-get_accesskey_list.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Access Key Secret默认不显示，单击&amp;rdquo;&lt;strong>显示&lt;/strong> &amp;ldquo;链接，百度云将向账号所属的联系人手机发送一个验证码，验证通过后，才会显示Access Key Secret。
+&lt;img src="../../../../faq/image/baidu-get_access_key_secret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建联通云账号">新建联通云账号&lt;/h3>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为联通云，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：联通云平台的名称。&lt;/li>
+&lt;li>密钥ID/密码：通过访问密钥Access Key验证方式对接联通云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#%E8%81%94%E9%80%9A%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">联通云相关参数获取方式&lt;/a>。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置同步资源区域页面，该配置可在云账号详情页-订阅-区域进行修改（默认同步所有区域）。如在Cloudpods平台默认同步所有区域，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>配置成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：账单文件访问信息（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入账单文件访问信息页面配置云账号的账单参数以便用户可以在费用中查看云账号的账单信息。账单文件访问信息页面选填，如不需要在Cloudpods平台查看云账号账单信息，可直接单击 &lt;strong>&lt;em>跳过&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中查看账单信息等，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，并进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。&lt;/li>
+&lt;li>联通云账单通过API获取，因此在该页面只需要配置以下参数。
+&lt;ul>
+&lt;li>立即采集账单：Cloudpods平台默认每天凌晨4点自动采集账单。开启该项后，配置完账单文件访问信息后，将会立即采集账单。&lt;/li>
+&lt;li>时间范围：当启用立即采集账单后，支持设置时间范围，立即采集时间范围内的账单，请确保在选择的时间范围内有账单数据。建议采集1~6个月内的账单，否则会因为数据太多，造成系统压力多大影响日常采集账单的任务。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建联通云账号。&lt;/li>
+&lt;/ol>
+&lt;h4 id="联通云相关参数获取方式">联通云相关参数获取方式&lt;/h4>
+&lt;h5 id="如何获取联通云api密钥">如何获取联通云API密钥&lt;/h5>
+&lt;ol>
+&lt;li>
+&lt;p>使用主账号登录联通云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &lt;strong>&lt;em>&amp;ldquo;访问控制&amp;rdquo;&lt;/em>&lt;/strong> 菜单项进入IAM 访问控制页面。
+&lt;img src="../../../../faq/image/liantong-accesskeys.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在IAM 访问控制页面，单击用户名有房操作项 &lt;strong>&lt;em>&amp;ldquo;安全设置&amp;rdquo;&lt;/em>&lt;/strong> 按钮进入安全设置页面。
+&lt;img src="../../../../faq/image/liantong-accesskeys1.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在安全设置页面单击 &lt;strong>&lt;em>&amp;ldquo;新建访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮，新建访问密钥时联通云会向账号联系人手机发送验证码，验证通过后才可以创建密钥，在弹出的新增访问密钥对话框中即可看到密钥信息，即密钥ID（Access Key ID）、密码（Access Key Secret）。
+&lt;img src="../../../../faq/image/liantong-get_access_key_secret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建金山云账号">新建金山云账号&lt;/h3>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为金山云，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：金山云平台的名称。&lt;/li>
+&lt;li>密钥ID/密码：通过Access Key验证方式对接金山云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#%E9%87%91%E5%B1%B1%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">金山云相关参数获取方式&lt;/a>。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置同步资源区域页面，该配置可在云账号详情页-订阅-区域进行修改（默认同步所有区域）。如在Cloudpods平台默认同步所有区域，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>配置成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：账单文件访问信息（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入账单文件访问信息页面配置云账号的账单参数以便用户可以在费用中查看云账号的账单信息。账单文件访问信息页面选填，如不需要在Cloudpods平台查看云账号账单信息，可直接单击 &lt;strong>&lt;em>跳过&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中查看账单信息等，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，并进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。&lt;/li>
+&lt;li>金山云账单通过API获取，因此在该页面只需要配置以下参数。
+&lt;ul>
+&lt;li>立即采集账单：Cloudpods平台默认每天凌晨4点自动采集账单。开启该项后，配置完账单文件访问信息后，将会立即采集账单。&lt;/li>
+&lt;li>时间范围：当启用立即采集账单后，支持设置时间范围，立即采集时间范围内的账单，请确保在选择的时间范围内有账单数据。建议采集1~6个月内的账单，否则会因为数据太多，造成系统压力多大影响日常采集账单的任务。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建金山云账号。&lt;/li>
+&lt;/ol>
+&lt;h4 id="金山云相关参数获取方式">金山云相关参数获取方式&lt;/h4>
+&lt;h5 id="如何获取金山云api密钥">如何获取金山云API密钥&lt;/h5>
+&lt;ol>
+&lt;li>
+&lt;p>使用主账号登录金山云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &lt;strong>&lt;em>&amp;ldquo;Access Keys&amp;rdquo;&lt;/em>&lt;/strong> 菜单项进入AK密钥管理页面。
+&lt;img src="../../../../faq/image/jinshan-accesskeys.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;新建密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮，在弹出的风险预警提示对话框中单击 &lt;strong>&lt;em>&amp;ldquo;继续使用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，金山云将向账号所属的联系人手机发送一个验证码，验证通过后，弹出生成密钥对话框。支持查看AccessKey详情和下载。
+&lt;img src="../../../../faq/image/jinshan-get_access_key_secret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建青云账号">新建青云账号&lt;/h3>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为青云，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：青云平台的名称。&lt;/li>
+&lt;li>密钥ID/密码：通过API密钥（Access Key）验证方式对接青云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#%E9%9D%92%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">青云相关参数获取方式&lt;/a>。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>开启免密登录：启用该项后，会自动将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。实现通过本系统单点登录到公有云平台。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置同步资源区域页面，该配置可在云账号详情页-订阅-区域进行修改（默认同步所有区域）。如在Cloudpods平台默认同步所有区域，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>配置成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：账单文件访问信息（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入账单文件访问信息页面配置云账号的账单参数以便用户可以在费用中查看云账号的账单信息。账单文件访问信息页面选填，如不需要在Cloudpods平台查看云账号账单信息，可直接单击 &lt;strong>&lt;em>跳过&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中查看账单信息等，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，并进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。&lt;/li>
+&lt;li>青云账单通过API获取，因此在该页面只需要配置以下参数。
+&lt;ul>
+&lt;li>立即采集账单：Cloudpods平台默认每天凌晨4点自动采集账单。开启该项后，配置完账单文件访问信息后，将会立即采集账单。&lt;/li>
+&lt;li>时间范围：当启用立即采集账单后，支持设置时间范围，立即采集时间范围内的账单，请确保在选择的时间范围内有账单数据。建议采集1~6个月内的账单，否则会因为数据太多，造成系统压力多大影响日常采集账单的任务。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建青云账号。&lt;/li>
+&lt;/ol>
+&lt;h4 id="青云相关参数获取方式">青云相关参数获取方式&lt;/h4>
+&lt;h5 id="如何获取青云api密钥">如何获取青云API密钥&lt;/h5>
+&lt;ol>
+&lt;li>
+&lt;p>使用主账号登录青云控制台，单击页面右上角个人信息，展开下拉菜单，单击 &lt;strong>&lt;em>&amp;ldquo;API密钥&amp;rdquo;&lt;/em>&lt;/strong> 菜单项进入API密钥管理页面。
+&lt;img src="../../../../faq/image/qingcloud-accesskeys.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;创建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，在弹出的创建API密钥对话框中单击 &lt;strong>&lt;em>&amp;ldquo;提交&amp;rdquo;&lt;/em>&lt;/strong> 按钮，生成API密钥，支持下载取得私钥。
+&lt;img src="../../../../faq/image/qingcloud-get_access_key_secret.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
 &lt;h3 id="新建vmware账号">新建VMware账号&lt;/h3>
 &lt;p>&lt;strong>支持版本&lt;/strong>&lt;/p>
 &lt;p>支持纳管VMware 5.0~7.0版本。&lt;/p>
@@ -1489,7 +1697,7 @@
 &lt;li>同一个二层网络下具体相同VLAN的连续IP地址段为一个IP子网；&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>VMware云账号添加完成后，如自动添加的二层网络和IP子网不符合组网需求，请根据VMware的实际网络环境进行合并wire和合并IP子网的操作；合并wire操作不可逆，如配置错误，请删除云账号后重新添加。&lt;/li>
+&lt;li>VMware云账号添加完成后，如自动添加的二层网络和IP子网不符合组网需求，请根据VMware的实际网络环境进行合并wire和合并IP子网的操作；合并wire操作不可逆，如配置错误，请删除云账号后重新添加,网络问题参考：&lt;a href="../../../../function_principle/multicloud/cloudaccounts/vmware_net">VMware网络原理&lt;/a>。&lt;/li>
 &lt;/ol>
 &lt;p>&lt;strong>操作步骤&lt;/strong>&lt;/p>
 &lt;ol>
@@ -1503,9 +1711,12 @@
 &lt;li>账号：vCenter的管理员用户名。&lt;/li>
 &lt;li>密码：vCenter管理员用户的密码。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步vCenter上信息，若启用需要设置自动同步的时间间隔。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1565,9 +1776,13 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>项目：OpenStack平台上的项目，如admin项目。&lt;/li>
 &lt;li>Domain Name：OpenStack平台上的Domain name，如default。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：OpenStack平台只支持将云账号上的资源按照云上项目归类且默认资源归属项目不能手动指定，如需更改默认资源归属项目，请在订阅列表中更改项目。勾选自动创建项目将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步OpenStack平台上的信息，并设置自动同步的时间间隔，最低为30分钟。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1598,9 +1813,13 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;/div>
 &lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步ZStack/DStack平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1625,9 +1844,13 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>密钥ID/密码：通过Access Key验证方式对接阿里云平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#%E9%A3%9E%E5%A4%A9%E4%BA%91%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">飞天云相关参数获取方式&lt;/a>&lt;/li>
 &lt;li>秘钥ID: 假设秘钥是: NbzBaQ94MPzjZf5i, 可查看的最高组织Id是: 4, 则秘钥需要填写: NbzBaQ94MPzjZf5i/4&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步阿里飞天平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1657,44 +1880,6 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>在服务的Service Registration列中，单击鼠标右键，选择 &lt;strong>&lt;em>&amp;ldquo;选择更多&amp;rdquo;&lt;/em>&lt;/strong> 。&lt;/li>
 &lt;li>在 &lt;strong>&lt;em>&amp;ldquo;详情&amp;rdquo;&lt;/em>&lt;/strong> 页面查看产品服务的Endpoint地址。&lt;/li>
 &lt;/ol>
-&lt;h3 id="新建hcso账号">新建HCSO账号&lt;/h3>
-&lt;p>该功能用于纳管HCSO账号。&lt;/p>
-&lt;ol>
-&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
-&lt;li>选择云平台为HCSO，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
-&lt;li>配置以下参数：
-&lt;ul>
-&lt;li>名称：HCSO账号的名称。&lt;/li>
-&lt;li>密钥ID/密码：通过Access Key验证方式对接HCSO平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#hcso%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">HCSO相关参数获取方式&lt;/a>&lt;/li>
-&lt;li>默认区域/端点(Endpoint))域名：以地址iam.cn-north-1.test.com为例. 其中&lt;code>iam&lt;/code>指统一身份认证服务,&lt;code>cn-north-1&lt;/code>指端点区域,&lt;code>test.com&lt;/code>即端点(Endpoint)域名。&lt;/li>
-&lt;li>统一认证服务端点/弹性云服务器端点/虚拟私有云端点/镜像服务端点/云硬盘端点/分布式缓存端点/弹性负载均衡端点/对象存储服务端点/关系型数据库端点/NAT网关端点/云审计服务端点/监控服务端点/企业项目端点/文件系统（SFS Turbo）端点：选填，通过API使用资源时，需要指定对应的终端节点，请向企业管理员获取终端节点信息。&lt;/li>
-&lt;li>子网DNS：设置环境中的子网默认DNS地址，最多可以设置两个，请使用英文',&amp;lsquo;隔开.例如： 10.125.0.26,10.125.0.27。&lt;/li>
-&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。&lt;/li>
-&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步HCSO平台上的信息，并设置自动同步的时间间隔。&lt;/li>
-&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
-&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建HCSO账号。&lt;/li>
-&lt;/ol>
-&lt;h4 id="hcso相关参数获取方式">HCSO相关参数获取方式&lt;/h4>
-&lt;h5 id="hcso获取accesskey">HCSO获取AccessKey&lt;/h5>
-&lt;ol>
-&lt;li>
-&lt;p>登录HCSO控制台，鼠标悬停在右上角用户名处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的凭证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入我的凭证页面。&lt;/p>
-&lt;p>&lt;img src="../../../images/multiplecloud/hcsoaksk.png" alt="">&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>单击左侧[访问密钥]菜单，在访问密钥页面单击 &lt;strong>&lt;em>&amp;ldquo;新增访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
-&lt;p>&lt;img src="../../../images/multiplecloud/hcsoaddaksk.png" alt="">&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>通过验证后，会下载credentials名称的Excel表格，打开表格后即可获取密钥ID（Access Key ID）和密码（Secret Access Key）。
-&lt;img src="../../../../faq/image/faq_account_huawei_3.png" alt="">&lt;/p>
-&lt;/li>
-&lt;/ol>
 &lt;h3 id="新建cloudpods云账号">新建Cloudpods云账号&lt;/h3>
 &lt;p>该功能用于纳管Cloudpods账号。&lt;/p>
 &lt;ol>
@@ -1706,9 +1891,13 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>认证地址：即对应的keystone服务地址，可在Cloudpods控制节点通过&lt;code>ocadm cluster rcadmin&lt;/code>命令获取OS_AUTH_URL。一般为http://域名(IP地址):30500/v3。&lt;/li>
 &lt;li>密钥ID/密码：通过Access Key验证方式对接Cloudpods，获取方式请参考&lt;a href="#cloudpods%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">Cloudpods相关参数获取方式&lt;/a>&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步Cloudpods平台上的信息，并设置自动同步的时间间隔。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1731,6 +1920,89 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;p>&lt;img src="../../../images/multiplecloud/cloudpodsaksklist.png" alt="">&lt;/p>
 &lt;/li>
 &lt;/ol>
+&lt;h3 id="新建hcso账号">新建HCSO账号&lt;/h3>
+&lt;p>该功能用于纳管HCSO账号。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为HCSO，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：HCSO账号的名称。&lt;/li>
+&lt;li>密钥ID/密码：通过Access Key验证方式对接HCSO平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#hcso%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">HCSO相关参数获取方式&lt;/a>&lt;/li>
+&lt;li>默认区域/端点(Endpoint))域名：以地址iam.cn-north-1.test.com为例. 其中&lt;code>iam&lt;/code>指统一身份认证服务,&lt;code>cn-north-1&lt;/code>指端点区域,&lt;code>test.com&lt;/code>即端点(Endpoint)域名。&lt;/li>
+&lt;li>统一认证服务端点/弹性云服务器端点/虚拟私有云端点/镜像服务端点/云硬盘端点/分布式缓存端点/弹性负载均衡端点/对象存储服务端点/关系型数据库端点/NAT网关端点/云审计服务端点/监控服务端点/企业项目端点/文件系统（SFS Turbo）端点：选填，通过API使用资源时，需要指定对应的终端节点，请向企业管理员获取终端节点信息。&lt;/li>
+&lt;li>子网DNS：设置环境中的子网默认DNS地址，最多可以设置两个，请使用英文',&amp;lsquo;隔开.例如： 10.125.0.26,10.125.0.27。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建HCSO账号。&lt;/li>
+&lt;/ol>
+&lt;h4 id="hcso相关参数获取方式">HCSO相关参数获取方式&lt;/h4>
+&lt;h5 id="hcso获取accesskey">HCSO获取AccessKey&lt;/h5>
+&lt;ol>
+&lt;li>
+&lt;p>登录HCSO控制台，鼠标悬停在右上角用户名处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;我的凭证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入我的凭证页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/multiplecloud/hcsoaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击左侧[访问密钥]菜单，在访问密钥页面单击 &lt;strong>&lt;em>&amp;ldquo;新增访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../../images/multiplecloud/hcsoaddaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>通过验证后，会下载credentials名称的Excel表格，打开表格后即可获取密钥ID（Access Key ID）和密码（Secret Access Key）。
+&lt;img src="../../../../faq/image/faq_account_huawei_3.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建hcs账号">新建HCS账号&lt;/h3>
+&lt;p>该功能用于纳管HCS账号。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为HCS，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：HCS云账号的名称。&lt;/li>
+&lt;li>备注：HCS云账号的备注。&lt;/li>
+&lt;li>密钥ID/密码：通过Access Key验证方式对接HCS平台，Access Key由密钥ID（Access Key ID）和密码（Access Key Secret）组成。具体请参考&lt;a href="#hcs%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">HCS相关参数获取方式&lt;/a>。&lt;/li>
+&lt;li>认证地址：HCS管理平台的认证地址，如region1.example.com。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>只读模式：开启后，该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建HCS账号。&lt;/li>
+&lt;/ol>
+&lt;h4 id="hcs相关参数获取方式">HCS相关参数获取方式&lt;/h4>
+&lt;h5 id="hcs获取accesskey">HCS获取AccessKey&lt;/h5>
+&lt;ol>
+&lt;li>
+&lt;p>登录HCS控制台，鼠标悬停在右上角用户处，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;个人设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入个人设置页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/multiplecloud/hcsaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击基本信息下方 &lt;strong>&lt;em>&amp;ldquo;管理访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 菜单，在管理访问密钥页面单击 &lt;strong>&lt;em>&amp;ldquo;新增访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/p>
+&lt;p>&lt;img src="../../../images/multiplecloud/hcsaddaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击 &lt;strong>&lt;em>&amp;ldquo;新增访问密钥&amp;rdquo;&lt;/em>&lt;/strong> 按钮后，生成的访问密钥文件会下载到本地（csv文件），打开后即可获取密钥ID（Access Key ID）和密码（Secret Access Key）。
+&lt;img src="../../../images/multiplecloud/hcsbelongaksk.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
 &lt;h3 id="新建nutanix账号">新建Nutanix账号&lt;/h3>
 &lt;p>该功能用于纳管Nutanix平台资源，支持纳管Nutanix V2版本。&lt;/p>
 &lt;ol>
@@ -1744,14 +2016,93 @@ $ kubectl rollout restart deployment -n kube-system coredns
 &lt;li>端口：Prism web控制台的访问端口，默认为9440。&lt;/li>
 &lt;li>账号、密码：即登录Prism web控制台的账号和密码。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步Nutanix平台上的信息，并设置自动同步的时间间隔。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
 &lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建Nutanix平台的账号。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建外部数据账号">新建外部数据账号&lt;/h3>
+&lt;p>外部数据格式：参考: &lt;a href="../../../../development/remotefile">外部数据&lt;/a>;
+该功能用于对接并导入外部数据资源，要求用户可以访问外部数据http服务器。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为外部数据，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：外部数据的名称。&lt;/li>
+&lt;li>备注：外部数据的备注。&lt;/li>
+&lt;li>链接地址：外部数据http服务器的接入地址。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试通过后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建外部数据账号。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建proxmox账号">新建Proxmox账号&lt;/h3>
+&lt;p>该功能用于纳管Proxmox账号。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为Proxmox，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：Proxmox云账号的名称。&lt;/li>
+&lt;li>备注：Proxmox云账号的备注。&lt;/li>
+&lt;li>接入地址：Proxmox平台的控制台的地址。&lt;/li>
+&lt;li>端口：Proxmox控制台的访问端口，默认为8006。&lt;/li>
+&lt;li>认证方式：Proxmox支持PAM、PVE两种认证方式。&lt;/li>
+&lt;li>账号、密码：即登录Proxmox控制台的账号和密码。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置相关参数。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建Proxmox平台的账号。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建h3c账号">新建H3C账号&lt;/h3>
+&lt;p>该功能用于纳管H3C账号。&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建云账号页面。&lt;/li>
+&lt;li>选择云平台为H3C，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置云账号页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：H3C云账号的名称。&lt;/li>
+&lt;li>备注：H3C云账号的备注。&lt;/li>
+&lt;li>接入地址：H3C平台的控制台的地址。&lt;/li>
+&lt;li>端口：H3C控制台的访问端口，默认为11000。&lt;/li>
+&lt;li>账号、密码：即登录H3C控制台的账号和密码。&lt;/li>
+&lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
+&lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
+&lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
+&lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：配置同步资源区域&amp;rdquo;&lt;/em>&lt;/strong> 按钮，配置相关参数。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建H3C平台的账号。&lt;/li>
 &lt;/ol>
 &lt;h3 id="新建s3账号">新建S3账号&lt;/h3>
 &lt;p>S3即Simple Storage service。在创建S3账号之前需要先部署基于S3协议的对象存储服务器，如MinIO等，MinIO的安装部署&lt;a href="https://min.io/download#/linux">参考链接&lt;/a>。&lt;/p>
@@ -1802,9 +2153,12 @@ SecretKey: mUd+e+h0DS3oIDEvF27b2EE4l+WN5MuZ2ZI+VOag
 &lt;li>密钥ID：ceph对象存储服务器的密钥ID。&lt;/li>
 &lt;li>密码：密钥ID对应的密码信息。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步Ceph对象存储上的信息，并设置自动同步的时间间隔。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -1823,83 +2177,140 @@ SecretKey: mUd+e+h0DS3oIDEvF27b2EE4l+WN5MuZ2ZI+VOag
 &lt;li>密钥ID：XSKY对象存储服务器的密钥ID。&lt;/li>
 &lt;li>密码：密钥ID对应的密码信息。&lt;/li>
 &lt;li>域：选择云账号所属的域。当云账号私有状态下，域下所有项目用户都可以使用云账号创建资源。&lt;/li>
-&lt;li>资源归属项目：选择将云账号上的资源同步到Cloudpods平台的本地项目。如需将云账号上的资源按照云上项目归类，请先指定默认资源归属项目，并勾选自动创建项目。勾选后，将会在Cloudpods平台创建与云上项目同名的本地项目，并将资源同步到对应项目中。云上没有项目归属的资源将会同步到默认资源归属项目。&lt;/li>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;li>屏蔽同步资源：开启后，支持选择需要屏蔽的资源类型，支持多选，屏蔽的资源类型在云账号同步时不会被同步。&lt;/li>
 &lt;li>代理：当云账号需要代理才可以正常访问时设置该项，留空代表直连。如没有合适的代理，直接单击“新建”超链接，在弹出的新建代理对话框中设置相关参数，创建代理。&lt;/li>
-&lt;li>自动同步：设置是否自动同步XSKY对象存储上的信息，并设置自动同步的时间间隔。&lt;/li>
 &lt;li>共享范围：设置云账号的共享范围，默认为不共享，则仅云账号所在域可以使用该账号，若设置为全局共享，则平台上所有用户都可以使用该云账号创建资源。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 按钮，测试输入的参数是否正确。&lt;/li>
 &lt;li>测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;下一步：定时同步任务设置（可选）&amp;quot;&lt;/em>&lt;/strong> 按钮，进入定时同步任务设置页面配置云账号的同步任务使得云账号自动同步行为更加可控。定时同步任务设置页面选填，如不需要在Cloudpods平台设置自动同步任务，可直接单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。如需要在Cloudpods平台中设置云账号自动同步的时间，请配置相关参数，配置完成且测试成功后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建XSKY账号。&lt;/li>
 &lt;/ol>
-&lt;h2 id="全量同步">全量同步&lt;/h2>
-&lt;p>该功能用于全量同步账号上的资源信息。&lt;/p>
+&lt;h2 id="同步云账号">同步云账号&lt;/h2>
+&lt;p>该功能用于同步云账号上的资源信息。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;ul>
-&lt;li>禁用状态的云账号不支持全量同步；&lt;/li>
+&lt;li>禁用状态的云账号不支持同步云账号；&lt;/li>
 &lt;/ul>
 &lt;/div>
-&lt;p>&lt;strong>单个云账号全量同步&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>单个云账号同步&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;全量同步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，全量同步云账号上的资源信息。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;同步云账号&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出同步云账号对话框。&lt;/li>
+&lt;li>选择同步模式，支持选择全量同步和增量同步，增量同步只同步新增和删除的资源。&lt;/li>
+&lt;li>选择同步资源类型，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
-&lt;p>&lt;strong>批量全量同步&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>批量同步&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在云账号列表勾选一个或多个云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;全量同步&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，全量同步云账号上的资源信息。&lt;/li>
+&lt;li>在云账号列表勾选一个或多个云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;同步云账号&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出同步云账号对话框。&lt;/li>
+&lt;li>选择同步模式，支持选择全量同步和增量同步，增量同步只同步新增和删除的资源。&lt;/li>
+&lt;li>选择同步资源类型，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用">启用&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的云账号，禁用状态的云账号的资源不能被使用。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面，单击&amp;quot;禁用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;状态设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用云账号。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;状态设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用云账号。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用">禁用&lt;/h2>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的云账号。删除之前需要先禁用云账号。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面，单击&amp;quot;启用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;状态设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用云账号。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号列表中勾选一个或多个&amp;quot;启用&amp;quot;状态的云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;状态设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用云账号。&lt;/li>
+&lt;/ol>
+&lt;h2 id="连接测试">连接测试&lt;/h2>
+&lt;p>该功能用于测试账号的连接状态并同步云账号上的资源信息。禁用状态的云账号不支持该操作。&lt;/p>
+&lt;p>&lt;strong>单个云账号连接测试&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;状态设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，测试账号连接状态，若处于云账号连接状态则同步云账号上资源信息。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量连接测试&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号列表勾选一个或多个云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;状态设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，测试账号连接状态，若处于云账号连接状态则同步云账号上资源信息。&lt;/li>
 &lt;/ol>
 &lt;h2 id="设置自动同步">设置自动同步&lt;/h2>
-&lt;p>该功能用于设置云账号是否开启自动同步，并设置自动同步间隔时间。自动同步即增量同步云账号上的资源。&lt;/p>
-&lt;p>&lt;strong>云账号设置自动同步&lt;/strong>&lt;/p>
+&lt;p>该功能用于设置云账号是否开启自动同步，并设置自动同步间隔时间，自动同步即增量同步云账号上的资源，自动同步支持资源同步和账单任务。&lt;/p>
+&lt;p>&lt;strong>云账号设置资源自动同步&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置自动同步&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置定时任务对话框。&lt;/li>
-&lt;li>单击**_&amp;ldquo;新建&amp;rdquo;_** 按钮，进入配置自动同步页面。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;自动同步&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置定时任务对话框。&lt;/li>
+&lt;li>选择资源同步页签，单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置资源自动同步页面。&lt;/li>
 &lt;li>配置以下参数：
 &lt;ul>
 &lt;li>名称：定时任务的名称。&lt;/li>
+&lt;li>类型：同步云账号。&lt;/li>
 &lt;li>触发频率：支持单次、每天、每周、每月的自定义时间。&lt;/li>
 &lt;li>触发时间：选择具体的时间作为触发时间，例如：2000-01-01 00:00。&lt;/li>
+&lt;li>有效时间：支持为空，不选择代表长期有效。&lt;/li>
 &lt;/ul>
 &lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
-&lt;h2 id="更新账号密码">更新账号密码&lt;/h2>
+&lt;p>&lt;strong>云账号设置账单任务&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;自动同步&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置定时任务对话框。&lt;/li>
+&lt;li>选择账单任务页签，单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置账单任务页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>任务类型：支持拉取账单、预付费分摊、缺省项目分摊、二次定价、删除账单。&lt;/li>
+&lt;li>时间范围：选择任务类型的生效时间范围。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置同步策略">设置同步策略&lt;/h2>
+&lt;p>该功能用于通过设置标签与资源映射项目的对应关系，将云账号下的资源按照规则设置分配给指定项目。参考: &lt;a href="../../../../web_ui/multiplecloud/cloudaccount/synchronizationpolicy/#%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5%E4%B8%8D%E5%90%8C%E6%83%85%E5%86%B5%E8%AF%B4%E6%98%8E">同步策略不同情况说明&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;设置同步策略&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置自动同步对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>资源归属方式：默认指定项目，还支持根据云上项目归属。&lt;/li>
+&lt;li>资源归属项目：资源归属方式选择指定项目时，可以选择将云账号上的资源同步到Cloudpods平台的本地项目，本地项目会根据域来过滤。资源归属方式选择根据云上项目归属时，资源会同步与云上项目同名的本地项目中，若资源无云上项目属性则归属到指定项目中。&lt;/li>
+&lt;li>同步策略：开启后，通过设置标签与资源映射项目的对应关系，将资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。&lt;/li>
+&lt;li>同步策略生效范围：打开同步策略后显示，支持选择资源标签和项目标签。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更新账号">更新账号&lt;/h2>
 &lt;p>该功能用于更新云账号的账号和密码信息。不同平台的云账号参数不同。不同平台账号密码获取方式请参考对应的新建云账号章节。禁用状态的云账号不支持该操作。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 VMware云账号暂不支持更新账号。
 &lt;/div>
 &lt;ol>
-&lt;li>在云账号列表中，分别单击不同平台云账号操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更新账号密码&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更新账号密码对话框。&lt;/li>
+&lt;li>在云账号列表中，分别单击不同平台云账号操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;更新账号&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更新账号密码对话框。&lt;/li>
 &lt;li>修改不同平台的账号密码信息，修改完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
-&lt;h2 id="更新账单文件">更新账单文件&lt;/h2>
-&lt;p>该功能用于更新云账号的账单文件，仅阿里云、华为云、AWS、Azure、Google支持。不同平台的账单文件参数不同，不同平台账号密码获取方式请参考对应的新建云账号章节。&lt;/p>
+&lt;h2 id="只读模式">只读模式&lt;/h2>
+&lt;p>该功能用于将云账号设置为只读模式，开启只读模式后该云账号只会进行同步资源操作，无法进行其他任务操作，如新建、删除或修改等。&lt;/p>
 &lt;ol>
-&lt;li>在云账号列表中，分别单击不同平台云账号操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更新账单文件&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入更新账单文件页面。&lt;/li>
-&lt;li>修改不同平台的账单文件参数，修改完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;只读模式&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出只读模式对话框。&lt;/li>
+&lt;li>设置只读模式开关，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
-&lt;h2 id="连接测试">连接测试&lt;/h2>
-&lt;p>该功能用于测试账号的连接状态并同步云账号上的资源信息。禁用状态的云账号不支持该操作。&lt;/p>
-&lt;p>&lt;strong>单个云账号连接测试&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，测试账号连接状态，若处于云账号连接状态则同步云账号上资源信息。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量连接测试&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在云账号列表勾选一个或多个云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;连接测试&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，测试账号连接状态，若处于云账号连接状态则同步云账号上资源信息。&lt;/li>
-&lt;/ol>
-&lt;h2 id="设置优惠率">设置优惠率&lt;/h2>
-&lt;p>该功能用于为公有云账号设置优惠率。设置优惠率后，用户创建公有云资源时显示的估算价格为优惠后的价格。&lt;/p>
+&lt;h2 id="开启免密登录">开启免密登录&lt;/h2>
+&lt;p>该功能用于开启云账号的免密登录功能，将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。开启后,在云账号详情-免密登录页面添加的免密用户可以免密登录公有云平台。目前暂不支持关闭该功能。&lt;/p>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
-&lt;ul>
-&lt;li>对公有云云账号设置优惠率，不会影响公有云上的实际账单费用。&lt;/li>
-&lt;li>仅在云账号共享范围内创建资源才会显示优惠后的价格。&lt;/li>
-&lt;/ul>
+目前支持免密登录的公有云平台：阿里云、腾讯云、华为云、AWS。
 &lt;/div>
 &lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置优惠率&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置优惠率对话框。&lt;/li>
-&lt;li>设置优惠率（优惠后价格=原价*（1-优惠率）），单击 **_&amp;ldquo;确定&amp;rdquo;_** 按钮，完成操作。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;开启免密登录&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;h2 id="设置共享">设置共享&lt;/h2>
 &lt;p>该功能用于设置云账号的共享状态。&lt;/p>
@@ -1924,7 +2335,7 @@ VMware云账号暂不支持更新账号。
 通过云账号同步下来的资源（除安全组外）的共享范围都受云账号的共享范围影响。云账号上的资源其他域是否可用需要看资源的具体共享范围。
 &lt;/div>
 &lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
 &lt;li>配置以下参数：
 &lt;ul>
 &lt;li>当共享范围选择为“不共享”时，即云账号的共享范围为私有，仅云账号所属域可以使用云账号的资源。&lt;/li>
@@ -1947,53 +2358,38 @@ VMware云账号暂不支持更新账号。
 &lt;h2 id="设置代理">设置代理&lt;/h2>
 &lt;p>该功能用于帮助已创建好的云账号绑定代理。&lt;/p>
 &lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置代理&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置代理对话框。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;属性设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;设置代理&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置代理对话框。&lt;/li>
 &lt;li>选择代理，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
-&lt;h2 id="开启免密登录">开启免密登录&lt;/h2>
-&lt;p>该功能用于开启云账号的免密登录功能，将系统的SAML信息同步到云账号上，并成为云上登录的身份提供商。开启后,在云账号详情-免密登录页面添加的免密用户可以免密登录公有云平台。目前暂不支持关闭该功能。&lt;/p>
+&lt;h2 id="更新账单">更新账单&lt;/h2>
+&lt;p>该功能用于更新云账号的账单文件，仅阿里云、华为云、AWS、Azure、Google支持。不同平台的账单文件参数不同，不同平台账号密码获取方式请参考对应的新建云账号章节。&lt;/p>
+&lt;ol>
+&lt;li>在云账号列表中，分别单击不同平台云账号操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;费用设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;更新账单&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入更新账单文件页面。&lt;/li>
+&lt;li>修改不同平台的账单文件参数，修改完成后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置优惠率">设置优惠率&lt;/h2>
+&lt;p>该功能用于为公有云账号设置优惠率。设置优惠率后，用户创建公有云资源时显示的估算价格为优惠后的价格。&lt;/p>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
-目前支持免密登录的公有云平台：阿里云、腾讯云、华为云、AWS。
+&lt;ul>
+&lt;li>对公有云云账号设置优惠率，不会影响公有云上的实际账单费用。&lt;/li>
+&lt;li>仅在云账号共享范围内创建资源才会显示优惠后的价格。&lt;/li>
+&lt;/ul>
 &lt;/div>
 &lt;ol>
-&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;开启免密登录&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="启用">启用&lt;/h2>
-&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的云账号，禁用状态的云账号的资源不能被使用。&lt;/p>
-&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在云账号页面，单击&amp;quot;禁用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用云账号。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在云账号列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用云账号。&lt;/li>
-&lt;/ol>
-&lt;h2 id="禁用">禁用&lt;/h2>
-&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的云账号。删除之前需要先禁用云账号。&lt;/p>
-&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在云账号页面，单击&amp;quot;启用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用云账号。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在云账号列表中勾选一个或多个&amp;quot;启用&amp;quot;状态的云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用云账号。&lt;/li>
+&lt;li>在云账号页面，单击云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;费用设置&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;设置优惠率&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置优惠率对话框。&lt;/li>
+&lt;li>设置优惠率（优惠后价格=原价*（1-优惠率）），单击 **_&amp;ldquo;确定&amp;rdquo;_** 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;h2 id="删除">删除&lt;/h2>
 &lt;p>该功能用于删除云账号。删除之前需要先禁用云账号。在Cloudpods平台上删除云账号不会影响到云账号上的资源。&lt;/p>
 &lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在云账号页面，单击&amp;quot;禁用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>在云账号页面，单击&amp;quot;禁用&amp;quot;状态的云账号右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
 &lt;ol>
-&lt;li>在云账号列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>在云账号列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的云账号，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，再选择 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看云账号详情">查看云账号详情&lt;/h2>
@@ -2003,7 +2399,7 @@ VMware云账号暂不支持更新账号。
 &lt;li>详情页面顶部菜单项支持对云账号进行更新账号密码、全量同步、设置自动同步、连接测试、设置为共享、设置为私有、启用、禁用、删除等操作。&lt;/li>
 &lt;li>查看以下信息：
 &lt;ul>
-&lt;li>基本信息：包括云上ID、ID、名称、状态、域、项目、共享范围、平台、账号、代理、启用状态、同步时间、创建时间、更新时间、备注等。&lt;/li>
+&lt;li>基本信息：包括云上ID、ID、名称、状态、域、资源归属项目、共享范围、平台、账号、代理、启用状态、同步时间、创建时间、更新时间、备注等。&lt;/li>
 &lt;li>账号信息：包括环境、健康状态、余额、虚拟机数量、宿主机数量。&lt;/li>
 &lt;/ul>
 &lt;/li>
@@ -2063,18 +2459,19 @@ VMware云账号暂不支持更新账号。
 &lt;li>在列表勾选一个或多个订阅，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出更改项目对话框。&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
 &lt;/ol>
-&lt;h3 id="全量同步-1">全量同步&lt;/h3>
-&lt;p>该功能用于全量同步订阅信息。&lt;/p>
+&lt;h3 id="同步资源">同步资源&lt;/h3>
+&lt;p>该功能用于同步订阅的资源信息。&lt;/p>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 &lt;ul>
-&lt;li>当云账号只有一个订阅，全量同步订阅等同于全量同步云账号。&lt;/li>
-&lt;li>当云账号有多个订阅，如华为云，全量同步订阅仅同步订阅下的区域信息。&lt;/li>
+&lt;li>当云账号只有一个订阅，同步订阅全部资源类型等同于全量同步云账号。&lt;/li>
+&lt;li>当云账号有多个订阅，如华为云，同步订阅全部资源类型仅同步订阅下的区域信息。&lt;/li>
 &lt;/ul>
 &lt;/div>
 &lt;ol>
 &lt;li>在云账号详情页面，单击“订阅”页签，进入订阅页面。&lt;/li>
-&lt;li>单击订阅右侧操作列 &lt;strong>&lt;em>&amp;ldquo;全量同步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，同步订阅信息。&lt;/li>
+&lt;li>单击订阅右侧操作列 &lt;strong>&lt;em>&amp;ldquo;同步资源&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出同步资源对话框。&lt;/li>
+&lt;li>选择同步资源类型，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作&lt;/li>
 &lt;/ol>
 &lt;h3 id="启用订阅">启用订阅&lt;/h3>
 &lt;p>当订阅处于”启用“状态，且状态处于“已连接”时，用户可以正常使用订阅在对应的公有云平台的区域中创建资源。&lt;/p>
@@ -2138,7 +2535,7 @@ VMware云账号暂不支持更新账号。
 &lt;li>在列表中勾选一个或多个区域，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;设置同步&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出设置同步对话框。&lt;/li>
 &lt;li>选择是否同步该区域的资源，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
 &lt;/ol>
-&lt;h4 id="全量同步-2">全量同步&lt;/h4>
+&lt;h4 id="全量同步">全量同步&lt;/h4>
 &lt;p>该功能用于全量同步订阅下指定区域的资源。&lt;/p>
 &lt;ol>
 &lt;li>在订阅详情页面，单击“区域”页签，进入区域页面。&lt;/li>
@@ -2369,7 +2766,7 @@ VMware云账号暂不支持更新账号。
 &lt;li>对云用户组支持进行管理操作，详细请参考&lt;a href="../cloudgroup/">云用户组&lt;/a>内容。&lt;/li>
 &lt;/ol>
 &lt;h2 id="查看云上项目">查看云上项目&lt;/h2>
-&lt;p>该功能用于查看云平台上的项目与本地项目的映射。其中VMware、OpenStack、阿里云、华为云、腾讯云、Azure平台上的项目与本地项目支持双向同步。&lt;/p>
+&lt;p>该功能用于查看云平台上的项目与本地项目的映射同时支持新建云上项目并关联本地项目。其中VMware、OpenStack、阿里云、华为云、腾讯云、Azure平台上的项目与本地项目支持双向同步。&lt;/p>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 &lt;ul>
@@ -2377,6 +2774,26 @@ VMware云账号暂不支持更新账号。
 &lt;li>在没有对应云上项目的项目中创建资源，如果云平台上有同名项目，将会同步到同名项目上；若没有同名项目，则会在云上创建同名项目，并将资源同步到同名项目中。&lt;/li>
 &lt;/ul>
 &lt;/div>
+&lt;h3 id="新建云上项目">新建云上项目&lt;/h3>
+&lt;p>该功能用于新建云上项目，同时支持云上项目关联本地项目。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>仅支持阿里云、腾讯云、华为云和Azure。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在云账号详情页面，单击“云上项目”页签，进入云上项目页面。&lt;/li>
+&lt;li>单击项目对应操作列 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建云上项目对话框。&lt;/li>
+&lt;li>输入云上项目名称，单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入关联本地项目页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>类型：支持选择现有本地项目或新建本地项目&lt;/li>
+&lt;li>项目：当类型选择“选择现有项目”时，需要选择域和项目；当类型选择“新建本地项目”时，输入名称。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。若暂时不关联本地项目支持单击 &lt;strong>&lt;em>&amp;ldquo;跳过&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
 &lt;h3 id="切换本地项目">切换本地项目&lt;/h3>
 &lt;p>该功能用于更改本地项目与云上项目的映射关系。切换本地项目后，云账号的资源也将同步至新项目。&lt;/p>
 &lt;div class="alert alert-primary" role="alert">
@@ -2401,6 +2818,7 @@ VMware云账号暂不支持更新账号。
 &lt;/ol>
 &lt;h2 id="设置定时任务">设置定时任务&lt;/h2>
 &lt;p>该功能用于新建定时同步任务和查看账单同步任务。&lt;/p>
+&lt;p>&lt;strong>云账号设置资源自动同步&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>在云账号详情页面，单击“定时任务”页签，进入定时任务-资源同步页面。&lt;/li>
 &lt;li>在定时任务-资源同步页面单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建定时任务-资源同步页面。&lt;/li>
@@ -2410,6 +2828,19 @@ VMware云账号暂不支持更新账号。
 &lt;li>类型：同步云账号。&lt;/li>
 &lt;li>触发频率：支持选择单次、每天、每周、每月。&lt;/li>
 &lt;li>触发时间：触发频率选择单次，需要设置一个具体的时间提醒一次；触发频率选择每天，需要设置一个每天触发的时间和当前任务的有效时间；触发频率选择每周，需要设置触发的具体星期、触发的具体时间和当前任务的有效时间；需要设置触发的具体日期、触发的具体时间和当前任务的有效时间。&lt;/li>
+&lt;li>有效时间：支持为空，不选择代表长期有效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>云账号设置账单任务&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在云账号页面，单击“定时任务”页签，进入定时任务-资源同步页面。&lt;/li>
+&lt;li>选择账单任务页签，单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入配置账单任务页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>任务类型：支持拉取账单、预付费分摊、缺省项目分摊、二次定价、删除账单。&lt;/li>
+&lt;li>时间范围：选择任务类型的生效时间范围。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
@@ -2844,13 +3275,55 @@ VMware云账号暂不支持更新账号。
 &lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;/ol></description></item><item><title>Docs: 同步策略</title><link>https://www.cloudpods.org/zh/docs/web_ui/multiplecloud/cloudaccount/projectmappping/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/multiplecloud/cloudaccount/projectmappping/</guid><description>
-&lt;p>同步策略即通过设置标签与资源映射项目的对应关系，将公有云下的资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。目前支持的资源为所有带标签的项目资源。
+&lt;/ol></description></item><item><title>Docs: 同步策略</title><link>https://www.cloudpods.org/zh/docs/web_ui/multiplecloud/cloudaccount/synchronizationpolicy/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/multiplecloud/cloudaccount/synchronizationpolicy/</guid><description>
+&lt;p>同步策略即通过设置标签与资源映射项目的对应关系，将云账号下的资源按照规则设置分配给指定项目，同步策略仅在云账号同步的时候生效。目前支持的资源为所有带标签的项目资源。&lt;/p>
+&lt;h2 id="同步策略不同情况说明">同步策略不同情况说明&lt;/h2>
+&lt;p>设置不同资源归属方式与同步策略组合的同步效果说明：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>资源归属方式&lt;/th>
+&lt;th>同步策略生效范围&lt;/th>
+&lt;th>同步说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>指定项目&lt;/td>
+&lt;td>关闭同步策略&lt;/td>
+&lt;td>将云上所有资源都归属到云账号的缺省项目&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>指定项目&lt;/td>
+&lt;td>资源标签&lt;/td>
+&lt;td>能根据资源标签确定本地项目的，则归属到该本地项目。否则，将该资源归属到云账号的缺省项目&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>指定项目&lt;/td>
+&lt;td>项目标签&lt;/td>
+&lt;td>能根据资源云上项目的标签确定本地项目的，则归属到该本地项目。否则，将该资源归属到云账号的缺省项目&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>根据云上项目归属&lt;/td>
+&lt;td>关闭同步策略&lt;/td>
+&lt;td>云上有明确项目归属的，本地自动创建云上同名项目，归属到本地同名项目，无明确项目归属的，归属到本地缺省项目&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>根据云上项目归属&lt;/td>
+&lt;td>资源标签&lt;/td>
+&lt;td>能根据资源标签确定本地项目的，则归属到该本地项目。否则，云上有明确项目归属的，本地自动创建云上同名项目，归属到本地同名项目，无明确项目归属的，归属到本地缺省项目&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>根据云上项目归属&lt;/td>
+&lt;td>项目标签&lt;/td>
+&lt;td>能根据资源云上项目的标签确定本地项目的，则归属到该本地项目。否则，云上有明确项目归属的，本地自动创建云上同名项目，归属到本地同名项目，无明确项目归属的，归属到本地缺省项目&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
 当磁盘、快照、eip等项目资源绑定到其他资源上时，将会按照其他资源上的标签，将其同步到对应项目中，若磁盘、快照、eip等未关联资源，则按照磁盘、快照、eip上的标签同步到对应项目。
 &lt;/div>
-&lt;/p>
 &lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;多云管理/云账号/同步策略&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入同步策略页面。&lt;/p>
 &lt;p>&lt;img src="../../../images/multiplecloud/projectmapping.png" alt="">&lt;/p>
 &lt;h2 id="新建同步策略">新建同步策略&lt;/h2>
@@ -2861,7 +3334,7 @@ VMware云账号暂不支持更新账号。
 &lt;ul>
 &lt;li>域：设置同步策略所属域。仅针对对应域下的云账号（共享带该域的云账号不生效）、项目有效。&lt;/li>
 &lt;li>名称：设置同步策略的名称。&lt;/li>
-&lt;li>规则：单击 **&lt;em>&amp;ldquo;添加规则&amp;rdquo;&lt;/em>**按钮，开始配置同步策略的规则，支持添加多个规则。
+&lt;li>规则：单击 &lt;strong>&lt;em>&amp;ldquo;添加规则&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始配置同步策略的规则，支持添加多个规则。
 &lt;ul>
 &lt;li>条件：包括匹配以下至少一个标签时和全部匹配以下标签时，即用来判断资源关联的标签需要满足上述某一条件时才会将资源分配给对应的映射项目。&lt;/li>
 &lt;li>标签：设置具体的标签，支持选择已有标签和新建标签。&lt;/li>
@@ -2889,7 +3362,7 @@ VMware云账号暂不支持更新账号。
 &lt;ul>
 &lt;li>域：设置同步策略所属域。仅针对对应域下的云账号（共享带该域的云账号不生效）、项目有效。&lt;/li>
 &lt;li>名称：设置同步策略的名称。&lt;/li>
-&lt;li>规则：单击 **&lt;em>&amp;ldquo;添加规则&amp;rdquo;&lt;/em>**按钮，开始配置同步策略的规则，支持添加多个规则。
+&lt;li>规则：单击 &lt;strong>&lt;em>&amp;ldquo;添加规则&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始配置同步策略的规则，支持添加多个规则。
 &lt;ul>
 &lt;li>条件：包括匹配以下至少一个标签时和全部匹配以下标签时，即用来判断资源关联的标签需要满足上述某一条件时才会将资源分配给对应的映射项目。&lt;/li>
 &lt;li>标签：设置具体的标签，支持选择已有标签和新建标签。&lt;/li>
@@ -2916,7 +3389,7 @@ VMware云账号暂不支持更新账号。
 &lt;ul>
 &lt;li>域：设置同步策略所属域。仅针对对应域下的云账号（共享带该域的云账号不生效）、项目有效。&lt;/li>
 &lt;li>名称：设置同步策略的名称。&lt;/li>
-&lt;li>规则：单击 **&lt;em>&amp;ldquo;添加规则&amp;rdquo;&lt;/em>**按钮，开始配置同步策略的规则，支持添加多个规则。
+&lt;li>规则：单击 &lt;strong>&lt;em>&amp;ldquo;添加规则&amp;rdquo;&lt;/em>&lt;/strong> 按钮，开始配置同步策略的规则，支持添加多个规则。
 &lt;ul>
 &lt;li>条件：包括匹配以下至少一个标签时和全部匹配以下标签时，即用来判断资源关联的标签需要满足上述某一条件时才会将资源分配给对应的映射项目。&lt;/li>
 &lt;li>标签：设置具体的标签，支持选择已有标签和新建标签。&lt;/li>

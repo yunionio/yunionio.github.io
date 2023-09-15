@@ -2,40 +2,39 @@
 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/</link><description>Recent content in 版本发布 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 08 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/release/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.10.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_10_5/</link><pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_10_5/</guid><description>
 &lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
 &lt;ul>
-&lt;li>【主机】支持 vmware主机名称和标签支持同步到云上&lt;/li>
-&lt;li>【主机】支持所有平台新建虚拟机时设置自定义数据（UserData）&lt;/li>
+&lt;li>【主机】支持 vmware主机名称和标签双向同步&lt;/li>
 &lt;li>【主机】支持更新GPU透传设备的设备类型&lt;/li>
-&lt;li>【主机】新建KVM主机硬盘支持指定块存储&lt;/li>
-&lt;li>【认证】消息订阅支持设置静默期&lt;/li>
+&lt;li>【主机】支持新建KVM主机硬盘同时指定块存储&lt;/li>
+&lt;li>【认证】支持消息订阅设置消息静默期&lt;/li>
 &lt;li>【容器】支持更新 K8s 集群 kubeconfig&lt;/li>
-&lt;li>【容器】支持纳管只有只读权限的k8s集群&lt;/li>
-&lt;li>【云账号】云账号纳管后并发同步云账号相关skus数据，优化云账号同步速度&lt;/li>
-&lt;li>【安装部署】确保使用 python3 执行 py 脚本&lt;/li>
+&lt;li>【容器】支持纳管只读权限的k8s集群&lt;/li>
+&lt;li>【多云】云账号纳管后并发同步云账号相关sku数据，提高云账号同步速度&lt;/li>
+&lt;li>【部署】部署增加检查，确保使用 python3 执行 py 脚本&lt;/li>
 &lt;/ul>
 &lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
 &lt;ul>
 &lt;li>【主机】修复系统盘和数据盘过滤逻辑不一致问题&lt;/li>
-&lt;li>【主机】修复虚拟机添加网卡网络参数问题&lt;/li>
+&lt;li>【主机】修复虚拟机添加网卡网络参数错误问题&lt;/li>
 &lt;li>【主机】修复虚拟机修改安全组状态显示异常问题&lt;/li>
 &lt;li>【主机】修复切换镜像磁盘大小范围错误问题&lt;/li>
 &lt;li>【主机】修复国产海光CPU宿主机无法正常启动Windows 7等版本Windows虚拟机的问题&lt;/li>
 &lt;li>【主机】修复未能正确识别Debian 12 Cloud Image镜像&lt;/li>
-&lt;li>【主机】修复Windows 2022虚拟机未正确设置DNS服务器地址&lt;/li>
+&lt;li>【主机】修复Windows 2022虚拟机未正确设置DNS服务器地址问题&lt;/li>
+&lt;li>【网络】修复DNS解析同步异常问题&lt;/li>
 &lt;li>【主机】修复 3D 类型 GPU 设备探测失败的问题&lt;/li>
 &lt;li>【主机】修复 lvm 磁盘批量创建部署失败以及 vg deactive 失败的问题&lt;/li>
-&lt;li>【主机】避免 esxi 虚拟机删除失败的问题&lt;/li>
-&lt;li>【网络】修复DNS解析同步异常问题&lt;/li>
-&lt;li>【工单】修复通知和邮件没有发送的问题&lt;/li>
-&lt;li>【安装部署】修复 docker compose 部署的环境 cloudshell 无法登陆的问题&lt;/li>
+&lt;li>【工单】修复工单通知和邮件发送异常问题&lt;/li>
+&lt;li>【主机】修复部分场景vmware虚拟机删除失败的问题&lt;/li>
+&lt;li>【部署】修复 docker compose 部署的环境 cloudshell 无法登陆的问题&lt;/li>
 &lt;/ul>
 &lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
 &lt;ul>
 &lt;li>【主机】支持集成堡垒机（jumpserver），创建虚拟机时自动同步记录到堡垒机（企业版）&lt;/li>
-&lt;li>【主机】支持KVM虚拟机设置网卡流量限制，按流量计费&lt;/li>
-&lt;li>【主机】虚拟机vGPU 透传支持，包括AMD和Nvidia的vGPU&lt;/li>
-&lt;li>【容器】支持在 Aws 上自建 K8s 集群，集成 VPC CNI、CSI 和 LB Controller 等插件，对标 Aws EKS&lt;/li>
-&lt;li>【安装部署】支持以指定的非root用户执行ocboot脚本部署平台&lt;/li>
-&lt;li>【安装部署】ocboot安装脚本run.py支持&amp;ndash;stack参数，支持部署只包含私有云（参数为edge）或云管（参数为cmp）功能的集群&lt;/li>
+&lt;li>【主机】支持平台新建虚拟机时设置自定义数据（UserData）&lt;/li>
+&lt;li>【主机】支持虚拟机vGPU 透传，包括AMD和Nvidia的vGPU&lt;/li>
+&lt;li>【容器】支持在 Aws 上自建 K8s 集群，集成 VPC CNI、CSI 和 LB Controller 等插件&lt;/li>
+&lt;li>【部署】支持以指定的非root用户执行ocboot脚本部署平台&lt;/li>
+&lt;li>【部署】支持部署只包含私有云（参数为edge）或云管（参数为cmp）功能的集群&lt;/li>
 &lt;/ul>
 &lt;h2 id="升级方式">升级方式&lt;/h2>
 &lt;ul>

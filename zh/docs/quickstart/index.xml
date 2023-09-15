@@ -683,44 +683,7 @@ Password: admin@123
 &lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 Cloudpods 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
 &lt;p>&lt;img src="../images/cloudaccount.png" alt="多云管理">&lt;/p>
 &lt;h2 id="faq">FAQ&lt;/h2>
-&lt;h3 id="1-在-all-in-one-部署完成后宿主机列表没有宿主机">1. 在 All in One 部署完成后宿主机列表没有宿主机？&lt;/h3>
-&lt;p>如下图所示，若发现环境部署完成后宿主机列表中没有宿主机，可按照以下方式进行排查&lt;/p>
-&lt;p>&lt;img src="../images/nohost.png" alt="">&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>请确认部署用的yaml文件中是否有&lt;code>as_host: true&lt;/code>配置项，若没有，则表示该节点只作为控制节点使用，不作为计算节点使用，因此宿主机列表中没有宿主机是正常的；&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>在控制节点排查 host 问题，请参考：&lt;a href="../../function_principle/onpremise/host/troubleshooting/">Host服务问题排障技巧&lt;/a>&lt;/p>
-&lt;ol>
-&lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
-&lt;/ol>
-&lt;pre>&lt;code># 创建包含宿主机网段的IP子网
-$ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
-&lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
-&lt;ol start="2">
-&lt;li>若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="../images/hostnameerror.png" alt="">&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="2-在-all-in-one-中找不到虚拟机界面">2. 在 All in One 中找不到虚拟机界面？&lt;/h3>
-&lt;p>All in One 部署的节点会部署 Cloudpods host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 Cloudpods 环境中没有启用宿主机。&lt;/p>
-&lt;p>请到 &lt;code>管理后台&lt;/code> 界面，点击 &lt;code>主机/基础资源/宿主机&lt;/code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p>
-&lt;div class="alert alert-warning" role="alert">
-&lt;h4 class="alert-heading">注意&lt;/h4>
-&lt;p>如果要使用 Cloudpods 私有云虚拟机，需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
-&lt;/div>
-&lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
-&lt;h3 id="3-修改节点的-hostname-有些服务启动失败">3. 修改节点的 hostname ，有些服务启动失败&lt;/h3>
-&lt;p>k8s 管理节点，依赖于 hostname，请改回去。&lt;/p>
-&lt;h3 id="4-如何重装">4. 如何重装&lt;/h3>
+&lt;h3 id="1-如何重装">1. 如何重装&lt;/h3>
 &lt;ol>
 &lt;li>
 &lt;p>执行 &lt;code>kubeadm reset -f&lt;/code> 删除 kubernetes 集群&lt;/p>
@@ -733,10 +696,10 @@ $ reboot
 &lt;/li>
 &lt;/ol>
 &lt;p>&lt;img src="../images/oo_syncuser.png" alt="">&lt;/p>
-&lt;ol start="4">
+&lt;ol start="2">
 &lt;li>第2步的修改，会影响 onecloud-operator 的性能，所以等所有服务启动，可以将第2步的参数恢复。&lt;/li>
 &lt;/ol>
-&lt;h3 id="5-其它问题">5. 其它问题？&lt;/h3>
+&lt;h3 id="2-其它问题">2. 其它问题？&lt;/h3>
 &lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: Kubernetes Helm 安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/k8s/</guid><description>
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">

@@ -293,7 +293,7 @@ $ climc server-delete -f &amp;lt;server_id&amp;gt;
 &lt;h2 id="安装部署">安装部署&lt;/h2>
 &lt;p>不同版本的操作系统安装方式不同，启动方式不同，以下列出一些操作系统安装方式。&lt;/p>
 &lt;h3 id="linux-安装启动">linux 安装启动&lt;/h3>
-&lt;pre>&lt;code>安装：
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 安装：&lt;/span>
 Debian : apt-get install qemu-guest-agent
 Ubuntu : apt-get install qemu-guest-agent
 Alpine : apk add qemu-guest-agent
@@ -301,15 +301,24 @@ Arch Linux : pacman -S qemu-guest-agent
 Kali Linux : apt-get install qemu-guest-agent
 Fedora :dnf install qemu-guest-agent-2
 Raspbian : apt-get install qemu-guest-agent
-systemd 启动或其他启动方式:
-systemctl enable --now qemu-guest-agent
-启动完成后可以在虚机内查看到 qemu-ga 的进程
-例如 centos7 下，ps 可以看到 qemu-ga进程启动，并且禁用了一下命令:
-/usr/bin/qemu-ga --method=virtio-serial --path=/dev/virtio-ports/org.qemu.guest_agent.0 --blacklist=guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush,guest-exec,guest-exec-status -F/etc/qemu-ga/fsfreeze-hook
-centos7 下 blacklist 配置是在 /etc/sysconfig/qemu-ga 下面
-$ cat /etc/sysconfig/qemu-ga | grep BLACKLIST_RPC
-BLACKLIST_RPC=guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush,guest-exec,guest-exec-status
-&lt;/code>&lt;/pre>&lt;h3 id="windows-安装启动">windows 安装启动&lt;/h3>
+&lt;span style="color:#8f5902;font-style:italic"># systemd 启动或其他启动方式:&lt;/span>
+$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now qemu-guest-agent
+&lt;span style="color:#8f5902;font-style:italic"># 启动完成后可以在虚机内查看到 qemu-ga 的进程&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 例如 centos7 下，ps 可以看到 qemu-ga进程启动，并且禁用了一下命令:&lt;/span>
+$ /usr/bin/qemu-ga --method&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>virtio-serial --path&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/dev/virtio-ports/org.qemu.guest_agent.0 --blacklist&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush,guest-exec,guest-exec-status -F/etc/qemu-ga/fsfreeze-hook
+&lt;span style="color:#8f5902;font-style:italic"># centos7 下 blacklist 配置是在 /etc/sysconfig/qemu-ga 下面&lt;/span>
+$ cat /etc/sysconfig/qemu-ga &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep BLACKLIST_RPC
+&lt;span style="color:#000">BLACKLIST_RPC&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush,guest-exec,guest-exec-status
+&lt;span style="color:#8f5902;font-style:italic"># 也可以使用以下命令查看 blacklist 配置&lt;/span>
+$ ps -ef&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep qemu-ga&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep -E &lt;span style="color:#4e9a06">&amp;#34;blacklist=|b=&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="修改黑名单配置">修改黑名单配置&lt;/h4>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改黑名单，编辑 /etc/sysconfig/qemu-ga 配置文件，将需要的命令从BLACKLIST_RPC中删除&lt;/span>
+$ vi /etc/sysconfig/qemu-ga
+&lt;span style="color:#8f5902;font-style:italic"># 编辑完成后保存，重新启动 qemu-ga 服务：&lt;/span>
+$ systemctl restart qemu-guest-agent
+&lt;span style="color:#8f5902;font-style:italic"># 重新查看qga的黑名单，确认是否配置成功&lt;/span>
+$ ps -ef&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep qemu-ga&lt;span style="color:#000;font-weight:bold">|&lt;/span>grep -E &lt;span style="color:#4e9a06">&amp;#34;blacklist=|b=&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="windows-安装启动">windows 安装启动&lt;/h3>
 &lt;p>windows 需要挂载 &lt;a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/">virtio-win&lt;/a> 的 iso, 打开 iso 找到 guest-agent 目录 安装对应的 guest-agent.&lt;/p>
 &lt;h2 id="使用介绍">使用介绍&lt;/h2>
 &lt;p>执行 qga 命令需要确保虚机为 running(运行中) 的状态。若虚机内 guest-agent 未安装，则执行的命令会超时失败。&lt;/p>
@@ -453,7 +462,85 @@ Optional arguments:
 Print usage and this &lt;span style="color:#204a87">help&lt;/span> message and exit.
 &lt;span style="color:#8f5902;font-style:italic"># eg:&lt;/span>
 climc server-qga-set-password test-server root testPassword@1234
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 迁移磁盘存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/change-disk-storge/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/change-disk-storge/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="qga-获取虚拟机的网卡信息">qga 获取虚拟机的网卡信息&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc server-qga-get-network --help
+Usage: climc server-qga-get-network &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;ID&amp;gt;
+Qga-Get-Network server
+Positional arguments:
+&amp;lt;ID&amp;gt;
+ID or name of the server
+Optional arguments:
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--help&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+Print usage and this &lt;span style="color:#204a87">help&lt;/span> message and exit.
+&lt;span style="color:#8f5902;font-style:italic"># eg:&lt;/span>
+$ climc server-qga-get-network test-server
+- hardware-address: &lt;span style="color:#4e9a06">&amp;#34;00:00:00:00:00:00&amp;#34;&lt;/span>
+ip-addresses:
+- ip-address: 127.0.0.1
+ip-address-type: ipv4
+prefix: &lt;span style="color:#0000cf;font-weight:bold">8&lt;/span>
+- ip-address: ::1
+ip-address-type: ipv6
+prefix: &lt;span style="color:#0000cf;font-weight:bold">128&lt;/span>
+name: lo
+statistics:
+rx-bytes: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+rx-dropped: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+rx-errs: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+rx-packets: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+tx-bytes: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+tx-dropped: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+tx-errs: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+tx-packets: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+- hardware-address: 00:22:c8:10:5a:1c
+ip-addresses:
+- ip-address: 192.168.100.45
+ip-address-type: ipv4
+prefix: &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span>
+- ip-address: fe80::222:c8ff:fe10:5a1c
+ip-address-type: ipv6
+prefix: &lt;span style="color:#0000cf;font-weight:bold">64&lt;/span>
+name: eth0
+statistics:
+rx-bytes: &lt;span style="color:#0000cf;font-weight:bold">6703&lt;/span>
+rx-dropped: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+rx-errs: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+rx-packets: &lt;span style="color:#0000cf;font-weight:bold">62&lt;/span>
+tx-bytes: &lt;span style="color:#0000cf;font-weight:bold">9460&lt;/span>
+tx-dropped: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+tx-errs: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+tx-packets: &lt;span style="color:#0000cf;font-weight:bold">65&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="qga-修改运行虚拟机的网络地址">qga 修改运行虚拟机的网络地址&lt;/h2>
+&lt;h4 id="配置需求">配置需求：&lt;/h4>
+&lt;ul>
+&lt;li>qga 版本 ≥ 2.11.1&lt;/li>
+&lt;li>支持 guest-ping、guest-network-get-interfaces、guest-get-osinfo、guest-exec命令&lt;/li>
+&lt;/ul>
+&lt;h4 id="版本号查看">版本号查看：&lt;/h4>
+&lt;p>qga 的版本号可以通过 guest-info 命令查看&lt;/p>
+&lt;h4 id="黑名单配置">黑名单配置：&lt;/h4>
+&lt;p>手动安装的 qga 默认的黑名单为空，即所有命令均可使用，不用进行额外配置，跳过该步骤。
+centos7 版本之后系统自带 qga ，默认在部署虚拟机时已经对黑名单已经进行了处理，如果没有处理成功，可按照&lt;a href="#%E4%BF%AE%E6%94%B9%E9%BB%91%E5%90%8D%E5%8D%95%E9%85%8D%E7%BD%AE">修改黑名单配置&lt;/a>修改黑名单。&lt;/p>
+&lt;h4 id="使用方法">使用方法&lt;/h4>
+&lt;p>这里以 centos7 为例，介绍修改运行虚拟机的 IP 地址&lt;/p>
+&lt;p>虚拟机之前的网络地址和路由如图所示
+&lt;img src="images/prev_net.png" alt="">&lt;/p>
+&lt;p>在虚拟机管理页面选择 网络——更多——更换IP 修改虚拟机的 IP 地址
+&lt;img src="images/change_ip.png" alt="">&lt;/p>
+&lt;p>指定需要修改的 IP 地址，这里需要指定子网内的 IP 地址，因为要在运行状态下修改虚拟机的 IP ，需要勾选重启网卡按钮(默认勾选)
+&lt;img src="images/change_ip_detail.png" alt="">&lt;/p>
+&lt;p>点击确定后，虚拟机进入配置阶段，等待虚拟机状态变为运行中，表示修改 IP 地址成功
+&lt;img src="images/change_ip_dashboard.png" alt="">&lt;/p>
+&lt;p>虚拟机的 IP 地址和路由表都发生了修改
+&lt;img src="images/curr_net.png" alt="">&lt;/p>
+&lt;p>如果虚拟机使用 qga 修改网络配置失败，会调用ansible 修改网络配置&lt;/p>
+&lt;h4 id="注意事项">注意事项：&lt;/h4>
+&lt;ul>
+&lt;li>使用 qga 修改网络配置时第一次可能会失败，但其实 qga 的状态是正常的，因此在第一次执行出错后会自动执行第二次，此时第二次的执行结果才是最终执行结果。&lt;/li>
+&lt;li>修改网络配置后的路由会变为静态路由&lt;/li>
+&lt;li>windows 执行时间会相对长一点&lt;/li>
+&lt;li>使用 qga 修改网络配置失败可能是因为没有安装 qga、qga 版本过低或 qga 执行失败，需要逐步排查&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 迁移磁盘存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/change-disk-storge/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/change-disk-storge/</guid><description>
 &lt;p>在 v3.9.4 版本后可以把虚拟机的磁盘迁移到另一个存储，应用场景如下：&lt;/p>
 &lt;ul>
 &lt;li>Ceph RBD 磁盘迁移到本地存储&lt;/li>

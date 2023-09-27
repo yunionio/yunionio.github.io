@@ -189,7 +189,7 @@ ONBOOT=yes
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#204a87;font-weight:bold">ovn_encap_ip&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10.129.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth0/br0/10.128.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth1/br1/bcast1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">eth1/br1/10.129.26.2&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置后，虚拟机之前的VPC网络流量都会封装为源和目的IP地址为业务网段的geneve流量。网络上只需要确保业务口之前网络互通，宿主机的业务口的VLAN模式无论是TRUNK还是Access都不影响。&lt;/p>
 &lt;h3 id="虚拟机网络配置-1">虚拟机网络配置&lt;/h3>
 &lt;p>同理，这种模式下，虚拟机的网络为VPC管理，用户可以任意创建VPC，并在VPC内分配任意的IP子网。不同VPC之间的IP子网之间相互隔离，无法访问。相同VPC内的IP子网之间无隔离。由于宿主机配置了 ovn_encap_ip 为宿主机的业务口IP，所以虚拟机之前的ovn流量都是通过宿主机的业务口转发。&lt;/p>

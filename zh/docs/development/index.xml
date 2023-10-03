@@ -790,6 +790,52 @@ protocol: https
 &lt;li>&lt;a href="https://github.com/Unknwon/go-code-convention/tree/master/zh-CN">https://github.com/Unknwon/go-code-convention/tree/master/zh-CN&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/golang/go/wiki/CodeReviewComments">https://github.com/golang/go/wiki/CodeReviewComments&lt;/a>&lt;/li>
 &lt;li>Godoc: documenting Go code，https://blog.golang.org/godoc-documenting-go-code&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Github Issues 处理逻辑</title><link>https://www.cloudpods.org/zh/docs/development/issue-process/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/issue-process/</guid><description>
+&lt;p>Cloudpods 所有相关的 issues 都在 &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> 管理维护。&lt;/p>
+&lt;p>目前 issue 的处理逻辑如下：&lt;/p>
+&lt;h2 id="issue-生命周期相关">issue 生命周期相关&lt;/h2>
+&lt;ul>
+&lt;li>用户创建 issue 时：
+&lt;ul>
+&lt;li>打上 &amp;lsquo;state/awaiting processing&amp;rsquo; 的标签，表示这个问题待处理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果 issue 超过 30 天没有更新：
+&lt;ul>
+&lt;li>打上 stale 标签，表示已经长期没有进展了&lt;/li>
+&lt;li>如果 issue 有 announcement 标签，就算超过 30 天没有更新，也不会打上 stale 标签&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果 issue 超过 37 天没有更新:
+&lt;ul>
+&lt;li>自动关闭 issue&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果 issue 被关闭：
+&lt;ul>
+&lt;li>在 issue 没有 stale 标签的情况下，会删掉 &amp;lsquo;state/awaiting user feedback&amp;rsquo; 和 &amp;lsquo;stale/awaiting processing&amp;rsquo; 的标签&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="issue-评论相关">issue 评论相关&lt;/h2>
+&lt;ul>
+&lt;li>issue 发生评论时：
+&lt;ul>
+&lt;li>如果是创建 issue 的作者评论:
+&lt;ul>
+&lt;li>会打上 &amp;lsquo;state/awaiting processing&amp;rsquo; 标签&lt;/li>
+&lt;li>并且删掉 &amp;lsquo;state/awaiting user feedback&amp;rsquo; 标签&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果是其它用户评论:
+&lt;ul>
+&lt;li>会打上 &amp;lsquo;state/awaiting user feedback&amp;rsquo; 标签&lt;/li>
+&lt;li>并且删掉 &amp;lsquo;state/awaiting processing&amp;rsquo; 标签&lt;/li>
+&lt;li>如果不想删掉 &amp;lsquo;state/awaiting processing&amp;rsquo;，需要在评论的时候加上 &amp;lsquo;/keep-state&amp;rsquo; 关键字&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;/ul></description></item><item><title>Docs: 手动部署开发集群</title><link>https://www.cloudpods.org/zh/docs/development/single_service_dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/single_service_dev/</guid><description>
 &lt;p>本文介绍手工部署用于开发测试用途的服务集群的步骤。&lt;/p>
 &lt;h2 id="适用人群">适用人群&lt;/h2>

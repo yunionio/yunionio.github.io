@@ -790,10 +790,11 @@ protocol: https
 &lt;li>&lt;a href="https://github.com/Unknwon/go-code-convention/tree/master/zh-CN">https://github.com/Unknwon/go-code-convention/tree/master/zh-CN&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/golang/go/wiki/CodeReviewComments">https://github.com/golang/go/wiki/CodeReviewComments&lt;/a>&lt;/li>
 &lt;li>Godoc: documenting Go code，https://blog.golang.org/godoc-documenting-go-code&lt;/li>
-&lt;/ul></description></item><item><title>Docs: Github Issues 处理逻辑</title><link>https://www.cloudpods.org/zh/docs/development/issue-process/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/issue-process/</guid><description>
+&lt;/ul></description></item><item><title>Docs: Github Issues 使用指南</title><link>https://www.cloudpods.org/zh/docs/development/issue-process/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/issue-process/</guid><description>
 &lt;p>Cloudpods 所有相关的 issues 都在 &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> 管理维护。&lt;/p>
+&lt;h2 id="处理逻辑">处理逻辑&lt;/h2>
 &lt;p>目前 issue 的处理逻辑如下：&lt;/p>
-&lt;h2 id="issue-生命周期相关">issue 生命周期相关&lt;/h2>
+&lt;h3 id="issue-生命周期相关">issue 生命周期相关&lt;/h3>
 &lt;ul>
 &lt;li>用户创建 issue 时：
 &lt;ul>
@@ -813,11 +814,11 @@ protocol: https
 &lt;/li>
 &lt;li>如果 issue 被关闭：
 &lt;ul>
-&lt;li>在 issue 没有 stale 标签的情况下，会删掉 &amp;lsquo;state/awaiting user feedback&amp;rsquo; 和 &amp;lsquo;stale/awaiting processing&amp;rsquo; 的标签&lt;/li>
+&lt;li>在 issue 没有 stale 标签的情况下，会删掉 &amp;lsquo;state/awaiting user feedback&amp;rsquo; 和 &amp;lsquo;state/awaiting processing&amp;rsquo; 的标签&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="issue-评论相关">issue 评论相关&lt;/h2>
+&lt;h3 id="issue-评论相关">issue 评论相关&lt;/h3>
 &lt;ul>
 &lt;li>issue 发生评论时：
 &lt;ul>
@@ -836,7 +837,25 @@ protocol: https
 &lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;/ul></description></item><item><title>Docs: 手动部署开发集群</title><link>https://www.cloudpods.org/zh/docs/development/single_service_dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/single_service_dev/</guid><description>
+&lt;/ul>
+&lt;h2 id="使用指南">使用指南&lt;/h2>
+&lt;p>给 issues 打上标签后，就可以基于标签来做过滤了，常用的场景可以用以下的方式过滤：&lt;/p>
+&lt;h3 id="查询目前等待处理的问题">查询目前等待处理的问题&lt;/h3>
+&lt;p>只用查询状态为打开，并且有 &amp;lsquo;state/awaiting processing&amp;rsquo; 标签，并且没有 &amp;lsquo;stale&amp;rsquo; 标签的 issues 就可以了。&lt;/p>
+&lt;p>Github 前端可以用以下的表达式过滤:&lt;/p>
+&lt;pre>&lt;code>is:open is:issue label:&amp;quot;state/awaiting processing&amp;quot; -label:stale
+&lt;/code>&lt;/pre>&lt;p>对应到 Cloudpods issues 页面：https://github.com/yunionio/cloudpods/issues?page=1&amp;amp;q=is%3Aopen+is%3Aissue+label%3A%22state%2Fawaiting+processing%22+-label%3Astale&lt;/p>
+&lt;h3 id="查询过期即将关闭的问题">查询过期即将关闭的问题&lt;/h3>
+&lt;p>只用查询状态为打开，并且有 &amp;lsquo;stale&amp;rsquo; 标签的 issues。&lt;/p>
+&lt;p>Github 前端可以用以下的表达式过滤:&lt;/p>
+&lt;pre>&lt;code>is:open is:issue label:stale
+&lt;/code>&lt;/pre>&lt;p>对应到 Cloudpods issues 页面：https://github.com/yunionio/cloudpods/issues?q=is%3Aopen+is%3Aissue+label%3Astale+&lt;/p>
+&lt;h3 id="查询过期但被关闭的问题">查询过期但被关闭的问题&lt;/h3>
+&lt;p>这一类问题通常是用户长期没有回复，或者没有及时解决的问题，这类问题是有查询价值的，有时候需要找到这类问题，并且重新打开。&lt;/p>
+&lt;p>查询状态为关闭，并且有 &amp;lsquo;stale&amp;rsquo; 标签的 issues。&lt;/p>
+&lt;p>Github 前端可以用以下的表达式过滤:&lt;/p>
+&lt;pre>&lt;code>is:closed is:issue label:stale
+&lt;/code>&lt;/pre>&lt;p>对应到 Cloudpods issues 页面：https://github.com/yunionio/cloudpods/issues?q=is%3Aclosed+is%3Aissue+label%3Astale&lt;/p></description></item><item><title>Docs: 手动部署开发集群</title><link>https://www.cloudpods.org/zh/docs/development/single_service_dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/single_service_dev/</guid><description>
 &lt;p>本文介绍手工部署用于开发测试用途的服务集群的步骤。&lt;/p>
 &lt;h2 id="适用人群">适用人群&lt;/h2>
 &lt;ul>

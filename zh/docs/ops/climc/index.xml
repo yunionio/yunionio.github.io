@@ -56,7 +56,8 @@ $ climc --help
 &lt;li>AccessKey认证方式类似于公有云的认证签名, 目前仅python和go的sdk支持, 若用其他语言接入需要自行实现&lt;a href="https://github.com/yunionio/cloudpods/blob/10b1d9bdd35776cf8cb597d918fa571fbc356238/pkg/mcclient/aksk.go#L80">签名算法&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;/div>
-&lt;h4 id="控制节点认证配置">控制节点认证配置&lt;/h4>
+&lt;h4 id="通过用户名密码认证">通过用户名／密码认证&lt;/h4>
+&lt;h5 id="控制节点认证配置">控制节点认证配置&lt;/h5>
 &lt;p>在控制节点上可直接通过以下命令认证配置。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取环境变量&lt;/span>
 $ ocadm cluster rcadmin
@@ -70,7 +71,7 @@ $ ocadm cluster rcadmin
 &lt;span style="color:#8f5902;font-style:italic"># 认证环境变量&lt;/span>
 $ &lt;span style="color:#204a87">source&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ocadm cluster rcadmin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>注意: 如果执行 climc 时出现 &lt;em>Error: Missing OS_AUTH_URL&lt;/em> 的错误提示时，请重新执行 &lt;code>source &amp;lt;(ocadm cluster rcadmin)&lt;/code> 命令。&lt;/p>
-&lt;h4 id="非控制节点认证配置">非控制节点认证配置&lt;/h4>
+&lt;h5 id="非控制节点认证配置">非控制节点认证配置&lt;/h5>
 &lt;p>在非控制节点做认证配置上首先需要在对应的控制节点上执行&lt;code>ocadm cluster rcadmin&lt;/code>；
 将输出的认证信息保存到本地的文件中，通过source命令认证配置。&lt;/p>
 &lt;p>以下为用户名／密码认证的配置文件模板，通过OS_USERNAME, OS_DOMAIN_NAME, OS_PASSWORD, OS_PROJECT_NAME, OS_PROJECT_DOMAIN等字段指定用户的信息和项目的信息。&lt;/p>
@@ -100,7 +101,48 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_admi
 &lt;/span>&lt;span style="color:#4e9a06"># endpoint 类型为 public
 &lt;/span>&lt;span style="color:#4e9a06">export OS_ENDPOINT_TYPE=publicURL
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>以下为Access Key/Secret认证的配置文件模板，通过OS_ACCESS_KEY, OS_SECRET_KEY等两个字段指定用户的Access Key/secret。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="token认证">token认证&lt;/h4>
+&lt;p>可以使用临时获得的token进行认证，配置文件模板如下所示。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 临时TOKEN&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_AUTH_TOKEN&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>gAAAAABlG_bcoWRX6BV0B5Sb3jN0Maoi......UOyDVGCy4-6_AglLh
+&lt;span style="color:#8f5902;font-style:italic"># 项目名称&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_PROJECT_NAME&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>system
+&lt;span style="color:#8f5902;font-style:italic"># 项目归属域名称&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_PROJECT_DOMAIN&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Default
+&lt;span style="color:#8f5902;font-style:italic"># 认证接口&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_AUTH_URL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>https://192.168.0.246:5000/v3
+&lt;span style="color:#8f5902;font-style:italic"># 使用服务的Endpoint类型&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">OS_ENDPOINT_TYPE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>public
+&lt;span style="color:#8f5902;font-style:italic"># 是否缓存token&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">YUNION_USE_CACHED_TOKEN&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 是否不验证TLS证书&lt;/span>
+&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">YUNION_INSECURE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>临时token可以通过如下climc命令获取：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc session-show
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> context &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;ip&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;192.168.0.246&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;source&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;cli&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Yunion &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> a0fc05a5ac5...c8d612c9631a1c &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> domain_policies &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;domain-admin&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> endpoint_type &lt;span style="color:#000;font-weight:bold">|&lt;/span> public &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> expires &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2023-10-04T13:35:25.485534Z &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_domain &lt;span style="color:#000;font-weight:bold">|&lt;/span> Default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_domain_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> default &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> project_policies &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> region &lt;span style="color:#000;font-weight:bold">|&lt;/span> YunionHQ &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> role_ids &lt;span style="color:#000;font-weight:bold">|&lt;/span> 5fc1e5c088984e2....cb,e40d785012...682e3a0c647f340b5 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> roles &lt;span style="color:#000;font-weight:bold">|&lt;/span> admin,domainadmin &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> system_policies &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;sysadmin&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant &lt;span style="color:#000;font-weight:bold">|&lt;/span> system &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> tenant_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> a7f2e2a81a1e4850a41eae5f140ceb14 &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> token &lt;span style="color:#000;font-weight:bold">|&lt;/span> gAAAAABlHBidVk6AT58hAHjN3E6tYtliGE061xRSVARWtdW7Z.................................fIeJY3ToKLz-A19rSYql8RKzzG4EkrnKuYD_4NY &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> user &lt;span style="color:#000;font-weight:bold">|&lt;/span> qiujian &lt;span style="color:#000;font-weight:bold">|&lt;/span>
+&lt;span style="color:#000;font-weight:bold">|&lt;/span> user_id &lt;span style="color:#000;font-weight:bold">|&lt;/span> 0d48cd5032970fe....c0d9022f9c2346fd &lt;span style="color:#000;font-weight:bold">|&lt;/span>
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="通过access-keysecret认证">通过Access Key／Secret认证&lt;/h4>
+&lt;p>以下为Access Key/Secret认证的配置文件模板，通过OS_ACCESS_KEY, OS_SECRET_KEY等两个字段指定用户的Access Key/secret。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在控制节点上获取用户在一个项目中的Access Key/Secret&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 生成 Secret Key&lt;/span>
 $ climc credential-create-aksk
@@ -134,7 +176,8 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; ~/test_rc_aksk
 &lt;/span>&lt;span style="color:#4e9a06"># 对应的 region
 &lt;/span>&lt;span style="color:#4e9a06">export OS_REGION_NAME=region0
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>模板配置完成后，通过以下名称认证环境变量。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="验证">验证&lt;/h3>
+&lt;p>模板配置完成后，通过以下方式验证认证环境变量配置成功。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># source 认证环境变量&lt;/span>
 $ &lt;span style="color:#204a87">source&lt;/span> ~/test_rc_admin
 &lt;span style="color:#8f5902;font-style:italic"># 或者想要使用 Access Key/Secret 登陆&lt;/span>

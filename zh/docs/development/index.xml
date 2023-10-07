@@ -807,7 +807,7 @@ protocol: https
 &lt;li>如果 issue 有 announcement 标签，就算超过 30 天没有更新，也不会打上 stale 标签&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>如果 issue 超过 37 天没有更新:
+&lt;li>如果有 &amp;lsquo;state/awaiting user feedback&amp;rsquo; 标签的 issue 超过 37 天没有更新:
 &lt;ul>
 &lt;li>自动关闭 issue&lt;/li>
 &lt;/ul>
@@ -846,14 +846,15 @@ protocol: https
 &lt;pre>&lt;code>is:open is:issue label:&amp;quot;state/awaiting processing&amp;quot; -label:stale
 &lt;/code>&lt;/pre>&lt;p>对应到 Cloudpods issues 页面：&lt;/p>
 &lt;p>&lt;a href="https://github.com/yunionio/cloudpods/issues?page=1&amp;amp;q=is%3Aopen+is%3Aissue+label%3A%22state%2Fawaiting+processing%22+-label%3Astale">https://github.com/yunionio/cloudpods/issues?page=1&amp;amp;q=is%3Aopen+is%3Aissue+label%3A%22state%2Fawaiting+processing%22+-label%3Astale&lt;/a>&lt;/p>
-&lt;h3 id="查询过期即将关闭的问题">查询过期即将关闭的问题&lt;/h3>
-&lt;p>只用查询状态为打开，并且有 &amp;lsquo;stale&amp;rsquo; 标签的 issues。&lt;/p>
+&lt;h3 id="查询过期但等待处理的问题">查询过期但等待处理的问题&lt;/h3>
+&lt;p>这类问题是需要关注的，通常为我们超过30天都没有处理的问题。&lt;/p>
+&lt;p>只用查询状态为打开，并且有 &amp;lsquo;state/awaiting processing&amp;rsquo; 和 &amp;lsquo;stale&amp;rsquo; 标签的 issues。&lt;/p>
 &lt;p>Github 前端可以用以下的表达式过滤:&lt;/p>
-&lt;pre>&lt;code>is:open is:issue label:stale
+&lt;pre>&lt;code>is:open is:issue label:&amp;quot;state/awaiting processing&amp;quot; label:stale
 &lt;/code>&lt;/pre>&lt;p>对应到 Cloudpods issues 页面：&lt;/p>
-&lt;p>&lt;a href="https://github.com/yunionio/cloudpods/issues?q=is%3Aopen+is%3Aissue+label%3Astale+">https://github.com/yunionio/cloudpods/issues?q=is%3Aopen+is%3Aissue+label%3Astale+&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/yunionio/cloudpods/issues?q=is%3Aopen+is%3Aissue+label%3A%22state%2Fawaiting+processing%22+label%3Astale">https://github.com/yunionio/cloudpods/issues?q=is%3Aopen+is%3Aissue+label%3A%22state%2Fawaiting+processing%22+label%3Astale&lt;/a>&lt;/p>
 &lt;h3 id="查询过期但被关闭的问题">查询过期但被关闭的问题&lt;/h3>
-&lt;p>这一类问题通常是用户长期没有回复，或者没有及时解决的问题，这类问题是有查询价值的，有时候需要找到这类问题，并且重新打开。&lt;/p>
+&lt;p>这一类问题通常是用户长期没有回复，这类问题是有查询价值的，有时候需要找到这类问题，并且重新打开。&lt;/p>
 &lt;p>查询状态为关闭，并且有 &amp;lsquo;stale&amp;rsquo; 标签的 issues。&lt;/p>
 &lt;p>Github 前端可以用以下的表达式过滤:&lt;/p>
 &lt;pre>&lt;code>is:closed is:issue label:stale

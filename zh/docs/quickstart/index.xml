@@ -782,7 +782,7 @@ imageRepository: registry.cn-beijing.aliyuncs.com/yunion
 # edition choose from:
 # - ce: community edition
 # - ee: enterprise edition
-&lt;span style="color:#00a000">+ # 选择部署 ce(开源) 或者 ee(企业) 版本
+&lt;span style="color:#00a000">+ # 选择部署 ce(开源) 版本
 &lt;/span>&lt;span style="color:#00a000">&lt;/span> edition: ce
 # storageClass for stateful component
 &lt;span style="color:#00a000">+ # 有状态服务使用的 storageClass，如果不设置就会使用 local-path CSI
@@ -911,22 +911,7 @@ $ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="删除">删除&lt;/h2>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm delete -n onecloud default
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它问题">其它问题&lt;/h2>
-&lt;h3 id="1-如何切换成开源企业版本">1. 如何切换成开源/企业版本？&lt;/h3>
-&lt;p>现在默认 k8s 部署的集群是开源版本(ee)，可以通过下面的操作切换成企业版本(ce)：&lt;/p>
-&lt;p>通过修改对应的 values yaml 文件，修改里面的 cluster.edition 为 ce(开源) 或者 ee(企业) ，然后使用 helm upgrade 升级：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/charts/cloudpods/values-prod.yaml
-&lt;/span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -104,7 +104,7 @@ cluster:
-&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # - ce: community edition
-# - ee: enterprise edition
-# 选择部署 ce(开源) 或者 ee(企业) 版本
-&lt;span style="color:#a40000">- edition: ce
-&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ edition: ee
-&lt;/span>&lt;span style="color:#00a000">&lt;/span> # storageClass for stateful component
-# 有状态服务使用的 storageClass，如果不设置就会使用 local-path CSI
-# 这个可根据 k8s 集群情况自行调节
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm upgrade -n onecloud default . -f values-prod.yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-onecloud-namespace-缺少-keystone-glance-region-等-pod">2. onecloud namespace 缺少 keystone, glance, region 等 pod&lt;/h3>
+&lt;h3 id="1-onecloud-namespace-缺少-keystone-glance-region-等-pod">1. onecloud namespace 缺少 keystone, glance, region 等 pod&lt;/h3>
 &lt;p>如果执行 &lt;code>helm install&lt;/code> 后，执行 &lt;code>kubectl get pods -n onecloud&lt;/code> 发现只有 operator 这个 pod，而没有出现 keystone, glance, region 这些平台相关服务的 pod ，可以使用下面的命令查看 operator pod 的日志排查问题。&lt;/p>
 &lt;p>出现这种情况的原因一般都是 operator 在创建 keystone, region 这些平台相关服务出现了错误。常见的问题有 operator 无法使用相关的 mysql 用户创建用户和数据库；或者创建了 keystone 服务后，又无法通过 K8s 内部 service 域名访问 keystone pod 等。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将 operator 的所有日志重定向到文件&lt;/span>

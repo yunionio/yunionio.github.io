@@ -2895,6 +2895,17 @@ climc&amp;gt; &lt;span style="color:#204a87">exit&lt;/span>
 &lt;p>然后在消息订阅管理界⾯，在你感兴趣消息的接收管理中新建机器⼈类型的接收⼈，并选择上述新创建Webhook机器⼈。&lt;/p>
 &lt;p>⽬前⽐较统⼀的是配置
 “资源创建、删除发送通知”,“资源调整配置发送通知”以及“资源同步发送通知”（也可能叫做“resource sync”）。&lt;/p>
+&lt;p>关于header,body,msg_key字段的说明：&lt;/p>
+&lt;pre>&lt;code>
+header: 特指额外附加的webhook请求头，可为空。
+body: 特指额外附加的webhook报文，可为空。
+msg_key: 特指对于所需报文的key，可为空，为空时默认key为Msg
+注: 当body与msg_key同名时，body优先，会导致主体信息丢失，故msg_key与body不得同名。
+&lt;/code>&lt;/pre>&lt;p>例：&lt;/p>
+&lt;p>webhook配置:&lt;/p>
+&lt;p>&lt;img src="../images/webhook_config.jpg" alt="">&lt;/p>
+&lt;p>webhook结果:&lt;/p>
+&lt;p>&lt;img src="../images/webhook_result.jpg" alt="">&lt;/p>
 &lt;h2 id="支持webhook时间通知的资源">支持Webhook时间通知的资源&lt;/h2>
 &lt;ul>
 &lt;li>云管平台⽀持创建、删除、更新、删除的资源：虚拟机、硬盘、RDS、Redis、LB、EIP、VPC、IP⼦⽹、安全组、证书、DNS、NAT、对象存储OSS、NAS；&lt;/li>
@@ -2937,7 +2948,9 @@ Body:
 {
 &amp;quot;Msg&amp;quot;: &amp;quot;This is a validate message.&amp;quot;
 }
-&lt;/code>&lt;/pre></description></item><item><title>Docs: 监控</title><link>https://www.cloudpods.org/zh/docs/development/monitor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/monitor/</guid><description/></item><item><title>Docs: 编排</title><link>https://www.cloudpods.org/zh/docs/development/orchestration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/orchestration/</guid><description>
+&lt;/code>&lt;/pre>&lt;h3 id="模板启用">模板启用&lt;/h3>
+&lt;p>目前还可通过climc命令调整webhook是否启用模板: climc notify-robot-update &lt;robot-id> &amp;ndash;use-template true&lt;/p>
+&lt;p>启用模板后，发出的报文将与常规机器人通知一致，将不再返回json数据，而是返回文案信息。&lt;/p></description></item><item><title>Docs: 监控</title><link>https://www.cloudpods.org/zh/docs/development/monitor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/monitor/</guid><description/></item><item><title>Docs: 编排</title><link>https://www.cloudpods.org/zh/docs/development/orchestration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/orchestration/</guid><description>
 &lt;p>平台的编排系统使用了 Helm 这个通用工具来实现，如果不熟悉 Helm 这个工具，可以先参考&lt;a href="https://helm.sh/zh/docs/intro/using_helm/">官方文档&lt;/a>做一些了解。&lt;/p>
 &lt;p>其中有以下3个概念需要理解：&lt;/p>
 &lt;ul>

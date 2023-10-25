@@ -380,7 +380,21 @@ Usage: climc server-reset-nic-traffic-limit &lt;span style="color:#ce5c00;font-w
 &lt;span style="color:#8f5902;font-style:italic"># 参数中 MAC 为网卡的 mac 地址&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 设置完成查看网卡信息&lt;/span>
 $ climc server-network-show &amp;lt;SERVER_ID&amp;gt; &amp;lt;NETWORK_ID&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>网卡流量到达上限后会切断网卡，需要调用这两个接口设置更高的流量上限或者重置网卡已使用的流量来恢复网卡。&lt;/p></description></item><item><title>Docs: 网卡附属IP(SubIPs)</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/subips/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/subips/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>网卡流量到达上限后会切断网卡，需要调用这两个接口设置更高的流量上限或者重置网卡已使用的流量来恢复网卡。&lt;/p></description></item><item><title>Docs: IP预留</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/reservedip/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/reservedip/</guid><description>
+&lt;h2 id="ip预留池">IP预留池&lt;/h2>
+&lt;p>平台维护了IP预留池，将未被平台分配但被其他系统使用的IP放入IP预留池，防止IP被分配给虚拟机或其他平台管理的资源。&lt;/p>
+&lt;h3 id="ip地址占用检测">IP地址占用检测&lt;/h3>
+&lt;p>平台会每隔6小时做一次全局ping检测，把所有经典网络的IP地址进行ping。并且把平台未维护，但是响应ping的IP标记为预留IP，防止被平台分配，避免IP冲突。如果IP被检测在线并预留后，就不会被自动释放了。需要用户手动释放。&lt;/p>
+&lt;p>在创建主机时，如果确认这个IP没有被使用，并且有可能放到预留IP里，可以在创建的network参数里，加一个reserved: true的参数，这样即使IP被预留了，也会被自动从预留IP池中释放用于分配。&lt;/p>
+&lt;h2 id="预留ip的使用">预留IP的使用&lt;/h2>
+&lt;h3 id="预留ip">预留IP&lt;/h3>
+&lt;p>预留指定网络里的指定IP地址，并且可以预留自动释放的预留IP，即先预留IP，在指定时间后，自动释放该预留IP。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-reserve-ip &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--duration DURATION&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &amp;lt;NETWORK&amp;gt; &amp;lt;NOTES&amp;gt; &amp;lt;IPS&amp;gt; ...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看预留ip">查看预留IP&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc reserved-ip-list &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--network NETID&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="释放预留ip">释放预留IP&lt;/h3>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-release-reserved-ip &amp;lt;NETWORK&amp;gt; &amp;lt;IP&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 网卡附属IP(SubIPs)</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/subips/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/subips/</guid><description>
 &lt;p>默认情况下，虚拟机的虚拟网卡只能分配一个IP，但可以通过如下方式给一个网卡分配诺干个附属IP，平台默认会检查虚拟机网卡流量的源IP进行检查，通过附属IP，可以允许在虚拟机内使用多个IP。&lt;/p>
 &lt;p>申请附属IP的API为：&lt;/p>
 &lt;pre>&lt;code>POST /servers/&amp;lt;sid&amp;gt;/add-sub-ips

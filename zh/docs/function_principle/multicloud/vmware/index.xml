@@ -59,7 +59,7 @@ VMWare纳管</title><link>https://www.cloudpods.org/zh/docs/function_principle/m
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;img src="./vmwarenet.png" width="600">
+&lt;img src="../vmwarenet.png" width="600">
 &lt;p>纳管 VMware 云账号时，平台会同步端口组的信息，并自动为每个端口组创建一个一一对应的二层网络。因VMware不负责虚拟机的IP地址管理，因此同步后二层网络上的IP子网信息需要管理员在Cloudpods上维护。&lt;/p>
 &lt;h2 id="vmware-ip子网的维护">VMware IP子网的维护&lt;/h2>
 &lt;p>Cloudpods平台虚拟机的虚拟网卡包含如下四个信息：关联的虚拟机，对接的IP子网，虚拟网卡的IP地址和MAC地址。因为VMware不负责维护IP子网的信息，因此纳管VMware云账号后，我们只能获知每台虚拟机对接的虚拟网卡的MAC地址，对接的端口组（以及对应的二层网络）。更进一步地，如果VMware虚拟机内安装并运行版本匹配的VMware Tools软件，则VMware平台也能通过VMware tools获得虚拟机内配置的IP地址。但因为IP子网信息的缺失，导致刚纳管后的VMware虚拟机都没有虚拟网卡的记录。为了方便用户使用，如果虚拟机的IP地址可以通过VMware Tools获取，则会把该IP地址信息记录在虚拟机的标签上，但这仅仅是做了一个标记。为了纳管的VMware虚拟机有虚拟网卡的记录，需要在平台创建合适的IP子网。&lt;/p>

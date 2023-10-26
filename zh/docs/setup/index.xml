@@ -691,6 +691,7 @@ $ sysctl -p
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>安装 keepalived nc&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ yum install -y keepalived nc
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>添加配置&lt;/p>
+&lt;p>以下为主节点的配置：&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 请确保 virtual_router_id 不会和局域网内的其他 keepalived 集群冲突&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/keepalived/keepalived.conf
 &lt;/span>&lt;span style="color:#4e9a06">global_defs {
@@ -728,7 +729,45 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; /etc/keepalive
 &lt;/span>&lt;span style="color:#4e9a06">echo | nc 127.0.0.1 3306 &amp;amp;&amp;gt;/dev/null
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
 $ chmod +x /etc/keepalived/chk_mysql
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动 keepalived&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>以下为备节点的配置：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 请确保备节点 virtual_router_id 和主节点一致&lt;/span>
+$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;/etc/keepalived/keepalived.conf
+&lt;/span>&lt;span style="color:#4e9a06">global_defs {
+&lt;/span>&lt;span style="color:#4e9a06"> router_id onecloud
+&lt;/span>&lt;span style="color:#4e9a06">}
+&lt;/span>&lt;span style="color:#4e9a06">
+&lt;/span>&lt;span style="color:#4e9a06">vrrp_script chk_mysql {
+&lt;/span>&lt;span style="color:#4e9a06"> script &amp;#34;/etc/keepalived/chk_mysql&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> interval 1
+&lt;/span>&lt;span style="color:#4e9a06">}
+&lt;/span>&lt;span style="color:#4e9a06">
+&lt;/span>&lt;span style="color:#4e9a06">vrrp_instance VI_1 {
+&lt;/span>&lt;span style="color:#4e9a06"> state BACKUP
+&lt;/span>&lt;span style="color:#4e9a06"> interface $DB_NETIF
+&lt;/span>&lt;span style="color:#4e9a06"> virtual_router_id 99
+&lt;/span>&lt;span style="color:#4e9a06"> priority 99
+&lt;/span>&lt;span style="color:#4e9a06"> advert_int 1
+&lt;/span>&lt;span style="color:#4e9a06"> nopreempt
+&lt;/span>&lt;span style="color:#4e9a06"> authentication {
+&lt;/span>&lt;span style="color:#4e9a06"> auth_type PASS
+&lt;/span>&lt;span style="color:#4e9a06"> auth_pass $DBHA_KA_AUTH
+&lt;/span>&lt;span style="color:#4e9a06"> }
+&lt;/span>&lt;span style="color:#4e9a06">
+&lt;/span>&lt;span style="color:#4e9a06"> track_script {
+&lt;/span>&lt;span style="color:#4e9a06"> chk_mysql
+&lt;/span>&lt;span style="color:#4e9a06"> }
+&lt;/span>&lt;span style="color:#4e9a06">
+&lt;/span>&lt;span style="color:#4e9a06"> virtual_ipaddress {
+&lt;/span>&lt;span style="color:#4e9a06"> $DB_VIP
+&lt;/span>&lt;span style="color:#4e9a06"> }
+&lt;/span>&lt;span style="color:#4e9a06">}
+&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; /etc/keepalived/chk_mysql
+&lt;/span>&lt;span style="color:#4e9a06">#!/bin/bash
+&lt;/span>&lt;span style="color:#4e9a06">echo | nc 127.0.0.1 3306 &amp;amp;&amp;gt;/dev/null
+&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+$ chmod +x /etc/keepalived/chk_mysql
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>配置后，在主备节点分别启动 keepalived&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ systemctl &lt;span style="color:#204a87">enable&lt;/span> --now keepalived
 $ ip addr show &lt;span style="color:#000">$DB_NETIF&lt;/span>
 2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span style="color:#0000cf;font-weight:bold">1500&lt;/span> qdisc pfifo_fast state UP group default qlen &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>

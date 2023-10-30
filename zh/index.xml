@@ -502,7 +502,7 @@ rook-ceph-operator-68964f4b87-pc87m 1/1 Running &lt;span style="color:#0000cf;fo
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ diff -u cluster.yaml cluster-env.yaml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>请根据自己的节点环境配置，参考 diff 修改，需要注意的地方如下：&lt;/p>
 &lt;ul>
-&lt;li>spec.image: 改为 registry.cn-beijing.aliyuncs.com/yunionio/ceph:v14.2.22 ，这里需要用 v14 版本的镜像，对应的 ceph 版本为 nautilus，更高的版本可能会出现 cloudpods 不兼容的情况&lt;/li>
+&lt;li>spec.image: 改为 registry.cn-beijing.aliyuncs.com/yunionio/ceph:v14.2.22 ，这里需要用 v14 版本的镜像，对应的 ceph 版本为 nautilus。如果要使用更高版本 v16 版本ceph，请参考下文 [使用 Pacific (v16) Ceph]。&lt;/li>
 &lt;li>spec.network.provider: 改为 host ，表示 ceph 相关容器使用 hostNetwork ，这样才能给 Kubernetes 集群之外的服务使用&lt;/li>
 &lt;li>spec.placement: 修改了里面的 Kubernetes 调度策略，表示把 ceph pod 调度到 role=storage-node 的节点上&lt;/li>
 &lt;li>spec.storage: 表示存储的配置
@@ -740,7 +740,36 @@ pool &lt;span style="color:#4e9a06">&amp;#39;cloudpods-test&amp;#39;&lt;/span> c
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它操作">其它操作&lt;/h2>
 &lt;ul>
 &lt;li>删除 Rook 部署的 Ceph 集群请参考：&lt;a href="https://rook.io/docs/rook/v1.7/ceph-teardown.html">Cleaning up a Cluster&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Blog: 用Calico网络策略设置主机node防火墙规则</title><link>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</link><pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</guid><description>
+&lt;/ul>
+&lt;h2 id="使用-pacific-v16-ceph">使用 Pacific (v16) Ceph&lt;/h2>
+&lt;p>上文介绍的流程适合部署 v14 版本的ceph，为了部署 v16 版本的ceph，首先需要把待部署的 ceph 镜像改为：&lt;/p>
+&lt;pre>&lt;code>registry.cn-beijing.aliyuncs.com/yunionio/ceph:v16.2.14
+&lt;/code>&lt;/pre>&lt;p>另外，每个计算节点默认部署的是CentOS 7自带的ceph-common，版本为 v10.2.5。该版本的 ceph-common 已经无法访问 v16 ceph。为此，还需要升级每个计算节点的 ceph-common 版本。具体方法如下：&lt;/p>
+&lt;p>配置 ceph rpm repo 文件 /etc/yum.repos.d/ceph.repo, 内容为：&lt;/p>
+&lt;pre>&lt;code>[ceph]
+name=Ceph packages for $basearch
+baseurl=https://download.ceph.com/rpm-15.2.17/el7/$basearch
+enabled=1
+priority=2
+gpgcheck=1
+gpgkey=https://download.ceph.com/keys/release.asc
+[ceph-noarch]
+name=Ceph noarch packages
+baseurl=https://download.ceph.com/rpm-15.2.17/el7/noarch
+enabled=1
+priority=2
+gpgcheck=1
+gpgkey=https://download.ceph.com/keys/release.asc
+[ceph-source]
+name=Ceph source packages
+baseurl=https://download.ceph.com/rpm-15.2.17/el7/SRPMS
+enabled=0
+priority=2
+gpgcheck=1
+gpgkey=https://download.ceph.com/keys/release.asc
+&lt;/code>&lt;/pre>&lt;p>保存 ceph.repo 后，执行如下命令安装 v15.2.17 的 ceph-common:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">yum install -y ceph-common
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注：因为ceph官方rpm未提供v16的CentOS 7 rpms，因此安装v15的rpms，该版本兼容v16的ceph-common。&lt;/p></description></item><item><title>Blog: 用Calico网络策略设置主机node防火墙规则</title><link>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</link><pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/blog/2021/09/25/calico-customized-node-firewall/</guid><description>
 &lt;p>&lt;strong>作者:&lt;/strong> 小助手&lt;/p>
 &lt;p>Cloudpods的服务运行在一个Kubernetes集群之上，该Kubernets集群的网络方案采用了&lt;a href="https://docs.projectcalico.org/">Calico&lt;/a>。因此运行Cloudpods服务的节点的iptables规则被Calico接管。这就导致我们在Cloudpods服务节点上配置的防火墙规则会被Calico配置的iptables规则覆盖，导致防火墙规则不生效。本文介绍如何使用Calico的HostEndpoint和GlobalNetworkPolicy来设置主机节点的防火墙规则。&lt;/p>
 &lt;h2 id="1准备calicoctl工具">1、准备calicoctl工具&lt;/h2>

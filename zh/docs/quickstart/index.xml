@@ -106,10 +106,10 @@ $ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="c
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">其他地区&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
 &lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
-$ ./run.py &amp;lt;host_ip&amp;gt;
+$ ./run.py full &amp;lt;host_ip&amp;gt;
 &lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
 &lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
-$ ./run.py &amp;lt;host_ip&amp;gt; -m https://mirrors.aliyun.com/pypi/simple/
+$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ full &amp;lt;host_ip&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
 &lt;p>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
@@ -157,7 +157,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> # 设置镜像仓库，如果待部署的机器处于海外，可以用 dockerhub 的镜像仓库：docker.io/yunion
 &lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunion
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py ./config-allinone.yml&lt;/code> 部署集群了。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py full ./config-allinone.yml&lt;/code> 部署集群了。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开始部署&lt;/span>
 $ ./run.py full ./config-allinone.yml
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="部署完成">部署完成&lt;/h2>
@@ -411,7 +411,7 @@ $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allino
 &lt;/span>&lt;span style="color:#4e9a06"> # 设置镜像仓库，如果待部署的机器处于海外，可以用 dockerhub 的镜像仓库：docker.io/yunion
 &lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunion
 &lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py ./config-allinone.yml&lt;/code> 部署集群了。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>当填写完 config-allinone.yml 部署配置文件后，便可以执行 ocboot 里面的 &lt;code>./run.py virt ./config-allinone.yml&lt;/code> 部署集群了。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开始部署&lt;/span>
 $ ./run.py virt ./config-allinone.yml
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="部署完成">部署完成&lt;/h2>

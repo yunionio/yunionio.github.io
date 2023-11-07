@@ -930,7 +930,8 @@ $ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;p>该方案通过 Docker Compose 部署 Cloudpods 多云管理版本，该方式部署的是 All in One 环境，即所有的多云管理服务都使用容器运行在一个节点。&lt;/p>
-&lt;p>该部署方法仅适用于多云管理功能的使用，比如管理公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)，无法使用内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)&lt;/p>
+&lt;p>该部署方法仅适用于多云管理功能的使用，比如管理公有云(aws, 阿里云, 腾讯云等)或者其它私有云(zstack, openstack 等)，无法使用内置私有云相关功能(因为内置私有云需要节点上面安装配置 qemu, openvswitch 等各种虚拟化软件)。&lt;/p>
+&lt;p>另外 VMWare 目前也无法使用 Docker Compose 的方式管理，因为目前对 VMWare 的磁盘管理依赖依赖内核 nbd 模块，该模块无法在 docker compose 里面加载。如果是需要对 VMWare 管理，请使用 &lt;a href="../../quickstart/allinone-multicloud">All in One 多云管理平台安装&lt;/a> 的方式部署。&lt;/p>
 &lt;p>如果需要使用内置私有云，请使用 &lt;a href="../../quickstart/allinone-private">All in One 私有云安装&lt;/a> 的方式部署。&lt;/p>
 &lt;/div>
 &lt;h2 id="环境准备">环境准备&lt;/h2>

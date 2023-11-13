@@ -1,5 +1,120 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-欢迎来到 Cloudpods 文档中心</title><link>https://www.cloudpods.org/zh/docs/</link><description>Recent content in 欢迎来到 var_oem_name 文档中心 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 08 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.10.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_10_5/</link><pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_10_5/</guid><description>
+欢迎来到 Cloudpods 文档中心</title><link>https://www.cloudpods.org/zh/docs/</link><description>Recent content in 欢迎来到 var_oem_name 文档中心 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 08 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: v3.10.7 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_10_7/</link><pubDate>Wed, 08 Nov 2023 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_10_7/</guid><description>
+&lt;p>本次发布，重点是对已有功能的优化和修复，本次重点对接了社区反馈较多的天翼云新版本，由于之前对接是旧版接口，导致用户使用问题较多。 本次接口已切换为天翼云最近版本，使用上更加方便。&lt;/p>
+&lt;p>同时本次在部署上进行了优化，新支持了基于Ubuntu 22.04发行版部署，同时部署脚本根据用户使用场景进行了区分，支持使用virt（私有云）, cmp（多云管理）和 full（融合云）三种部署方式，用户可结合自己实际使用场景进行选择，进而可提高资源的使用率。&lt;/p>
+&lt;p>场景不涉及功能均会进行隐藏，具体更新内容如下&lt;/p>
+&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】支持关机状态一键安装监控 Agent&lt;/li>
+&lt;li>【主机】KVM 虚拟机支持指定磁盘限速&lt;/li>
+&lt;li>【主机】支持项目管理员进行续费和自动续费操作&lt;/li>
+&lt;li>【主机】KVM虚拟机单盘大小默认限制降为10T&lt;/li>
+&lt;li>【主机】回收站资源支持查看操作日志&lt;/li>
+&lt;li>【主机】精简 host-deployer 容器镜像&lt;/li>
+&lt;li>【主机】支持 VMware 在线调整配置及扩容磁盘&lt;/li>
+&lt;li>【多云】资源支持基于到云订阅同名项目&lt;/li>
+&lt;li>【多云】支持天翼云支持新版本接口&lt;/li>
+&lt;li>【系统】优化CPU性能，降低系统负载。&lt;/li>
+&lt;li>【报表】项目报表增加归属域的信息（企业版）&lt;/li>
+&lt;li>【部署】部署脚本优化，提供 virt（私有云）, cmp（多云管理）和 full（融合云）三种部署方式&lt;/li>
+&lt;li>【部署】ocboot run.py 支持不写本地部署机器 ip ，自动配置 ssh 免密登录&lt;/li>
+&lt;li>【部署】添加参数支持 pip mirror ，加快国内安装 ansible 等 python 包的速度&lt;/li>
+&lt;li>【部署】升级 grafana 到 7.5.17 ，方便服务日志搜索&lt;/li>
+&lt;/ul>
+&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】修复 KVM 虚拟机无法修改启动顺序问题&lt;/li>
+&lt;li>【主机】修复 VMware 虚拟机可能删除失败问题&lt;/li>
+&lt;li>【主机】修复平台版本差异导致迁移失败问题&lt;/li>
+&lt;li>【主机】修复历史套餐数据残留问题&lt;/li>
+&lt;li>【主机】修复龙蜥发行版镜像没有识别的问题&lt;/li>
+&lt;li>【主机】修复周期性频繁刷新调度器缓存问题&lt;/li>
+&lt;li>【主机】修复重装系统后根据镜像无法更新虚机引导方式的问题&lt;/li>
+&lt;li>【主机】修复 SR-IOV 网卡调度失败问题&lt;/li>
+&lt;li>【主机】修复重装系统使用 UEFI 镜像 bios参数没有更新的问题&lt;/li>
+&lt;li>【主机】修复某些虚拟机操作系统 DHCP 返回 hostname 不兼容的问题&lt;/li>
+&lt;li>【裸金属】修复因为 QGA 部署导致物理机装机失败的问题&lt;/li>
+&lt;li>【列表】修复列表资源名称修改必填校验丢失问题&lt;/li>
+&lt;li>【列表】修复导出可能导致的数据不全问题&lt;/li>
+&lt;li>【调度】修复尽量使用和避免使用调度器逻辑不正确的问题&lt;/li>
+&lt;li>【容器】修复容器新建定时任务报错问题&lt;/li>
+&lt;li>【容器】修复导入集群失败的问题&lt;/li>
+&lt;li>【多云】修复基于docker compose 部署，云上子账号无法同步的问题&lt;/li>
+&lt;/ul>
+&lt;h2 id="问题修复-fixes-1">问题修复 (Fixes)&lt;/h2>
+&lt;ul>
+&lt;li>【部署】支持基于 Ubuntu 22.04 x86_64 版本部署平台&lt;/li>
+&lt;li>【主机】支持 rocky linux 镜像创建虚拟机&lt;/li>
+&lt;li>【主机】虚拟机列表IP支持正则表达式过滤&lt;/li>
+&lt;li>【工单】工单审批支持机器人、webhook 类型通知（企业版）&lt;/li>
+&lt;/ul>
+&lt;h2 id="升级方式">升级方式&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>具体变更请参考:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.10/3-10-7/">CHANGELOG v3.10.7&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: v3.10.6 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_10_6/</link><pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_10_6/</guid><description>
+&lt;p>本期发布中，前端优化了静态资源的加载机制，将页面打开前需加载的静态资源包从80MB缩减为2MB，首页加载速度有明显提升。另外值得一提的是开源之夏 chentianxiang 同学的#【17600通过QGA修改运行时虚拟机的网络设置】成功合并，解决了困扰已久的修改虚拟机网卡后不能可靠重启虚拟机网络生效的问题。&lt;/p>
+&lt;p>同时本期改进很多社区反馈问题，例如支持新建KVM主机时设置主机自动启动，修复桌面操作系统主机初始账号为root导致无法正常登录，修复华为云region同步异常等问题。&lt;/p>
+&lt;p>以下为本期发布的主要改进，修复和新功能。&lt;/p>
+&lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】主机运行时更换IP后，通过Qemu Guest Agent重新配置主机网络，提升操作成功率&lt;/li>
+&lt;li>【主机】镜像上传后，如果平台已经纳管了 VMware 才会自动转换生成 vmdk 镜像，否则不生成&lt;/li>
+&lt;li>【主机】取消迁移状态优化，展示虚拟机实际状态&lt;/li>
+&lt;li>【主机】支持新建 KVM 磁盘指定块存储&lt;/li>
+&lt;li>【前端】分离前端js及预加载静态资源（如字体等），提高前端页面加载速度&lt;/li>
+&lt;li>【主机】支持新建 KVM 主机设置自动启动&lt;/li>
+&lt;li>【主机】支持 VMware 一键创建相同配置&lt;/li>
+&lt;li>【主机】KVM 和 VMware 重装系统安装监控 agent&lt;/li>
+&lt;li>【主机】优化关联 GPU 逻辑，vGPU与物理 GPU 互斥&lt;/li>
+&lt;li>【认证】支持取消已颁发token，删除用户或access key时同时取消对应的有效token&lt;/li>
+&lt;li>【工单】支持定义虚拟机重启和关机工单类型（企业版）&lt;/li>
+&lt;li>【工单】优化查询速度（企业版）&lt;/li>
+&lt;li>【巡检】优化自动巡检中针对高可用的检查逻辑（企业版）&lt;/li>
+&lt;/ul>
+&lt;h2 id="问题修复-fixes">问题修复 (Fixes)&lt;/h2>
+&lt;ul>
+&lt;li>【主机】修复保存镜像可能会出现重启失败问题&lt;/li>
+&lt;li>【主机】修复插入 ISO 后详情页显示名称不正确的问题&lt;/li>
+&lt;li>【主机】修复 vGPU 热插拔相关问题&lt;/li>
+&lt;li>【多云】修复修改本地项目和云上项目映射关系显示问题&lt;/li>
+&lt;li>【主机】修复资源导出部分标签无法导出问题&lt;/li>
+&lt;li>【主机】修复vmware实例hostname截断问题&lt;/li>
+&lt;li>【主机】修复部分信创桌面操作系统初始化账号是root导致无法正常登录&lt;/li>
+&lt;li>【多云】修复修改本地项目和云上项目映射关系显示问题&lt;/li>
+&lt;li>【多云】修复纳管创建cloudpods实例失败问题&lt;/li>
+&lt;li>【多云】修复华为云region同步异常问题&lt;/li>
+&lt;li>【多云】修复删除云账号数据库死锁问题&lt;/li>
+&lt;li>【监控】修复自动迁移选择目标宿主机时会出现 panic 的问题&lt;/li>
+&lt;li>【调度】修复子网没有及时刷新，导致调度失败的问题&lt;/li>
+&lt;li>【部署】修复命令行通过 feature-config 打开或者关闭一些功能会被重置的问题&lt;/li>
+&lt;li>【容器】修复 k8s 集群同步资源的时候会偶尔出现同步失败的问题&lt;/li>
+&lt;/ul>
+&lt;h2 id="新功能-new-features">新功能 (New Features)&lt;/h2>
+&lt;ul>
+&lt;li>【容器】支持容器镜像仓库&lt;/li>
+&lt;/ul>
+&lt;h2 id="升级方式">升级方式&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>开源版本，升级请参考文档：&lt;a href="https://www.cloudpods.org/zh/docs/setup/upgrade/">开源版本升级&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>企业版本，升级请参考文档：&lt;a href="https://docs.yunion.cn/zh/docs/quick/upgrade/">企业版本升级&lt;/a> 。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>具体变更请参考:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.cloudpods.org/zh/docs/development/changelog/release-3.10/3-10-6/">CHANGELOG v3.10.6&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: v3.10.5 版本发布</title><link>https://www.cloudpods.org/zh/docs/release/v3_10_5/</link><pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/release/v3_10_5/</guid><description>
 &lt;h2 id="功能优化-enhancements">功能优化 (Enhancements)&lt;/h2>
 &lt;ul>
 &lt;li>【主机】支持 vmware主机名称和标签双向同步&lt;/li>
@@ -2776,80 +2891,4 @@
 &lt;li>&lt;strong>kubeserver:&lt;/strong> helm release resource object&amp;rsquo;s name and id missed (&lt;a href="https://github.com/yunionio/kubecomps/commit/178dfadf02b6f7234cc595ea23b4e00b4fc02c7a">178dfadf&lt;/a>, &lt;a href="mailto:zexi.li@qq.com">Zexi Li&lt;/a>)&lt;/li>
 &lt;li>&lt;strong>kubeserver:&lt;/strong> helm release resource list (&lt;a href="https://github.com/yunionio/kubecomps/commit/07fb88072d366773c025c66a079e0d505cf5cb55">07fb8807&lt;/a>, &lt;a href="mailto:zexi.li@qq.com">Zexi Li&lt;/a>)&lt;/li>
 &lt;/ul>
-&lt;p>.6.15&amp;hellip;v3.6.16&lt;/p></description></item><item><title>Docs: v3.6.15</title><link>https://www.cloudpods.org/zh/docs/development/changelog/release-3.6/3-6-15/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/changelog/release-3.6/3-6-15/</guid><description>
-&lt;p>发布时间 2021-05-08 11:06:00&lt;/p>
-&lt;hr>
-&lt;h2 id="ocadm">ocadm&lt;/h2>
-&lt;p>仓库地址: &lt;a href="https://github.com/yunionio/ocadm">https://github.com/yunionio/ocadm&lt;/a>&lt;/p>
-&lt;p>1 commits to &lt;a href="https://github.com/yunionio/ocadm/compare/v3.6.14...v3.6.15">ocadm - v3.6.15&lt;/a> since this release.&lt;/p>
-&lt;h3 id="bug-fixes-1">Bug Fixes (1)&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>keepalived:&lt;/strong> 解决 高可用架构部署的默认网卡传递参数问题 (&lt;a href="https://github.com/yunionio/ocadm/commit/a0ce5d6ebe55233d7cd54f0b24706de3c9e2cb03">a0ce5d6e&lt;/a>, &lt;a href="mailto:zhangdongliang@yunion.cn">Zhang Dongliang&lt;/a>)&lt;/li>
-&lt;/ul>
-&lt;p>3.6.14&amp;hellip;v3.6.15&lt;/p></description></item><item><title>Docs: v3.6.14</title><link>https://www.cloudpods.org/zh/docs/development/changelog/release-3.6/3-6-14/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/development/changelog/release-3.6/3-6-14/</guid><description>
-&lt;p>发布时间 2021-05-06 15:31:56&lt;/p>
-&lt;hr>
-&lt;h2 id="cloudpods">cloudpods&lt;/h2>
-&lt;p>仓库地址: &lt;a href="https://github.com/yunionio/cloudpods">https://github.com/yunionio/cloudpods&lt;/a>&lt;/p>
-&lt;p>35 commits to &lt;a href="https://github.com/yunionio/cloudpods/compare/v3.6.13...v3.6.14">cloudpods - v3.6.14&lt;/a> since this release.&lt;/p>
-&lt;h3 id="ansibleserver-1">Ansibleserver (1)&lt;/h3>
-&lt;ul>
-&lt;li>wait zombie subprocesses (&lt;a href="https://github.com/yunionio/cloudpods/commit/42ec59e811f3aed55512cf98500cddeaf1825582">42ec59e811&lt;/a>, &lt;a href="mailto:zhouyousong@yunionyun.com">Yousong Zhou&lt;/a>)&lt;/li>
-&lt;/ul>
-&lt;h3 id="bug-fixes-30">Bug Fixes (30)&lt;/h3>
-&lt;ul>
-&lt;li>require password for imported user (&lt;a href="https://github.com/yunionio/cloudpods/commit/c3d0b0fe1f9b36263f750f2858810d7e86dd7c23">c3d0b0fe1f&lt;/a>, &lt;a href="mailto:qiujian@yunionyun.com">Qiu Jian&lt;/a>)&lt;/li>
-&lt;li>avoid host worker is locked when image cache is deleted (&lt;a href="https://github.com/yunionio/cloudpods/commit/adff20026e462ec246ccc9ac70277dd2bb22ed41">adff20026e&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>add options for pre allow ip add (&lt;a href="https://github.com/yunionio/cloudpods/commit/170b373740df29b8b0c3f572bdf8ad8b1536f6de">170b373740&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>avoid panic (&lt;a href="https://github.com/yunionio/cloudpods/commit/d43e645ed2bf4bc2215a2d4f93a9a8bf05e0ee38">d43e645ed2&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>add region id params (&lt;a href="https://github.com/yunionio/cloudpods/commit/951e9218ce445fc92356413b4a057edf7c73da15">951e9218ce&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>add rbdcli commond for debug (&lt;a href="https://github.com/yunionio/cloudpods/commit/2ca8d0f7e458e35130ba3b5a6c3f766487fc4704">2ca8d0f7e4&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>baremetal:&lt;/strong> baremetal ipmi probe reset link up state (&lt;a href="https://github.com/yunionio/cloudpods/commit/906a591f00d91ece351f8282590db952e8fe9aaf">906a591f00&lt;/a>, &lt;a href="mailto:qiujian@yunionyun.com">Qiu Jian&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>baremetal,esxiagent:&lt;/strong> no cloudroot user initialized (&lt;a href="https://github.com/yunionio/cloudpods/commit/da585a7b3549f361e179d563db5457a570828e4f">da585a7b35&lt;/a>, &lt;a href="mailto:qiujian@yunionyun.com">Qiu Jian&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>common:&lt;/strong> add debug info for lock (&lt;a href="https://github.com/yunionio/cloudpods/commit/91141d64329544105d07b7656dec383ce6cf6e9c">91141d6432&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>esxi:&lt;/strong> prevent fake template and real template from duplication (&lt;a href="https://github.com/yunionio/cloudpods/commit/ed676427d237002186d0850f6d08fde8b81d3bfb">ed676427d2&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>keystone:&lt;/strong> tag list for keystone service (&lt;a href="https://github.com/yunionio/cloudpods/commit/8504d364ff806b841903ed814616619ea8312337">8504d364ff&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> account arrears (&lt;a href="https://github.com/yunionio/cloudpods/commit/9dfb23c2810e10404837d8088d6e5417502a6590">9dfb23c281&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> avoid panic when sync resources (&lt;a href="https://github.com/yunionio/cloudpods/commit/7c90d219b30122b07650319981acab78a0f86357">7c90d219b3&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> Refuse to recommend the corresponding network for the ip that crosses the limit (&lt;a href="https://github.com/yunionio/cloudpods/commit/b595f59ef89c8e4e7370f780abcb1488eb6c097e">b595f59ef8&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> add egress_mbps params for lb (&lt;a href="https://github.com/yunionio/cloudpods/commit/df79388ded3ae40d25cb23dfa464d91129a6c5c4">df79388ded&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> add all.servers.any_pool/all.hosts.any_pool metrics (&lt;a href="https://github.com/yunionio/cloudpods/commit/da0a7c7b6e885e7d413df704cb55ccfff11504bd">da0a7c7b6e&lt;/a>, &lt;a href="mailto:qiujian@yunionyun.com">Qiu Jian&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> make cloudprovider sync worker configurable (&lt;a href="https://github.com/yunionio/cloudpods/commit/46517ebd1396c5dcb8931dd8b721770206d05ced">46517ebd13&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> allow owner to operate snapshotpolicy cache (&lt;a href="https://github.com/yunionio/cloudpods/commit/b95b553b9bfb426f478aafe093e1ec69b7f7ec52">b95b553b9b&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> avoid using LocalTaskworker in time-consuming synchronization of cloudaccount (&lt;a href="https://github.com/yunionio/cloudpods/commit/c0ba43e5f13c7dc54a4eb1757f83be4a61ca521f">c0ba43e5f1&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> optimized vm account name code (&lt;a href="https://github.com/yunionio/cloudpods/commit/824fc247a78dd652cd9d895c4c6143f5c13d31e4">824fc247a7&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> avoid panic when sync aliyun networks (&lt;a href="https://github.com/yunionio/cloudpods/commit/e1c1c0b842d3700d3556c9d7221852d172febf72">e1c1c0b842&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> fetch cached image from glance by default (&lt;a href="https://github.com/yunionio/cloudpods/commit/3adae60e235fcc798726562c91274e3d2978282e">3adae60e23&lt;/a>, &lt;a href="mailto:zexi.li@qq.com">Zexi Li&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> vm list order by disk size (&lt;a href="https://github.com/yunionio/cloudpods/commit/09f44d79a4e65c92b76bb77be7a0adae30130e63">09f44d79a4&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> avoid assign vm ip addr not effect (&lt;a href="https://github.com/yunionio/cloudpods/commit/e82392107f1ca40b3e74729f62fc7ef20e127b78">e82392107f&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> make SScheduledTaskLabel implement IJointModelManager (&lt;a href="https://github.com/yunionio/cloudpods/commit/75a007ea1938fa79c0f60b40e6d45b2879b7795b">75a007ea19&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> qcloud redis sync fix (&lt;a href="https://github.com/yunionio/cloudpods/commit/9464fbe6b2e58f65f431cceef4ca1d33c586ef31">9464fbe6b2&lt;/a>, &lt;a href="mailto:tangbin@yunion.cn">tangbin&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> use special localtask to run time-consuming provider synchronization task (&lt;a href="https://github.com/yunionio/cloudpods/commit/aa539bff9e0b15f017b5bafb7d86d27f2337cccb">aa539bff9e&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> tag list key case insensitive (&lt;a href="https://github.com/yunionio/cloudpods/commit/1dc421a6dbca6200f22e6785e4bb291c0a9f96ce">1dc421a6db&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> download cached image from source host before migrating (&lt;a href="https://github.com/yunionio/cloudpods/commit/243953ba6a6c29e9b1f997dfe3212d27cbf76e37">243953ba6a&lt;/a>, &lt;a href="mailto:zexi.li@qq.com">Zexi Li&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> avoid network create failed when vpc is ok but wire not sync (&lt;a href="https://github.com/yunionio/cloudpods/commit/cfef1fe2a3705091aefaa402b35c87d4cc36dfe1">cfef1fe2a3&lt;/a>, &lt;a href="mailto:quxuan@yunionyun.com">Qu Xuan&lt;/a>)&lt;/li>
-&lt;/ul>
-&lt;h3 id="features-4">Features (4)&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>arm64,build:&lt;/strong> arm 编译时,不编译 rbdcli (&lt;a href="https://github.com/yunionio/cloudpods/commit/aebe35a8538040937db108f62abf5a21c723dca0">aebe35a853&lt;/a>, &lt;a href="mailto:zhangdongliang@yunion.cn">Zhang Dongliang&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> support to specify zone for the created wire (&lt;a href="https://github.com/yunionio/cloudpods/commit/f3ae127f2caf0d5ea04bc38151a3563895091c81">f3ae127f2c&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> support creating a network with a native vmware network name (&lt;a href="https://github.com/yunionio/cloudpods/commit/07292089fa2b3ffa7a5089a9819393b7b1c6438a">07292089fa&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;li>&lt;strong>region:&lt;/strong> increase the log for debugging when syncing cloudimage (&lt;a href="https://github.com/yunionio/cloudpods/commit/e13885e22ba9965aa7b785ef1dd6fa9af4b5099b">e13885e22b&lt;/a>, &lt;a href="mailto:mjoycarry@gmail.com">rainzm&lt;/a>)&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="kubecomps">kubecomps&lt;/h2>
-&lt;p>仓库地址: &lt;a href="https://github.com/yunionio/kubecomps">https://github.com/yunionio/kubecomps&lt;/a>&lt;/p>
-&lt;p>1 commits to &lt;a href="https://github.com/yunionio/kubecomps/compare/v3.6.13...v3.6.14">kubecomps - v3.6.14&lt;/a> since this release.&lt;/p>
-&lt;h3 id="bug-fixes-1">Bug Fixes (1)&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>kubeserver:&lt;/strong> cluster ca and key field nullable deleted (&lt;a href="https://github.com/yunionio/kubecomps/commit/db982b7ef64c426d19398e7f8fd20bdaed597f72">db982b7e&lt;/a>, &lt;a href="mailto:zexi.li@qq.com">Zexi Li&lt;/a>)&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="ocadm">ocadm&lt;/h2>
-&lt;p>仓库地址: &lt;a href="https://github.com/yunionio/ocadm">https://github.com/yunionio/ocadm&lt;/a>&lt;/p>
-&lt;p>1 commits to &lt;a href="https://github.com/yunionio/ocadm/compare/v3.6.13...v3.6.14">ocadm - v3.6.14&lt;/a> since this release.&lt;/p>
-&lt;h3 id="features-1">Features (1)&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>keepalived,ha:&lt;/strong> 新增 keepalived_interface 变量支持,以便在安装高可用多网卡情况下支持非默认网卡绑定 vip (&lt;a href="https://github.com/yunionio/ocadm/commit/202790933a64eadf487567b6873160e328edb677">20279093&lt;/a>, &lt;a href="mailto:zhangdongliang@yunion.cn">Zhang Dongliang&lt;/a>)&lt;/li>
-&lt;/ul>
-&lt;p>v3.6.13&amp;hellip;v3.6.14&lt;/p></description></item></channel></rss>
+&lt;p>.6.15&amp;hellip;v3.6.16&lt;/p></description></item></channel></rss>

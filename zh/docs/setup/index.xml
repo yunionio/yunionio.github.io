@@ -342,7 +342,7 @@
 &lt;li>在公有云上部署环境时，建议部署Mariadb数据库，不要使用mysql 5.6及以下版本，防止索引长度 bug： Index column size too large. The maximum column size is 767 bytes.&lt;/li>
 &lt;/ul></description></item><item><title>Docs: 高可用安装</title><link>https://www.cloudpods.org/zh/docs/setup/ha-ce/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/ha-ce/</guid><description>
 &lt;h2 id="环境准备">环境准备&lt;/h2>
-&lt;p>关于环境的准备和不同架构 CPU 操作系统的要求，请参考 &lt;a href="../../quickstart/allinone-converge#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">All in One 融合云安装/机器配置要求&lt;/a>。&lt;/p>
+&lt;p>关于环境的准备和不同架构 CPU 操作系统的要求，请参考 &lt;a href="../../quickstart/allinone-full#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">融合云安装/机器配置要求&lt;/a>。&lt;/p>
 &lt;p>假设准备好了 3 台 CentOS7 机器，以及 1 台 Mariadb/MySQL 的机器，规划如下：&lt;/p>
 &lt;table>
 &lt;thead>
@@ -386,7 +386,13 @@
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>其中 DB 的部署目前是不归 ocboot 部署工具管理的，需要提前手动部署，高可用的数据库部署可以参考文档 &lt;a href="../db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
+&lt;p>其中 DB 的部署目前是不归 ocboot 部署工具管理的，需要提前手动部署。 建议使用 MariaDB 数据库，不要使用 MySQL 5.6及以下版本，防止出现索引长度 bug： Index column size too large. The maximum column size is 767 bytes. 的问题。各发行版对应 MariaDB 版本如下：&lt;/p>
+&lt;ul>
+&lt;li>Centos 7.6-7.9 Minimal(X86_64和ARM64) 默认安装MariaDB 5.5.68&lt;/li>
+&lt;li>Debian 10-11(X86_64和ARM64) 默认安装MariaDB 10.3.1&lt;/li>
+&lt;li>Kylin V10 sp2(X86_64和ARM64) 默认安装MariaDB 10.3.4&lt;/li>
+&lt;/ul>
+&lt;p>另外高可用的数据库部署也可以参考文档 &lt;a href="../db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
 &lt;h2 id="开始安装">开始安装&lt;/h2>
 &lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
 &lt;p>参考 &lt;a href="../../quickstart/allinone-converge/#%E4%B8%8B%E8%BD%BD-ocboot">All in One 融合云安装/下载 ocboot&lt;/a>。&lt;/p>
@@ -404,30 +410,48 @@
 &lt;span style="color:#000">MASTER_2_INTERFACE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0&amp;#34;&lt;/span>
 &lt;span style="color:#000">MASTER_2_IP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>10.127.90.103
 cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span style="color:#4e9a06"># primary_master_node 表示运行 k8s 和 Cloudpods 服务的节点
 &lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
+&lt;/span>&lt;span style="color:#4e9a06"> # ansible ssh 登录 ip
 &lt;/span>&lt;span style="color:#4e9a06"> hostname: $PRIMARY_IP
+&lt;/span>&lt;span style="color:#4e9a06"> # 不使用本地登录方式
 &lt;/span>&lt;span style="color:#4e9a06"> use_local: false
+&lt;/span>&lt;span style="color:#4e9a06"> # ansible ssh 登录用户
 &lt;/span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;span style="color:#4e9a06"> # cloudpods 版本
 &lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#34;v3.10.7&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库连接地址
 &lt;/span>&lt;span style="color:#4e9a06"> db_host: $DB_IP
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库用户
 &lt;/span>&lt;span style="color:#4e9a06"> db_user: &amp;#34;$DB_USER&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库密码
 &lt;/span>&lt;span style="color:#4e9a06"> db_password: &amp;#34;$DB_PSWD&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # 数据库端口
 &lt;/span>&lt;span style="color:#4e9a06"> db_port: &amp;#34;$DB_PORT&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> skip_docker_config: true
-&lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunionio
-&lt;/span>&lt;span style="color:#4e9a06"> ha_using_local_registry: false
+&lt;/span>&lt;span style="color:#4e9a06"> # 节点 IP
 &lt;/span>&lt;span style="color:#4e9a06"> node_ip: &amp;#34;$PRIMARY_IP&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # 对应 Kubernetes calico 插件默认网卡选择规则
 &lt;/span>&lt;span style="color:#4e9a06"> ip_autodetection_method: &amp;#34;can-reach=$PRIMARY_IP&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的 ip
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: $K8S_VIP
+&lt;/span>&lt;span style="color:#4e9a06"> # k8s 控制节点的端口
 &lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> # 该节点作为 Cloudpods 私有云计算节点
 &lt;/span>&lt;span style="color:#4e9a06"> as_host: true
+&lt;/span>&lt;span style="color:#4e9a06"> # 虚拟机强行作为 Cloudpods 内置私有云计算节点（默认为 false）。开启此项时，请确保 as_host: true
+&lt;/span>&lt;span style="color:#4e9a06"> as_host_on_vm: true
+&lt;/span>&lt;span style="color:#4e9a06"> # 产品版本，从 [&amp;#39;Fullstack&amp;#39;,&amp;#39;CMP&amp;#39;,&amp;#39;Edge&amp;#39;] 选择一个，FullStack 会安装融合云，CMP 安装多云管理版本，Edge 安装私有云
+&lt;/span>&lt;span style="color:#4e9a06"> product_version: &amp;#39;Fullstack&amp;#39;
+&lt;/span>&lt;span style="color:#4e9a06"> # 设置镜像仓库，如果待部署的机器处于海外，可以用 dockerhub 的镜像仓库：docker.io/yunion
+&lt;/span>&lt;span style="color:#4e9a06"> image_repository: registry.cn-beijing.aliyuncs.com/yunionio
+&lt;/span>&lt;span style="color:#4e9a06"> # 启用高可用模式
 &lt;/span>&lt;span style="color:#4e9a06"> high_availability: true
 &lt;/span>&lt;span style="color:#4e9a06"> use_ee: false
+&lt;/span>&lt;span style="color:#4e9a06"> # 使用 minio 作为后端虚拟机镜像存储
 &lt;/span>&lt;span style="color:#4e9a06"> enable_minio: true
-&lt;/span>&lt;span style="color:#4e9a06"> registry_mirrors:
-&lt;/span>&lt;span style="color:#4e9a06"> - https://lje6zxpk.mirror.aliyuncs.com
 &lt;/span>&lt;span style="color:#4e9a06"> insecure_registries:
 &lt;/span>&lt;span style="color:#4e9a06"> - $PRIMARY_IP:5000
+&lt;/span>&lt;span style="color:#4e9a06"> ha_using_local_registry: false
 &lt;/span>&lt;span style="color:#4e9a06"> host_networks: &amp;#34;$PRIMARY_INTERFACE/br0/$PRIMARY_IP&amp;#34;
 &lt;/span>&lt;span style="color:#4e9a06">
 &lt;/span>&lt;span style="color:#4e9a06">master_nodes:
@@ -436,8 +460,6 @@ cat &amp;gt; config-k8s-ha.yml &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EO
 &lt;/span>&lt;span style="color:#4e9a06"> as_controller: true
 &lt;/span>&lt;span style="color:#4e9a06"> as_host: true
 &lt;/span>&lt;span style="color:#4e9a06"> ntpd_server: &amp;#34;$PRIMARY_IP&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> registry_mirrors:
-&lt;/span>&lt;span style="color:#4e9a06"> - https://lje6zxpk.mirror.aliyuncs.com
 &lt;/span>&lt;span style="color:#4e9a06"> high_availability: true
 &lt;/span>&lt;span style="color:#4e9a06"> hosts:
 &lt;/span>&lt;span style="color:#4e9a06"> - user: root

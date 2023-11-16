@@ -1,0 +1,429 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+Cloudpods CMP Installation Guide</title><link>https://www.cloudpods.org/en/docs/quickstart/cmp/</link><description>Recent content in Cloudpods CMP Installation Guide on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/en/docs/quickstart/cmp/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Ocboot Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/cmp/allinone-multicloud/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/cmp/allinone-multicloud/</guid><description>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Note&lt;/h4>
+This chapter is about setting up the Cloudpods service quickly through the deployment tool. If you want to deploy a highly available cluster in a production environment, please refer to [High Availability Installation] (../../../setup/ha-ce/) .
+&lt;/div>
+&lt;h2 id="environment-preparation">Environment Preparation&lt;/h2>
+&lt;h3 id="machine-configuration-requirements">Machine Configuration Requirements&lt;/h3>
+&lt;ul>
+&lt;li>Operating system: Different distribution versions are supported according to different CPU architectures. Currently, the supported distribution situations are as follows:
+&lt;ul>
+&lt;li>&lt;a href="http://isoredirect.centos.org/centos/7/isos">CentOS 7.6~7.9 Minimal&lt;/a>: x86_64 and arm64 are supported&lt;/li>
+&lt;li>&lt;a href="https://www.debian.org/distrib/">Debian 10/11&lt;/a>: x86_64 and arm64 are supported&lt;/li>
+&lt;li>&lt;a href="https://releases.ubuntu.com/jammy/">Ubuntu 22.04&lt;/a>: Only x86_64 is supported&lt;/li>
+&lt;li>&lt;a href="https://www.kylinos.cn/scheme/server/1.html">Galaxy Kylin V10 SP2/SP3&lt;/a>: x86_64 and arm64 are supported&lt;/li>
+&lt;li>&lt;a href="https://www.chinauos.com/">Trusted UOS Kongzi&lt;/a>: x86_64 and arm64 are supported&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>The operating system needs to be a clean version. Because the deployment tool will build a kubernetes cluster of the specified version from the beginning, ensure that kubernetes, docker, and other container management tools are not installed on the system, otherwise there will be conflicts and installation abnormalities.&lt;/li>
+&lt;li>Minimum configuration requirements: CPU 4 cores, memory 8GiB, storage 100GiB&lt;/li>
+&lt;li>The storage path used by virtual machines and services is all under &lt;strong>/opt&lt;/strong> directory, so it is recommended to set a separate mount point for the &lt;strong>/opt&lt;/strong> directory in an ideal environment
+&lt;ul>
+&lt;li>For example, partition /dev/sdb1 separately to make ext4 and then mount it to the /opt directory through /etc/fstab.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="install-ansible-and-git">Install ansible and git&lt;/h2>
+&lt;p>First, you need to install ansible and git, and the minimum version of ansible is 2.9.27, among which 2.11.12 is tested more.&lt;/p>
+&lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Kylin V10&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">Other operating systems&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
+$ yum install -y epel-release git python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
+$ yum install -y git python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
+&lt;p>&lt;p>If prompted with &lt;code>locale&lt;/code> related errors, please execute the following command first:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+locale-gen
+&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
+$ apt install -y git python3-pip
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
+&lt;span style="color:#4e9a06">```&lt;/span>Note: In a &lt;span style="color:#4e9a06">`&lt;/span>debian 11&lt;span style="color:#4e9a06">`&lt;/span> environment, &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> the boot option &lt;span style="color:#4e9a06">`&lt;/span>systemd.unified_cgroup_hierarchy&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#4e9a06">`&lt;/span> is not found in &lt;span style="color:#4e9a06">`&lt;/span>/proc/cmdline&lt;span style="color:#4e9a06">`&lt;/span>, ocboot will automatically configure the corresponding &lt;span style="color:#4e9a06">`&lt;/span>GRUB&lt;span style="color:#4e9a06">`&lt;/span> option, rebuild the boot parameters, and restart the operating system so that &lt;span style="color:#4e9a06">`&lt;/span>k8s&lt;span style="color:#4e9a06">`&lt;/span> can start up normally.
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
+$ python3 -m pip install --upgrade pip setuptools wheel
+$ python3 -m pip install --upgrade ansible
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;h2 id="install-cloudpods">Install Cloudpods&lt;/h2>
+&lt;p>The deployment tool is located at &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>. Clone this tool with &lt;code>git clone&lt;/code> and run the &lt;code>run.py&lt;/code> script to deploy the service. The installation steps are as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Download the ocboot tool to the local machine&lt;/span>
+$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute &lt;code>run.py&lt;/code> to deploy the service. &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> is the IP address of the deployment node, and is optional. If not specified, the default route is used to deploy the service. If the node has multiple network cards, &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> can be specified to choose the corresponding network card to listen for services.&lt;/p>
+&lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">Mainland China&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">Other Regions&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
+&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Direct deployment will pull the container image from registry.cn-beijing.aliyuncs.com&lt;/span>
+$ ./run.py cmp &amp;lt;host_ip&amp;gt;
+&lt;span style="color:#8f5902;font-style:italic"># If you encounter slow package downloads during pip installation, you can use the -m parameter to specify the pip source&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># For example, use: https://mirrors.aliyun.com/pypi/simple/ as the source below&lt;/span>
+$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ cmp &amp;lt;host_ip&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
+&lt;p>&lt;p>For some network environments, access to registry.cn-beijing.aliyuncs.com is slow or unavailable. Starting from version &lt;code>v3.9.5&lt;/code>, you can specify the image source &lt;a href="http://docker.io">docker.io&lt;/a> to install. The command is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py cmp &amp;lt;host_ip&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This method automatically generates a configuration file named &lt;code>config-allinone-current.yaml&lt;/code> in the current directory and executes the deployment based on the parameters in the configuration file.&lt;/p>
+&lt;/div>&lt;/div>
+&lt;h2 id="deployment-complete">Deployment Complete&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">....
+&lt;span style="color:#8f5902;font-style:italic"># After deployment, the following output indicates success&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Open https://10.168.26.216 in the browser, where ip is the &amp;lt;host_ip&amp;gt; set previously&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Login to the front-end page with admin/admin@123&lt;/span>
+Initialized successfully!
+Web page: https://10.168.26.216
+User: admin
+Password: admin@123
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then use a browser to access https://10.168.26.216. Enter &lt;code>admin&lt;/code> for the username and &lt;code>admin@123&lt;/code> for the password to enter the Cloudpods interface.&lt;/p>
+&lt;p>&lt;img src="../../images/index.png" alt="Login page">&lt;/p>
+&lt;h2 id="getting-started-with-cloudpods">Getting Started with Cloudpods&lt;/h2>
+&lt;h3 id="import-public-clouds-or-other-private-cloud-platform-resources">Import public clouds or other private cloud platform resources&lt;/h3>
+&lt;p>Cloudpods multi-cloud management platform can unify and manage resources from other cloud platforms.&lt;/p>
+&lt;p>In the &lt;code>Multi-Cloud Management&lt;/code> menu, select &lt;code>Cloud Account&lt;/code> and create a new one. Fill in the authentication information of the corresponding cloud platform according to your needs. After configuring the cloud account, the Cloudpods service will sync the corresponding cloud platform resources, which can be viewed in the front-end after synchronization is complete.&lt;/p>
+&lt;p>&lt;img src="../../images/cloudaccount.png" alt="Multi-Cloud Management">&lt;/p>
+&lt;h2 id="faq">FAQ&lt;/h2>
+&lt;h3 id="1-how-to-reinstall">1. How to reinstall?&lt;/h3>
+&lt;ol>
+&lt;li>Execute &lt;code>kubeadm reset -f&lt;/code> to delete the kubernetes cluster&lt;/li>
+&lt;li>Rerun the ocboot script&lt;/li>
+&lt;/ol>
+&lt;h3 id="2-other-problems">2. Other problems?&lt;/h3>
+&lt;p>Other issues are welcome to be submitted on the Cloudpods Github issues page: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a>. We will reply as soon as possible.&lt;/p></description></item><item><title>Docs: Docker Compose Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/cmp/docker-compose/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/cmp/docker-compose/</guid><description>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Warning&lt;/h4>
+&lt;p>This solution uses Docker Compose to deploy the Cloudpods multi-cloud management version. This method deploys an All-in-One environment, which means that all multi-cloud management services are run in containers on a single node.&lt;/p>
+&lt;p>This deployment method is only applicable for using multi-cloud management functions, such as managing public clouds (AWS, Alibaba Cloud, Tencent Cloud, etc.) or other private clouds (Zstack, OpenStack, etc.), and cannot use built-in private cloud-related functions (because built-in private clouds require installation and configuration of various virtualization software such as qemu and OpenVswitch on the nodes).&lt;/p>
+&lt;p>In addition, VMware cannot currently be managed using the Docker Compose method because current disk management for VMware relies on the nbd module in the kernel, which cannot be loaded within Docker Compose. If you need to manage VMware, please use the [Ocboot installation] by following the steps described in the [../cmp/allinone-multicloud] section.&lt;/p>
+&lt;p>If you need to use built-in private clouds, please use the &lt;a href="../../../quickstart/allinone-virt">Private Cloud Installation&lt;/a> method of deployment.&lt;/p>
+&lt;/div>
+&lt;h2 id="environmental-requirements">Environmental Requirements&lt;/h2>
+&lt;h3 id="machine-configuration-requirements">Machine Configuration Requirements&lt;/h3>
+&lt;ul>
+&lt;li>Minimum configuration requirements: 4 core CPU, 8GB RAM, and 100GB storage&lt;/li>
+&lt;li>Docker version: ce-23.0.2
+&lt;ul>
+&lt;li>Docker recommends installing the latest version of ce, which already includes the Docker Compose plugin.&lt;/li>
+&lt;li>Docker requires enabling container networks and iptables.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="installation-and-configuration-of-docker">Installation and Configuration of Docker&lt;/h3>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Attention&lt;/h4>
+Skip this step if your environment has already installed the new version of Docker.
+&lt;/div>
+&lt;p>The following is an example of how to install Docker on CentOS 7. If you are using another distribution, please refer to the official documentation for installation: [Install Docker Engine] (&lt;a href="https://docs.docker.com/engine/install/)">https://docs.docker.com/engine/install/)&lt;/a>.&lt;/p>
+&lt;p>Chinese users can use the aliyun repository to install Docker-CE, as shown below:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install necessary system tools&lt;/span>
+$ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+&lt;span style="color:#8f5902;font-style:italic"># Add software source information&lt;/span>
+$ sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;span style="color:#8f5902;font-style:italic"># Update and install docker-ce and compose plugins&lt;/span>
+$ sudo yum makecache fast
+$ sudo yum -y install docker-ce docker-ce-cli docker-compose-plugin
+&lt;span style="color:#8f5902;font-style:italic"># enable docker service&lt;/span>
+$ sudo systemctl &lt;span style="color:#204a87">enable&lt;/span> --now docker
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-cloudpods-cmp">Running Cloudpods CMP&lt;/h2>
+&lt;p>After the Docker Compose environment is ready, you can use the docker-compose.yml configuration file in &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> to start the service. The steps are as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># download ocboot tool locally&lt;/span>
+$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;span style="color:#8f5902;font-style:italic"># enter the compose directory&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> compose
+$ ls -alh docker-compose.yml
+&lt;span style="color:#8f5902;font-style:italic"># run service&lt;/span>
+$ docker compose up
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>After the service is started, you can log in to &lt;em>https://&lt;local-ip>&lt;/em> to access the frontend service, and the default login user password is: admin and admin@123.&lt;/p>
+&lt;h2 id="operating-instructions">Operating Instructions&lt;/h2>
+&lt;h3 id="1-run-services-in-the-background">1. Run services in the background&lt;/h3>
+&lt;p>You can use the &amp;lsquo;-d/&amp;ndash;detach&amp;rsquo; parameter to run all services in the background, as shown below:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># run all services in the background```&lt;/span>
+$ docker compose up -d
+&lt;span style="color:#8f5902;font-style:italic"># After putting the service to the background, the log output can be viewed with the logs command&lt;/span>
+$ docker compose logs -f
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-login-to-the-climc-command-line-container">2. Login to the climc command line container&lt;/h3>
+&lt;p>If you want to operate the platform with command line tools, you can use the following method to enter the container:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ docker &lt;span style="color:#204a87">exec&lt;/span> -ti compose-climc-1 bash
+Welcome to Cloud Shell :-&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> You may execute climc and other &lt;span style="color:#204a87">command&lt;/span> tools in this shell.
+Please &lt;span style="color:#204a87">exec&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;climc&amp;#39;&lt;/span> to get started
+&lt;span style="color:#8f5902;font-style:italic"># Source authentication information&lt;/span>
+bash-5.1# &lt;span style="color:#204a87">source&lt;/span> /etc/yunion/rcadmin
+bash-5.1# climc user-list
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-view-service-configuration-and-persistent-data">3. View service configuration and persistent data&lt;/h3>
+&lt;p>The persistent data of all services is stored under the &lt;em>ocboot/compose/data&lt;/em> directory. All configurations are automatically generated and usually do not need to be manually modified. The following explains each directory:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree data
+data
+├── etc
+│   ├── nginx
+│   │   └── conf.d
+│   │   └── default.conf &lt;span style="color:#8f5902;font-style:italic"># Front-end nginx configuration&lt;/span>
+│   └── yunion
+│   ├── *.conf &lt;span style="color:#8f5902;font-style:italic"># Configuration of each Cloudpods service&lt;/span>
+│   ├── pki &lt;span style="color:#8f5902;font-style:italic"># Certificate directory&lt;/span>
+│   ├── rcadmin &lt;span style="color:#8f5902;font-style:italic"># Command line authentication information&lt;/span>
+├── opt
+│   └── cloud
+│   └── workspace
+│   └── data
+│   └── glance &lt;span style="color:#8f5902;font-style:italic"># Image directory for image services&lt;/span>
+└── var
+└── lib
+├── influxdb &lt;span style="color:#8f5902;font-style:italic"># influxdb persistent data directory&lt;/span>
+└── mysql &lt;span style="color:#8f5902;font-style:italic"># mysql database persistent data directory&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-delete-all-containers">4. Delete all containers&lt;/h3>
+&lt;p>The persistent data of all services is stored under the &lt;em>ocboot/compose/data&lt;/em> directory. Deleting containers will not lose data. You can restart directly with &lt;em>docker compose up&lt;/em> next time, and the operation is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Delete services&lt;/span>
+$ docker compose down
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="common-questions">Common Questions&lt;/h2>
+&lt;h3 id="1-docker-service-does-not-open-iptables-and-bridge-causing-the-container-network-to-fail-to-create">1. Docker service does not open iptables and bridge, causing the container network to fail to create&lt;/h3>
+&lt;p>By default, when starting the Docker service, iptables is turned on by default. If &amp;ldquo;bridge: none&amp;rdquo; and &amp;ldquo;iptables: false&amp;rdquo; are set in &lt;em>/etc/docker/daemon.json&lt;/em>, docker compose cannot be used.&lt;/p>
+&lt;p>Before running docker compose, make sure that the bridge and iptables functions are turned on.&lt;/p>
+&lt;h3 id="2-how-was-docker-composeyml-with-many-services-generated">2. How was docker-compose.yml with many services generated?&lt;/h3>
+&lt;p>The Cloudpods CMP multi-cloud version includes many services. If you manually write the compose configuration for each service, it will be very complicated. Therefore, there is a &lt;em>generate-compose.py&lt;/em> script in ocboot, which is responsible for generating a docker-compose.yml file. You can use the following command to generate the compose configuration file:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ python3 generate-compose.py &amp;gt; compose/docker-compose.yml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-how-to-upgrade-the-service">3. How to upgrade the service?&lt;/h3>
+&lt;p>Upgrading through docker compose is very convenient, just update the docker-compose.yml configuration file.&lt;/p>
+&lt;p>For example, if &lt;em>ocboot/compose/docker-compose.yml&lt;/em> is updated, you can use git pull to get the latest code and then restart it. The steps are as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Use git pull to update&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> ocboot
+$ git pull
+&lt;span style="color:#8f5902;font-style:italic"># Restart compose service&lt;/span>
+$ &lt;span style="color:#204a87">cd&lt;/span> compose
+$ docker compose down
+$ docker compose up -d
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Kubernetes Helm Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/cmp/k8s/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/cmp/k8s/</guid><description>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Note&lt;/h4>
+&lt;p>This solution deploys Cloudpods multi-cloud management version automatically using Helm on an existing Kubernetes cluster.&lt;/p>
+&lt;p>This deployment method may cause compatibility errors due to different configurations of CSI, CNI, and Ingress controller in different Kubernetes distributions. If deployment fails and you want to quickly experience the product functionality, we recommend using the &lt;a href="../../cmp/allinone-multicloud">Ocboot installation&lt;/a> method.&lt;/p>
+&lt;p>Also, VMware cannot currently be managed using Docker Compose because disk management for VMware depends on the kernel nbd module, which cannot be loaded inside docker compose. If you need to manage VMware, please use the &lt;a href="../../cmp/allinone-multicloud">Ocboot installation&lt;/a> method to deploy.&lt;/p>
+&lt;p>The Kubernetes distribution versions that have been verified are:&lt;/p>
+&lt;ul>
+&lt;li>Alibaba Cloud ACK&lt;/li>
+&lt;li>Tencent Cloud TKE&lt;/li>
+&lt;li>Azure AKS&lt;/li>
+&lt;li>AWS ECS&lt;/li>
+&lt;/ul>
+&lt;p>This deployment method is only applicable to the use of multi-cloud management functionality, such as managing public clouds (AWS, Alibaba Cloud, Tencent Cloud, etc.) or private clouds (ZStack, OpenStack, etc.), and cannot use built-in private cloud-related functionality (because built-in private cloud requires the installation and configuration of various virtualization software such as QEMU and OpenvSwitch on the node).&lt;/p>
+&lt;/div>
+&lt;h2 id="environment-setup">Environment Setup&lt;/h2>
+&lt;p>The Cloudpods components run on top of Kubernetes, and the environment and related software dependencies are as follows:&lt;/p>
+&lt;ul>
+&lt;li>Kubernetes cluster configuration requirements:
+&lt;ul>
+&lt;li>Kubernetes version: 1.15 ~ 1.24&lt;/li>
+&lt;li>System configuration: At least 4 CPUs, 8GB of memory, storage space for nodes of 100G.&lt;/li>
+&lt;li>Nodes need to be able to access the public network.&lt;/li>
+&lt;li>Provide an ingress controller.&lt;/li>
+&lt;li>Internal coredns resolution.&lt;/li>
+&lt;li>Support Helm. To install the helm tool, refer to &lt;a href="https://helm.sh/docs/intro/install/">https://helm.sh/docs/intro/install/&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Provide a MySQL database (optional): You can choose to use the database connected in the Kubernetes cluster or an external one. In the production environment, we recommend using an externally-managed MySQL (if a public cloud RDS service is available).&lt;/li>
+&lt;/ul>
+&lt;h2 id="deployment">Deployment&lt;/h2>
+&lt;h3 id="clone-chart">Clone Chart&lt;/h3>
+&lt;p>The Cloudpods Helm Chart is located in the &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a> repository. Download it locally using the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git clone https://github.com/yunionio/ocboot
+$ &lt;span style="color:#204a87">cd&lt;/span> charts/cloudpods
+&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Note&lt;/h4>
+&lt;p>Next, we will use helm to install the cloudpods chart. When using &lt;code>helm install&lt;/code>, &lt;code>--namespace onecloud&lt;/code> must be specified, other namespaces cannot be used.&lt;/p>
+&lt;p>The reason is that the operator service does not yet support deploying the platform&amp;rsquo;s services to other namespaces. This will be improved later.&lt;/p>
+&lt;/div>
+&lt;h3 id="testing-environment-installation">Testing Environment Installation&lt;/h3>
+&lt;p>The method for installing the testing environment is as follows. This method will deploy mysql and local-path-provisioner CSI dependency plugins in the Kubernetes cluster and does not require connecting to mysql outside of the cluster.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Note that `--namespace onecloud` cannot be changed to another. It must be onecloud&lt;/span>
+$ helm install --name-template default --namespace onecloud --debug . -f values-dev.yaml --create-namespace
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="production-environment-installation">Production Environment Installation&lt;/h3>
+&lt;p>The previously deployed method is only for testing because of fewer dependencies and faster installation times. In the production environment, modify the parameters in &lt;code>./values-prod.yaml&lt;/code> according to needs and use this file to create a Helm Release.&lt;/p>
+&lt;p>We recommend modifying the following:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>```+++ b/charts/cloudpods/values-prod.yaml
+localPathCSI:
+&lt;span style="color:#00a000">+ # Depending on the deployment status of CSI in the k8s cluster, choose whether to deploy the default local-path CSI
+&lt;/span>&lt;span style="color:#00a000">+ # If the k8s cluster already has a stable CSI, set this value to false and do not deploy this component
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> enabled: true
+helperPod:
+image: registry.cn-beijing.aliyuncs.com/yunionio/busybox:1.35.0
+&lt;span style="color:#800080;font-weight:bold">@@ -60,11 +62,16 @@ localPathCSI:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span>
+cluster:
+mysql:
+&lt;span style="color:#00a000">+ # External mysql address
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> host: 1.2.3.4
+&lt;span style="color:#00a000">+ # External mysql port
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> port: 3306
+&lt;span style="color:#00a000">+ # External mysql user, a user with root permissions is needed because cloudpods operator will create a database user for other services
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> user: root
+&lt;span style="color:#00a000">+ # External mysql password
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> password: your-db-password
+statefulset:
+&lt;span style="color:#00a000">+ # For production deployment, set this to false, otherwise a mysql will be deployed in the k8s cluster and connected using this statefulset mysql
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> enabled: false
+image:
+repository: &amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/mysql&amp;#34;
+&lt;span style="color:#800080;font-weight:bold">@@ -91,15 +98,20 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> # imageRepository defines default image registry
+imageRepository: registry.cn-beijing.aliyuncs.com/yunion
+# publicEndpoint is upstream ingress virtual ip address or DNS domain
+&lt;span style="color:#00a000">+ # The DNS domain or IP address accessible from outside the cluster
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> publicEndpoint: foo.bar.com
+# edition choose from:
+# - ce: community edition
+# - ee: enterprise edition
+&lt;span style="color:#00a000">+ # Choose to deploy the ce (open source) version
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> edition: ce
+# storageClass for stateful component
+&lt;span style="color:#00a000">+ # The storageClass used by stateful components, if not set, local-path CSI will be used.
+&lt;/span>&lt;span style="color:#00a000">+ # This can be adjusted according to the k8s cluster condition
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> storageClass: &amp;#34;&amp;#34;
+ansibleserver:
+service:
+&lt;span style="color:#00a000">+ # Specify the nodePort exposed by the service, which can be modified if there is a conflict with an existing service in the cluster
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> nodePort: 30890
+apiGateway:
+apiService:
+&lt;span style="color:#800080;font-weight:bold">@@ -193,6 +205,7 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> service:
+nodePort: 30889
+&lt;span style="color:#00a000">+# Set up ingress
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> ingress:
+enabled: true
+&lt;span style="color:#00a000">+ # Set the className for ingress, for example using nginx-ingress-controller in the cluster, set className to nginx
+&lt;/span>&lt;span style="color:#00a000">+ # className: nginx
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> className: &amp;#34;&amp;#34;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>After modifying the values-prod.yaml file, use the following command to deploy:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Note that the `--namespace onecloud` here cannot be changed to any other namespace. It must be onecloud&lt;/span>
+$ helm install --name-template default --namespace onecloud . -f values-prod.yaml --create-namespace
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="check-the-deployment-status-of-services">Check the deployment status of services&lt;/h2>
+&lt;p>After using &lt;code>helm install&lt;/code> to install the cloudpods chart, use the following command to check the status of the deployed pods.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Under normal operating conditions, there should be these pods in the onecloud namespace&lt;/span>
+$ kubectl get pods -n onecloud&lt;span style="color:#4e9a06">```&lt;/span>
+NAME READY STATUS RESTARTS AGE
+default-cloudpods-ansibleserver-779bcbc875-nzj6k 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-apigateway-7877c64f5c-vljrs 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-climc-6f4bf8c474-nj276 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-cloudevent-79c894bbfc-zdqcs 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-cloudid-67c7894db7-86czj 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-cloudmon-5cd9866bdf-c27fc 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 68m
+default-cloudpods-cloudproxy-6679d94fc7-gm5tx 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-devtool-6db6f4d454-ldw69 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-esxi-agent-7bcc56987b-lgpnf 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-etcd-q8j5c29tm2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 145m
+default-cloudpods-glance-7547c455d5-fnzqq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-influxdb-c9947bdc8-x8xth 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-keystone-6cc64bdcc7-xhh7m 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 145m
+default-cloudpods-kubeserver-5544d59c98-l9d74 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-logger-8f56cd9b5-f9kbp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-monitor-746985b5cf-l8sqm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-notify-dd566cfd6-hxzr4 10/10 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-operator-7478b6c64b-wbg26 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 72m
+default-cloudpods-region-7dfd9b888-hsvv8 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 144m
+default-cloudpods-scheduledtask-7d69b877f7-4ltm6 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+default-cloudpods-scheduler-8495f85798-zgvq2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-web-5bc6fcf78d-4f7lw 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 140m
+default-cloudpods-webconsole-584cfb4796-4mtnj 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 139m
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="create-default-management-user">Create default management user&lt;/h2>
+&lt;h3 id="create-account-login-web-ui">Create account login Web UI&lt;/h3>
+&lt;p>If it is an enterprise version, the frontend will prompt for registration and obtaining a license. The following operations apply to the open source version:&lt;/p>
+&lt;h3 id="enter-climc-command-line-pod">Enter climc command line pod&lt;/h3>
+&lt;p>If it is a deployment of ce (community open source version), the platform&amp;rsquo;s command line tool needs to be used to create a default user and perform related operations. The corresponding command is as follows, first enter the climc pod container:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Enter climc pod&lt;/span>
+$ kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> -- bash
+Welcome to Cloud Shell :-&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> You may execute climc and other &lt;span style="color:#204a87">command&lt;/span> tools in this shell.
+Please &lt;span style="color:#204a87">exec&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;climc&amp;#39;&lt;/span> to get started
+bash-5.1#
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="create-user">Create user&lt;/h3>
+&lt;p>Create an admin user inside the climc pod. The command is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Create admin user, set password to admin@123, adjust it according to your needs&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>in-climc-pod&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ climc user-create --password &lt;span style="color:#4e9a06">&amp;#39;admin@123&amp;#39;&lt;/span> --enabled admin
+&lt;span style="color:#8f5902;font-style:italic"># Allow web login&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>in-climc-pod&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ climc user-update --allow-web-console admin
+&lt;span style="color:#8f5902;font-style:italic"># Add admin user to system project and give administrator privileges&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>in-climc-pod&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ climc project-add-user system admin admin
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="access-frontend">Access frontend&lt;/h2>
+&lt;p>Access the platform&amp;rsquo;s exposed frontend based on the created ingress. View the ingress using the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># My tested cluster ingress information is as follows, different k8s clusters have different implementations based on the ingress plugin&lt;/span>
+$ kubectl get ingresses -n onecloud
+NAME HOSTS ADDRESS PORTS AGE
+default-cloudpods-web * 10.127.100.207 80, &lt;span style="color:#0000cf;font-weight:bold">443&lt;/span> 7h52m
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Visit the platform frontend at https://10.127.100.207 using a web browser and then log in using the previously created admin user.&lt;/p>
+&lt;h2 id="upgrade">Upgrade&lt;/h2>
+&lt;p>Upgrade can be done by modifying the corresponding values yaml file and then performing upgrade configuration. For example, if the 30888 port of cluster.regionServer.service.nodePort encounters a conflict, change it to another port 30001 by modifying the corresponding value in values-prod.yaml:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-diff" data-lang="diff">&lt;span style="color:#a40000">--- a/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/charts/cloudpods/values-prod.yaml
+&lt;/span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -170,7 +170,7 @@ cluster:
+&lt;/span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> nodePort: 30885
+regionServer:
+service:
+&lt;span style="color:#a40000">- nodePort: 30888
+&lt;/span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ nodePort: 30001
+&lt;/span>&lt;span style="color:#00a000">&lt;/span> report:
+service:
+nodePort: 30967
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then upgrade using the helm upgrade command:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm upgrade -n onecloud default . -f values-prod.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then view the onecloudcluster resource. You will find that the corresponding spec.regionServer.service.nodePort becomes 30001, and the corresponding service nodePort will also change:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># View the properties of regionServer in onecloudcluster&lt;/span>
+$ kubectl get oc -n onecloud default-cloudpods -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> regionServer
+regionServer:
+affinity: &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span>
+disable: &lt;span style="color:#204a87">false&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>dnsDomain: cloud.onecloud.io
+dnsServer: 10.127.100.207
+image: registry.cn-beijing.aliyuncs.com/yunion/region:v3.9.2
+imagePullPolicy: IfNotPresent
+limits:
+cpu: &amp;ldquo;1.333333&amp;rdquo;
+memory: 2045Mi
+replicas: 1
+requests:
+cpu: 10m
+memory: 10Mi
+service:
+nodePort: 30001&lt;/p>
+&lt;h1 id="view-the-nodeport-of-the-default-cloudpods-region-service">View the nodePort of the default-cloudpods-region service&lt;/h1>
+&lt;p>$ kubectl get svc -n onecloud | grep region
+default-cloudpods-region NodePort 10.110.105.228 &lt;none> 30001:30001/TCP 7h30m&lt;/p>
+&lt;pre>&lt;code>
+Check if the cluster.regionServer.service.nodePort that was previously changed has changed in the platform endpoint:
+```bash
+# Use the climc pod to specify the endpoint-list command
+$ kubectl exec -ti -n onecloud $(kubectl get pods -n onecloud | grep climc | awk '{print $1}') -- climc endpoint-list --search compute
++----------------------------------+-----------+----------------------------------+----------------------------------------+-----------+---------+
+| ID | Region_ID | Service_ID | URL | Interface | Enabled |
++----------------------------------+-----------+----------------------------------+----------------------------------------+-----------+---------+
+| c88e03490c2543a987d86d733b918a2d | region0 | a9abfdd204e9487c8c4d6d85defbfaef | https://10.127.100.207:30001 | public | true |
+| a04e161ee71346ac88ddd04fcebfe5ce | region0 | a9abfdd204e9487c8c4d6d85defbfaef | https://default-cloudpods-region:30001 | internal | true |
++----------------------------------+-----------+----------------------------------+----------------------------------------+-----------+---------+
+*** Total: 2 Pages: 1 Limit: 20 Offset: 0 Page: 1 ***
+&lt;/code>&lt;/pre>&lt;h2 id="deleting">Deleting&lt;/h2>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ helm delete -n onecloud default
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="other-issues">Other issues&lt;/h2>
+&lt;h3 id="1-onecloud-namespace-is-missing-keystone-glance-region-pod-etc">1. onecloud namespace is missing keystone, glance, region pod, etc.&lt;/h3>
+&lt;p>If you execute &lt;code>kubectl get pods -n onecloud&lt;/code> after executing &lt;code>helm install&lt;/code> and only operator pod appears, without keystone, glance, region and other platform-related service pods, you can use the following command to check the operator pod log to troubleshoot the issue.The reason for this situation is generally caused by errors when the operator creates Keystone, Region, and other platform-related services. Common problems include the operator not being able to use the relevant MySQL user to create users and databases, or after creating the Keystone service, the Keystone pod cannot be accessed through the K8s internal service domain name, and so on.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Redirect all logs of the operator to a file&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep operator &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &amp;gt; /tmp/operator.log
+&lt;span style="color:#8f5902;font-style:italic"># Then check if there are any relevant errors in /tmp/operator.log&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># Check if there is a requeuing keyword in the operator logs, and generally errors will be reflected here&lt;/span>
+$ kubectl logs -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep operator &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep requeuing
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

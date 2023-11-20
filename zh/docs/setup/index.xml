@@ -393,6 +393,14 @@
 &lt;li>Kylin V10 sp2(X86_64和ARM64) 默认安装MariaDB 10.3.4&lt;/li>
 &lt;/ul>
 &lt;p>另外高可用的数据库部署也可以参考文档 &lt;a href="../db-ha">部署 DB HA 环境&lt;/a> 。&lt;/p>
+&lt;h2 id="高可用集群-ntp-一致性">高可用集群 ntp 一致性&lt;/h2>
+&lt;p>请在安装之前，确保集群的时间一致。否则在签发证书步骤失败。&lt;/p>
+&lt;p>如果是联网安装，可以参考下面的命令，确保集群内每台服务器都与互联网时间保持一致：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 您可以选择更方便、可达的授时服务器&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 如果提示没有ntpdate 命令，请使用 os 对应的包管理器自行安装&lt;/span>
+&lt;span style="color:#8f5902;font-style:italic"># 例如在centos 上： yum install -y ntp &amp;amp;&amp;amp; systemctl enable ntpd --now&lt;/span>
+ntpdate -u edu.ntp.org.cn &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> hwclock -w &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> ntpdate -u -q edu.ntp.org.cn
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果是离线安装，请确保集群的服务器彼此之间的时间保持一致(不强求与互联网保持一致，但集群机器之间确保时间同步)。&lt;/p>
 &lt;h2 id="开始安装">开始安装&lt;/h2>
 &lt;h3 id="下载-ocboot">下载 ocboot&lt;/h3>
 &lt;p>参考 &lt;a href="../../quickstart/allinone-converge/#%E4%B8%8B%E8%BD%BD-ocboot">All in One 融合云安装/下载 ocboot&lt;/a>。&lt;/p>
@@ -541,7 +549,8 @@ Remove &lt;span style="color:#204a87">test&lt;/span> database and access to it? 
 Reload privilege tables now? &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>Y/n&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> y
 ... Success!
 ... ...
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改 Mariadb 配置文件，准备配置主主复制&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改 Mariadb 配置文件，准备配置主主复制。&lt;/p>
+&lt;p>备注：主、从区别是&lt;code>confserver-id&lt;/code>、&lt;code>auto_increment_offset&lt;/code>两个字段。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 主节点&lt;/span>
 $ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt; /etc/my.cnf
 &lt;/span>&lt;span style="color:#4e9a06">[mysqld]
@@ -695,6 +704,8 @@ mysql -u root -p&lt;span style="color:#000">$MYSQL_PASSWD&lt;/span> -e &lt;span 
 mysql -u root -p&lt;span style="color:#000">$MYSQL_PASSWD&lt;/span> -e &lt;span style="color:#4e9a06">&amp;#34;SHOW SLAVE STATUS\G&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep Running
 Slave_IO_Running: Yes
 Slave_SQL_Running: Yes
+&lt;span style="color:#8f5902;font-style:italic"># 如果这一步不成功，例如Slave_SQL_Running为 connecting，极大概率是防火墙没关闭。请执行如下命令，关闭防火墙，然后重新执行上一步的2个Yes的检测。&lt;/span>
+systemctl is-active firewalld &amp;gt;/dev/null &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> systemctl disable --now firewalld
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 主主复制部署完成，可以测试在任一节点进行数据库操作，另一节点验证。不过对外提供服务还是需要通过 vip，不然发生切换还需要业务端切换 ip，下面配置 keepalived 对外提供服务。&lt;/p>
 &lt;h3 id="部署配置-keepalived">部署配置 keepalived&lt;/h3>
 &lt;p>设置相关的环境变量，根据不同的环境自行配置。&lt;/p>
@@ -800,6 +811,48 @@ inet 192.168.199.97/32 scope global eth0
 valid_lft forever preferred_lft forever
 inet6 fe80::222:cfff:fe40:1e29/64 scope link
 valid_lft forever preferred_lft forever
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置-keepalived-自动切换网卡">配置 keepalived 自动切换网卡&lt;/h3>
+&lt;p>本方案中，&lt;code>k8s&lt;/code> 与 &lt;code>mysql&lt;/code>共用网卡。如果&lt;code>k8s&lt;/code>启用了&lt;code>host&lt;/code>功能，会自动启用&lt;code>br0&lt;/code>网卡。在&lt;code>host&lt;/code> 启动、网卡切换时，有一定概率影响&lt;code>mysql&lt;/code>的高可用稳定性。以下是辅助脚本，来提升&lt;code>k8s+mysql&lt;/code>的稳定性。&lt;/p>
+&lt;p>以下脚本分别在 db 的主节点、备节点执行。注意替换第一行的&lt;code>node_ip&lt;/code>变量为本机&lt;code>ip&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">node_ip&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#8f5902;font-style:italic"># 注意替换这里的 DB_NODE_IP 为本机 Ip&lt;/span>
+&lt;span style="color:#ce5c00;font-weight:bold">[[&lt;/span> -z &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$node_ip&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">]]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;please export variable &amp;#39;node_ip&amp;#39; first! &amp;#34;&lt;/span>
+cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF_CK1 &amp;gt;/etc/keepalived/check_interface.sh
+&lt;/span>&lt;span style="color:#4e9a06">#!/usr/bin/env bash
+&lt;/span>&lt;span style="color:#4e9a06">
+&lt;/span>&lt;span style="color:#4e9a06">datestr=&amp;#34;\$(date +&amp;#34;%F %T&amp;#34;)&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06">env_interface=\$(cat /etc/keepalived/keepalived.conf| grep -w interface |awk &amp;#39;{print \$2}&amp;#39;)
+&lt;/span>&lt;span style="color:#4e9a06">echo &amp;#34;[\$datestr] 目前keepalived监听的网卡: \$env_interface&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06">router_interface=\$(/usr/sbin/ip a show | grep $node_ip | awk &amp;#39;{ print \$NF}&amp;#39;)
+&lt;/span>&lt;span style="color:#4e9a06">echo &amp;#34;[\$datestr] ip所在网卡名称: [\$router_interface]&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06">
+&lt;/span>&lt;span style="color:#4e9a06">if [[ -n &amp;#34;\$router_interface&amp;#34; ]] &amp;amp;&amp;amp; [[ &amp;#34;\$router_interface&amp;#34; != &amp;#34;\$env_interface&amp;#34; ]]; then
+&lt;/span>&lt;span style="color:#4e9a06"> echo &amp;#34;[\$datestr] update keepalived.conf interface&amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06"> sed -i -e &amp;#34;s#\$env_interface#\$router_interface#g&amp;#34; /etc/keepalived/keepalived.conf
+&lt;/span>&lt;span style="color:#4e9a06"> systemctl restart keepalived
+&lt;/span>&lt;span style="color:#4e9a06">else
+&lt;/span>&lt;span style="color:#4e9a06"> echo &amp;#34;[\$datestr] No need to update interface. &amp;#34;
+&lt;/span>&lt;span style="color:#4e9a06">fi
+&lt;/span>&lt;span style="color:#4e9a06">EOF_CK1&lt;/span>
+cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF_CK2 &amp;gt;/etc/keepalived/check_interface2.sh
+&lt;/span>&lt;span style="color:#4e9a06">#!/usr/bin/env bash
+&lt;/span>&lt;span style="color:#4e9a06">for i in {1..3}; do
+&lt;/span>&lt;span style="color:#4e9a06"> /etc/keepalived/check_interface.sh &amp;gt;&amp;gt; /var/log/keepalived.log
+&lt;/span>&lt;span style="color:#4e9a06"> sleep 20
+&lt;/span>&lt;span style="color:#4e9a06">done
+&lt;/span>&lt;span style="color:#4e9a06">EOF_CK2&lt;/span>
+cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF_CRON &amp;gt;/etc/cron.d/update_keepalived_interface
+&lt;/span>&lt;span style="color:#4e9a06">* * * * * root /etc/keepalived/check_interface2.sh &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
+&lt;/span>&lt;span style="color:#4e9a06">EOF_CRON&lt;/span>
+systemctl restart crond
+chmod +x /etc/keepalived/chk_mysql
+chmod +x /etc/keepalived/check_interface.sh
+chmod +x /etc/keepalived/check_interface2.sh
+systemctl &lt;span style="color:#204a87">enable&lt;/span> --now keepalived
+systemctl restart keepalived
+chmod +x /etc/rc.d/rc.local
+&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q /etc/keepalived/check_interface.sh /etc/rc.d/rc.local&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+sed -i &lt;span style="color:#4e9a06">&amp;#39;$a bash /etc/keepalived/check_interface.sh &amp;gt;&amp;gt; /var/log/keepalived.log&amp;#39;&lt;/span> /etc/rc.d/rc.local
+&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，DB 高可用部署完成，任一节点的 Mariadb 或 keepalived 服务异常，或者任一节点宕机，都不影响对外服务。&lt;/p></description></item><item><title>Docs: 添加计算节点</title><link>https://www.cloudpods.org/zh/docs/setup/host/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/setup/host/</guid><description>
 &lt;p>如果需要构建内部私有云，就需要部署计算节点(宿主机)。计算节点主要负责虚拟机、网络和存储的管理，需要安装的组件如下:&lt;/p>
 &lt;table>

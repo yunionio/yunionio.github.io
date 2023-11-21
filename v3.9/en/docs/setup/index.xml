@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods 3.9 –
-Deployment</title><link>https://www.cloudpods.org//v3.9/en/docs/setup/</link><description>Recent content in Deployment on Cloudpods 3.9</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org//v3.9/en/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Upgrade</title><link>https://www.cloudpods.org//v3.9/en/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/en/docs/setup/upgrade/</guid><description>
+Deployment</title><link>https://www.cloudpods.org//v3.9/en/docs/setup/</link><description>Recent content in Deployment on Cloudpods 3.9</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudpods.org//v3.9/en/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Upgrade</title><link>https://www.cloudpods.org//v3.9/en/docs/setup/upgrade/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/en/docs/setup/upgrade/</guid><description>
 &lt;p>This article describes the steps and considerations for upgrading from v3.7.x to v3.8.x.&lt;/p>
 &lt;p>Version upgrades are recommended from adjacent versions, e.g. upgrading from v3.2.x to v3.7.x requires the following steps:&lt;/p>
 &lt;ol>
@@ -24,21 +24,22 @@ Deployment</title><link>https://www.cloudpods.org//v3.9/en/docs/setup/</link><de
 &lt;/ol>
 &lt;h2 id="get-current-version">Get current version&lt;/h2>
 &lt;p>You can view the current cluster version using kubectl:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Use kubectl to get the current version of the cluster as v3.7.5&lt;/span>
-$ kubectl -n onecloud get onecloudclusters default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
-v3.7.5
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pull-ocboot-tool">Pull ocboot tool&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Use kubectl to get the current version of the cluster as v3.7.5&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl -n onecloud get onecloudclusters default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.version}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>v3.7.5
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pull-ocboot-tool">Pull ocboot tool&lt;/h2>
 &lt;p>If you already have the ocboot tool locally, you can skip this step and just update the code to the corresponding branch.&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and python-paramiko locally&lt;/span>
-$ yum install -y python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible paramiko
-&lt;span style="color:#8f5902;font-style:italic"># git clone ocboot&lt;/span>
-$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="fetch-ocboot-latest-source-code">Fetch ocboot latest source code&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git pull
-$ git checkout v3.9.9
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="upgrade-cloudpods-cluster-services">Upgrade Cloudpods cluster services&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible and python-paramiko locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible paramiko
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># git clone ocboot&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.9 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="fetch-ocboot-latest-source-code">Fetch ocboot latest source code&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ git pull
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git checkout v3.9.9
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="upgrade-cloudpods-cluster-services">Upgrade Cloudpods cluster services&lt;/h2>
 &lt;p>The update service works by remotely logging in to the first control node of the cluster via local ssh with no password, getting information about all the nodes, and then performing playbook updates via ansible, so the following requirements need to known:&lt;/p>
 &lt;ol>
 &lt;li>Local machine can ssh remotely login PRIMARY_MASTER_HOST&lt;/li>
@@ -46,20 +47,22 @@ $ git checkout v3.9.9
 &lt;/ol>
 &lt;p>If you have not set password-free login, use the command &lt;em>ssh-copy-id -i ~/.ssh/id_rsa.pub root@PRIMARY_MASTER_HOST&lt;/em> to downlink the public key to the corresponding node in your environment.&lt;/p>
 &lt;p>The upgrade version number can be found on the [CHANGELOG release/3.8 page](&amp;hellip; /&amp;hellip; /changelog/release-3.8/).&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Use ocboot upgrade version to v3.8.3&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># This step will take longer because of pulling the docker image, please be patient&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST is the ip address of the first node of the deployed cluster&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Need to be able to log on locally with ssh key&lt;/span>
-$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.8.3
-&lt;span style="color:#8f5902;font-style:italic"># Alternatively, you can use `. /ocboot.py upgrade --help` for other optional parameters&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># For example:&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># --user Specify PRIMARY_MASTER_HOST ssh user&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># --port Specify PRIMARY_MASTER_HOST ssh port&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># --key-file Use other ssh private key&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># --as-bastion Use PRIMARY_MASTER_HOST deployed as the intranet host for the bastion&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># You can also log in to PRIMARY_MASTER_HOST during the upgrade process and use kubectl to view the upgrade status of the corresponding pods&lt;/span>
-$ kubectl get pods -n onecloud --watch
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="downgrade-related">Downgrade Related&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Use ocboot upgrade version to v3.8.3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># This step will take longer because of pulling the docker image, please be patient&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># PRIMARY_MASTER_HOST is the ip address of the first node of the deployed cluster&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Need to be able to log on locally with ssh key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./ocboot.py upgrade &amp;lt;PRIMARY_MASTER_HOST&amp;gt; v3.8.3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Alternatively, you can use `. /ocboot.py upgrade --help` for other optional parameters&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># For example:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># --user Specify PRIMARY_MASTER_HOST ssh user&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># --port Specify PRIMARY_MASTER_HOST ssh port&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># --key-file Use other ssh private key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># --as-bastion Use PRIMARY_MASTER_HOST deployed as the intranet host for the bastion&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># You can also log in to PRIMARY_MASTER_HOST during the upgrade process and use kubectl to view the upgrade status of the corresponding pods&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud --watch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="downgrade-related">Downgrade Related&lt;/h2>
 &lt;p>If you encounter any problems with the upgrade, such as a feature not meeting expectations or a bug, you can downgrade and roll back with the following command.&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Attention&lt;/h4>
@@ -69,11 +72,12 @@ $ kubectl get pods -n onecloud --watch
 &lt;/ul>
 &lt;p>If you encounter problems, please go to &lt;a href="https://github.com/yunionio/cloudpods/issues">GitHub mention issue&lt;/a>.
 &lt;/div>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># The principle of downgrading is to modify the image version of each service&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># For example, the current version is v3.8.3 and then you want to downgrade to v3.7.8&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.7.8&lt;/span>
-$ /opt/yunion/bin/ocadm cluster update --version v3.7.8 --wait
-&lt;span style="color:#8f5902;font-style:italic"># Downgrading will re-pull a new mirror and can open another window&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Use the following command to view the updates for each pod&lt;/span>
-$ kubectl -n onecloud get pods -w
-&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># The principle of downgrading is to modify the image version of each service&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># For example, the current version is v3.8.3 and then you want to downgrade to v3.7.8&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 在第一个控制节点执行如下命令降级会 v3.7.8&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ /opt/yunion/bin/ocadm cluster update --version v3.7.8 --wait
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Downgrading will re-pull a new mirror and can open another window&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Use the following command to view the updates for each pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl -n onecloud get pods -w
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

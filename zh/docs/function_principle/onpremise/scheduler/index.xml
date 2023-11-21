@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-资源调度</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/</link><description>Recent content in 资源调度 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 11 Jul 2019 20:50:28 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 调度算法</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/algorithm/</link><pubDate>Sat, 23 Apr 2022 20:50:28 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/algorithm/</guid><description>
+资源调度</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/</link><description>Recent content in 资源调度 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Thu, 11 Jul 2019 20:50:28 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 调度算法</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/algorithm/</link><pubDate>Sat, 23 Apr 2022 20:50:28 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/algorithm/</guid><description>
 &lt;p>Cloudpods 调度器的实现原理参考了Kubernetes的调度器，也是通过两个调度阶段来实现：&lt;/p>
 &lt;ul>
 &lt;li>过滤阶段(Filtering)&lt;/li>
@@ -46,8 +46,8 @@
 &lt;li>创建调度标签low_cpu_mem，默认策略为 避免使用。&lt;/li>
 &lt;li>创建动态调度标签 host_low_cpu_mem，添加匹配条件为 &amp;lsquo;host.free_cpu_count &amp;lt; 10 || host.free_mem_size &amp;lt; 2048&amp;rsquo;，对应 low_cpu_mem 调度标签。目前界面暂不支持设置CPU内存的条件，可通过Climc命令进行设置。&lt;/li>
 &lt;/ol>
-&lt;pre>&lt;code># 创建调度标签
+&lt;pre tabindex="0">&lt;code># 创建调度标签
 $ climc schedtag-create low_cpu_mem --strategy avoid
 # 创建动态调度标签机制
-$ climc dynamic-schedtag-create --enable host_low_cpu_mem low_cpu_mem 'host.free_cpu_count &amp;lt; 10 || host.free_mem_size &amp;lt; 2048'
+$ climc dynamic-schedtag-create --enable host_low_cpu_mem low_cpu_mem &amp;#39;host.free_cpu_count &amp;lt; 10 || host.free_mem_size &amp;lt; 2048&amp;#39;
 &lt;/code>&lt;/pre></description></item></channel></rss>

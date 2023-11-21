@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-负载均衡集群</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/</link><description>Recent content in 负载均衡集群 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 集群</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/lbcluster/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/lbcluster/</guid><description>
+负载均衡集群</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/</link><description>Recent content in 负载均衡集群 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 集群</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/lbcluster/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/network/lbcluster/lbcluster/</guid><description>
 &lt;p>负载均衡集群是一组转发节点LBAgent的集合，一般情况下一个集群下配置两个LBAgent节点互为主备即可，同一集群下的LBAgent节点的VRRP路由ID必须相同。&lt;/p>
 &lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡集群/集群&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入集群页面。&lt;/p>
 &lt;p>&lt;img src="../../../images/network/lbcluster1.png" alt="">&lt;/p>
@@ -121,7 +121,7 @@
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;p>当转发节点上有监听任意IP的某个端口的服务配置时，会造成在使用该转发节点的LB实例上配置对应协议端口的监听无法正常使用。&lt;/p>
-&lt;pre>&lt;code># 在转发节点上查看监听任意IP的端口情况
+&lt;pre tabindex="0">&lt;code># 在转发节点上查看监听任意IP的端口情况
 $ netstat -nlp |grep 0.0.0.0:
 tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN 7120/sshd
 &lt;/code>&lt;/pre>&lt;p>通过查询可以发现转发节点上的sshd服务正在监听任意IP的TCP 22端口，如用户需要在LB实例上配置TCP 22端口的监听，则需要将转发节点的sshd配置文件，将&amp;quot;/etc/ssh/sshd_config&amp;quot;配置文件的&lt;code>#ListenAddress 0.0.0.0&lt;/code>改为&lt;code>ListenAddress &amp;lt;转发节点IP&amp;gt;&lt;/code> 。&lt;/p>
@@ -136,11 +136,11 @@ tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN 7120/sshd
 &lt;li>指定系统用户：需要使用系统管理员用户部署节点。设置项目为“system”、选择已知密码的系统用户名并输入对应密码。如不存在已知系统用户密码，可通过climc命令创建系统用户lbagent用户，并使用lbagent用户及密码部署。
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建lbagent系统用户&lt;/span>
-$ climc user-create lbagent --password xxx --system-account
-&lt;span style="color:#8f5902;font-style:italic"># 将lbagent用户以管理员的角色加入到system项目&lt;/span>
-$ climc project-add-user system lbagent admin
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 创建lbagent系统用户&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc user-create lbagent --password xxx --system-account
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 将lbagent用户以管理员的角色加入到system项目&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc project-add-user system lbagent admin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;/li>
 &lt;li>部署类型：选择转发实例节点，请尽量选取相互独立的虚拟机、宿主机或外部机器。
@@ -150,9 +150,9 @@ $ climc project-add-user system lbagent admin
 &lt;li>当选择外部机器时，要求ansible server（一般为控制节点）能够访问到目标机器。且目标机器上存在cloudroot用户，cloudroot用户支持sudo免密登录，管理员使用公钥可以免密登录cloudroot等。
 &lt;div class="alert alert-primary" role="alert">
 &lt;h4 class="alert-heading">说明&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 获取管理员公钥&lt;/span>
-$ climc sshkeypair-show --admin
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 获取管理员公钥&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc sshkeypair-show --admin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;/li>
 &lt;/ul>

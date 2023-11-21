@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-常见问题</title><link>https://www.cloudpods.org/zh/docs/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 29 Aug 2019 22:01:30 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 快速入门</title><link>https://www.cloudpods.org/zh/docs/faq/intro/</link><pubDate>Thu, 29 Aug 2019 18:50:55 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/intro/</guid><description>
+常见问题</title><link>https://www.cloudpods.org/zh/docs/faq/</link><description>Recent content in 常见问题 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Thu, 29 Aug 2019 22:01:30 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/faq/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 快速入门</title><link>https://www.cloudpods.org/zh/docs/faq/intro/</link><pubDate>Thu, 29 Aug 2019 18:50:55 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/intro/</guid><description>
 &lt;h2 id="本产品可以解决的问题">本产品可以解决的问题？&lt;/h2>
 &lt;ul>
 &lt;li>云化企业私有基础设施
@@ -162,15 +162,15 @@
 &lt;ol>
 &lt;li>
 &lt;p>将新下载的ISO镜像挂载在控制节点或计算节点的/mnt目录下 。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 升级操作必须使用非root的任意用户&lt;/span>
-$ su yunion
-$ sudo mount -o loop Yunion-x86_64-DVD-3.0-x.iso /mnt
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 升级操作必须使用非root的任意用户&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ su yunion
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo mount -o loop Yunion-x86_64-DVD-3.0-x.iso /mnt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>进入“/mnt/yunion”目录，执行upgrade.sh升级脚本，将自动更新各组件软件，并重启服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ &lt;span style="color:#204a87">cd&lt;/span> /mnt/yunion
-$ ./upgrade.sh
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#204a87">cd&lt;/span> /mnt/yunion
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./upgrade.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ol></description></item><item><title>Docs: 多云管理</title><link>https://www.cloudpods.org/zh/docs/faq/cloudaccount/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudaccount/</guid><description>
 &lt;h2 id="产品支持对接哪些平台">产品支持对接哪些平台？&lt;/h2>
 &lt;p>目前Cloudpods支持对接的私有云平台有VMware、OpenStack、ZStack、DStack；公有云平台有阿里云、AWS、Azure、华为云、腾讯云、UCloud、谷歌云、天翼云、Ecloud。&lt;/p>
@@ -195,34 +195,15 @@ $ ./upgrade.sh
 &lt;h2 id="如何删除一个已经同步导入资源信息的云账号">如何删除一个已经同步导入资源信息的云账号？&lt;/h2>
 &lt;p>在云管平台上添加云账号，并执行全量同步操作后，会导入云账号下的资源信息，如虚拟机、EIP、VPC等。删除云账号时由于云管平台上存在由该云账号导入的资源，所以无法删除云账号，需要先删除该云账号关联的资源，才可以删除云账号，然而该操作比较麻烦。由此，云管平台提供了删除云账号的脚本clean_provider.sh，该脚本将会自动遍历云账号导入的所有资源信息，逐个删除相应的数据库记录，最终删除云账号。&lt;/p>
 &lt;p>通过ssh远程连接控制节点，执行以下命令：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">API_VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>V2 &lt;span style="color:#8f5902;font-style:italic">#脚本使用V2版本的API，所以需要显式声明&lt;/span>
-$ &lt;span style="color:#204a87">cd&lt;/span> /opt/yunion/scripts/tools/
-$ ./clean_provider.sh &amp;lt;provider_id_or_name&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何设置openstack的虚拟机免密登陆">如何设置OpenStack的虚拟机免密登陆？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">API_VERSION&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>V2 &lt;span style="color:#8f5902;font-style:italic">#脚本使用V2版本的API，所以需要显式声明&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#204a87">cd&lt;/span> /opt/yunion/scripts/tools/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./clean_provider.sh &amp;lt;provider_id_or_name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何设置openstack的虚拟机免密登陆">如何设置OpenStack的虚拟机免密登陆？&lt;/h2>
 &lt;p>在云管平台中需要把OpenStack虚拟机所在的VPC中direct值设置为true，然后在平台中设置免密登陆成功，再安装监控agent。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ &lt;span style="color:#204a87">source&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ocadm cluster rcadmin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-$ climc server-show 虚拟机名称 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep vpc_id &lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机所在vpc的id&lt;/span>
-$ climc vpc-update --direct vpc_id &lt;span style="color:#8f5902;font-style:italic"># vpc_id为上述查询的值&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源同步不下来问题排查</title><link>https://www.cloudpods.org/zh/docs/faq/sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/sync/</guid><description>
-&lt;h2 id="检查账号权限">检查账号权限&lt;/h2>
-&lt;ul>
-&lt;li>打开云账号详情标签页, 查看是否有截图中提示的缺少权限&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="../image/lake_of_permission.png" alt="">&lt;/p>
-&lt;h2 id="检查云订阅是否被禁用">检查云订阅是否被禁用&lt;/h2>
-&lt;p>&lt;img src="../image/cloudprovider_disabled.png" alt="">&lt;/p>
-&lt;h2 id="检查资源所在的云订阅区域是否被禁用-同时查看同步时间若长时间未同步可以先手动同步下">检查资源所在的云订阅区域是否被禁用, 同时查看同步时间，若长时间未同步，可以先手动同步下&lt;/h2>
-&lt;p>&lt;img src="../image/cloudprovider_region_disabled.png" alt="">&lt;/p>
-&lt;h2 id="检查同步参数skip_server_by_sys_tag_keys">检查同步参数skip_server_by_sys_tag_keys&lt;/h2>
-&lt;pre>&lt;code># 此参数含义是若有公有云虚拟机带有特定系统标签, 则跳过此虚拟机同步，目前默认跳过阿里云弹性伸缩组相关实例
-$ climc service-config-show region2 | grep skip_server_by_sys_tag_keys
-&amp;quot;skip_server_by_sys_tag_keys&amp;quot;: &amp;quot;acs:autoscaling:scalingGroupId&amp;quot;,
-# 若需要同步弹性伸缩组实例，可将此参数改为其他标签
-$ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
-# 同时可以检查下skip_server_by_user_tag_keys设置
-# 此参数含义是若有公有云虚拟机带有特定自定义标签, 则跳过此虚拟机同步
-&lt;/code>&lt;/pre>&lt;h2 id="阿里云waf同步">阿里云WAF同步&lt;/h2>
-&lt;p>阿里云waf是属于杭州和新加坡的资源，若阿里云WAF未同步，需要检查这两个区域的同步是否关闭&lt;/p></description></item><item><title>Docs: 资源纳管</title><link>https://www.cloudpods.org/zh/docs/faq/heterresource/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/heterresource/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#204a87">source&lt;/span> &amp;lt;&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>ocadm cluster rcadmin&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc server-show 虚拟机名称 &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep vpc_id &lt;span style="color:#8f5902;font-style:italic"># 查看虚拟机所在vpc的id&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc vpc-update --direct vpc_id &lt;span style="color:#8f5902;font-style:italic"># vpc_id为上述查询的值&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源纳管</title><link>https://www.cloudpods.org/zh/docs/faq/heterresource/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/heterresource/</guid><description>
 &lt;h2 id="支持哪些虚拟化平台">支持哪些虚拟化平台？&lt;/h2>
 &lt;p>支持管理KVM、VMware等虚拟化平台，同时支持阿里云、腾讯云等公有云平台&lt;/p>
 &lt;h2 id="支持哪些类别的裸金属服务器">支持哪些类别的裸金属服务器？&lt;/h2>
@@ -265,26 +246,26 @@ $ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
 &lt;ol>
 &lt;li>
 &lt;p>首先通过以下命令查看当前宿主机的启动内核：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ uname -r
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ uname -r
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>通过以下命令查看宿主机上所有可用内核：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ grep &lt;span style="color:#4e9a06">&amp;#39;^menuentry&amp;#39;&lt;/span> /boot/grub2/grub.cfg
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../image/hostkernel.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ grep &lt;span style="color:#4e9a06">&amp;#39;^menuentry&amp;#39;&lt;/span> /boot/grub2/grub.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../image/hostkernel.png" alt="">&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>如上图，当前宿主机的启动内核为序号0“3.10.0-957.12.1.el7.x86_64”，内核序号从0开始，依次排序。如需将启动内核指定为“3.10.0-862.14.4.el7.yn20190712.x86_64”，该内核序号为1。则需要修改/etc/default/grub文件，增加或将原来的GRUB_DEFAULT的值改为1。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ vi /etc/default/grub &lt;span style="color:#8f5902;font-style:italic">#按进入insert模式修改以下内容&lt;/span>
-&lt;span style="color:#000">GRUB_DEFAULT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#8f5902;font-style:italic">#修改完成后，按ESC后输入：wq保存配置&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ vi /etc/default/grub &lt;span style="color:#8f5902;font-style:italic">#按进入insert模式修改以下内容&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_DEFAULT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#8f5902;font-style:italic">#修改完成后，按ESC后输入：wq保存配置&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>执行以下命令重新生成启动菜单。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ grub2-mkconfig -o /boot/grub2/grub.cfg
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ grub2-mkconfig -o /boot/grub2/grub.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>重启宿主机，查看宿主机启动内核是否已修改为“3.10.0-862.14.4.el7.yn20190712.x86_64”。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ uname -r
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../image/hostkernelmodify.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ uname -r
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../image/hostkernelmodify.png" alt="">&lt;/p>
 &lt;/li>
 &lt;/ol>
 &lt;h2 id="如何将宿主机新的本地磁盘加入存储池用于存储虚拟机的虚拟磁盘">如何将宿主机新的本地磁盘加入存储池，用于存储虚拟机的虚拟磁盘？&lt;/h2>
@@ -297,25 +278,25 @@ $ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
 &lt;/li>
 &lt;li>
 &lt;p>以上操作完成后，修改该宿主机的/etc/yunion/host.conf，找到 &lt;strong>local_image_path&lt;/strong> 配置项，将新磁盘的挂载目录路径加入数组中。保存后，重启host服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看host服务所在pod，并删除&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host
-$ kubectl delete pod &amp;lt;host-pod-name&amp;gt; -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看host服务所在pod，并删除&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep host
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete pod &amp;lt;host-pod-name&amp;gt; -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>如用户没有将磁盘挂载到“/opt/cloud/”目录下，且不想修改挂载目录，可按照下面步骤进行操作。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 假设之前挂载目录为“/data/test”，通过mount --bind命令将“/data/test”挂载到“/opt/cloud/test”&lt;/span>
-$ mount --bind /data/test /opt/cloud/test
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 假设之前挂载目录为“/data/test”，通过mount --bind命令将“/data/test”挂载到“/opt/cloud/test”&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ mount --bind /data/test /opt/cloud/test
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>并修改/etc/fstab，将配置持久化fstab中。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">/data/test /opt/cloud/test none defaults,bind &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>/data/test /opt/cloud/test none defaults,bind &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>修改该宿主机的/etc/yunion/host.conf，找到 &lt;strong>local_image_path&lt;/strong> 配置项，将新磁盘的挂载目录路径加入数组中。保存后，重启host服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看host和host-image服务所在pod，并删除&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -E &lt;span style="color:#4e9a06">&amp;#39;host|host-image&amp;#39;&lt;/span>
-$ kubectl delete pod -n onecloud &amp;lt;host-pod-name&amp;gt; &amp;lt;host-image-pod-name&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看host和host-image服务所在pod，并删除&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -E &lt;span style="color:#4e9a06">&amp;#39;host|host-image&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete pod -n onecloud &amp;lt;host-pod-name&amp;gt; &amp;lt;host-image-pod-name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ol>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
@@ -326,19 +307,19 @@ $ kubectl delete pod -n onecloud &amp;lt;host-pod-name&amp;gt; &amp;lt;host-imag
 &lt;p>当宿主机由于异常原因（故障或其他原因）下线时，在云管平台上删除宿主机上的虚拟机时，控制器请求删除虚拟机配置文件等信息无法得到宿主机host服务的响应，将导致虚拟机删除失败。为了删除已下线宿主机上的虚拟机，云管平台Climc命令提供server-purge的接口，在宿主机不可用状态，可以使用server-purge命令清理虚拟机的数据库记录。&lt;/p>
 &lt;p>server-purge命令使用如下：&lt;/p>
 &lt;p>通过ssh远程连接控制节点，执行以下命令。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 模拟宿主机下线操作，将宿主机禁用&lt;/span>
-$ climc host-disable &amp;lt;host_id&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># 删除宿主机上的虚拟机记录 &lt;/span>
-$ climc server-purge &amp;lt;server_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何快速清理一台已经下线的宿主机上面的数据库记录">如何快速清理一台已经下线的宿主机上面的数据库记录？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 模拟宿主机下线操作，将宿主机禁用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc host-disable &amp;lt;host_id&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 删除宿主机上的虚拟机记录 &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc server-purge &amp;lt;server_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何快速清理一台已经下线的宿主机上面的数据库记录">如何快速清理一台已经下线的宿主机上面的数据库记录？&lt;/h2>
 &lt;p>删除宿主机的数据库记录要求删除宿主机上所有的虚拟机和本地磁盘信息。当宿主机下线时，云管平台无法在界面正常删除虚拟机和本地磁盘，只能在控制节点使用server-purge和disk-purge命令在后台逐个删除，删除操作较为麻烦。为了能快速清理以及下线的宿主机数据库记录，云管平台的控制节点提供了快速清理脚本clean_host.sh。&lt;/p>
 &lt;p>使用方法如下：&lt;/p>
 &lt;p>通过ssh远程连接控制节点，执行以下命令：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> sh &lt;span style="color:#8f5902;font-style:italic"># 进入climc容器执行如下命令&lt;/span>
-$ /opt/yunion/scripts/tools/clean_host.sh &amp;lt;host_id&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果该宿主机是从物理机转换过来的，还需要重启 baremetal-agent 服务更新记录：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl rollout restart deployment -n onecloud default-baremetal-agent
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="为什么物理服务器baremetal无法被云管平台纳管">为什么物理服务器Baremetal无法被云管平台纳管？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kubectl &lt;span style="color:#204a87">exec&lt;/span> -ti -n onecloud &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep climc &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> sh &lt;span style="color:#8f5902;font-style:italic"># 进入climc容器执行如下命令&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ /opt/yunion/scripts/tools/clean_host.sh &amp;lt;host_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果该宿主机是从物理机转换过来的，还需要重启 baremetal-agent 服务更新记录：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl rollout restart deployment -n onecloud default-baremetal-agent
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="为什么物理服务器baremetal无法被云管平台纳管">为什么物理服务器Baremetal无法被云管平台纳管？&lt;/h2>
 &lt;p>请检查并确保物理服务器满足以下配置项：&lt;/p>
 &lt;ul>
 &lt;li>
@@ -382,12 +363,12 @@ $ /opt/yunion/scripts/tools/clean_host.sh &amp;lt;host_id&amp;gt;
 &lt;/li>
 &lt;li>
 &lt;p>通过ssh远程连接控制节点，获取宿主机镜像id。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc image-show &amp;lt;image-name&amp;gt; &lt;span style="color:#8f5902;font-style:italic">#获取镜像id&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ climc image-show &amp;lt;image-name&amp;gt; &lt;span style="color:#8f5902;font-style:italic">#获取镜像id&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>使用climc命令在region服务配置中添加”convert_hypervisor_default_template“为宿主机镜像的id信息。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc service-config --config &lt;span style="color:#000">convert_hypervisor_default_template&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>a9b67435-8c08-4063-8ea6-d885ea26aa79 region2
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ climc service-config --config &lt;span style="color:#000">convert_hypervisor_default_template&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>a9b67435-8c08-4063-8ea6-d885ea26aa79 region2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>设置完成后，用户在云管平台界面上进行将物理机转换为宿主机操作时，当选择”默认配置（最高）冗余“、”RAID-1/RAID-10(2倍冗余)“、”RAID-5(1.x倍冗余)“、”RAID-0(无冗余)“时，将使用默认镜像转换为宿主机。&lt;/p>
 &lt;/li>
@@ -412,8 +393,8 @@ $ /opt/yunion/scripts/tools/clean_host.sh &amp;lt;host_id&amp;gt;
 &lt;ul>
 &lt;li>
 &lt;p>宿主机的引导方式为UEFI模式。GPU卡注册需要在内核启动参数中添加相关配置，当宿主机为BIOS引导时，部署脚本将会自动添加，若宿主机为UEFI引导，则需要执行以下命令并进行重启操作。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>BIOS未开启vt-d：检查宿主机BIOS是否开启vt-d。&lt;/p>
 &lt;/li>
@@ -422,32 +403,51 @@ $ /opt/yunion/scripts/tools/clean_host.sh &amp;lt;host_id&amp;gt;
 &lt;h4 class="alert-heading">说明&lt;/h4>
 BIOS是否开启vt-d的检查方式的&lt;a href="https://stackoverflow.com/questions/51261999/check-if-vt-d-iommu-has-been-enabled-in-the-bios-uefi">参考链接&lt;/a>。
 &lt;/div>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 针对于Intel主机生效，AMD主机可尝试使用&amp;#34;dmesg | grep AMD-Vi&amp;#34;&lt;/span>
-$ dmesg &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep DMAR
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 针对于Intel主机生效，AMD主机可尝试使用&amp;#34;dmesg | grep AMD-Vi&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ dmesg &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep DMAR
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
 &lt;li>若执行命令后有显示内容，且最后一行内容为D&lt;code>MAR-IR: Enabled IRQ remapping in &amp;lt;whichever&amp;gt; mode&lt;/code>，表示BIOS已开启vt-d。&lt;/li>
 &lt;li>若执行命令后提示错误信息或无信息，表示BIOS未开启vt-d，需要用户在BIOS设置中启用vt-d或X2APIC。不同型号主机启用方式不同，请根据实际情况进行操作。&lt;/li>
 &lt;/ol>
 &lt;h2 id="托管物理机时报could-not-open-device-at-devipmi0-or-devipmi0-or-devipmidev0-no-such-file-or-directory错误该如何处理">托管物理机时，报“Could not open device at /dev/ipmi0 or /dev/ipmi/0 or /dev/ipmidev/0: No such file or directory”错误，该如何处理？&lt;/h2>
 &lt;p>解决方法：需要加载ipmi相关模块。&lt;/p>
 &lt;p>在控制节点上执行以下命令：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ lsmod &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep ^ipmi
-$ modprobe ipmi_watchdog
-$ modprobe ipmi_poweroff
-$ modprobe ipmi_devintf
-$ modprobe ipmi_si &lt;span style="color:#8f5902;font-style:italic"># 加载该模块如果没有不影响ipmi的使用（与系统版本有关）&lt;/span>
-$ modprobe ipmi_msghandler &lt;span style="color:#8f5902;font-style:italic"># 加载该模块如果没有不影响ipmi的使用&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="导入vmware云账号时如何查看未导入到平台的vmware宿主机的ip地址">导入VMware云账号时，如何查看未导入到平台的VMware宿主机的IP地址？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ lsmod &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep ^ipmi
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ modprobe ipmi_watchdog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ modprobe ipmi_poweroff
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ modprobe ipmi_devintf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ modprobe ipmi_si &lt;span style="color:#8f5902;font-style:italic"># 加载该模块如果没有不影响ipmi的使用（与系统版本有关）&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ modprobe ipmi_msghandler &lt;span style="color:#8f5902;font-style:italic"># 加载该模块如果没有不影响ipmi的使用&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="导入vmware云账号时如何查看未导入到平台的vmware宿主机的ip地址">导入VMware云账号时，如何查看未导入到平台的VMware宿主机的IP地址？&lt;/h2>
 &lt;p>导入VMware云账号时，需要在Cloudpods平台上为VMware宿主机添加IP子网，此时VMware宿主机才可以导入到Cloudpods平台，当不清楚宿主机IP地址时，可通过查看region操作日志的方法获取到宿主机的IP地址。&lt;/p>
 &lt;p>操作步骤如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region所在pod的操作日志并实时输出日志&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region &lt;span style="color:#000;font-weight:bold">|&lt;/span>awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl logs -n onecloud -f
-&lt;span style="color:#8f5902;font-style:italic"># 将region日志信息保存在region文件中&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region &lt;span style="color:#000;font-weight:bold">|&lt;/span>awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl logs -n onecloud &amp;gt;region1.log
-&lt;span style="color:#8f5902;font-style:italic"># 在日志中查看“SyncHosts for provider”字段，该条日志信息将包含宿主机的IP地址。&lt;/span>
-$ cat region.log &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#39;yncHosts for provider&amp;#39;&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>I &lt;span style="color:#0000cf;font-weight:bold">200211&lt;/span> 17:07:46 models.syncOnPremiseCloudProviderInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>cloudsync.go:1123&lt;span style="color:#ce5c00;font-weight:bold">)]&lt;/span> SyncHosts &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> provider vm result: removed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> failed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> updated &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> failed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> added &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> failed 1&lt;span style="color:#000;font-weight:bold">;&lt;/span>fail to find wire &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> host esix65 10.127.10.178: sql: no rows in result &lt;span style="color:#204a87">set&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 云资源</title><link>https://www.cloudpods.org/zh/docs/faq/cloudresource/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudresource/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看region所在pod的操作日志并实时输出日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region &lt;span style="color:#000;font-weight:bold">|&lt;/span>awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl logs -n onecloud -f
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 将region日志信息保存在region文件中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region &lt;span style="color:#000;font-weight:bold">|&lt;/span>awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl logs -n onecloud &amp;gt;region1.log
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 在日志中查看“SyncHosts for provider”字段，该条日志信息将包含宿主机的IP地址。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cat region.log &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#39;yncHosts for provider&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>I &lt;span style="color:#0000cf;font-weight:bold">200211&lt;/span> 17:07:46 models.syncOnPremiseCloudProviderInfo&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>cloudsync.go:1123&lt;span style="color:#ce5c00;font-weight:bold">)]&lt;/span> SyncHosts &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> provider vm result: removed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> failed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> updated &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> failed &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> added &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> failed 1&lt;span style="color:#000;font-weight:bold">;&lt;/span>fail to find wire &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> host esix65 10.127.10.178: sql: no rows in result &lt;span style="color:#204a87">set&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 资源同步不下来问题排查</title><link>https://www.cloudpods.org/zh/docs/faq/sync/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/sync/</guid><description>
+&lt;h2 id="检查账号权限">检查账号权限&lt;/h2>
+&lt;ul>
+&lt;li>打开云账号详情标签页, 查看是否有截图中提示的缺少权限&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../image/lake_of_permission.png" alt="">&lt;/p>
+&lt;h2 id="检查云订阅是否被禁用">检查云订阅是否被禁用&lt;/h2>
+&lt;p>&lt;img src="../image/cloudprovider_disabled.png" alt="">&lt;/p>
+&lt;h2 id="检查资源所在的云订阅区域是否被禁用-同时查看同步时间若长时间未同步可以先手动同步下">检查资源所在的云订阅区域是否被禁用, 同时查看同步时间，若长时间未同步，可以先手动同步下&lt;/h2>
+&lt;p>&lt;img src="../image/cloudprovider_region_disabled.png" alt="">&lt;/p>
+&lt;h2 id="检查同步参数skip_server_by_sys_tag_keys">检查同步参数skip_server_by_sys_tag_keys&lt;/h2>
+&lt;pre tabindex="0">&lt;code># 此参数含义是若有公有云虚拟机带有特定系统标签, 则跳过此虚拟机同步，目前默认跳过阿里云弹性伸缩组相关实例
+$ climc service-config-show region2 | grep skip_server_by_sys_tag_keys
+&amp;#34;skip_server_by_sys_tag_keys&amp;#34;: &amp;#34;acs:autoscaling:scalingGroupId&amp;#34;,
+# 若需要同步弹性伸缩组实例，可将此参数改为其他标签
+$ climc service-config --config skip_server_by_sys_tag_keys=other-tag region2
+# 同时可以检查下skip_server_by_user_tag_keys设置
+# 此参数含义是若有公有云虚拟机带有特定自定义标签, 则跳过此虚拟机同步
+&lt;/code>&lt;/pre>&lt;h2 id="阿里云waf同步">阿里云WAF同步&lt;/h2>
+&lt;p>阿里云waf是属于杭州和新加坡的资源，若阿里云WAF未同步，需要检查这两个区域的同步是否关闭&lt;/p></description></item><item><title>Docs: 云资源</title><link>https://www.cloudpods.org/zh/docs/faq/cloudresource/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/cloudresource/</guid><description>
 &lt;h2 id="计算资源管理具备哪些能力">计算资源管理具备哪些能力？&lt;/h2>
 &lt;p>包括虚拟机和裸金属的生命周期管理，包括创建、修改、删除、启动和关闭等操作。&lt;/p>
 &lt;h2 id="存储资源管理具备哪些能力">存储资源管理具备哪些能力？&lt;/h2>
@@ -469,25 +469,25 @@ $ cat region.log &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &
 &lt;h2 id="如何修改已删除主机和云硬盘在回收站的保留时间">如何修改已删除主机和云硬盘在回收站的保留时间？&lt;/h2>
 &lt;p>Cloudpods平台提供了主机和硬盘回收站的功能，当将主机和硬盘删除后，主机和硬盘将会在保留在回收站一段时间后自动删除，默认为保留3天。主机在回收站的保留时间可以修改，设置方法如下：&lt;/p>
 &lt;p>通过ssh远程连接控制节点，使用climc命令修改主机和硬盘在回收站的保留时间。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改主机和硬盘的保留时间一周，参数值单位为s，604800 = 7*24*60。&lt;/span>
-$ climc service-config --config &lt;span style="color:#000">pending_delete_expire_seconds&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">604800&lt;/span> region2
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置完成后等待5分钟左右生效。或删除镜像所在pod重启镜像服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
-$ kubectl delete pods &amp;lt;region-pod-name&amp;gt; -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何修改已删除镜像在回收站的保留时间">如何修改已删除镜像在回收站的保留时间？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 修改主机和硬盘的保留时间一周，参数值单位为s，604800 = 7*24*60。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc service-config --config &lt;span style="color:#000">pending_delete_expire_seconds&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">604800&lt;/span> region2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置完成后等待5分钟左右生效。或删除镜像所在pod重启镜像服务。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete pods &amp;lt;region-pod-name&amp;gt; -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何修改已删除镜像在回收站的保留时间">如何修改已删除镜像在回收站的保留时间？&lt;/h2>
 &lt;p>Cloudpods平台提供了镜像回收站功能，当镜像删除后，镜像将保留在镜像回收站中。在回收站中的镜像不会自动删除，但是可以手动设置镜像在回收站中的保留时间，设置方法如下：&lt;/p>
 &lt;p>通过ssh远程连接控制节点，使用climc命令修改镜像在回收站的保留时间。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改镜像的保留时间一周，参数值单位为s，604800 = 7*24*60。&lt;/span>
-$ climc service-config --config &lt;span style="color:#000">pending_delete_expire_seconds&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">604800&lt;/span> glance
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置完成后，等待5分钟左右生效。或删除镜像所在pod重启镜像服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep glance
-$ kubectl delete pods &amp;lt;glance-pod-name&amp;gt; -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>由于Cloudpods平台上无法查看到回收站中镜像的删除时间，所以需要使用climc命令在控制节点上查看镜像自动删除的时间是否符合预期。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc image-show &amp;lt;image-namge/image-id&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># image-name、image-id为回收站中的镜像名称和id&lt;/span>
-Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value
-auto_delete_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2019-08-20T09:14:47.000000Z &lt;span style="color:#8f5902;font-style:italic">#镜像自动删除时间&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="为什么不能打开镜像市场">为什么不能打开镜像市场？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 修改镜像的保留时间一周，参数值单位为s，604800 = 7*24*60。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc service-config --config &lt;span style="color:#000">pending_delete_expire_seconds&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">604800&lt;/span> glance
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置完成后，等待5分钟左右生效。或删除镜像所在pod重启镜像服务。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep glance
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete pods &amp;lt;glance-pod-name&amp;gt; -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>由于Cloudpods平台上无法查看到回收站中镜像的删除时间，所以需要使用climc命令在控制节点上查看镜像自动删除的时间是否符合预期。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ climc image-show &amp;lt;image-namge/image-id&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># image-name、image-id为回收站中的镜像名称和id&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Field &lt;span style="color:#000;font-weight:bold">|&lt;/span> Value
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>auto_delete_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2019-08-20T09:14:47.000000Z &lt;span style="color:#8f5902;font-style:italic">#镜像自动删除时间&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="为什么不能打开镜像市场">为什么不能打开镜像市场？&lt;/h2>
 &lt;p>常见原因：&lt;/p>
 &lt;ol>
 &lt;li>服务器时区或时间不对，导致OSS API无法正常工作。&lt;/li>
@@ -507,14 +507,14 @@ auto_delete_at &lt;span style="color:#000;font-weight:bold">|&lt;/span> 2019-08-
 &lt;ul>
 &lt;li>
 &lt;p>阿里云账户余额不足，在云管平台上创建按量付费的主机时，要求阿里云账户余额大于100元。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">SDK.ServerError
-ErrorCode: InvalidAccountStatus.NotEnoughBalance
-Message: Your account does not have enough balance.
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>SDK.ServerError
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ErrorCode: InvalidAccountStatus.NotEnoughBalance
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Message: Your account does not have enough balance.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>阿里云账户没有授权OSS导入ESC镜像的权限。查看系统日志，可看到如下报错信息。对于这类新接入的阿里云账户，需要在阿里云控制台上为账户添加从OSS导入ECS镜像的角色权限，一般来讲，云管平台会通过阿里云RAM API自动设置权限，若账号无RAM API权限，则需要按下面方法手动授权：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">SDK.ServerError ErrorCode: NoSetRoletoECSServiceAcount Message: ECS service account Have no right to access your OSS.please attach a role of access your oss to ECS service account.
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>SDK.ServerError ErrorCode: NoSetRoletoECSServiceAcount Message: ECS service account Have no right to access your OSS.please attach a role of access your oss to ECS service account.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
 &lt;li>登录阿里云控制台，选择“监控与管理&amp;gt;访问控制&amp;gt;角色管理”，单击 &lt;strong>&lt;em>&amp;ldquo;新建角色&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出设置对话框。&lt;/li>
 &lt;li>选择角色类型为“服务角色”、选择类型为“ESC虚拟机”、角色名称设置为AliyunECSImageImportDefaultRole；&lt;/li>
 &lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;创建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建角色。&lt;/li>
@@ -525,8 +525,8 @@ Message: Your account does not have enough balance.
 &lt;/li>
 &lt;li>
 &lt;p>阿里云账户没有开通OSS服务。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">oss: service returned error: &lt;span style="color:#000">StatusCode&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>403, &lt;span style="color:#000">ErrorCode&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UserDisable, &lt;span style="color:#000">ErrorMessage&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UserDisable
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>登录阿里云平台，开通OSS服务。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>oss: service returned error: &lt;span style="color:#000">StatusCode&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>403, &lt;span style="color:#000">ErrorCode&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UserDisable, &lt;span style="color:#000">ErrorMessage&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>UserDisable
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>登录阿里云平台，开通OSS服务。&lt;/p>
 &lt;p>&lt;img src="../image/oss.png" alt="">&lt;/p>
 &lt;/li>
 &lt;/ul>
@@ -570,18 +570,18 @@ Message: Your account does not have enough balance.
 &lt;/table>
 &lt;h2 id="为什么在云管平台上创建或纳管的虚拟机中存在注入的公钥文件">为什么在云管平台上创建或纳管的虚拟机中存在注入的公钥文件？&lt;/h2>
 &lt;p>&lt;strong>原因&lt;/strong>：虚拟机的公钥文件是由平台注入的，会同时注入一个全局和一个项目级别的公钥文件到虚拟机。私钥存放在控制节点，用户可以通过Climc命令查看密钥文件。&lt;/p>
-&lt;pre>&lt;code># 查看注入密钥，--admin表示全局的密钥；--project表示查看项目的密钥。
+&lt;pre tabindex="0">&lt;code># 查看注入密钥，--admin表示全局的密钥；--project表示查看项目的密钥。
 $ climc sshkeypair-show --admin
 $ climc sshkeypair-show --project &amp;lt;project-name&amp;gt;
 &lt;/code>&lt;/pre>&lt;p>&lt;strong>应用场景&lt;/strong>：通过注入密钥文件，在云管平台上的虚拟机的Web SSH功能可以以cloudroot用户免密登录到虚拟机。后续平台的自动化运维功能也是基于该功能。&lt;/p>
 &lt;h2 id="实例名称同步">实例名称同步&lt;/h2>
 &lt;p>平台自3.10开始默认开启实例名称同步, 若云上的实例名称发生变化后，当云账号同步完成资源或者单独指定实例进行状态同步，实例的名称会跟随云上进行同步
 可以通过以下命令进行打开或者关闭&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 开启实例名称同步&lt;/span>
-$ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> region2
-&lt;span style="color:#8f5902;font-style:italic"># 关闭实例名称同步&lt;/span>
-$ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> region2
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 容器</title><link>https://www.cloudpods.org/zh/docs/faq/docker/</link><pubDate>Fri, 30 Aug 2019 15:18:35 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/docker/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 开启实例名称同步&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> region2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 关闭实例名称同步&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> region2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 容器</title><link>https://www.cloudpods.org/zh/docs/faq/docker/</link><pubDate>Fri, 30 Aug 2019 15:18:35 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/docker/</guid><description>
 &lt;h2 id="容器管理包括哪些内容">容器管理包括哪些内容？&lt;/h2>
 &lt;p>包括容器集群、容器服务、容器编排等方面内容。&lt;/p>
 &lt;h2 id="支持哪些类型的容器平台">支持哪些类型的容器平台？&lt;/h2>
@@ -601,25 +601,25 @@ $ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;
 &lt;ol>
 &lt;li>
 &lt;p>修改/etc/default/grub文件，在GRUB_CMDLINE_LINUX增加“net.ifnames = 0 biosdevname = 0”的参数，例如:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">GRUB_TIMEOUT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span>
-&lt;span style="color:#000">GRUB_DISTRIBUTOR&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>sed &lt;span style="color:#4e9a06">&amp;#39;s, release .*$,,g&amp;#39;&lt;/span> /etc/system-release&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
-&lt;span style="color:#000">GRUB_DEFAULT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>saved
-&lt;span style="color:#000">GRUB_DISABLE_SUBMENU&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span>
-&lt;span style="color:#000">GRUB_TERMINAL_OUTPUT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;console&amp;#34;&lt;/span>
-&lt;span style="color:#000">GRUB_CMDLINE_LINUX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;crashkernel=auto rhgb quiet intel_iommu=on iommu=pt vfio_iommu_type1.allow_unsafe_interrupts=1 rdblacklist=nouveau nouveau.modeset=0 net.ifnames=0 biosdevname=0&amp;#34;&lt;/span>
-&lt;span style="color:#000">GRUB_DISABLE_RECOVERY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;true&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_TIMEOUT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_DISTRIBUTOR&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>sed &lt;span style="color:#4e9a06">&amp;#39;s, release .*$,,g&amp;#39;&lt;/span> /etc/system-release&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_DEFAULT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>saved
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_DISABLE_SUBMENU&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_TERMINAL_OUTPUT&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;console&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_CMDLINE_LINUX&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;crashkernel=auto rhgb quiet intel_iommu=on iommu=pt vfio_iommu_type1.allow_unsafe_interrupts=1 rdblacklist=nouveau nouveau.modeset=0 net.ifnames=0 biosdevname=0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">GRUB_DISABLE_RECOVERY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;true&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>修改完成后，执行以下命令生成启动文件。&lt;/p>
 &lt;ol>
 &lt;li>若服务器是BIOS启动，执行以下命令：&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ grub2-mkconfig -o /boot/grub2/grub.cfg
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ grub2-mkconfig -o /boot/grub2/grub.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
 &lt;li>若服务器是UEFI启动，执行以下命令：&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>重启系统后，查看MAC对应的网卡名称是否已修改为eth0。&lt;/p>
 &lt;/li>
@@ -652,27 +652,27 @@ $ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;
 &lt;/li>
 &lt;li>
 &lt;p>在控制节点使用climc命令启用该宿主机；&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc host-enable id
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ climc host-enable id
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;h3 id="host服务为什么会变成离线">Host服务为什么会变成离线？&lt;/h3>
 &lt;p>region的HostPingDetectionTask将超过3分钟未收到ping的host服务置为offline，并将宿主机上的虚拟机状态设置为unknown。&lt;/p>
 &lt;h3 id="宿主机的host服务启动失败且报错fail-to-get-network-infono-networks该怎么解决">宿主机的Host服务启动失败，且报错“Fail to get network info：no networks”，该怎么解决？&lt;/h3>
 &lt;p>该问题一般是没有为宿主机注册网络，需要在云管平台为宿主机创建一个IP子网或使用Climc命令在控制节点创建一个网络。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ climc network-create bcast0 host02 10.168.222.226 10.168.222.226 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> --gateway 10.168.222.1
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何解决qemu版本不匹配的问题">如何解决qemu版本不匹配的问题？&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ climc network-create bcast0 host02 10.168.222.226 10.168.222.226 &lt;span style="color:#0000cf;font-weight:bold">24&lt;/span> --gateway 10.168.222.1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何解决qemu版本不匹配的问题">如何解决qemu版本不匹配的问题？&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>现象：使用过程中，启动虚拟机时可能遇到类似这样的错误信息：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">uses a qcow2 feature which is not supported by this qemu version: QCOW version &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>uses a qcow2 feature which is not supported by this qemu version: QCOW version &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>原因：主要原因是qcow版本不一致。原始的qcow2创建版本使用的qemu-img为较新版本，现在创建时使用的为较旧版本，旧版本不支持新版本。&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>解决方案：在拥有较新版本的qemu-img里面进行兼容性转换，例如执行以下命令进行转换，转换完毕后，再重新添加镜像：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ qemu-img convert -o &lt;span style="color:#000">compat&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0.10 -f qcow2 -O qcow2 centos6-cloud-init.qcow2 centos-st-ssh-key.qcow2
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ qemu-img convert -o &lt;span style="color:#000">compat&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0.10 -f qcow2 -O qcow2 centos6-cloud-init.qcow2 centos-st-ssh-key.qcow2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
 &lt;h2 id="如何将其它kvm平台上的虚拟机迁移到系统中">如何将其它KVM平台上的虚拟机迁移到系统中？&lt;/h2>
 &lt;ol>
@@ -707,89 +707,89 @@ $ climc service-config --config &lt;span style="color:#000">enable_sync_name&lt;
 &lt;p>Cloudpods容器化部署后可通过Kubernetes相关命令查看Cloudpods平台中的系统组件以及组件日志等。&lt;/p>
 &lt;h3 id="查看组件pod运行情况">查看组件pod运行情况&lt;/h3>
 &lt;p>系统组件都以 k8s pod的形式运行，通过以下命令查看Cloudpods平台的系统组件以及运行情况等。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># -n表示namespace的意思，目前我们的服务都部署在onecloud namespace下，查看所有组件的pod的运行情况&lt;/span>
-$ kubectl get pods -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># -o wide查看pod的更多详细信息，比如运行在哪个节点上&lt;/span>
-$ kubectl get pods -n onecloud -o wide
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定pod资源的详细信息，如查看region组件的pod的详细信息&lt;/span>
-$ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
-$ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启服务">重启服务&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># -n表示namespace的意思，目前我们的服务都部署在onecloud namespace下，查看所有组件的pod的运行情况&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># -o wide查看pod的更多详细信息，比如运行在哪个节点上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud -o wide
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看指定pod资源的详细信息，如查看region组件的pod的详细信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启服务">重启服务&lt;/h3>
 &lt;p>在Kubernetes集群上，组件pods大部分通过deployment管理的，当删除pod时将会自动重建新的pod，所以重启组件服务时可以直接删除对应组件的pod。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启web服务，如删除web前端pod&lt;/span>
-$ kubectl delete pods &lt;span style="color:#000">$web_pod_name&lt;/span> -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
-$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep default-host &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print #1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
-&lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，服务都以default开头&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启web服务，如删除web前端pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete pods &lt;span style="color:#000">$web_pod_name&lt;/span> -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep default-host &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print #1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，服务都以default开头&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
 &lt;p>Cloudpods的所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以region服务为例更新其configmaps配置信息&lt;/span>
-$ kubectl edit configmaps default-region -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 修改完成后，删除对应服务的pod即可生效&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
-$ kubectl delete &lt;span style="color:#000">$region_pod_name&lt;/span> -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 以region服务为例更新其configmaps配置信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl edit configmaps default-region -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 修改完成后，删除对应服务的pod即可生效&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete &lt;span style="color:#000">$region_pod_name&lt;/span> -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
 &lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 首先需要找到region服务所在pod&lt;/span>
-$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region服务容器的日志，其中-f表示follow，即持续输出日志，类似于journalctl的 -f；--since 5m 表示查看近5分钟的日志信息。按CTRL+C退出日志输出&lt;/span>
-$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> -f --since 5m
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看region容器日志，将最近5分钟的所有日志到region.log&lt;/span>
-$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> --since 5m &amp;gt; region.log
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 若有些服务有两个容器，如host服务有名称为host和host-image的容器，此时查看容器命令时需要加&amp;#39;-c&amp;#39; 指定查看哪个容器的日志&lt;/span>
-$ kubectl logs -n onecloud &lt;span style="color:#000">$host_pod_name&lt;/span> -c host-image -f
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它常用管理命令">其它常用管理命令&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 首先需要找到region服务所在pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看region服务容器的日志，其中-f表示follow，即持续输出日志，类似于journalctl的 -f；--since 5m 表示查看近5分钟的日志信息。按CTRL+C退出日志输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> -f --since 5m
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看region容器日志，将最近5分钟的所有日志到region.log&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> --since 5m &amp;gt; region.log
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 若有些服务有两个容器，如host服务有名称为host和host-image的容器，此时查看容器命令时需要加&amp;#39;-c&amp;#39; 指定查看哪个容器的日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs -n onecloud &lt;span style="color:#000">$host_pod_name&lt;/span> -c host-image -f
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其它常用管理命令">其它常用管理命令&lt;/h2>
 &lt;p>kubectl更多命令请参考&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">kubectl官方文档&lt;/a>&lt;/p>
 &lt;h3 id="查看平台版本信息">查看平台版本信息&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 其中onecloudcluster 可以简写成oc；default为OneCloudCluster的名称；&lt;/span>
-$ kubectl get oc -n onecloud default -o go-template --template&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{{printf &amp;#34;%s\n&amp;#34; .spec.version}}&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看mysql信息">查看MySQL信息&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看MySQL的配置连接新，其中oc为onecloudcluster；default为oc的名称；grep -A 4即属于匹配后4行数据。&lt;/span>
-$ kubectl get oc -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看oc的的api对象信息">查看OC的的API对象信息&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看OC的运行情况&lt;/span>
-$ kubectl get onecloudcluster -n onecloud
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 以yaml文件的形式查看OC的API对象信息，该信息中包含集群的所有配置信息。&lt;/span>
-$ kubeclt get oc -n onecloud -o yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="部署管理工具ocadm的常用管理命令">部署管理工具ocadm的常用管理命令&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 其中onecloudcluster 可以简写成oc；default为OneCloudCluster的名称；&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get oc -n onecloud default -o go-template --template&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{{printf &amp;#34;%s\n&amp;#34; .spec.version}}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看mysql信息">查看MySQL信息&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看MySQL的配置连接新，其中oc为onecloudcluster；default为oc的名称；grep -A 4即属于匹配后4行数据。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get oc -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看oc的的api对象信息">查看OC的的API对象信息&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看OC的运行情况&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get onecloudcluster -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 以yaml文件的形式查看OC的API对象信息，该信息中包含集群的所有配置信息。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubeclt get oc -n onecloud -o yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="部署管理工具ocadm的常用管理命令">部署管理工具ocadm的常用管理命令&lt;/h2>
 &lt;p>部署管理工具ocadm类似于Kubernetes集群中的kubeadm工具。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 创建集群 &lt;/span>
-$ ocadm cluster create
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看集群认证信息&lt;/span>
-$ ocadm cluster rcadmin
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将本地镜像源切换到阿里云镜像源&lt;/span>
-$ ocadm cluster update --image-repository registry.cn-beijing.aliyuncs.com/yunionio --wait
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 将产品升级或回滚到指定版本，当系统镜像源为阿里云镜像源的情况下才可以使用下面的命令升级&lt;/span>
-$ ocadm cluster update --version &lt;span style="color:#000">$version&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的host服务&lt;/span>
-$ ocadm node disable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用节点的host服务&lt;/span>
-$ ocadm node enable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的controller服务&lt;/span>
-$ ocadm node disable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用节点的controller服务&lt;/span>
-$ ocadm node enable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 禁用Baremetal服务&lt;/span>
-$ ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 如在node1主机上启用baremetal服务，并监听br0网卡。&lt;/span>
-$ ocadm baremetal &lt;span style="color:#204a87">enable&lt;/span> --node node1 --listen-interface br0
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在First Node节点获取加入节点的token信息&lt;/span>
-$ ocadm token create
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 在First Node查看token信息&lt;/span>
-$ ocadm token list
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 切换到开源版前端，ce(community edition)为开源版前端；&lt;/span>
-$ ocadm cluster update --use-ce --wait
-&lt;span style="color:#8f5902;font-style:italic"># 切换到商业版前端，ee(enterprise edition)为商业版前端 &lt;/span>
-$ ocadm cluster update --use-ee --wait
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 启用itsm组件&lt;/span>
-$ ocadm component &lt;span style="color:#204a87">enable&lt;/span> itsm
-&lt;span style="color:#8f5902;font-style:italic"># 禁用itsm组件&lt;/span>
-$ ocadm component disable itsm
-&lt;span style="color:#8f5902;font-style:italic"># 安装失败时清理环境，请谨慎使用该命令&lt;/span>
-$ ocadm reset --force
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 其他问题</title><link>https://www.cloudpods.org/zh/docs/faq/others/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/others/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 创建集群 &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm cluster create
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看集群认证信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm cluster rcadmin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 将本地镜像源切换到阿里云镜像源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm cluster update --image-repository registry.cn-beijing.aliyuncs.com/yunionio --wait
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 将产品升级或回滚到指定版本，当系统镜像源为阿里云镜像源的情况下才可以使用下面的命令升级&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm cluster update --version &lt;span style="color:#000">$version&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的host服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm node disable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 启用节点的host服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm node enable-host-agent --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 禁用节点的controller服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm node disable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 启用节点的controller服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm node enable-onecloud-controller --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 禁用Baremetal服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm baremetal disable --node &lt;span style="color:#000">$node_name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如在node1主机上启用baremetal服务，并监听br0网卡。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm baremetal &lt;span style="color:#204a87">enable&lt;/span> --node node1 --listen-interface br0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 在First Node节点获取加入节点的token信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm token create
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 在First Node查看token信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm token list
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 切换到开源版前端，ce(community edition)为开源版前端；&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm cluster update --use-ce --wait
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 切换到商业版前端，ee(enterprise edition)为商业版前端 &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm cluster update --use-ee --wait
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 启用itsm组件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm component &lt;span style="color:#204a87">enable&lt;/span> itsm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 禁用itsm组件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm component disable itsm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 安装失败时清理环境，请谨慎使用该命令&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ocadm reset --force
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 其他问题</title><link>https://www.cloudpods.org/zh/docs/faq/others/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/faq/others/</guid><description>
 &lt;h2 id="目前支持哪些平台及哪些资源">目前支持哪些平台及哪些资源？&lt;/h2>
 &lt;ol>
 &lt;li>具体查看我们&lt;a href="../../function_principle/multicloud/">在线版文档&lt;/a>&lt;/li>

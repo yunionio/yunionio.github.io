@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods 3.9 –
-Quick Start</title><link>https://www.cloudpods.org//v3.9/en/docs/quickstart/</link><description>Recent content in Quick Start on Cloudpods 3.9</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org//v3.9/en/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: All in One Installation</title><link>https://www.cloudpods.org//v3.9/en/docs/quickstart/allinone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/en/docs/quickstart/allinone/</guid><description>
+Quick Start</title><link>https://www.cloudpods.org//v3.9/en/docs/quickstart/</link><description>Recent content in Quick Start on Cloudpods 3.9</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudpods.org//v3.9/en/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: All in One Installation</title><link>https://www.cloudpods.org//v3.9/en/docs/quickstart/allinone/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/en/docs/quickstart/allinone/</guid><description>
 &lt;h2 id="preparation">Preparation&lt;/h2>
 &lt;h3 id="requirements">Requirements&lt;/h3>
 &lt;ul>
@@ -38,102 +38,104 @@ Quick Start</title><link>https://www.cloudpods.org//v3.9/en/docs/quickstart/</li
 &lt;h3 id="local-environment">Local environment&lt;/h3>
 &lt;p>The local environment is the environment where the user performs the actual operation. The local environment for this installation is executing on a MAC OS laptop. The installation can also be executed on the Linux box to be deployed.&lt;/p>
 &lt;h4 id="prepare-passwordless-ssh-login">Prepare passwordless SSH login&lt;/h4>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Generate the local ssh keypair&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># (SKIP this stekp if you already have ~/.ssh/id_rsa.pub locally)&lt;/span>
-$ ssh-keygen
-&lt;span style="color:#8f5902;font-style:italic"># Copy the generated ~/.ssh/id_rsa.pub public key to the machine to be deployed&lt;/span>
-$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
-&lt;span style="color:#8f5902;font-style:italic"># Try to login to the machine to be deployed without password,&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># should be able to get the hostname of the deployed machine&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># without entering the login password&lt;/span>
-$ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="install-ansible-and-git">Install ansible and git&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Generate the local ssh keypair&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># (SKIP this stekp if you already have ~/.ssh/id_rsa.pub locally)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh-keygen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Copy the generated ~/.ssh/id_rsa.pub public key to the machine to be deployed&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Try to login to the machine to be deployed without password,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># should be able to get the hostname of the deployed machine&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># without entering the login password&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh root@10.168.26.216 &lt;span style="color:#4e9a06">&amp;#34;hostname&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="install-ansible-and-git">Install ansible and git&lt;/h4>
 &lt;p>We first install ansible and git. The commends depends on the OS of the box.&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Kylin v10&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">Others&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
-$ yum install -y epel-release git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
-$ yum install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
-$ apt install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="install-cloudpods">Install Cloudpods&lt;/h2>
-&lt;p>The installation tool is &lt;a href="https://github.com/yunionio/ocboot,">https://github.com/yunionio/ocboot,&lt;/a> then according to the configuration of the machine to be deployed, use ansbile playbook to install and configure the Cloudpods. The following commands are performed on the local environment and steps are as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
-$ git clone -b release/3.8 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="quick-installation">Quick installation&lt;/h3>
+&lt;p>The installation tool is &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>, then according to the configuration of the machine to be deployed, use ansbile playbook to install and configure the Cloudpods. The following commands are performed on the local environment and steps are as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Git clone the ocboot installation tool locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.8 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="quick-installation">Quick installation&lt;/h3>
 &lt;p>Simplely execute run.py with the IP address of the Linux box to start the AllInOne installation.&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">./run.py 10.168.26.216
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will automatically generate a configuration yaml config-allinone-current.yaml in the working directory. You may check the default values of the installation parameters in this YAML.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./run.py 10.168.26.216
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will automatically generate a configuration yaml config-allinone-current.yaml in the working directory. You may check the default values of the installation parameters in this YAML.&lt;/p>
 &lt;h3 id="customized-installation">Customized installation&lt;/h3>
 &lt;p>You may also use a customized installation YAML to start the installation. An example configuration file is shown as following.&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Write config-allinone.yml configuration file&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
-&lt;/span>&lt;span style="color:#4e9a06"># mariadb_node indicates the node where the mariadb service needs to be deployed
-&lt;/span>&lt;span style="color:#4e9a06">mariadb_node:
-&lt;/span>&lt;span style="color:#4e9a06"> # IP of the machine to be deployed
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> # SSH Login username of the machine to be deployed
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # Username of mariadb
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # Password of mariadb
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"># primary_master_node indicates the machine running Kubernetes and OneCloud Platform
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # Database connection address
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> # Database connection username
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> # Database connection password
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"> # IP of Kubernetes controlplane
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.168.26.216
-&lt;/span>&lt;span style="color:#4e9a06"> # Port of Kubernetes controlplane
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods version
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#39;v3.7.2&amp;#39;
-&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods login username
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_user: admin
-&lt;/span>&lt;span style="color:#4e9a06"> # Cloudpods login user&amp;#39;s password
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_user_password: admin@123
-&lt;/span>&lt;span style="color:#4e9a06"> # This machine serves as a Cloudpods private cloud computing node
-&lt;/span>&lt;span style="color:#4e9a06"> as_host: true
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the config-allinone.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code>. /run.py . /config-allinone.yml&lt;/code> to deploy the cluster.&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Start deployment&lt;/span>
-$ ./run.py ./config-allinone.yml
-....
-&lt;span style="color:#8f5902;font-style:italic"># The following output will be displayed when the deployment is completed,&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># indicating successful operation&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Open with your browser at https://10.168.26.216&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Login with admin/admin@123 user password to access the Web UI&lt;/span>
-Initialized successfully!
-Web page: https://10.168.26.216
-User: admin
-Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="done">Done&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Write config-allinone.yml configuration file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-allinone.yml
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"># mariadb_node indicates the node where the mariadb service needs to be deployed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">mariadb_node:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # IP of the machine to be deployed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # SSH Login username of the machine to be deployed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Username of mariadb
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Password of mariadb
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"># primary_master_node indicates the machine running Kubernetes and OneCloud Platform
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">primary_master_node:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> hostname: 10.168.26.216
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Database connection address
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_host: 10.168.26.216
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Database connection username
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Database connection password
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # IP of Kubernetes controlplane
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_host: 10.168.26.216
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Port of Kubernetes controlplane
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Cloudpods version
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> onecloud_version: &amp;#39;v3.7.2&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Cloudpods login username
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> onecloud_user: admin
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # Cloudpods login user&amp;#39;s password
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> onecloud_user_password: admin@123
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> # This machine serves as a Cloudpods private cloud computing node
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> as_host: true
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the config-allinone.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code>. /run.py . /config-allinone.yml&lt;/code> to deploy the cluster.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Start deployment&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py ./config-allinone.yml
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># The following output will be displayed when the deployment is completed,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># indicating successful operation&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Open with your browser at https://10.168.26.216&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Login with admin/admin@123 user password to access the Web UI&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="done">Done&lt;/h2>
 &lt;p>Then use your browser to visit https://10.168.26.216, enter &lt;code>admin&lt;/code> for username and &lt;code>admin@123&lt;/code> for password and you will see the Web UI.&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="Login UI">&lt;/p>
 &lt;h2 id="start-using-cloudpods">Start using Cloudpods&lt;/h2>
@@ -166,14 +168,14 @@ Password: admin@123
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Attention&lt;/h4>
 &lt;p>If you want to use Cloudpods private cloud, you need ensure the computing machine use the kernel compiled by us. You can use the following command to check whether the host uses the kernel including the &lt;code>yn&lt;/code> keyword.&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Check if yn keyword kernel is used&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># If the kernel is not the version with the yn keyword,&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># it may be the first time you install it using ocboot,&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># and you can reboot into the yn kernel&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Check if yn keyword kernel is used&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># If the kernel is not the version with the yn keyword,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># it may be the first time you install it using ocboot,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># and you can reboot into the yn kernel&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;p>&lt;img src="../images/host.png" alt="Host">&lt;/p>
 &lt;h3 id="2-change-the-hostname-of-the-node-some-services-fail-to-start">2. Change the hostname of the node, some services fail to start&lt;/h3>
@@ -211,7 +213,7 @@ $ reboot
 &lt;li>node IP: 10.127.10.156&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>master_nodes: This role indicates that these nodes are running the control service, which is optional, and is primarily used along with primary_master_node to form Kubernetes' etcd 3 node high availability cluster
+&lt;li>master_nodes: This role indicates that these nodes are running the control service, which is optional, and is primarily used along with primary_master_node to form Kubernetes&amp;rsquo; etcd 3 node high availability cluster
 &lt;ul>
 &lt;li>node IP: 10.127.10.157-158&lt;/li>
 &lt;/ul>
@@ -252,42 +254,42 @@ $ reboot
 &lt;h3 id="download-ocboot">Download ocboot&lt;/h3>
 &lt;p>Please refer to the &lt;a href="../allinone/#download-ocboot">All in One Installation/Download ocboot&lt;/a>.&lt;/p>
 &lt;h3 id="write-deployment-configuration">Write deployment configuration&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Write config-nodes.yml configuration file&lt;/span>
-$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.yml
-&lt;/span>&lt;span style="color:#4e9a06">mariadb_node:
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06">primary_master_node:
-&lt;/span>&lt;span style="color:#4e9a06"> onecloud_version: v3.7.1
-&lt;/span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> db_user: root
-&lt;/span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">master_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.157
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.158
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">worker_nodes:
-&lt;/span>&lt;span style="color:#4e9a06"> hosts:
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.159
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.160
-&lt;/span>&lt;span style="color:#4e9a06"> user: root
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
-&lt;/span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
-&lt;/span>&lt;span style="color:#4e9a06">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="start-deployment">Start Deployment&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Write config-nodes.yml configuration file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cat &lt;span style="color:#4e9a06">&amp;lt;&amp;lt;EOF &amp;gt;./config-nodes.yml
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">mariadb_node:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">primary_master_node:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> onecloud_version: v3.7.1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> hostname: 10.127.10.156
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_host: 10.127.10.156
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> db_password: your-sql-password
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">master_nodes:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> hosts:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.157
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.158
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">worker_nodes:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> hosts:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.159
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> - hostname: 10.127.10.160
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> user: root
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_host: 10.127.10.156
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06"> controlplane_port: &amp;#34;6443&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="start-deployment">Start Deployment&lt;/h3>
 &lt;p>Once the config-nodes.yml deployment configuration file is filled in, you can execute the ocboot file &lt;code>. /run.py . /config-nodes.yml&lt;/code> to deploy the cluster.&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Start deployment&lt;/span>
-$ ./run.py ./config-nodes.yml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the deployment is complete, you can access https://10.168.26.216 (the IP of the primary_master_node) using your browser, and enter he username &lt;code>admin&lt;/code> and password &lt;code>admin@123&lt;/code> to enter the Web UI.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Start deployment&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py ./config-nodes.yml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the deployment is complete, you can access https://10.168.26.216 (the IP of the primary_master_node) using your browser, and enter he username &lt;code>admin&lt;/code> and password &lt;code>admin@123&lt;/code> to enter the Web UI.&lt;/p>
 &lt;p>Then you can &lt;a href="../allinone/#create-the-first-virtual-machine">create private cloud virtual machines&lt;/a> or &lt;a href="../allinone/#import-public-cloud-or-other-private-cloud-platform-resources">import public cloud or other private cloud platform resources&lt;/a>.&lt;/p></description></item></channel></rss>

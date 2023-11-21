@@ -1,5 +1,172 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-负载均衡</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/</link><description>Recent content in 负载均衡 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/web_ui/network/lb/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 实例</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lb/</guid><description>
+负载均衡</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/</link><description>Recent content in 负载均衡 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org/zh/docs/web_ui/network/lb/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 访问控制</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbacl/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbacl/</guid><description>
+&lt;p>访问控制用于设置访问负载均衡的IP白名单或IP黑名单，在访问控制策略组中仅可以设置IP地址范围，在配置负载均衡实例监听时可设置是否启用访问控制，并设置针对具体的访问控制策略组设置访问白名单或黑名单。&lt;/p>
+&lt;p>&lt;strong>访问控制来源&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>同步公有云上被实例上的监听绑定的访问控制，并自动在访问控制缓存里添加一条记录，同步下来的访问控制默认本域共享。&lt;/li>
+&lt;li>在云管平台上创建访问控制策略组。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/访问控制&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入访问控制页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/network/lbacl1.png" alt="">&lt;/p>
+&lt;h2 id="新建访问控制">新建访问控制&lt;/h2>
+&lt;p>该功能用于创建访问控制策略组。&lt;/p>
+&lt;ol>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出创建访问控制对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建访问控制时需要指定访问控制所属的项目。&lt;/li>
+&lt;li>访问控制策略组名称：设置访问控制策略组的名称。&lt;/li>
+&lt;li>批量添加IP地址：添加访问控制策略组内源地址的IP地址及IP地址段等。
+&lt;ul>
+&lt;li>每一行为一个IP地址或IP地址段。IP地址如192.168.1.1，IP地址段如192.168.1.0/24；&lt;/li>
+&lt;li>IP地址与备注以|分隔，如192.168.1.0/24|备注，备注信息可选。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改访问控制">修改访问控制&lt;/h2>
+&lt;p>该功能用于修改访问控制策略组的IP地址范围。&lt;/p>
+&lt;ol>
+&lt;li>单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改访问控制对话框。&lt;/li>
+&lt;li>修改批量条件IP地址：
+&lt;ul>
+&lt;li>每一行为一个IP地址或IP地址段。IP地址如192.168.1.1，IP地址段如192.168.1.0/24；&lt;/li>
+&lt;li>IP地址与备注以|分隔，如192.168.1.0/24|备注，备注信息可选。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更改项目">更改项目&lt;/h2>
+&lt;p>该功能用于更改访问控制所属项目。当访问控制为私有状态时，才可以更改项目。&lt;/p>
+&lt;p>&lt;strong>单个访问控制更改项目&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>修改域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量更改项目&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在访问控制列表中选择一个或多个访问控制策略组，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>修改域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置共享">设置共享&lt;/h2>
+&lt;p>该功能用于设置访问控制的共享状态。&lt;/p>
+&lt;p>项目资源的共享范围有五种：&lt;/p>
+&lt;ul>
+&lt;li>不共享（私有）：即项目资源只能本项目的用户可以使用。&lt;/li>
+&lt;li>项目共享-部分（本域内多项目共享）：即项目资源可以共享到同域下的指定项目（一个或多个），只有本项目和被共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>项目共享-全部（本域共享）：即项目资源可以共享给域下所有项目，即项目所在域的用户都可以使用项目资源。&lt;/li>
+&lt;li>域共享-部分（多域共享）：即项目资源可以共享到指定域（一个或多个），只有项目资源所在域和共享域下的用户可以使用项目资源。&lt;/li>
+&lt;li>域共享-全部（全局共享）：即项目资源可以共享给全部域使用，即系统中所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置域共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>在Cloudpods平台已开启三级权限。&lt;/li>
+&lt;li>用户处于管理后台。&lt;/li>
+&lt;/ul>
+&lt;p>设置项目共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>用户处于管理后台或域管理后台。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个访问控制设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
+&lt;ul>
+&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
+&lt;p>多个访问控制批量设置的共享范围必须相同。否则请单独为访问控制设置共享。&lt;/p>
+&lt;ol>
+&lt;li>在访问控制列表中选择一个或多个访问控制策略组，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
+&lt;ul>
+&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除访问控制">删除访问控制&lt;/h2>
+&lt;p>该功能用于删除访问控制，当访问控制策略组关联的监听为0时，才可以删除。&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出删除确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除访问控制策略组。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看访问控制详情">查看访问控制详情&lt;/h2>
+&lt;p>该功能用于查看访问控制的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
+&lt;li>查看访问控制策略组的云上ID、ID、名称、状态、域、项目、源地址|备注、创建时间、更新时间、备注。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看访问控制关联的监听列表">查看访问控制关联的监听列表&lt;/h2>
+&lt;p>该功能用于查看访问控制关联的监听列表。&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
+&lt;li>单击“监听”页签，进入监听页面。查看访问控制关联的监听列表。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看访问控制缓存列表">查看访问控制缓存列表&lt;/h2>
+&lt;p>缓存列表来源有两种：&lt;/p>
+&lt;ul>
+&lt;li>创建公有云平台的负载均衡实例使用Cloudpods平台上的访问控制策略组时，该证书将缓存到公有云平台。&lt;/li>
+&lt;li>同步公有云平台上的负载均衡访问控制策略组，将同步在Cloudpods平台新建访问控制策略组和缓存记录。&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
+&lt;li>单击“缓存列表”页签，进入缓存页面。&lt;/li>
+&lt;li>查看缓存列表信息，包括访问控制策略组名称、创建时间、更新时间、项目、平台、区域、云账号。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除缓存">删除缓存&lt;/h3>
+&lt;p>该功能用于删除公有云上对应账号区域的访问控制，当访问控制关联的监听为0时，才可以删除。&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
+&lt;li>单击“缓存列表”页签，进入缓存页面。&lt;/li>
+&lt;li>单击访问控制缓存右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看访问控制策略组相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 实例</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lb/</guid><description>
 &lt;p>负载均衡服务即为了保证业务的高可用，将多台业务虚拟机或服务器等虚拟成一个逻辑的应用服务池，通过虚拟IP向外提供服务，用户访问虚拟IP时，负载均衡服务将监听指定端口将来自用户的请求分发给后端的虚拟机或服务器处理。&lt;/p>
 &lt;p>一个完整的负载均衡主要包括3部分，负载均衡实例、监听和后端服务器组。用户在配置负载监听服务时需要先创建负载均衡实例，再为负载均衡实例绑定后端服务器组后，配置监听。&lt;/p>
 &lt;ul>
@@ -1875,174 +2042,7 @@ table tr th, table tr td { border:1px solid #808080; padding:5px; }
 − Cloudpods平台上的后端服务器组对应Google上的后端服务；&lt;/p>
 &lt;ul>
 &lt;li>Cloudpods平台上的后端服务器由Google上的实例组、实例名、后端服务端口（HTTP/HTTPS LB为命名端口、TCP/UDP LB为转发规则的端口）组成。&lt;/li>
-&lt;/ul></description></item><item><title>Docs: 访问控制</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbacl/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbacl/</guid><description>
-&lt;p>访问控制用于设置访问负载均衡的IP白名单或IP黑名单，在访问控制策略组中仅可以设置IP地址范围，在配置负载均衡实例监听时可设置是否启用访问控制，并设置针对具体的访问控制策略组设置访问白名单或黑名单。&lt;/p>
-&lt;p>&lt;strong>访问控制来源&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>同步公有云上被实例上的监听绑定的访问控制，并自动在访问控制缓存里添加一条记录，同步下来的访问控制默认本域共享。&lt;/li>
-&lt;li>在云管平台上创建访问控制策略组。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡/访问控制&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入访问控制页面。&lt;/p>
-&lt;p>&lt;img src="../../../images/network/lbacl1.png" alt="">&lt;/p>
-&lt;h2 id="新建访问控制">新建访问控制&lt;/h2>
-&lt;p>该功能用于创建访问控制策略组。&lt;/p>
-&lt;ol>
-&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出创建访问控制对话框。&lt;/li>
-&lt;li>设置以下参数：
-&lt;ul>
-&lt;li>指定项目：管理员和域管理员在新建访问控制时需要指定访问控制所属的项目。&lt;/li>
-&lt;li>访问控制策略组名称：设置访问控制策略组的名称。&lt;/li>
-&lt;li>批量添加IP地址：添加访问控制策略组内源地址的IP地址及IP地址段等。
-&lt;ul>
-&lt;li>每一行为一个IP地址或IP地址段。IP地址如192.168.1.1，IP地址段如192.168.1.0/24；&lt;/li>
-&lt;li>IP地址与备注以|分隔，如192.168.1.0/24|备注，备注信息可选。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="修改访问控制">修改访问控制&lt;/h2>
-&lt;p>该功能用于修改访问控制策略组的IP地址范围。&lt;/p>
-&lt;ol>
-&lt;li>单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改访问控制对话框。&lt;/li>
-&lt;li>修改批量条件IP地址：
-&lt;ul>
-&lt;li>每一行为一个IP地址或IP地址段。IP地址如192.168.1.1，IP地址段如192.168.1.0/24；&lt;/li>
-&lt;li>IP地址与备注以|分隔，如192.168.1.0/24|备注，备注信息可选。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="更改项目">更改项目&lt;/h2>
-&lt;p>该功能用于更改访问控制所属项目。当访问控制为私有状态时，才可以更改项目。&lt;/p>
-&lt;p>&lt;strong>单个访问控制更改项目&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
-&lt;li>修改域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量更改项目&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在访问控制列表中选择一个或多个访问控制策略组，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
-&lt;li>修改域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
-&lt;/ol>
-&lt;h2 id="设置共享">设置共享&lt;/h2>
-&lt;p>该功能用于设置访问控制的共享状态。&lt;/p>
-&lt;p>项目资源的共享范围有五种：&lt;/p>
-&lt;ul>
-&lt;li>不共享（私有）：即项目资源只能本项目的用户可以使用。&lt;/li>
-&lt;li>项目共享-部分（本域内多项目共享）：即项目资源可以共享到同域下的指定项目（一个或多个），只有本项目和被共享项目下的用户可以使用项目资源。&lt;/li>
-&lt;li>项目共享-全部（本域共享）：即项目资源可以共享给域下所有项目，即项目所在域的用户都可以使用项目资源。&lt;/li>
-&lt;li>域共享-部分（多域共享）：即项目资源可以共享到指定域（一个或多个），只有项目资源所在域和共享域下的用户可以使用项目资源。&lt;/li>
-&lt;li>域共享-全部（全局共享）：即项目资源可以共享给全部域使用，即系统中所有用户都可以使用项目资源。&lt;/li>
-&lt;/ul>
-&lt;div class="alert alert-primary" role="alert">
-&lt;h4 class="alert-heading">说明&lt;/h4>
-&lt;p>设置域共享的条件：&lt;/p>
-&lt;ul>
-&lt;li>在Cloudpods平台已开启三级权限。&lt;/li>
-&lt;li>用户处于管理后台。&lt;/li>
-&lt;/ul>
-&lt;p>设置项目共享的条件：&lt;/p>
-&lt;ul>
-&lt;li>用户处于管理后台或域管理后台。&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;p>&lt;strong>单个访问控制设置共享&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
-&lt;li>配置以下参数。
-&lt;ul>
-&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
-&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
-&lt;ul>
-&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
-&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
-&lt;ul>
-&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
-&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
-&lt;p>多个访问控制批量设置的共享范围必须相同。否则请单独为访问控制设置共享。&lt;/p>
-&lt;ol>
-&lt;li>在访问控制列表中选择一个或多个访问控制策略组，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
-&lt;li>配置以下参数。
-&lt;ul>
-&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
-&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
-&lt;ul>
-&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
-&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
-&lt;ul>
-&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
-&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="删除访问控制">删除访问控制&lt;/h2>
-&lt;p>该功能用于删除访问控制，当访问控制策略组关联的监听为0时，才可以删除。&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出删除确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除访问控制策略组。&lt;/li>
-&lt;/ol>
-&lt;h2 id="查看访问控制详情">查看访问控制详情&lt;/h2>
-&lt;p>该功能用于查看访问控制的详细信息。&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
-&lt;li>查看访问控制策略组的云上ID、ID、名称、状态、域、项目、源地址|备注、创建时间、更新时间、备注。&lt;/li>
-&lt;/ol>
-&lt;h2 id="查看访问控制关联的监听列表">查看访问控制关联的监听列表&lt;/h2>
-&lt;p>该功能用于查看访问控制关联的监听列表。&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
-&lt;li>单击“监听”页签，进入监听页面。查看访问控制关联的监听列表。&lt;/li>
-&lt;/ol>
-&lt;h2 id="查看访问控制缓存列表">查看访问控制缓存列表&lt;/h2>
-&lt;p>缓存列表来源有两种：&lt;/p>
-&lt;ul>
-&lt;li>创建公有云平台的负载均衡实例使用Cloudpods平台上的访问控制策略组时，该证书将缓存到公有云平台。&lt;/li>
-&lt;li>同步公有云平台上的负载均衡访问控制策略组，将同步在Cloudpods平台新建访问控制策略组和缓存记录。&lt;/li>
-&lt;/ul>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
-&lt;li>单击“缓存列表”页签，进入缓存页面。&lt;/li>
-&lt;li>查看缓存列表信息，包括访问控制策略组名称、创建时间、更新时间、项目、平台、区域、云账号。&lt;/li>
-&lt;/ol>
-&lt;h3 id="删除缓存">删除缓存&lt;/h3>
-&lt;p>该功能用于删除公有云上对应账号区域的访问控制，当访问控制关联的监听为0时，才可以删除。&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
-&lt;li>单击“缓存列表”页签，进入缓存页面。&lt;/li>
-&lt;li>单击访问控制缓存右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
-&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
-&lt;/ol>
-&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
-&lt;p>该功能用于查看访问控制策略组相关操作的日志信息。&lt;/p>
-&lt;ol>
-&lt;li>在访问控制页面，单击访问控制策略组名称项，进入访问控制详情页面。&lt;/li>
-&lt;li>单击“操作日志”页签，进入操作日志页面。
-&lt;ul>
-&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
-&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
-&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
-&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol></description></item><item><title>Docs: 证书</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbcert/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbcert/</guid><description>
+&lt;/ul></description></item><item><title>Docs: 证书</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbcert/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lb/lbcert/</guid><description>
 &lt;p>当在负载均衡实例上配置HTTPS监听转发来自HTTPS协议的请求时，需要配置证书。负载均衡只支持PEM格式的证书。&lt;/p>
 &lt;p>&lt;strong>证书来源&lt;/strong>：&lt;/p>
 &lt;ul>

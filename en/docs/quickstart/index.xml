@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-Quick Start</title><link>https://www.cloudpods.org/en/docs/quickstart/</link><description>Recent content in Quick Start on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/en/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Private Cloud Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/allinone-virt/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/allinone-virt/</guid><description>
+Quick Start</title><link>https://www.cloudpods.org/en/docs/quickstart/</link><description>Recent content in Quick Start on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudpods.org/en/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Private Cloud Installation</title><link>https://www.cloudpods.org/en/docs/quickstart/allinone-virt/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/en/docs/quickstart/allinone-virt/</guid><description>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Note&lt;/h4>
@@ -32,64 +32,65 @@ The content of this chapter is to quickly set up the Cloudpods service through d
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">Other Operating Systems&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install Ansible and Git locally&lt;/span>
-$ yum install -y epel-release git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install Ansible and Git locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install Ansible and Git locally&lt;/span>
-$ yum install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install Ansible and Git locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 &lt;p>&lt;p>If there is an error message related to &lt;code>locale&lt;/code>, please execute the following command first:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
-locale-gen
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
-&lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
-&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install Ansible and Git locally&lt;/span>
-$ apt install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;span style="color:#4e9a06">```&lt;/span>Note: In the &lt;span style="color:#4e9a06">`&lt;/span>debian 11&lt;span style="color:#4e9a06">`&lt;/span> environment, &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> the boot option &lt;span style="color:#4e9a06">`&lt;/span>systemd.unified_cgroup_hierarchy&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#4e9a06">`&lt;/span> cannot be found in &lt;span style="color:#4e9a06">`&lt;/span>/proc/cmdline&lt;span style="color:#4e9a06">`&lt;/span>, ocboot automatically configures the relevant &lt;span style="color:#4e9a06">`&lt;/span>GRUB&lt;span style="color:#4e9a06">`&lt;/span> options, rebuilds the boot options, and restarts the operating system to &lt;span style="color:#204a87">enable&lt;/span> &lt;span style="color:#4e9a06">`&lt;/span>k8s&lt;span style="color:#4e9a06">`&lt;/span> to start normally.
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale-gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install Ansible and Git locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">```&lt;/span>Note: In the &lt;span style="color:#4e9a06">`&lt;/span>debian 11&lt;span style="color:#4e9a06">`&lt;/span> environment, &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> the boot option &lt;span style="color:#4e9a06">`&lt;/span>systemd.unified_cgroup_hierarchy&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#4e9a06">`&lt;/span> cannot be found in &lt;span style="color:#4e9a06">`&lt;/span>/proc/cmdline&lt;span style="color:#4e9a06">`&lt;/span>, ocboot automatically configures the relevant &lt;span style="color:#4e9a06">`&lt;/span>GRUB&lt;span style="color:#4e9a06">`&lt;/span> options, rebuilds the boot options, and restarts the operating system to &lt;span style="color:#204a87">enable&lt;/span> &lt;span style="color:#4e9a06">`&lt;/span>k8s&lt;span style="color:#4e9a06">`&lt;/span> to start normally.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="install-cloudpods">Install Cloudpods&lt;/h2>
 &lt;p>The deployment tool is located at &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>. You need to clone this tool using &lt;code>git clone&lt;/code> and then run the &lt;code>run.py&lt;/code> script to deploy the service. The steps are as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Download the ocboot tool to the local machine&lt;/span>
-$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute run.py to deploy the service. The &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> is the IP address of the deployment node and is an optional parameter. If not specified, it will choose the default network card for service deployment. If your node has multiple network cards, you can choose the corresponding network card to listen to the service by specifying the &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong>.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Download the ocboot tool to the local machine&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute run.py to deploy the service. The &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> is the IP address of the deployment node and is an optional parameter. If not specified, it will choose the default network card for service deployment. If your node has multiple network cards, you can choose the corresponding network card to listen to the service by specifying the &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong>.&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">Mainland China&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">Other Regions&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Directly deploy and pull the container image from registry.cn-beijing.aliyuncs.com&lt;/span>
-$ ./run.py virt &amp;lt;host_ip&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># If there is a problem with slow pip installation package download, you can use the -m parameter to specify the pip source&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># For example, use https://mirrors.aliyun.com/pypi/simple/ source below&lt;/span>
-$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ virt &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Directly deploy and pull the container image from registry.cn-beijing.aliyuncs.com&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># If there is a problem with slow pip installation package download, you can use the -m parameter to specify the pip source&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># For example, use https://mirrors.aliyun.com/pypi/simple/ source below&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
 &lt;p>&lt;p>For some network environments, registry.cn-beijing.aliyuncs.com may be slow or unreachable. Starting from version &lt;code>v3.9.5&lt;/code>, you can specify the image source: &lt;a href="http://docker.io">docker.io&lt;/a> for installation. The command is as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py virt &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="deployment-completed">Deployment Completed&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">....
-&lt;span style="color:#8f5902;font-style:italic"># After the deployment is completed, the following output indicates that it has run successfully&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Open https://10.168.26.216 in the browser, where the IP address is the &amp;lt;host_ip&amp;gt; set earlier. &lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Use admin/admin@123 for the user password to log in to access the front-end interface&lt;/span>
-Initialized successfully!
-Web page: https://10.168.26.216
-User: admin
-Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then use the browser to access https://10.168.26.216, enter &lt;code>admin&lt;/code> for the username and &lt;code>admin@123&lt;/code> for the password to enter the Cloudpods interface.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># After the deployment is completed, the following output indicates that it has run successfully&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Open https://10.168.26.216 in the browser, where the IP address is the &amp;lt;host_ip&amp;gt; set earlier. &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Use admin/admin@123 for the user password to log in to access the front-end interface&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then use the browser to access https://10.168.26.216, enter &lt;code>admin&lt;/code> for the username and &lt;code>admin@123&lt;/code> for the password to enter the Cloudpods interface.&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="Login page">&lt;/p>
 &lt;h2 id="start-using-cloudpods">Start Using Cloudpods&lt;/h2>
 &lt;h3 id="create-the-first-virtual-machine">Create the First Virtual Machine&lt;/h3>
@@ -120,7 +121,7 @@ Password: admin@123
 &lt;ol>
 &lt;li>If the error message in the log contains &amp;ldquo;register failed: try create network: find_matched == false&amp;rdquo;, it means that the IP subnet containing the host was not successfully created, resulting in the host registration failure. Please create an IP subnet containing the host network segment.&lt;/li>
 &lt;/ol>
-&lt;pre>&lt;code># Create an IP subnet containing the host network segment
+&lt;pre tabindex="0">&lt;code># Create an IP subnet containing the host network segment
 $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
 &lt;ol start="2">
@@ -135,12 +136,12 @@ $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;g
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Note&lt;/h4>
 &lt;p>If you want to use Cloudpods private cloud virtual machines, and the host is the CentOS 7 distribution. The host needs to use the kernel compiled by Cloudpods. You can use the following command to check whether the host is using the Cloudpods kernel (contains yn keyword).&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Check whether the yn kernel is in use&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># If the kernel is not a version with a yn keyword, it may be the first time using ocboot installation, and you can enter the yn kernel by restarting&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Check whether the yn kernel is in use&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># If the kernel is not a version with a yn keyword, it may be the first time using ocboot installation, and you can enter the yn kernel by restarting&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;p>&lt;img src="../images/host.png" alt="Host">&lt;/p>
 &lt;h3 id="3-why-cant-the-service-be-started-after-changing-the-hostname-of-the-node">3. Why can&amp;rsquo;t the service be started after changing the hostname of the node?&lt;/h3>
@@ -188,69 +189,70 @@ This chapter uses the deployment tool to quickly build the Cloudpods service. If
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">Other Operating Systems&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
-$ yum install -y epel-release git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
-$ yum install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 &lt;p>&lt;p>If prompted with &lt;code>locale&lt;/code> related errors, execute the following command first:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
-locale-gen
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
-&lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
-&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
-$ apt install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;span style="color:#4e9a06">```&lt;/span>Note: It is known that in the &lt;span style="color:#4e9a06">`&lt;/span>debian 11&lt;span style="color:#4e9a06">`&lt;/span> environment, &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> the boot option &lt;span style="color:#4e9a06">`&lt;/span>systemd.unified_cgroup_hierarchy&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#4e9a06">`&lt;/span> cannot be found in &lt;span style="color:#4e9a06">`&lt;/span>/proc/cmdline&lt;span style="color:#4e9a06">`&lt;/span>, ocboot will automatically configure the corresponding &lt;span style="color:#4e9a06">`&lt;/span>GRUB&lt;span style="color:#4e9a06">`&lt;/span> option, rebuild the startup parameters, and restart the operating system so that &lt;span style="color:#4e9a06">`&lt;/span>k8s&lt;span style="color:#4e9a06">`&lt;/span> can start normally.
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale-gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Install ansible and git locally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">```&lt;/span>Note: It is known that in the &lt;span style="color:#4e9a06">`&lt;/span>debian 11&lt;span style="color:#4e9a06">`&lt;/span> environment, &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> the boot option &lt;span style="color:#4e9a06">`&lt;/span>systemd.unified_cgroup_hierarchy&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#4e9a06">`&lt;/span> cannot be found in &lt;span style="color:#4e9a06">`&lt;/span>/proc/cmdline&lt;span style="color:#4e9a06">`&lt;/span>, ocboot will automatically configure the corresponding &lt;span style="color:#4e9a06">`&lt;/span>GRUB&lt;span style="color:#4e9a06">`&lt;/span> option, rebuild the startup parameters, and restart the operating system so that &lt;span style="color:#4e9a06">`&lt;/span>k8s&lt;span style="color:#4e9a06">`&lt;/span> can start normally.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Local installation of Ansible&lt;/span>
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Local installation of Ansible&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="install-cloudpods">Install Cloudpods&lt;/h2>
 &lt;p>The deployment tool is available at &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>, and this tool needs to be cloned using &lt;code>git clone&lt;/code>, then run the &lt;code>run.py&lt;/code> script to deploy the service. The operation steps are as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Download ocboot tool to local&lt;/span>
-$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute run.py to deploy the service. &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> is the IP address of the deployment node. This parameter is optional. If not specified, the default route will be used to deploy the service. If there are multiple network cards on your node, you can specify &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> to select the corresponding network card to monitor the service.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Download ocboot tool to local&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute run.py to deploy the service. &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> is the IP address of the deployment node. This parameter is optional. If not specified, the default route will be used to deploy the service. If there are multiple network cards on your node, you can specify &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> to select the corresponding network card to monitor the service.&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">China&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">Other Regions&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Direct deployment, the container image is pulled from registry.cn-beijing.aliyuncs.com&lt;/span>
-$ ./run.py full &amp;lt;host_ip&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># If you encounter problems with slow pip package downloads, you can use the -m parameter to specify the pip source&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># For example, using: https://mirrors.aliyun.com/pypi/simple/ source below&lt;/span>
-$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ full &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Direct deployment, the container image is pulled from registry.cn-beijing.aliyuncs.com&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># If you encounter problems with slow pip package downloads, you can use the -m parameter to specify the pip source&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># For example, using: https://mirrors.aliyun.com/pypi/simple/ source below&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
 &lt;p>&lt;p>For some network environments where registry.cn-beijing.aliyuncs.com is slow or unreachable, as of version &lt;code>v3.9.5&lt;/code>, you can specify the image source: [docker.io] (&lt;a href="http://docker.io">http://docker.io&lt;/a>) to install. The command is as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py full &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;p>The &lt;strong>./run.py&lt;/strong> script will call ansible to deploy the service. If there is a problem during the deployment process that causes the script to exit, the script can be executed again for retry.&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Note&lt;/h4>
 If you are deploying based on the CentOS 7 distribution, there will be one restart due to kernel installation. The ./run.py script will be interrupted, please wait for the operating system to restart, and then execute the ./run.py script again to install the subsequent steps.
 &lt;/div>
 &lt;h2 id="deployment-complete">Deployment Complete&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">....
-&lt;span style="color:#8f5902;font-style:italic"># After the deployment is complete, there will be the following output, indicating successful operation&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Open https://10.168.26.216 in the browser, where this ip was set up earlier&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># Log in with admin/admin@123 user password to access the frontend interface&lt;/span>
-Initialized successfully!
-Web page: https://10.168.26.216
-User: admin
-Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, use a browser to access https://10.168.26.216 , enter the username &lt;code>admin&lt;/code> and password &lt;code>admin@123&lt;/code> to access the Cloudpods interface.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># After the deployment is complete, there will be the following output, indicating successful operation&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Open https://10.168.26.216 in the browser, where this ip was set up earlier&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Log in with admin/admin@123 user password to access the frontend interface&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, use a browser to access https://10.168.26.216 , enter the username &lt;code>admin&lt;/code> and password &lt;code>admin@123&lt;/code> to access the Cloudpods interface.&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="Login page">&lt;/p>
 &lt;h2 id="get-started-with-cloudpods">Get Started with Cloudpods&lt;/h2>
 &lt;h3 id="create-the-first-virtual-machine">Create the first Virtual Machine&lt;/h3>
@@ -279,7 +281,7 @@ Password: admin@123
 &lt;ol>
 &lt;li>If the error message in the log includes &amp;ldquo;register failed: try create network: find_matched == false&amp;rdquo;, it means that the IP subnet that contains the host was not created successfully, which caused the host registration to fail. Please create an IP subnet that contains the host subnet.&lt;/li>
 &lt;/ol>
-&lt;pre>&lt;code># Create an IP subnet that contains the host subnet
+&lt;pre tabindex="0">&lt;code># Create an IP subnet that contains the host subnet
 $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
 &lt;ol start="2">
@@ -294,12 +296,12 @@ $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;g
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">Note&lt;/h4>
 &lt;p>If you want to use the Cloudpods private cloud virtual machine and the distribution version of the host machine is CentOS 7, the host machine needs to use the Cloudpods-compiled kernel. You can use the following command to check whether the host machine is using the Cloudpods kernel (contains the key word &lt;code>yn&lt;/code>).&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># Check whether to use yn kernel&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># If the kernel is not a version that contains the keyword yn, it may be the first time using ocboot installation. Restart to enter the yn kernel&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Check whether to use yn kernel&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># If the kernel is not a version that contains the keyword yn, it may be the first time using ocboot installation. Restart to enter the yn kernel&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;p>&lt;img src="../images/host.png" alt="Host">&lt;/p>
 &lt;h3 id="3-why-cant-the-service-be-started-after-modifying-the-nodes-hostname">3. Why can&amp;rsquo;t the service be started after modifying the node&amp;rsquo;s hostname?&lt;/h3>

@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-日志运维</title><link>https://www.cloudpods.org/zh/docs/ops/log/</link><description>Recent content in 日志运维 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 28 Jun 2023 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/ops/log/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org/zh/docs/ops/log/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/backendlogs/</guid><description>
+日志运维</title><link>https://www.cloudpods.org/zh/docs/ops/log/</link><description>Recent content in 日志运维 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Wed, 28 Jun 2023 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/ops/log/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 持久化后端日志</title><link>https://www.cloudpods.org/zh/docs/ops/log/backendlogs/</link><pubDate>Wed, 05 Jan 2022 15:29:08 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/backendlogs/</guid><description>
 &lt;p>Cloudpods平台自&lt;code>3.7.6&lt;/code>版本后，operator服务 结合 kubeserver 会默认部署 grafana 和 loki 提供查看后端服务日志的功能。&lt;/p>
 &lt;p>查看日志只用登录 grafana 即可，默认的 grafana 访问方式是以 ingress 的方式暴露服务。&lt;/p>
 &lt;h3 id="访问grafana">访问Grafana&lt;/h3>
@@ -10,36 +10,40 @@
 &lt;li>默认登录用户: &lt;code>admin&lt;/code>&lt;/li>
 &lt;li>密码通过登陆管理节点执行以下命令获取: (注意该密码如果通过 grafana 前端修改后将会失效)&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ kubectl get oc -n onecloud default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.monitorStack.grafana.adminPassword}&amp;#39;&lt;/span>
-G6uD2dy82twGFbkj &lt;span style="color:#8f5902;font-style:italic"># 默认管理员登陆的密码&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../../images/grafanahome.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl get oc -n onecloud default -o&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">jsonpath&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;{.spec.monitorStack.grafana.adminPassword}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>G6uD2dy82twGFbkj &lt;span style="color:#8f5902;font-style:italic"># 默认管理员登陆的密码&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../../images/grafanahome.png" alt="">&lt;/p>
 &lt;ol start="2">
 &lt;li>点击上图中的2 explore 按钮，进入Loki日志查询页面。如在该页面可查询某节点的host pod日志等。在查询条件中输入&lt;code>{app=&amp;quot;host&amp;quot;,hostname=&amp;quot;testhost&amp;quot;}&lt;/code>，在下方将会显示出该节点上的host pod日志。&lt;/li>
 &lt;/ol>
 &lt;p>&lt;img src="../../images/explore.png" alt="">&lt;/p>
 &lt;h3 id="查询条件">查询条件&lt;/h3>
 &lt;p>loki 的日志服务查询是按标签进行过滤的，常用的标签 &amp;ldquo;app&amp;rdquo; 对应服务的名称，&amp;ldquo;hostname&amp;rdquo; 对应 pod 所在的机器，“container_name&amp;quot; 对应容器名称。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 比如要查看 &amp;#34;ovn-north&amp;#34; 容器的日志&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">container_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;ovn-north&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 查看节点 test 上的 host 服务日志&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>,hostname&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 查看 baremetal 服务日志&lt;/span>
-&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;baremetal-agent&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多使用方法请参考 &lt;a href="https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md">https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如要查看 &amp;#34;ovn-north&amp;#34; 容器的日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">container_name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;ovn-north&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看节点 test 上的 host 服务日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;host&amp;#34;&lt;/span>,hostname&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 baremetal 服务日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;baremetal-agent&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多使用方法请参考 &lt;a href="https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md">https://github.com/grafana/loki/blob/main/docs/sources/logql/_index.md&lt;/a>&lt;/p>
 &lt;h3 id="使用举例">使用举例&lt;/h3>
 &lt;p>如查询region服务过去3小时的日志。&lt;/p>
 &lt;p>查询条件可设置为&lt;code>{app=&amp;quot;region&amp;quot;}&lt;/code>，时间过滤设置为“Last 3 hours” 。&lt;/p>
 &lt;p>&lt;img src="../../images/explore-region.png" alt="">&lt;/p></description></item><item><title>Docs: 清理日志</title><link>https://www.cloudpods.org/zh/docs/ops/log/log/</link><pubDate>Wed, 08 Dec 2021 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/log/log/</guid><description>
 &lt;h3 id="清理服务日志">清理服务日志&lt;/h3>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看具体服务的分表日志&lt;/span>
-$ climc logs-show --service &amp;lt;service_type&amp;gt; splitable
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/logtable2.png" alt="">&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 删除超过6个月的分表&lt;/span>
-$ climc logs-purge-splitable --service &amp;lt;service_type&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/deletelogtable2.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看具体服务的分表日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc logs-show --service &amp;lt;service_type&amp;gt; splitable
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/logtable2.png" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 删除超过6个月的分表&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ climc logs-purge-splitable --service &amp;lt;service_type&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/deletelogtable2.png" alt="">&lt;/p>
 &lt;h3 id="清理数据库日志">清理数据库日志&lt;/h3>
 &lt;p>在部署日志的服务器上执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 设置自动清除binlog的保留时间&lt;/span>
-$ vi /etc/my.cnf
-&lt;span style="color:#000">expire_logs_days&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/binlog.png" alt="">&lt;/p></description></item></channel></rss>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 设置自动清除binlog的保留时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ vi /etc/my.cnf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">expire_logs_days&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">30&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="../images/binlog.png" alt="">&lt;/p></description></item></channel></rss>

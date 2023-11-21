@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-VMWare纳管</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/</link><description>Recent content in VMWare纳管 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: VMware网络原理</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_net/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_net/</guid><description>
+VMWare纳管</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/</link><description>Recent content in VMWare纳管 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: VMware网络原理</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_net/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_net/</guid><description>
 &lt;p>VMware是一个虚拟化平台，只提供二层网络交换的功能，不具备完整的网络管理能力。Cloudpods 为VMware补足网络管理的能力，提供IP地址和网络配置信息管理的能力。&lt;/p>
 &lt;h2 id="基本概念">基本概念&lt;/h2>
 &lt;p>VMware中有以下基本网络概念：&lt;/p>
@@ -71,11 +71,11 @@ VMWare纳管</title><link>https://www.cloudpods.org/zh/docs/function_principle/m
 &lt;h2 id="常用操作">常用操作&lt;/h2>
 &lt;h3 id="修正vmware虚拟机的ip地址">修正VMware虚拟机的IP地址&lt;/h3>
 &lt;p>在VMware虚拟机内VMware Tools不工作的情况下，无法通过API获得IP地址，这时候就需要通过修正IP地址的接口，人工设置虚拟机的在平台的IP地址。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-sync-fix-nics &amp;lt;ID&amp;gt; &amp;lt;IP&amp;gt; ...
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="为ip子网指定附属二层网络">为IP子网指定附属二层网络&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc server-sync-fix-nics &amp;lt;ID&amp;gt; &amp;lt;IP&amp;gt; ...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="为ip子网指定附属二层网络">为IP子网指定附属二层网络&lt;/h3>
 &lt;p>如果一个IP子网的IP地址被分散在多个二层网络的虚拟机使用，则需要为该IP子网设置额外的附属二层网络，这样确保对接到这些二层网络的虚拟机也能从该IP子网分配IP。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc network-sync-additional-wires &amp;lt;NETID&amp;gt; --wire-ids &amp;lt;WIRE_ID&amp;gt; ...
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: VMware迁移到KVM</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_v2v/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_v2v/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc network-sync-additional-wires &amp;lt;NETID&amp;gt; --wire-ids &amp;lt;WIRE_ID&amp;gt; ...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: VMware迁移到KVM</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_v2v/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/vmware/vmware_v2v/</guid><description>
 &lt;h2 id="将纳管的vmware主机迁移到kvm私有云">将纳管的VMware主机迁移到KVM私有云&lt;/h2>
 &lt;p>云平台支持将纳管的VMware主机迁移到内置KVM私有云主机。其工作原理为：&lt;/p>
 &lt;ol>
@@ -90,8 +90,8 @@ VMWare纳管</title><link>https://www.cloudpods.org/zh/docs/function_principle/m
 &lt;li>迁移方法&lt;/li>
 &lt;/ol>
 &lt;p>通过climc命令迁移，执行&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">climc server-convert-to-kvm &amp;lt;sid&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中，&lt;sid>为纳管的VMware主机的名称或ID。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc server-convert-to-kvm &amp;lt;sid&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中，&lt;sid>为纳管的VMware主机的名称或ID。&lt;/p>
 &lt;ol start="3">
 &lt;li>迁移过程&lt;/li>
 &lt;/ol>

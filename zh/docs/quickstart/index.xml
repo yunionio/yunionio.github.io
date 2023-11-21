@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
-快速开始</title><link>https://www.cloudpods.org/zh/docs/quickstart/</link><description>Recent content in 快速开始 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://www.cloudpods.org/zh/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 私有云安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/allinone-virt/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/allinone-virt/</guid><description>
+快速开始</title><link>https://www.cloudpods.org/zh/docs/quickstart/</link><description>Recent content in 快速开始 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org/zh/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 私有云安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/allinone-virt/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/allinone-virt/</guid><description>
 &lt;h2 id="前提">前提&lt;/h2>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
@@ -32,64 +32,65 @@
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">其它操作系统&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ yum install -y epel-release git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ yum install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 &lt;p>&lt;p>如果提示&lt;code>locale&lt;/code>相关的报错，请先执行：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
-locale-gen
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
-&lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
-&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ apt install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>备注：已知在&lt;code>debian 11&lt;/code>环境，如果&lt;code>/proc/cmdline&lt;/code>里找不到启动选项 &lt;code>systemd.unified_cgroup_hierarchy=0&lt;/code>，ocboot会自动配置相关的&lt;code>GRUB&lt;/code>选项，重建启动参数，并重启操作系统，以便 &lt;code>k8s&lt;/code> 能够正常启动。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale-gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>备注：已知在&lt;code>debian 11&lt;/code>环境，如果&lt;code>/proc/cmdline&lt;/code>里找不到启动选项 &lt;code>systemd.unified_cgroup_hierarchy=0&lt;/code>，ocboot会自动配置相关的&lt;code>GRUB&lt;/code>选项，重建启动参数，并重启操作系统，以便 &lt;code>k8s&lt;/code> 能够正常启动。&lt;/p>
 &lt;/div>
 &lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
 &lt;p>部署的工具在 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>，需要把该工具使用 &lt;code>git clone&lt;/code> 下来，然后运行 &lt;code>run.py&lt;/code> 脚本部署服务。操作步骤如下:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 run.py 部署服务。其中 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 为部署节点的 IP 地址，该参数为可选项。如果不指定则选择默认路由出去的那张网卡部署服务。如果你的节点有多张网卡，可以通过指定 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 选择对应网卡监听服务。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 run.py 部署服务。其中 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 为部署节点的 IP 地址，该参数为可选项。如果不指定则选择默认路由出去的那张网卡部署服务。如果你的节点有多张网卡，可以通过指定 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 选择对应网卡监听服务。&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">中国大陆&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">其他地区&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
-$ ./run.py virt &amp;lt;host_ip&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
-$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ virt &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
 &lt;p>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py virt &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="部署完成">部署完成&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">....
-&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216 ，该 ip 为之前设置 &amp;lt;host_ip&amp;gt;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
-Initialized successfully!
-Web page: https://10.168.26.216
-User: admin
-Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216 ，该 ip 为之前设置 &amp;lt;host_ip&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
 &lt;h2 id="开始使用cloudpods">开始使用Cloudpods&lt;/h2>
 &lt;h3 id="创建第一台虚拟机">创建第一台虚拟机&lt;/h3>
@@ -120,7 +121,7 @@ Password: admin@123
 &lt;ol>
 &lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
 &lt;/ol>
-&lt;pre>&lt;code># 创建包含宿主机网段的IP子网
+&lt;pre tabindex="0">&lt;code># 创建包含宿主机网段的IP子网
 $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
 &lt;ol start="2">
@@ -135,12 +136,12 @@ $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;g
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;p>如果要使用 Cloudpods 私有云虚拟机，并且宿主机是 CentOS 7 的发行版。需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
 &lt;h3 id="3-为什么修改了节点的-hostname-服务启动不了了">3. 为什么修改了节点的 hostname ，服务启动不了了？&lt;/h3>
@@ -188,69 +189,70 @@ $ reboot
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">其它操作系统&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ yum install -y epel-release git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ yum install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
 &lt;p>&lt;p>如果提示&lt;code>locale&lt;/code>相关的报错，请先执行：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
-locale-gen
-&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
-&lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
-&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
-$ apt install -y git python3-pip
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>备注：已知在&lt;code>debian 11&lt;/code>环境，如果&lt;code>/proc/cmdline&lt;/code>里找不到启动选项 &lt;code>systemd.unified_cgroup_hierarchy=0&lt;/code>，ocboot会自动配置相关的&lt;code>GRUB&lt;/code>选项，重建启动参数，并重启操作系统，以便 &lt;code>k8s&lt;/code> 能够正常启动。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale-gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>备注：已知在&lt;code>debian 11&lt;/code>环境，如果&lt;code>/proc/cmdline&lt;/code>里找不到启动选项 &lt;code>systemd.unified_cgroup_hierarchy=0&lt;/code>，ocboot会自动配置相关的&lt;code>GRUB&lt;/code>选项，重建启动参数，并重启操作系统，以便 &lt;code>k8s&lt;/code> 能够正常启动。&lt;/p>
 &lt;/div>
 &lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
-$ python3 -m pip install --upgrade pip setuptools wheel
-$ python3 -m pip install --upgrade ansible
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
 &lt;p>部署的工具在 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>，需要把该工具使用 &lt;code>git clone&lt;/code> 下来，然后运行 &lt;code>run.py&lt;/code> 脚本部署服务。操作步骤如下:&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
-$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 run.py 部署服务。其中 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 为部署节点的 IP 地址，该参数为可选项。如果不指定则选择默认路由出去的那张网卡部署服务。如果你的节点有多张网卡，可以通过指定 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 选择对应网卡监听服务。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 run.py 部署服务。其中 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 为部署节点的 IP 地址，该参数为可选项。如果不指定则选择默认路由出去的那张网卡部署服务。如果你的节点有多张网卡，可以通过指定 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 选择对应网卡监听服务。&lt;/p>
 &lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">中国大陆&lt;/a>&lt;/li>
 &lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">其他地区&lt;/a>&lt;/li>&lt;/ul>
 &lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
-&lt;p>&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
-$ ./run.py full &amp;lt;host_ip&amp;gt;
-&lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
-$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ full &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
 &lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
 &lt;p>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py full &amp;lt;host_ip&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
 &lt;p>&lt;strong>./run.py&lt;/strong> 脚本会调用 ansible 部署服务，如果部署过程中遇到问题导致脚本退出，可以重复执行该脚本进行重试。&lt;/p>
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 如果是基于 CentOS 7 发行版部署，会因为安装内核导致一次重启。./run.py 脚本会中断，请等待操作系统重启后，重新执行一次 ./run.py 脚本，进行后续步骤的安装。
 &lt;/div>
 &lt;h2 id="部署完成">部署完成&lt;/h2>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">....
-&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216 ，该 ip 为之前设置 &amp;lt;host_ip&amp;gt;&lt;/span>
-&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
-Initialized successfully!
-Web page: https://10.168.26.216
-User: admin
-Password: admin@123
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216 ，该 ip 为之前设置 &amp;lt;host_ip&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
 &lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
 &lt;h2 id="开始使用cloudpods">开始使用Cloudpods&lt;/h2>
 &lt;h3 id="创建第一台虚拟机">创建第一台虚拟机&lt;/h3>
@@ -279,7 +281,7 @@ Password: admin@123
 &lt;ol>
 &lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
 &lt;/ol>
-&lt;pre>&lt;code># 创建包含宿主机网段的IP子网
+&lt;pre tabindex="0">&lt;code># 创建包含宿主机网段的IP子网
 $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
 &lt;ol start="2">
@@ -294,12 +296,12 @@ $ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;g
 &lt;div class="alert alert-warning" role="alert">
 &lt;h4 class="alert-heading">注意&lt;/h4>
 &lt;p>如果要使用 Cloudpods 私有云虚拟机，并且宿主机是 CentOS 7 的发行版。需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
-$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
-Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
-&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
-$ reboot
-&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;/div>
 &lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
 &lt;h3 id="3-为什么修改了节点的-hostname-服务启动不了了">3. 为什么修改了节点的 hostname ，服务启动不了了？&lt;/h3>

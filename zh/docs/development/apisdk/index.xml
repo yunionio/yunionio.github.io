@@ -682,11 +682,11 @@ $curl -k -X &amp;#39;GET&amp;#39; -d &amp;#39;&amp;#39; -H &amp;#39;Accept: */*&
 &lt;/code>&lt;/pre></description></item><item><title>Docs: API调用方式</title><link>https://www.cloudpods.org/zh/docs/development/apisdk/01_apigateway/</link><pubDate>Sun, 05 Jun 2022 20:39:39 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/development/apisdk/01_apigateway/</guid><description>
 &lt;p>Cloudpods 的API由各个后端服务分别提供，因此为了访问API，需要API的调用方必须能够直接访问各个服务。每个服务的APi可以通过两个URL地址访问。一个是EndpointType类型为internal的URL，该URL只能在Kubernetes集群内访问；另一个是EndpointType类型为public的URL，该URL为托管Cloudpods服务的宿主机的Node Port的访问URL。&lt;/p>
 &lt;p>调用API的服务有几种部署方案：&lt;/p>
-&lt;h2 id="部署在hahahugoshortcode266s2hbhb的kubernetes集群内">部署在Cloudpods的Kubernetes集群内&lt;/h2>
+&lt;h2 id="部署在hahahugoshortcode258s2hbhb的kubernetes集群内">部署在Cloudpods的Kubernetes集群内&lt;/h2>
 &lt;p>这种情况，API调用方可以直接访问Cloudpods各个服务的service cluster IP，因此可以访问各个服务EndpointType为internal的地址。&lt;/p>
-&lt;h2 id="和hahahugoshortcode266s4hbhb的宿主机在同一内网安全域内">和Cloudpods的宿主机在同一内网安全域内&lt;/h2>
+&lt;h2 id="和hahahugoshortcode258s4hbhb的宿主机在同一内网安全域内">和Cloudpods的宿主机在同一内网安全域内&lt;/h2>
 &lt;p>这种情况，API调用方可以直接访问Cloudpods宿主机的Node Port，因此可以访问各个服务EndpointType为public的地址。&lt;/p>
-&lt;h2 id="和hahahugoshortcode266s6hbhb不在一个同一个网络安全域">和Cloudpods不在一个同一个网络安全域&lt;/h2>
+&lt;h2 id="和hahahugoshortcode258s6hbhb不在一个同一个网络安全域">和Cloudpods不在一个同一个网络安全域&lt;/h2>
 &lt;p>这种情况，服务调用方不能直接访问Cloudpods集群的宿主机的Node Port，需要通过一个统一的API入口访问，这样便于做网络安全策略。&lt;/p>
 &lt;h3 id="统一api入口">统一API入口&lt;/h3>
 &lt;p>为此，API网关提供统一的API入口。各个后端服务API的入口URL统一由API网关转发，需要在访问路径上插入如下的路径：&lt;/p>

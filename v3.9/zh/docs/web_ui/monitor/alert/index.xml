@@ -1,0 +1,221 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+告警</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/</link><description>Recent content in 告警 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 告警策略</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/commonalerts/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/commonalerts/</guid><description>
+&lt;p>告警策略即针对监控指标设置阈值，当资源的指标超过阈值时，将会立即通过通知渠道向用户发送告警消息，使用户可以快速响应解决问题。&lt;/p>
+&lt;p>目前系统内置以下默认策略：&lt;/p>
+&lt;ul>
+&lt;li>process.zombies：检测节点上僵尸进程大于10时告警。&lt;/li>
+&lt;li>process.total：检测节点上进程数大于20000时告警。&lt;/li>
+&lt;li>system.uptime：检测宿主机离线后告警。&lt;/li>
+&lt;li>mem.available：检测宿主机的可用内存不足时告警。&lt;/li>
+&lt;li>disk.inodes_free/inodes_total：检测磁盘inode空闲率过低时告警。&lt;/li>
+&lt;li>disk.free/total：检测磁盘空闲率过低时告警。&lt;/li>
+&lt;li>cpu.usage_active：检测宿主机CPU利用率过高时告警。&lt;/li>
+&lt;li>host_raid.adapter：检测磁盘状态异常时告警。&lt;/li>
+&lt;li>cloudaccount_balance.balance：检测云账号余额不足时告警。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;监控/监控/告警策略&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入告警策略页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/monitor/alert1.png" alt="">&lt;/p>
+&lt;h2 id="新建告警策略">新建告警策略&lt;/h2>
+&lt;p>该功能用于创建告警策略。&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入新建告警策略页面。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>所属范围：设置告警策略的所属范围，包括系统、域、项目。
+&lt;ul>
+&lt;li>系统：当选择系统时，只有系统管理员在管理后台可见。仅管理后台视图可见。&lt;/li>
+&lt;li>域：当选择域时，需要选择对应域，域管理后台则默认为当前域。&lt;/li>
+&lt;li>项目：当选择项目时，需要选择对应项目。项目视图下默认为当前项目。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>名称：设置告警策略的名称。&lt;/li>
+&lt;li>监控指标：支持通过资源类型、监控指标、指标项等设置具体的监控指标，支持对平台纳管的虚拟机、宿主机、云账号、存储桶、RDS、Redis等资源进行监控。&lt;/li>
+&lt;li>资源过滤：右侧图表中将默认显示全部资源的所选指标的信息，可通过平台、区域、项目等等条件过滤用户所需的数据。&lt;/li>
+&lt;li>触发条件：设置在连续的时间周期内的指标的阈值。当在时间周期内资源的指标的平均值、最大值或最小值超过设定的阈值或未获取到指标的数据（No Data），则对资源进行告警。&lt;/li>
+&lt;li>消息静默期：设置告警消息发送的间隔，若一直处于告警状态，首次触发告警后，静默期后才会发送第二次告警信息。当告警恢复后，会收到告警恢复通知并解除告警。若数据再次触发告警，则会再次发送告警信息。&lt;/li>
+&lt;li>告警级别：自定义设置告警策略的级别，包括普通、重要、致命。&lt;/li>
+&lt;li>告警接收人：设置接收告警消息的接收人。
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>管理后台下，可以选择所有接收人；&lt;/li>
+&lt;li>域管理后台下，可以选择所有加入到本域或属于本域的接收人；&lt;/li>
+&lt;li>项目视图下，只能选择当前登录用户。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/li>
+&lt;li>通知渠道：设置接收人接收告警消息的通知渠道。当选择多个接收人时，通知渠道取接收人支持的通知渠道的交集。&lt;/li>
+&lt;li>告警机器人：选择接收告警消息的告警机器人。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建告警策略。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改告警策略">修改告警策略&lt;/h2>
+&lt;p>该功能用于修改告警策略。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+默认策略不允许修改监控指标等内容。
+&lt;/div>
+&lt;ol>
+&lt;li>在告警策略页面，单击告警策略右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入修改告警策略页面。&lt;/li>
+&lt;li>修改相关参数，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用">启用&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的告警策略，禁用状态的告警策略不生效。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击&amp;quot;禁用&amp;quot;状态的告警策略右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用告警策略。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在告警策略列表中选择一条或多条告警策略，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用告警策略。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用">禁用&lt;/h2>
+&lt;p>该功能用于禁用&amp;quot;启用&amp;quot;状态的告警策略，禁用状态的告警策略不生效。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击&amp;quot;启用&amp;quot;状态的告警策略右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用告警策略。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在告警策略列表中选择一条或多条告警策略，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用告警策略。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除">删除&lt;/h2>
+&lt;p>该功能用于删除告警策略。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+默认策略不可删除。
+&lt;/div>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击告警策略右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在告警策略列表中选择一条或多条告警策略，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看告警策略详情">查看告警策略详情&lt;/h2>
+&lt;p>该功能用于查看告警策略的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击告警策略名称项，进入告警策略详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对告警策略进行管理操作。&lt;/li>
+&lt;li>查看基本信息：包括云上ID、ID、名称、状态、策略归属、启用状态、策略详情、告警级别、告警机器人、告警接收人、创建时间、更新时间、备注等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看告警记录">查看告警记录&lt;/h2>
+&lt;p>该功能用于查看触发告警的资源的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击告警策略名称项，进入告警策略详情页面。&lt;/li>
+&lt;li>单击“告警记录”页签，进入告警记录页面。&lt;/li>
+&lt;li>查看告警信息，单击资源数量可以查看具体发生告警的资源信息。&lt;/li>
+&lt;li>单击告警记录右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看告警的具体信息等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看告警策略相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在告警策略页面，单击告警策略名称项，进入告警策略详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 告警历史</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/alertrecord/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/alertrecord/</guid><description>
+&lt;p>告警历史显示系统中所有的触发告警以及恢复告警的告警策略和资源信息，便于用户了解统计系统内的所有告警记录等。当存在未恢复告警时，用户可在界面右上角&lt;img src="../../../images/ops/alertpolicy1.png" alt="">查看到未恢复告警的策略数量，支持快速跳转到未恢复告警页面。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;监控/告警/告警历史&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入告警策略页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/monitor/alertrecord.png" alt="">&lt;/p>
+&lt;h2 id="查看未恢复告警">查看未恢复告警&lt;/h2>
+&lt;p>该功能用于查看所有未恢复告警的最新报警记录。&lt;/p>
+&lt;ol>
+&lt;li>在告警历史页面，查看所有未恢复告警的最新报警记录。&lt;/li>
+&lt;li>支持查看以下信息：
+&lt;ul>
+&lt;li>策略名称：触发告警的资源匹配的告警策略的名称。&lt;/li>
+&lt;li>触发时间：发生告警的时间。&lt;/li>
+&lt;li>状态：仅包括发生报警的状态。&lt;/li>
+&lt;li>资源类型：告警策略的类型。&lt;/li>
+&lt;li>策略详情：告警策略的具体规则信息。&lt;/li>
+&lt;li>告警级别：显示当前告警记录的级别，包括普通、重要、致命。&lt;/li>
+&lt;li>资源数量：匹配告警策略的告警资源的数量，支持点击展开查看资源的名称、IP、平台、触发告警的值等。&lt;/li>
+&lt;li>消息状态：包括已发送、已收敛。当告警消息因为消息静默期未发送时，状态显示为已收敛。&lt;/li>
+&lt;li>查看：查看告警记录详情，包含触发告警的资源的触发告警的值，以及资源上告警相关参数的标签。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="屏蔽告警">屏蔽告警&lt;/h2>
+&lt;p>该功能用于屏蔽已发生的报警，使其不再发送告警消息。被屏蔽的告警记录仍显示在告警历史列表中且消息状态变为已屏蔽，同时在告警屏蔽页面中也可以查看到被屏蔽的告警记录，并支持解除屏蔽。&lt;/p>
+&lt;ol>
+&lt;li>在告警历史页面，默认进入未恢复告警页面。&lt;/li>
+&lt;li>单击未恢复告警右侧操作列 &lt;strong>&lt;em>&amp;ldquo;屏蔽&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出屏蔽对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>屏蔽时长：设置告警的屏蔽时长，默认为不设置，即一直屏蔽告警信息，支持选择“近1小时”、“近3小时”、“近6小时”、“近1天”、“近3天”以及 “自定义”时间，当超过屏蔽时长后，将会解除屏蔽。&lt;/li>
+&lt;li>屏蔽原因：设置屏蔽告警的原因。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看所有告警">查看所有告警&lt;/h2>
+&lt;p>该功能用于查看所有资源的告警历史记录。&lt;/p>
+&lt;ol>
+&lt;li>在告警历史页面，单击“所有告警”页签，查看所有资源的告警记录。&lt;/li>
+&lt;li>支持查看以下信息：
+&lt;ul>
+&lt;li>策略名称：触发告警的资源匹配的告警策略的名称。&lt;/li>
+&lt;li>触发时间：发生告警的时间。&lt;/li>
+&lt;li>状态：包括发生告警和告警已恢复。&lt;/li>
+&lt;li>资源类型：告警策略的类型。&lt;/li>
+&lt;li>策略详情：告警策略的具体规则信息。&lt;/li>
+&lt;li>告警级别：显示当前告警记录的级别，包括普通、重要、致命。&lt;/li>
+&lt;li>告警资源：匹配告警策略的告警资源的数量，支持点击展开查看资源的名称、IP、平台、触发告警的值等。&lt;/li>
+&lt;li>消息状态：包括已发送、已收敛。当告警消息因为消息静默期未发送时，状态显示为已收敛。&lt;/li>
+&lt;li>查看：查看告警记录详情，包含触发告警的资源的触发告警的值，以及资源上告警相关参数的标签。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 告警资源</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/alertresource/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/alertresource/</guid><description>
+&lt;p>告警资源即宿主机、云账号等影响系统正常使用的资源因为告警策略发生告警，等待处理的未回复系统资源告警列表。当此类告警发生时，用户可在界面右上角&lt;img src="../../../images/monitor/alertresourcetip.png" alt="">查看到告警资源数量等。用户通过资源匹配的告警策略排查资源的异常告警原因，当告警恢复后，则对应的告警资源将不再显示在告警列表。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;监控/监控/告警资源&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入告警资源页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/monitor/alertresource1.png" alt="">&lt;/p>
+&lt;h2 id="查看告警资源">查看告警资源&lt;/h2>
+&lt;p>该功能用于查看目前正在告警的系统资源信息。&lt;/p>
+&lt;ol>
+&lt;li>在告警资源页面，支持查看以下信息：
+&lt;ul>
+&lt;li>名称：告警资源的名称。&lt;/li>
+&lt;li>状态：目前只显示发生告警，且当资源告警恢复后，将不再显示在资源列表。&lt;/li>
+&lt;li>告警数量：可以查看资源匹配的告警策略的数量，展开告警数量可以查看告警资源匹配的告警策略的详细信息，包括策略的名称、触发时间、策略详情、告警级别、发生告警触发值、支持查看资源上告警相关参数的标签。&lt;/li>
+&lt;li>查看：查看资源上告警相关参数的标签。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 告警屏蔽</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/blockpolicy/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/monitor/alert/blockpolicy/</guid><description>
+&lt;p>告警屏蔽页面可以查看所有被屏蔽的告警，支持解除屏蔽的功能。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;监控/告警/告警屏蔽&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入告警屏蔽页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/monitor/blockpolicy.png" alt="">&lt;/p>
+&lt;h2 id="查看被屏蔽的告警">查看被屏蔽的告警&lt;/h2>
+&lt;p>该功能用于查看被屏蔽的告警记录。被屏蔽的告警将不会向用户发送告警消息。&lt;/p>
+&lt;ol>
+&lt;li>在告警屏蔽页面，查看被屏蔽的告警记录。&lt;/li>
+&lt;li>支持查看以下信息：
+&lt;ul>
+&lt;li>策略名称：触发告警的资源匹配的告警策略的名称。&lt;/li>
+&lt;li>状态：被屏蔽的告警记录状态，包括生效中、已过期。&lt;/li>
+&lt;li>资源类型：告警策略的类型。&lt;/li>
+&lt;li>资源名称：告警资源的名称。&lt;/li>
+&lt;li>屏蔽时间：告警被屏蔽的时间。&lt;/li>
+&lt;li>屏蔽原因：告警被屏蔽的原因。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="解除屏蔽">解除屏蔽&lt;/h2>
+&lt;p>该功能用于将被屏蔽的告警解除屏蔽，解除屏蔽的告警将会向用户发送告警消息。&lt;/p>
+&lt;ol>
+&lt;li>在告警屏蔽页面，单击右侧操作列 &lt;strong>&lt;em>&amp;ldquo;解除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol></description></item></channel></rss>

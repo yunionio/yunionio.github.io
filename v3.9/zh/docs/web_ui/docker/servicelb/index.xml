@@ -1,0 +1,230 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+服务与负载均衡</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/docker/servicelb/</link><description>Recent content in 服务与负载均衡 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/web_ui/docker/servicelb/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 服务</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/docker/servicelb/k8s-service/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/docker/servicelb/k8s-service/</guid><description>
+&lt;p>服务（Service）定义了访问后端Pod的访问方式，服务的详细介绍内容，请参考&lt;a href="https://kubernetes.io/docs/concepts/services-networking/service/">kubernets官方文档-Service&lt;/a>。目前支持两种访问方式。&lt;/p>
+&lt;ul>
+&lt;li>内部：即Service的ClusterIP模式，自动分配集群内部IP地址，仅供集群内部访问。&lt;/li>
+&lt;li>外部：即Service的Loadbalance模式，配合外部Cloudpods提供的负载均衡服务使用，通过负载均衡实例的服务地址访问后端pod，适合Web类的服务。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;容器/服务与负载均衡/服务&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入服务页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/service1.png" alt="">&lt;/p>
+&lt;h2 id="查看服务">查看服务&lt;/h2>
+&lt;p>该功能用于基于集群、命名空间筛选服务信息。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在服务页面，默认查看一个集群下所有命名空间的服务信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当环境中存在多个集群时，单击列表上方集群右侧输入框，选择其他集群，查看其他集群下的所有命名空间的服务信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当集群下存在多个命名空间时，单击列表上方命名空间右侧输入框，选择命名空间，查看指定命名空间下的服务信息。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/switchcluster&amp;amp;namespace.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="新建服务">新建服务&lt;/h2>
+&lt;p>该功能用于基于已有deployment和Statefulset应用创建服务。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建服务页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：服务的名称。&lt;/li>
+&lt;li>集群：选择服务所属集群。&lt;/li>
+&lt;li>命名空间：选择服务所属命名空间。命名空间用于逻辑划分集群，deployment、pod、service等都属于某一命名空间。在云管平台中命名空间对应项目。Kubernetes集群创建完成后默认将生成default、kube-system、kube-public等命名空间。&lt;/li>
+&lt;li>选择器：对应yaml文件的spec.selector，用于选择已创建的无状态或有状态应用。&lt;/li>
+&lt;li>服务：设置无状态或有状态应用以及容器组的访问方式，包括内部访问和外部访问。
+&lt;ul>
+&lt;li>内部：将自动生成一个ClusterIP供集群内部和容器组之间访问。
+&lt;ul>
+&lt;li>目标端口：目标端口是pod上的端口。&lt;/li>
+&lt;li>服务端口：用户访问端口。&lt;/li>
+&lt;li>协议：选择应用使用的协议，包括TCP和UDP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>外部：将配合负载均衡功能使用，供集群外部访问。使用外部服务之前需要先在负载均衡中创建负载均衡集群以及节点，创建外部服务时将同步在负载均衡中创建一个负载均衡实例。
+&lt;ul>
+&lt;li>负载均衡网络：选择IP子网，系统将自动从IP子网中分配一个IP地址作为访问IP。&lt;/li>
+&lt;li>目标端口：目标端口是pod上的端口。&lt;/li>
+&lt;li>服务端口：外部用户访问端口。&lt;/li>
+&lt;li>协议：选择应用使用的协议，包括TCP和UDP。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建服务。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看编辑">查看/编辑&lt;/h2>
+&lt;p>该功能用于查看或者编辑服务的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑服务的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除服务">删除服务&lt;/h2>
+&lt;p>该功能用于删除服务。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除服务以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在服务列表中选择一个或多个服务，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除服务以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看服务详情">查看服务详情&lt;/h2>
+&lt;p>该功能用于查看服务相关信息。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务名称项，进入服务详情页面。&lt;/li>
+&lt;li>查看以下信息：包括云上ID、ID、名称、状态、集群、命名空间、容器组、镜像、初始化镜像、标签、创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看容器组">查看容器组&lt;/h2>
+&lt;p>该功能用于查看服务创建的容器组，并支持管理容器组。&lt;/p>
+&lt;h3 id="查看编辑-1">查看/编辑&lt;/h3>
+&lt;p>该功能用于查看容器组的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务名称项，进入服务详情页面。&lt;/li>
+&lt;li>单击“容器组”页签，进入容器组页面。&lt;/li>
+&lt;li>单击容器组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑服务的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除">删除&lt;/h3>
+&lt;p>该功能用于删除容器组。容器组删除后将会根据yaml文件设置重新部署新的容器组。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务名称项，进入服务详情页面。&lt;/li>
+&lt;li>单击“容器组”页签，进入容器组页面。&lt;/li>
+&lt;li>单击容器组右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看事件">查看事件&lt;/h2>
+&lt;p>该功能用于记录资源对象事件发生的记录，包括内容、来源、原因、创建时间，用于排除故障。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务名称项，进入服务详情页面。&lt;/li>
+&lt;li>单击“事件”页签，进入事件页面。&lt;/li>
+&lt;li>查看事件的内容、来源、原因以及创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看源信息">查看源信息&lt;/h2>
+&lt;p>该功能用于查看并编辑服务的yaml信息。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务名称项，进入服务详情页面。&lt;/li>
+&lt;li>单击“源信息”页签，进入源信息页面。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;复制内容&amp;rdquo;&lt;/em>&lt;/strong> 按钮，复制节点的yaml文件信息。&lt;/li>
+&lt;li>更新yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;更新&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看服务相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在服务页面，单击服务名称项，进入服务详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 路由</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/docker/servicelb/k8s-ingress/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/docker/servicelb/k8s-ingress/</guid><description>
+&lt;p>路由（Ingress）是允许访问集群内路由的规则集合，通过配置路由规则可以实现不同域名可以访问到集群内部不同的路由。路由功能也需要配合外部Cloudpods提供的负载均衡路由使用，通过负载均衡实例提供外部访问。&lt;/p>
+&lt;p>路由的详细介绍内容，请参考&lt;a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">kubernets官方文档-Ingress&lt;/a>&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;容器/服务与负载均衡/路由&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入路由页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/ingress1.png" alt="">&lt;/p>
+&lt;h2 id="查看路由">查看路由&lt;/h2>
+&lt;p>该功能用于基于集群、命名空间筛选路由信息。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在路由页面，默认查看一个集群下所有命名空间的路由信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当环境中存在多个集群时，单击列表上方集群右侧输入框，选择其他集群，查看其他集群下的所有命名空间的路由信息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当集群下存在多个命名空间时，单击列表上方命名空间右侧输入框，选择命名空间，查看指定命名空间下的路由信息。&lt;/p>
+&lt;p>&lt;img src="../../../images/docker/switchcluster&amp;amp;namespace.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="新建路由">新建路由&lt;/h2>
+&lt;p>该功能用于基于已创建的路由创建路由规则，创建路由规则的同时将同步创建一个负载均衡实例。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入创建路由页面。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>名称：路由的名称。&lt;/li>
+&lt;li>集群：选择路由所属集群。&lt;/li>
+&lt;li>命名空间：选择路由所属命名空间。命名空间用于逻辑划分集群，deployment、pod、service等都属于某一命名空间。在云管平台中命名空间对应项目。Kubernetes集群创建完成后默认将生成default、kube-system、kube-public等命名空间。&lt;/li>
+&lt;li>路由规则：支持创建多个规则。
+&lt;ul>
+&lt;li>host：必须是一个标准的域名格式（Fully Qualified Domain Name）的字符串，而不能是IP地址。一个host支持创建多个路由和路径。
+&lt;ul>
+&lt;li>路由：选择已创建的路由以及端口号。&lt;/li>
+&lt;li>路径：路由对应的路径。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建路由。&lt;/li>
+&lt;li>创建成功后用户可以通过host设置的域名访问集群内部路由。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看编辑">查看/编辑&lt;/h2>
+&lt;p>该功能用于查看或者编辑路由的yaml文件。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;查看/编辑&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出查看/更新对话框。&lt;/li>
+&lt;li>支持查看和编辑路由的yaml文件信息。&lt;/li>
+&lt;li>编辑yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，即可生效。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除路由">删除路由&lt;/h2>
+&lt;p>该功能用于删除路由。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除路由以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在路由列表中选择一个或多个路由，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出的操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除路由以及相关资源。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看路由详情">查看路由详情&lt;/h2>
+&lt;p>该功能用于查看路由相关信息。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由名称项，进入路由详情页面。&lt;/li>
+&lt;li>查看以下信息：包括云上ID、ID、名称、状态、集群、端点、创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看服务">查看服务&lt;/h2>
+&lt;p>该功能用于查看和路由关联的服务信息。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由名称项，进入路由详情页面。&lt;/li>
+&lt;li>单击“服务”页面，进入服务页面。&lt;/li>
+&lt;li>查看和路由关联的服务信息。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看事件">查看事件&lt;/h2>
+&lt;p>该功能用于记录资源对象事件发生的记录，包括内容、来源、原因、创建时间，用于排除故障。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由名称项，进入路由详情页面。&lt;/li>
+&lt;li>单击“事件”页签，进入事件页面。&lt;/li>
+&lt;li>查看事件的内容、来源、原因以及创建时间等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看源信息">查看源信息&lt;/h2>
+&lt;p>该功能用于查看并编辑路由的yaml信息。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由名称项，进入路由详情页面。&lt;/li>
+&lt;li>单击“源信息”页签，进入源信息页面。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;复制内容&amp;rdquo;&lt;/em>&lt;/strong> 按钮，复制节点的yaml文件信息。&lt;/li>
+&lt;li>更新yaml文件后，单击 &lt;strong>&lt;em>&amp;ldquo;更新&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看路由相关的操作日志。&lt;/p>
+&lt;ol>
+&lt;li>在路由页面，单击路由名称项，进入路由详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

@@ -1,0 +1,33 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+日志</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/misc/log/</link><description>Recent content in 日志 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Tue, 18 Jan 2022 10:28:41 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/function_principle/misc/log/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 清理MySQL分表日志</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/misc/log/log-purge/</link><pubDate>Fri, 19 Jul 2019 20:59:00 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/misc/log/log-purge/</guid><description>
+&lt;p>平台上各个服务的日志日积月累数据量都不小，需要定期清理。&lt;/p>
+&lt;p>由于采用了分表保存的机制，可以将旧表drop来删除日志数据，释放空间。&lt;/p>
+&lt;p>但是，需要注意的是，只有在mysql开启了innodb_file_per_table=ON的选项后，drop表之后，会删除对应的数据库文件，从而释放出表空间。如果mysql未开启innodb_file_per_table选项，则mysql所有数据都保存在/var/lib/mysql/ibdata1这个文件中，即使删除了表，也不会立即释放表空间。&lt;/p>
+&lt;p>以下命令用来查看各个服务的日志表的情况：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc logs-splitable --service &amp;lt;service_name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中，service可以是：&lt;/p>
+&lt;ul>
+&lt;li>compute&lt;/li>
+&lt;li>image&lt;/li>
+&lt;li>identity&lt;/li>
+&lt;li>log&lt;/li>
+&lt;li>cloudevent&lt;/li>
+&lt;/ul>
+&lt;p>以下命令清理各个服务的过期日志表（默认drop清理6个月之前的日志表）：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc logs-purge --service &amp;lt;service_name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 日志配置</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/misc/log/log-options/</link><pubDate>Mon, 20 Mar 2023 20:59:00 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/misc/log/log-options/</guid><description>
+&lt;p>平台会将各个服务的操作日志保存在数据库，这些数据库自动支持定期清理功能。&lt;/p>
+&lt;p>目前支持将操作日志保存在mysql和clickhouse。如果将日志保存在mysql，则会对数据库按照时间进行分表，清理表是已通过drop旧表实现的。如果采用clickhouse保存日志，则通过clickhouse的TTL机制实现对过期数据的自动清理。&lt;/p>
+&lt;p>系统保存的操作操作日志支持如下配置项：&lt;/p>
+&lt;ul>
+&lt;li>ops_log_max_keep_months&lt;/li>
+&lt;/ul>
+&lt;p>保留日志的时间参数，默认是6个月&lt;/p>
+&lt;ul>
+&lt;li>splitable_max_duration_hours&lt;/li>
+&lt;/ul>
+&lt;p>日志分表的时间间隔，默认是720小时&lt;/p>
+&lt;ul>
+&lt;li>ops_log_with_clickhouse&lt;/li>
+&lt;/ul>
+&lt;p>操作日志采用clickhouse还是mysql作为数据存储&lt;/p></description></item></channel></rss>

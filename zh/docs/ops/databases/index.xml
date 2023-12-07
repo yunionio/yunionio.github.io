@@ -1,0 +1,145 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+数据库维护</title><link>https://www.cloudpods.org/zh/docs/ops/databases/</link><description>Recent content in 数据库维护 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Wed, 10 Nov 2021 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/ops/databases/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: MySQL推荐配置</title><link>https://www.cloudpods.org/zh/docs/ops/databases/mysql_config/</link><pubDate>Sat, 24 Jun 2023 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/databases/mysql_config/</guid><description>
+&lt;p>MySQL配置建议如下：&lt;/p>
+&lt;ol>
+&lt;li>取消对客户端的域名反解&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>skip-name-resolve
+&lt;/code>&lt;/pre>&lt;ol start="2">
+&lt;li>自动清理binlog的时间(天数）&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>expire_logs_days=30
+&lt;/code>&lt;/pre>&lt;ol start="3">
+&lt;li>设置每个表一个独立innodb文件&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>innodb_file_per_table=ON
+&lt;/code>&lt;/pre>&lt;ol start="4">
+&lt;li>最大连接数&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>max_connections=300
+&lt;/code>&lt;/pre>&lt;p>默认151，可以调高一些，比如300&lt;/p>
+&lt;p>注意：调高MySQL最大连接数同时需要调高操作系统的最大打开文件数，需修改 /usr/lib/systemd/system/mariadb.service 如下：&lt;/p>
+&lt;pre tabindex="0">&lt;code># /usr/lib/systemd/system/mariadb.service
+[Service]
+LimitNOFILE=10000
+LimitMEMLOCK=10000
+&lt;/code>&lt;/pre>&lt;ol start="5">
+&lt;li>query最大返回字节数&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>max_allowed_packet=20M
+&lt;/code>&lt;/pre>&lt;p>默认1M，调高为 20M&lt;/p>
+&lt;ol start="6">
+&lt;li>设置日期字段的默认时区为UTC&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>default_time_zone=&amp;#39;+00:00&amp;#39;
+&lt;/code>&lt;/pre>&lt;ol start="7">
+&lt;li>开启slow log日志以及该日志的logrotate&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>slow_query_log = ON
+long_query_time = 30
+slow_query_log_file = /var/log/mariadb/slow.log
+&lt;/code>&lt;/pre>&lt;ol start="8">
+&lt;li>开启error log&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>log_error=/var/log/mariadb/mariadb.err.log
+&lt;/code>&lt;/pre>&lt;ol start="9">
+&lt;li>关闭通用log&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>general_log=OFF
+general_log_file=/var/log/mariadb/mariadb.log
+&lt;/code>&lt;/pre>&lt;p>修改配置文件&lt;/p>
+&lt;pre tabindex="0">&lt;code># /etc/my.cnf
+[mysqld]
+skip-name-resolve
+expire_logs_days=30
+innodb_file_per_table=ON
+max_connections=300
+max_allowed_packet=20M
+default_time_zone=&amp;#39;+00:00&amp;#39;
+slow_query_log = ON
+long_query_time = 30
+slow_query_log_file = /var/log/mariadb/slow.log
+log_error = /var/log/mariadb/mariadb.err.log
+general_log=OFF
+general_log_file=/var/log/mariadb/mariadb.log
+&lt;/code>&lt;/pre></description></item><item><title>Docs: MySQL双主同步恢复</title><link>https://www.cloudpods.org/zh/docs/ops/databases/mysql_ha_recovery/</link><pubDate>Tue, 22 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/databases/mysql_ha_recovery/</guid><description>
+&lt;p>高可用部署场景中，MySQL采用双主自动同步的高可用模式，通过keepalived在双主节点上切换VIP，实现MySQL双主集群对外的高可用服务。和传统的MySQL主从同步相比，可以实现服务在两个节点的自动无缝切换。&lt;/p>
+&lt;p>本文介绍在MySQL双主数据同步出现异常，恢复双主数据同步的步骤方法。&lt;/p>
+&lt;p>MySQL双主实际可以理解为两个MySQL实例互为主备，是基于传统的MySQL主从同步基础上发展而来。因此实现两个MySQL实例的双主同步，实际可以分解为两个步骤：&lt;/p>
+&lt;p>1）实现节点1为主，节点2为备的主从同步
+2）实现节点2为主，节点1为备的主从同步&lt;/p>
+&lt;h2 id="查看同步状态">查看同步状态&lt;/h2>
+&lt;p>分别以两个MySQL实例的真实IP登录MySQL，执行&lt;/p>
+&lt;pre tabindex="0">&lt;code>SHOW SLAVE STATUS\G
+&lt;/code>&lt;/pre>&lt;p>查看两个从实例的状态，如果出现报错，则说明同步异常，需要修复。&lt;/p>
+&lt;h2 id="修复双主同步的步骤">修复双主同步的步骤&lt;/h2>
+&lt;h3 id="停止集群服务">停止集群服务&lt;/h3>
+&lt;p>为保险起见，首先要停止集群服务，避免再向数据库中写入数据。暂停集群服务的步骤请参见 https://www.cloudpods.org/zh/docs/ops/k8s/halt_cluster/ 。&lt;/p>
+&lt;p>下面需要确定哪个节点是当前的主节点，&lt;em>MySQL的VIP所在节点就是主节点&lt;/em>。&lt;/p>
+&lt;h3 id="停止当前从节点的keepalived">停止当前从节点的keepalived&lt;/h3>
+&lt;p>停止当前从节点的keepalived，以防止MySQL VIP的自动主从切换。&lt;/p>
+&lt;p>在从节点执行&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl stop keepalived
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="主节点操作">主节点操作&lt;/h3>
+&lt;p>首先需要停止数据库的主从同步。&lt;/p>
+&lt;p>首先登入当前主节点的MySQL，执行如下命令停止主节点和从节点的主从同步。&lt;/p>
+&lt;pre tabindex="0">&lt;code>STOP SLAVE;
+RESET SLAVE;
+&lt;/code>&lt;/pre>&lt;p>然后重置主节点的MASTER Status，并锁表&lt;/p>
+&lt;pre tabindex="0">&lt;code>RESET MASTER;
+FLUSH TABLES WITH READ LOCK;
+SHOW MASTER STATUS;
+&lt;/code>&lt;/pre>&lt;p>输出如下：&lt;/p>
+&lt;pre tabindex="0">&lt;code>MariaDB [(none)]&amp;gt; SHOW MASTER STATUS;
++------------------+-----------+--------------+------------------+
+| File | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+-----------+--------------+------------------+
+| mysql-bin.000001 | 98 | | |
++------------------+-----------+--------------+------------------+
+1 row in set (0.00 sec)
+&lt;/code>&lt;/pre>&lt;p>记录下MASTER的bin-log文件名称和位置。&lt;/p>
+&lt;p>然后退出MySQL，执行mysqldump将主节点的数据导出：&lt;/p>
+&lt;pre tabindex="0">&lt;code>mysqldump -u root -p --all-databases &amp;gt; /a/path/mysqldump.sql
+&lt;/code>&lt;/pre>&lt;p>再登入主节点MySQL，解锁READ LOCK。&lt;/p>
+&lt;pre tabindex="0">&lt;code>UNLOCK TABLES;
+&lt;/code>&lt;/pre>&lt;h3 id="从节点操作">从节点操作&lt;/h3>
+&lt;p>再登入当前从节点的MySQL，执行如下命名停止从节点的主从同步。&lt;/p>
+&lt;pre tabindex="0">&lt;code>STOP SLAVE;
+&lt;/code>&lt;/pre>&lt;p>退出MySQL，将主节点dump的数据导入从节点数据库：&lt;/p>
+&lt;pre tabindex="0">&lt;code>mysql -uroot -p &amp;lt; mysqldump.sql
+&lt;/code>&lt;/pre>&lt;p>然后再登入MySQL，恢复从节点的主从同步。&lt;/p>
+&lt;pre tabindex="0">&lt;code>RESET SLAVE;
+CHANGE MASTER TO MASTER_LOG_FILE=&amp;#39;mysql-bin.000001&amp;#39;, MASTER_LOG_POS=98;
+START SLAVE;
+&lt;/code>&lt;/pre>&lt;p>此时检查从节点的SLAVE同步状态：&lt;/p>
+&lt;pre tabindex="0">&lt;code>SHOW SLAVE STATUS\G
+&lt;/code>&lt;/pre>&lt;p>确保结果包含如下状态，则说明从节点的主从同步正常。&lt;/p>
+&lt;pre tabindex="0">&lt;code>Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+&lt;/code>&lt;/pre>&lt;h3 id="恢复主节点的slave状态">恢复主节点的SLAVE状态&lt;/h3>
+&lt;p>在从节点MySQL执行（注意这里不需要再锁表）。&lt;/p>
+&lt;pre tabindex="0">&lt;code>RESET MASTER;
+SHOW MASTER STATUS;
+&lt;/code>&lt;/pre>&lt;p>输出如下：&lt;/p>
+&lt;pre tabindex="0">&lt;code>MariaDB [(none)]&amp;gt; SHOW MASTER STATUS;
++------------------+-----------+--------------+------------------+
+| File | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+-----------+--------------+------------------+
+| mysql-bin.000001 | 740 | | |
++------------------+-----------+--------------+------------------+
+1 row in set (0.00 sec)
+&lt;/code>&lt;/pre>&lt;p>记录从节点的MASTER日志文件和位置。&lt;/p>
+&lt;p>在主节点MySQL执行如下命令恢复对从节点的主从同步&lt;/p>
+&lt;pre tabindex="0">&lt;code>CHANGE MASTER TO MASTER_LOG_FILE=&amp;#39;mysql-bin.000001&amp;#39;, MASTER_LOG_POS=740;
+START SLAVE;
+&lt;/code>&lt;/pre>&lt;p>此时检查主节点的SLAVE同步状态：&lt;/p>
+&lt;pre tabindex="0">&lt;code>SHOW SLAVE STATUS\G
+&lt;/code>&lt;/pre>&lt;p>确保结果包含如下状态，则说明主节点的主从同步正常。&lt;/p>
+&lt;pre tabindex="0">&lt;code>Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+&lt;/code>&lt;/pre>&lt;h3 id="恢复从节点keepalived">恢复从节点keepalived&lt;/h3>
+&lt;p>在从节点执行如下命令恢复从节点的keepalived&lt;/p>
+&lt;pre tabindex="0">&lt;code>systemctl start keepalived
+&lt;/code>&lt;/pre>&lt;h3 id="恢复服务">恢复服务&lt;/h3>
+&lt;p>在控制节点，参考 https://www.cloudpods.org/zh/docs/ops/k8s/halt_cluster/ 恢复onecloud-operator容器运行，恢复所有服务组件。&lt;/p>
+&lt;p>至此，配置完成。&lt;/p></description></item></channel></rss>

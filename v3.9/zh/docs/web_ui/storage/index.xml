@@ -1,0 +1,1020 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/</link><description>Recent content in 存储 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Thu, 29 Aug 2019 20:30:37 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 块存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/block/</link><pubDate>Thu, 29 Aug 2019 20:30:37 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/block/</guid><description>
+&lt;p>块存储用于存储虚拟机和裸金属等系统盘和数据盘的磁盘文件。块存储属于域资源。&lt;/p>
+&lt;p>块存储主要可以分为两大类：&lt;/p>
+&lt;ul>
+&lt;li>本地存储：物理机和宿主机等服务器上的本地存储。&lt;/li>
+&lt;li>网络存储：支持网络附属存储、共享存储、分布式存储等。
+&lt;ul>
+&lt;li>NFS：Network File System，网络文件系统。&lt;/li>
+&lt;li>Ceph：分布式存储系统。&lt;/li>
+&lt;li>GPFS：General Parallel File System，共享文件系统&lt;/li>
+&lt;li>Sheepdog：分布式存储系统&lt;/li>
+&lt;li>NAS：Network Attached Storage，网络附属存储。&lt;/li>
+&lt;li>vSAN：分布式存储，供vSphere集群使用。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;存储/块存储/块存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入块存储页面。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/blockstorage.png" alt="">&lt;/p>
+&lt;h2 id="新建存储">新建存储&lt;/h2>
+&lt;p>该功能用于连接Ceph分布式存储、NFS网络文件系统以及GPFS共享存储，存储创建完成后还需要关联宿主机操作才能被用户使用。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+在新建存储桶页面，可单击顶部“宿主机”、“物理机”页签，切换宿主机或者物理机上的块存储。
+&lt;/div>
+&lt;ol>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建存储对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>指定域：选择存储的所属域。&lt;/li>
+&lt;li>区域 ：设置区域和可用区。&lt;/li>
+&lt;li>名称：存储的名称。&lt;/li>
+&lt;li>介质类型：存储设备的介质类型，包括机械盘、固态盘和混合盘。性能固态盘&amp;gt;混合盘&amp;gt;机械盘。&lt;/li>
+&lt;li>存储类型：包括Ceph、NFS、GPFS三种。
+&lt;ul>
+&lt;li>当选择存储类型为&amp;quot;Ceph“时，配置以下参数。Ceph类型存储要求本地数据中心存在Ceph存储集群。
+&lt;ul>
+&lt;li>
+&lt;p>Ceph Mon Host：Ceph存储的监控节点的IP地址。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Ceph Key：Ceph存储集群默认启用密钥认证，Ceph Key即用户的密钥，格式为为“AQDsBh5b1CtoHxAA9atFhYn1cPBJvPCpoRVo/g==”形式的字符串。可通过以下命令获取Ceph存储的用户密钥。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ cat ceph.client.admin.keyring &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep key
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Ceph Pool：Ceph存储的存储池。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当选择存储类型为&amp;quot;NFS“时，配置以下参数。NFS类型存储要求本地数据中心存储NFS网络存储服务器。
+&lt;ul>
+&lt;li>NFS Host：NFS服务器的IP地址。&lt;/li>
+&lt;li>NFS Shared Dir：NFS服务器设置的共享目录。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当选择存储类型为”GPFS“时，无需配置任何参数。GPFS类型存储要求本地数据中心存在共享存储，并且需挂载存储的宿主机已关联该存储。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="启用">启用&lt;/h2>
+&lt;p>该功能用于启用&amp;quot;禁用&amp;quot;状态的块存储，禁用状态的存储无法提供存储服务。&lt;/p>
+&lt;p>&lt;strong>单个启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击&amp;quot;禁用&amp;quot;状态的块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用存储。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量启用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储列表中勾选一个或多个&amp;quot;禁用&amp;quot;状态的存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;启用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，启用存储。&lt;/li>
+&lt;/ol>
+&lt;h2 id="禁用">禁用&lt;/h2>
+&lt;p>该功能用于禁用”启用“状态的块存储。&lt;/p>
+&lt;p>&lt;strong>单个禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击”启用“状态的块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用存储。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量禁用&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储列表中勾选一个或多个”启用“状态的存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;禁用&amp;rdquo;&lt;/em>&lt;/strong> 按钮，禁用存储。&lt;/li>
+&lt;/ol>
+&lt;h2 id="管理宿主机">管理宿主机&lt;/h2>
+&lt;p>该功能用于将Ceph、GPFS、NFS类型的存储关联或取消关联宿主机。&lt;/p>
+&lt;h3 id="关联宿主机">关联宿主机&lt;/h3>
+&lt;p>该功能用于将Ceph、GPFS、NFS类型的存储关联到宿主机上，供宿主机使用。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>关联宿主机有如下要求：&lt;/p>
+&lt;ul>
+&lt;li>Ceph存储关联宿主机时，不需要挂载点，支持批量关联多个宿主机。&lt;/li>
+&lt;li>NFS存储关联宿主机时，如果多个宿主机挂载点一样，可以批量关联多个宿主机，宿主机上可以不存在挂载点。&lt;/li>
+&lt;li>GPFS存储关联宿主机时，实际宿主机上已关联了GPFS存储，平台上的关联操作仅为了可以创建虚拟机时可以使用GPFS存储，不影响实际挂载操作。其中GPFS存储关联宿主机时的挂载点必须与实际挂载点一致，需要由用户环境的运维人员提供。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在块存储页面，单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;管理宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入详情-宿主机页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;关联宿主机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联宿主机对话框。&lt;/li>
+&lt;li>选择宿主机以及宿主机上的挂载点，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，为宿主机关联存储。&lt;/li>
+&lt;/ol>
+&lt;h3 id="取消关联宿主机">取消关联宿主机&lt;/h3>
+&lt;p>该功能用于将块存储取消关联到宿主机。&lt;/p>
+&lt;p>&lt;strong>取消关联&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;管理宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入详情-宿主机页面。&lt;/li>
+&lt;li>单击宿主机右侧操作列 &lt;strong>&lt;em>&amp;ldquo;取消关联宿主机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击**&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>** 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量取消关联宿主机&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;管理宿主机&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入详情-宿主机页面。&lt;/li>
+&lt;li>在列表中选择一个或多个宿主机，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;取消关联宿主机&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击**&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>** 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="调整超售比">调整超售比&lt;/h2>
+&lt;p>该功能用于设置存储的超售比。超售即存储提供超过自身拥有的容量大小。存储实际可分配资源为实际资源*超售比。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+ZStack平台的存储暂不支持调整超售比。
+&lt;/div>
+&lt;p>&lt;strong>单块存储调整超售比&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整超售比&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>设置超售比，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量调整超售比&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在列表中勾选一个或多个块存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整超售比&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>分别设置CPU超售比和内存超售比，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="调整容量">调整容量&lt;/h2>
+&lt;p>仅OpenStack平台支持，由于云管平台获取不到OpenStack平台上存储的真正容量，所以云管平台支持设置OpenStack存储容量，请尽量将存储容量设置为存储的真实容量以尽可能的使用存储，避免由于设置的容量超出存储的真实容量而导致磁盘创建失败。&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击OpenStack平台上指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整容量&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出调整容量对话框。&lt;/li>
+&lt;li>设置容量大小，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改属性">修改属性&lt;/h2>
+&lt;p>该功能用于调整块存储的参数信息以及超售比。超售比为虚拟容量与实际容量的比值。&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改属性&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出修改属性对话框。&lt;/li>
+&lt;li>支持修改以下参数：
+&lt;ul>
+&lt;li>当选择Ceph类型存储时，支持修改Ceph Key（Ceph用户的密钥）、介质类型；&lt;/li>
+&lt;li>当选择NFS类型存储时，支持修改NFS Host（NFS服务器IP地址）、NFS Shared Dir（NFS的共享目录）、介质类型；&lt;/li>
+&lt;li>当选择其它类型存储时，仅支持修改介质类型。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="调整调度标签">调整调度标签&lt;/h2>
+&lt;p>该功能用于为块存储绑定调度标签，绑定调度标签的块存储将会按照调度标签为虚拟机提供存储。&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击指定块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;调整调度标签&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出调整调度标签对话框。&lt;/li>
+&lt;li>选择调度标签，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更改域">更改域&lt;/h2>
+&lt;p>该功能用于更改块存储的所属域。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>更改域的条件：需同时满足&lt;/p>
+&lt;ul>
+&lt;li>当前用户在管理后台。&lt;/li>
+&lt;li>在Cloudpods已开启三级权限。&lt;/li>
+&lt;li>存储的共享范围为私有。&lt;/li>
+&lt;li>存储类型不为本地存储。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个块存储更改域&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改域&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改域对话框。&lt;/li>
+&lt;li>选择块存储所属的域，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量更改域&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面中勾选一个或多个块存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改域&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改域对话框。&lt;/li>
+&lt;li>选择块存储所属的域，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置共享">设置共享&lt;/h2>
+&lt;p>该功能用于设置块存储的共享范围。&lt;/p>
+&lt;p>域资源的共享范围有三种：&lt;/p>
+&lt;ul>
+&lt;li>不共享（私有）：即域资源只能本域的用户可以使用。&lt;/li>
+&lt;li>域共享-部分（多域共享）：即域资源可以共享到指定域（一个或多个），只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>域共享-全部（全局共享）：即域资源可以共享给全部域使用，即系统中所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置共享的条件：需同时满足&lt;/p>
+&lt;ul>
+&lt;li>当前用户在管理后台。&lt;/li>
+&lt;li>在Cloudpods已开启三级权限。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+本地存储的共享范围要始终要与宿主机的共享范围保持一致。
+&lt;/div>
+&lt;p>&lt;strong>单个块存储设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击块存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即域资源的共享范围为私有，仅本域的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即域资源的共享范围为域共享-部分，只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即域资源的共享范围为域共享-全部，系统中的所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面中选择一个或多个块存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即域资源的共享范围为私有，仅本域的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即域资源的共享范围为域共享-部分，只有域资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即域资源的共享范围为域共享-全部，系统中的所有用户都可以使用域资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除">删除&lt;/h2>
+&lt;p>该功能用于删除块存储。当块存储未关联宿主机、且存储下没有硬盘文件和缓存文件时可删除。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>本地存储不支持删除。&lt;/li>
+&lt;li>若块存储未关联宿主机、且存储下没有硬盘文件和缓存文件，仍删除不了存储，可能是硬盘文件未彻底删除存放在回收站中，请在回收站中清除硬盘。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在块存储页面，根据需要删除块存储的数量，选择删除方式。
+&lt;ul>
+&lt;li>删除单个块存储：单击指定块存储右侧操作列 &lt;strong>&lt;em>更多&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，在弹出操作确认对话框中单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>删除多个块存储：在存储列表中勾选一个或多个存储，单击列表上方 &lt;strong>&lt;em>删除&lt;/em>&lt;/strong> 按钮，在弹出操作确认对话框中单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看块存储详情">查看块存储详情&lt;/h2>
+&lt;p>该功能用于查看块存储详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在块存储页面，单击指定块存储名称项，进入块存储详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对块存储进行启用、禁用、关联宿主机、调整容量、修改属性、调整标签以及删除操作。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：查看块存储的云上ID、ID、名称、状态、域、项目、共享范围、平台、启用状态、存储类型、介质类型、区域、可用区、云账号、创建时间、更新时间、备注等。&lt;/li>
+&lt;li>用量统计：查看块存储的物理容量（已分配/总量）、超售比、虚拟容量（虚拟容量=实际容量*超售比）、分配率、分配、预留、浪费容量。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看块存储挂载的宿主机信息">查看块存储挂载的宿主机信息&lt;/h3>
+&lt;p>该功能用于查看块存储管理的宿主机的信息，支持关联宿主机和取消关联宿主机操作。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>本地存储不支持取消关联宿主机。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在块存储详情页面，单击”宿主机“页签，进入宿主机页面。&lt;/li>
+&lt;li>查看宿主机的名称、启用、状态、IP、服务、#VM（虚拟机数量）、CPU（数量和使用率）、内存（数量和使用率）、存储、SN（序列号）信息。&lt;/li>
+&lt;li>根据需要取消关联块存储的主机数量，选择取消关联宿主机方式。
+&lt;ul>
+&lt;li>取消关联单个宿主机：单击指定宿主机右侧操作列 &lt;strong>&lt;em>取消关联宿主机&lt;/em>&lt;/strong> 按钮，在弹出的操作确认对话框中，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;li>批量取消关联宿主机：在宿主机列表选择一个或多个宿主机，单击列表上方 &lt;strong>&lt;em>取消关联宿主机&lt;/em>&lt;/strong> 按钮，在弹出的操作确认对话框中，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>除取消关联操作外，支持对裸金属服务器进行管理操作，具体操作使用方法请参考&lt;a href="../..../../../computing/resources/host">宿主机&lt;/a>。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看硬盘信息">查看硬盘信息&lt;/h3>
+&lt;p>该功能用于查看使用块存储创建的虚拟机硬盘信息，并支持删除硬盘。&lt;/p>
+&lt;ol>
+&lt;li>在块存储详情页面，单击”硬盘“页签，进入硬盘页面。&lt;/li>
+&lt;li>查看硬盘信息，包括名称、容量、格式、磁盘类型、虚拟机、是否挂载、状态信息等。&lt;/li>
+&lt;li>支持对硬盘进行管理操作，具体操作使用方法请参考&lt;a href="../../computing/storage/disk">硬盘&lt;/a>。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看回收站信息">查看回收站信息&lt;/h3>
+&lt;p>该功能用于查看目前处于回收站中的使用块存储创建的虚拟机硬盘信息。并支持清除和恢复操作。&lt;/p>
+&lt;ol>
+&lt;li>在块存储详情页面，单击“回收站”页签，进入回收站页面。&lt;/li>
+&lt;li>查看目前处于回收站的硬盘信息，包括名称、类型、虚拟机、状态等。&lt;/li>
+&lt;li>支持对回收站中的硬盘进行清除和恢复操作，具体操作使用方法请参考&lt;a href="../../computing/recovery/diskrecovery">硬盘回收站&lt;/a>。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看镜像缓存">查看镜像缓存&lt;/h3>
+&lt;p>镜像缓存即在存储上创建的虚拟机使用的镜像缓存信息，当关联镜像的虚拟机删除后可以释放镜像缓存，清理存储空间。&lt;/p>
+&lt;ol>
+&lt;li>在块存储详情页面，单击”镜像缓存“页签，进入镜像缓存页面。&lt;/li>
+&lt;li>查看镜像缓存信息，包括名称、文件大小、状态、路径、引用（使用该镜像缓存的虚拟机数量）等信息&lt;/li>
+&lt;li>释放缓存：单击镜像缓存指定操作列 &lt;strong>&lt;em>释放缓存&lt;/em>&lt;/strong> 按钮，在弹出的操作确认对话框中单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看操作日志">查看操作日志&lt;/h3>
+&lt;p>该功能用于查看块存储相关操作的日志信息&lt;/p>
+&lt;ol>
+&lt;li>在块存储详情页面，单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 存储桶</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/bucket/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/bucket/</guid><description>
+&lt;p>对象存储是用于存储任意文件的分布式存储服务。存储桶即bucket，用于存储对象文件。用户在存储文件之前必须先创建存储桶，云管平台以存储桶为对象存储的资源单位分配给项目使用。用户可以通过网络便捷的在对象存储中上传、下载以及分享文件。&lt;/p>
+&lt;p>云管平台目前支持对接并导入基于S3协议的对象存储服务MinIO、Ceph Radio以及公有云提供的对象存储服务。&lt;/p>
+&lt;p>使用流程：&lt;/p>
+&lt;ol>
+&lt;li>（二者任选其一）在多云管理对接并导入开通对象存储服务的公有云账号资源，同步公有云平台上的存储桶；&lt;/li>
+&lt;li>（二者任选其一）在多云管理对接并导入本地部署的对象存储服务器的账号资源；&lt;/li>
+&lt;li>创建存储桶，并为存储桶指定项目。&lt;/li>
+&lt;li>项目中的用户可以在存储桶中上传、下载以及分享文件等。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;存储/对象存储/存储桶&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入存储桶页面。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/bucket.png" alt="">&lt;/p>
+&lt;h2 id="新建存储桶">新建存储桶&lt;/h2>
+&lt;p>该功能用于新建存储桶。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+在新建存储桶页面，可单击顶部“本地IDC”、“公有云”页签，切换创建不同平台上的存储桶。
+&lt;/div>
+&lt;h3 id="新建本地idc存储桶">新建本地IDC存储桶&lt;/h3>
+&lt;p>在新建本地IDC存储桶之前请确保有对象存储S3/Ceph/XSKY的云账号。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击顶部“全部”或“本地IDC”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建存储桶对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建存储桶时需要指定存储桶的所属项目。&lt;/li>
+&lt;li>区域：选择存储桶所属的区域。&lt;/li>
+&lt;li>名称：设置存储桶的名称。存储桶名称全局唯一，不建议使用常用名称如test等，以防创建失败。&lt;/li>
+&lt;li>指定云订阅：指定创建存储桶的云订阅。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建存储桶。&lt;/li>
+&lt;/ol>
+&lt;h3 id="新建公有云存储桶">新建公有云存储桶&lt;/h3>
+&lt;p>在新建公有云平台弹性公网IP之前请确保有对应平台的云账号。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+目前仅支持创建阿里金融云外网区域的存储桶。
+&lt;/div>
+&lt;ol>
+&lt;li>在存储桶页面，单击顶部“公有云”页签，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建存储桶对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>指定项目：管理员和域管理员在新建存储桶时需要指定存储桶的所属项目。&lt;/li>
+&lt;li>区域：选择弹性公网IP所属的区域。可通过城市、平台快速过滤筛选出合适区域。&lt;/li>
+&lt;li>名称：设置存储桶的名称。&lt;/li>
+&lt;li>指定云订阅：指定创建存储桶的云订阅。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建存储桶。&lt;/li>
+&lt;/ol>
+&lt;h2 id="同步状态">同步状态&lt;/h2>
+&lt;p>该功能用于获取存储桶的当前状态。&lt;/p>
+&lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击存储桶右侧操作列 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 按钮，同步存储桶状态。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶列表中勾选一个或多个存储桶，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，批量同步存储桶状态。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置上限">设置上限&lt;/h2>
+&lt;p>该功能用于设置存储桶支持存储文件的容量大小和个数上限。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，根据需要设置上限的存储桶数量，选择设置上限的方式。
+&lt;ul>
+&lt;li>为单个存储桶设置上限：单击存储桶右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置上限&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置上限对话框。&lt;/li>
+&lt;li>为多个存储桶设置上限：在存储桶列表中勾选一个或多个存储桶，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置上限&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置上限对话框。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>设置存储桶的容量上限和对象上限（其中0表示无限制），单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置共享">设置共享&lt;/h2>
+&lt;p>该功能用于设置存储的共享范围。&lt;/p>
+&lt;p>项目资源的共享范围有五种：&lt;/p>
+&lt;ul>
+&lt;li>不共享（私有）：即项目资源只能本项目的用户可以使用。&lt;/li>
+&lt;li>项目共享-部分（本域内多项目共享）：即项目资源可以共享到同域下的指定项目（一个或多个），只有本项目和被共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>项目共享-全部（本域共享）：即项目资源可以共享给域下所有项目，即项目所在域的用户都可以使用项目资源。&lt;/li>
+&lt;li>域共享-部分（多域共享）：即项目资源可以共享到指定域（一个或多个），只有项目资源所在域和共享域下的用户可以使用项目资源。&lt;/li>
+&lt;li>域共享-全部（全局共享）：即项目资源可以共享给全部域使用，即系统中所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置域共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>在Cloudpods平台已开启三级权限。&lt;/li>
+&lt;li>用户处于管理后台。&lt;/li>
+&lt;/ul>
+&lt;p>设置项目共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>用户处于管理后台或域管理后台。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>存储桶的共享范围与云账号的共享范围有关。
+&lt;ul>
+&lt;li>当云账号不共享时，通过云账号同步下来的资源也不能共享。&lt;/li>
+&lt;li>当云账号启用共享时，通过云账号同步下来的资源也将随着云账号启用共享。&lt;/li>
+&lt;li>当云账号启用共享时，通过云账号同步下来的资源可以更改共享范围，请确保共享范围在云账号的共享范围内。&lt;/li>
+&lt;li>当云账号修改共享范围时，通过云账号同步下来的资源的共享范围要始终保持在云账号的共享范围内。如云账号共享A、B、C、D域，域资源共享A、C域，云账号修改共享范围为A、B域，则域资源只能共享到A域。&lt;/li>
+&lt;li>云账号共享云订阅时，通过云账号同步下来的域资源不能共享。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;p>&lt;strong>单个存储桶设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击存储桶右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
+&lt;ul>
+&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
+&lt;p>多个存储桶批量设置的共享范围必须相同。否则请单独为存储桶设置共享。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶列表中选择一个或多个存储桶，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“项目共享”时，需要选择本域下可共享的项目。
+&lt;ul>
+&lt;li>当项目选择同域下的一个或多个项目时，即项目资源的共享范围为项目共享-部分，只有项目资源所在项目和共享项目下的用户可以使用项目资源。&lt;/li>
+&lt;li>当项目选择全部时，即项目资源的共享范围为项目共享-全部，项目所在域下的用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置读写权限">设置读写权限&lt;/h2>
+&lt;p>该功能用于设置存储桶的读写权限。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>腾讯云存储桶不支持公开读写；&lt;/li>
+&lt;li>Azure存储桶不支持认证用户可读和公开读写；&lt;/li>
+&lt;li>AWS存储桶不支持超认证用户可读、本账号写公开读和公开读写；&lt;/li>
+&lt;li>阿里云、Ceph存储桶不支持认证用户可读；&lt;/li>
+&lt;li>阿里金融云内网区域的存储桶不支持设置读写权限的操作。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在存储桶页面，单击存储桶右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置读写权限&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置访问权限设置对话框。&lt;/li>
+&lt;li>设置读写权限：包括本账号读写、本账号公开读、公开读写。
+&lt;ul>
+&lt;li>本账号读写：只有用户本人可以读写指定存储桶中的数据。&lt;/li>
+&lt;li>认证用户可读：已认证用户可读取bucket中的数据，仅用户本人可执行写操作。&lt;/li>
+&lt;li>本账号写公开读：任何用户均可读取存储桶中的数据，但是向存储桶写数据需要进行身份验证。&lt;/li>
+&lt;li>公开读写：任何用户均可读写存储桶中的数据，无需身份验证，该权限安全风险极高，为保证您的数据安全，请谨慎选择。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="更改项目">更改项目&lt;/h2>
+&lt;p>该功能用于更改存储桶的所属项目，只有项目里的用户才可以使用存储桶存储文件。&lt;/p>
+&lt;p>&lt;strong>单个存储桶更改项目&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击存储桶右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>选择域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量更改项目&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶列表中勾选一个或多个存储桶，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;更改项目&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出更改项目对话框。&lt;/li>
+&lt;li>选择域和项目，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除存储桶">删除存储桶&lt;/h2>
+&lt;p>该功能用于删除时存储桶，当存储桶中不存在文件时，才可以删除。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+阿里金融云内网区域的存储桶不支持设置读写权限的操作。
+&lt;/div>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击存储桶右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶列表中勾选一个或多个存储桶，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看存储桶详情">查看存储桶详情&lt;/h2>
+&lt;p>该功能用于查看存储桶的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“详情”页签，进入存储桶详情页面。&lt;/li>
+&lt;li>查看以下信息
+&lt;ul>
+&lt;li>基本信息：包括存储桶的云上ID、ID、名称、状态、域、项目、共享范围、平台、区域、位置（可用于查看阿里金融云存储桶是否为内网区域）、存储类型、可用区、云账号、创建时间、更新时间、备注等。&lt;/li>
+&lt;li>访问域名：创建存储桶后会生成对应的访问域名以及S3网关，用户可通过S3网关统一管理存储桶等。&lt;/li>
+&lt;li>CDN加速域名：显示存储桶设置的CDN加速域名。&lt;/li>
+&lt;li>静态网站：显示存储桶静态网站的访问链接等。&lt;/li>
+&lt;li>用量统计：存储桶已使用容量统计。包括存储用量以及文件数量。&lt;/li>
+&lt;li>用量上限：存储桶设置的容量上限。包括存储容量上限和文件数量上限。&lt;/li>
+&lt;li>访问权限：设置存储桶的访问权限，包括本账号读写、本账号公开读、公开读写，本账号的信息可通过查看存储桶的后端访问信息获取。
+&lt;ul>
+&lt;li>本账号读写：只有用户本人可以读写指定存储桶中的数据。&lt;/li>
+&lt;li>认证用户可读：已认证用户可读取bucket中的数据，仅用户本人可执行写操作。&lt;/li>
+&lt;li>本账号公开读：任何用户均可读取存储桶中的数据，但是向存储桶写数据需要进行身份验证。&lt;/li>
+&lt;li>公开读写：任何用户均可读写存储桶中的数据，无需身份验证，该权限安全风险极高，为保证您的数据安全，请谨慎选择。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>防盗链：显示存储桶是否设置了防盗链。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="设置静态网站">设置静态网站&lt;/h3>
+&lt;p>对象存储支持在存储桶上托管静态网站，用户需要将静态网站的配置文件等上传到存储桶，设置文件的访问权限，通过设置静态网站功能设置静态网站展示的索引页和错误页等信息。配置完成后，用户可以通过访问域名访问静态网站，访问成功时，将跳转到索引页面，访问错误时，将跳转到错误页。&lt;/p>
+&lt;p>静态网站是指所有的网页都由静态内容构成，包括客户端执行的脚本，例如JavaScript。对象存储不支持涉及到需要服务器端处理的内容，例如PHP、JSP、ASP.NET等。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+目前仅腾讯云支持。
+&lt;/div>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“详情”页签，进入存储桶详情页面。&lt;/li>
+&lt;li>在静态网站模块，单击访问地址右侧 &lt;strong>&lt;em>&amp;ldquo;设置静态网站&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出设置静态网站对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>状态：选择是否启用托管静态网站功能，启用后，才可以配置下面参数。&lt;/li>
+&lt;li>索引文档：索引文档即静态网站的首页，当用户访问静态网站时将会默认访问该页面。大多数情况下，索引文档是index.html。&lt;/li>
+&lt;li>错误文档：当用户访问静态网站出错时，将会返回404错误码以及指定的错误文档的信息。大多数情况下，错误文档是error.html。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="设置防盗链">设置防盗链&lt;/h3>
+&lt;p>为了防止存储桶的数据被盗链而给用户产生不必要的损失，对象存储支持设置防盗链的功能。&lt;/p>
+&lt;p>HTTP协议支持通过表头referer字段可以获取访问目标网页的来源网页，防盗链即通过设置referer，去检测请求的referer的字段信息，是否与用于设置的黑白名单匹配，若与白名单匹配则允许访问，否则则阻止访问等。&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;ul>
+&lt;li>目前仅腾讯云支持。&lt;/li>
+&lt;li>若访问腾讯云存储桶时带有签名（不论URL和Header），则不进行防盗链验证。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“详情”页签，进入存储桶详情页面。&lt;/li>
+&lt;li>在防盗链模块，单击 &lt;strong>&lt;em>&amp;ldquo;设置&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出设置防盗链对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>空referer：是否允许HTTP或HTTPS header中包括空referer（header不带referer字段或referer字段为空）的请求访问对象存储资源。&lt;/li>
+&lt;li>白名单referer：允许白名单内的域名访问存储桶的默认访问地址。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，&lt;/li>
+&lt;/ol>
+&lt;h2 id="文件管理">文件管理&lt;/h2>
+&lt;p>该功能用于管理文件和文件夹。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>在云管平台上的AWS-中国区云账号上的存储桶中文件无论设置什么权限，都无法通过界面下载或url分享等方式下载文件。&lt;/li>
+&lt;li>阿里金融云内网区域的存储桶不支持文件管理等相关操作。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;h3 id="上传文件">上传文件&lt;/h3>
+&lt;p>该功能用于向指定存储桶中上传文件。最多支持4个文件同时上传，请注意如有同名文件，将会覆盖之前上传的文件。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+导入Azure云账号资源后，Azure存储桶不支持在根目录下上传文件。请在根目录下的文件夹里上传文件。
+&lt;/div>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;上传文件&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出上传文件对话框。&lt;/li>
+&lt;li>支持直接拖拽文件到虚线框或单击“直接上传”超链接选择上传文件，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，上传文件。&lt;/li>
+&lt;/ol>
+&lt;h3 id="下载文件">下载文件&lt;/h3>
+&lt;p>该功能支持用户下载文件到本地。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击文件右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;下载&amp;rdquo;&lt;/em>&lt;/strong> 按钮，浏览器下载或打开文件。&lt;/li>
+&lt;li>若下载的文件格式浏览器支持打开，浏览器将会直接打开文件而不会下载，建议在浏览器上将文件另存为，并保存到本地。&lt;/li>
+&lt;li>若下载的文件格式浏览器不支持打开，浏览器将会直接下载文件。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除文件">删除文件&lt;/h3>
+&lt;p>支持单个或批量删除文件。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击文件右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在文件列表中勾选一个或多个文件（夹），单击 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="生成url">生成URL&lt;/h3>
+&lt;p>该功能用于生成文件的临时URL地址，供用户分享。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击文件右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;生成Url&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出生成URL对话框。&lt;/li>
+&lt;li>设置连接有效时间（在有效时间内其他用户可以通过URL地址访问文件）生成临时URL，单击“复制文件URL”，复制文件URL地址到剪贴板，用户可粘贴分析该URL地址。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;关闭&amp;rdquo;&lt;/em>&lt;/strong> 按钮，关闭对话框。&lt;/li>
+&lt;/ol>
+&lt;h3 id="设置读写权限-1">设置读写权限&lt;/h3>
+&lt;p>该功能用于设置文件（夹）的读写权限，若不设置该项，文件的读写权限默认同存储桶一致。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+Azure存储桶中的文件不支持设置读写权限，文件的读写权限与存储桶一致。
+&lt;/div>
+&lt;p>&lt;strong>单个文件设置读写权限&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击文件右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置读写权限&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置访问权限设置对话框。&lt;/li>
+&lt;li>设置读写权限：包括本账号读写、本账号公开读、公开读写。
+&lt;ul>
+&lt;li>本账号读写：只有用户本人可以读写指定存储桶中的数据。&lt;/li>
+&lt;li>本账号公开读：任何用户均可读取存储桶中的数据，但是向存储桶写数据需要进行身份验证。&lt;/li>
+&lt;li>公开读写：任何用户均可读写存储桶中的数据，无需身份验证，该权限安全风险极高，为保证您的数据安全，请谨慎选择。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置读写权限&lt;/strong>&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+为存储桶中的文件夹设置读写权限，文件夹中的文件都将与文件夹权限保持一致。
+&lt;/div>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>在文件列表选择一个或多个文件（夹），单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置读写权限&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置访问权限设置对话框。&lt;/li>
+&lt;li>设置读写权限：包括本账号读写、本账号公开读、公开读写。
+&lt;ul>
+&lt;li>本账号读写：只有用户本人可以读写指定存储桶中的数据。&lt;/li>
+&lt;li>本账号公开读：任何用户均可读取存储桶中的数据，但是向存储桶写数据需要进行身份验证。&lt;/li>
+&lt;li>公开读写：任何用户均可读写存储桶中的数据，无需身份验证，该权限安全风险极高，为保证您的数据安全，请谨慎选择。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="设置http头">设置HTTP头&lt;/h3>
+&lt;p>该功能用于设置文件的HTTP头，当文件的HTTP头编码与文件本身的编码不对应时会导致文件通过浏览器打开显示乱码，此时用户可以通过设置HTTP头功能改变文件的默认HTTP头的编码方式。&lt;/p>
+&lt;p>&lt;strong>单个文件设置HTTP头&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击文件右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置HTTP头&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置HTTP头对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>Content-Type：文件类型，如image/png、&amp;ldquo;text/html; charset=UTF-8&amp;quot;等。&lt;/li>
+&lt;li>Content-Encoding：编码方式，如gzip、compress、identity等。&lt;/li>
+&lt;li>Content-Language：语言，如de-DE、en-CA等。&lt;/li>
+&lt;li>Content-Disposition：内容呈现方式，其中inline表示可以在浏览器中和页面内容一起显示（如图片），attachment表示是下载的内容。&lt;/li>
+&lt;li>Cache-Control：缓存控制，如no-cache、no-store等。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置HTTP头&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>在文件列表中选择一个或多个文件，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;设置HTTP头&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置HTTP头对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>Content-Type：文件类型，如image/png、&amp;ldquo;text/html; charset=UTF-8&amp;quot;等。&lt;/li>
+&lt;li>Content-Encoding：编码方式，如gzip、compress、identity等。&lt;/li>
+&lt;li>Content-Language：语言，如de-DE、en-CA等。&lt;/li>
+&lt;li>Content-Disposition：内容呈现方式，其中inline表示可以在浏览器中和页面内容一起显示（如图片），attachment表示是下载的内容。&lt;/li>
+&lt;li>Cache-Control：缓存控制，如no-cache、no-store等。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="文件夹管理">文件夹管理&lt;/h3>
+&lt;p>文件夹主要用于管理文件，对文件分类。在文件夹中支持对文件的上传、下载、分享等全部功能。文件夹支持嵌套，即在文件夹中新建文件夹等。&lt;/p>
+&lt;h4 id="新建文件夹">新建文件夹&lt;/h4>
+&lt;p>该功能用于新建文件夹，用于管理文件。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建文件夹&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建文件夹对话框。&lt;/li>
+&lt;li>设置文件夹名称，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h4 id="删除文件夹">删除文件夹&lt;/h4>
+&lt;p>该功能用于删除文件夹，支持单个或批量删除文件夹。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击指定文件夹右侧操作列的 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>在文件列表中勾选一个或多个文件夹，单击 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="跨域规则">跨域规则&lt;/h2>
+&lt;p>在通常的网页请求中，由于同源策略（same-origin policy）的限制，不同域（同协议、同域名（或IP）以及同端口视为一个域）之间无法进行交互。而跨域资源共享（CORS）通过在HTTP头中添加Origin字段允许服务器声明哪些源站通过浏览器有权限访问哪些资源等实现不同域之间的资源交互。&lt;/p>
+&lt;h3 id="新建跨域访问规则">新建跨域访问规则&lt;/h3>
+&lt;p>该功能用于创建跨域访问规则。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“跨域访问”页签，进入跨域访问页面。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建跨域访问规则。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>来源：允许跨域请求的来源。可以同时指定多个来源，每行只能填写一个。&lt;/li>
+&lt;li>允许的方法：支持 GET、PUT、POST、DELETE、HEAD。&lt;/li>
+&lt;li>允许的头部：允许使用哪些自定义头部的请求访问。&lt;/li>
+&lt;li>暴露的头部：CORS响应中带的额外头部，给客户端提供额外的信息。&lt;/li>
+&lt;li>缓存时间：请求得到结果的有效期。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="修改跨域访问规则">修改跨域访问规则&lt;/h3>
+&lt;p>该功能用于修改跨域访问规则。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“跨域访问”页签，进入跨域访问页面。&lt;/li>
+&lt;li>单击跨域规则右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出修改跨域访问规则。&lt;/li>
+&lt;li>支持修改以下参数：
+&lt;ul>
+&lt;li>来源：允许跨域请求的来源。可以同时指定多个来源，每行只能填写一个。&lt;/li>
+&lt;li>允许的方法：支持 GET、PUT、POST、DELETE、HEAD。&lt;/li>
+&lt;li>允许的头部：允许使用哪些自定义头部的请求访问。&lt;/li>
+&lt;li>暴露的头部：CORS响应中带的额外头部，给客户端提供额外的信息。&lt;/li>
+&lt;li>缓存时间：请求得到结果的有效期。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除跨域访问规则">删除跨域访问规则&lt;/h3>
+&lt;p>该功能用于删除跨域访问规则。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“跨域访问”页签，进入跨域访问页面。&lt;/li>
+&lt;li>单击跨域规则右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“跨域访问”页签，进入跨域访问页面。&lt;/li>
+&lt;li>在列表中选择一个或多个跨域规则，单击列表上方**&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>** 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="授权策略">授权策略&lt;/h2>
+&lt;p>该功能用于控制公有云根账号、子账号访问存储桶和对象的权限等。&lt;/p>
+&lt;h3 id="新建授权策略">新建授权策略&lt;/h3>
+&lt;p>该功能用于新建授权策略。授权策略用于定义指定用户对指定资源的指定操作权限。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“授权策略”页签，进入授权策略页面。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建授权策略对话框。&lt;/li>
+&lt;li>配置以下参数：
+&lt;ul>
+&lt;li>策略效果：目前仅支持允许。&lt;/li>
+&lt;li>用户：授权策略中支持访问资源的用户，目前支持设置根账号以及当前账号的子账号。当设置根账号时，需要输入对应的根账号ID。&lt;/li>
+&lt;li>资源：支持用户访问的资源，支持设置为整个存储桶或存储桶下的指定资源。&lt;/li>
+&lt;li>资源路径：当资源为“整个存储桶”时，资源路径不可设置；当资源为“指定资源”时，设置具体的资源路径，支持同时设置多个资源路径。&lt;/li>
+&lt;li>操作：设置用户对资源的操作权限，包括只读、读/写、完全控制等。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作&lt;/li>
+&lt;/ol>
+&lt;h3 id="删除授权策略">删除授权策略&lt;/h3>
+&lt;p>该功能用于删除授权策略。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“授权策略”页签，进入授权策略页面。&lt;/li>
+&lt;li>单击授权策略右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“授权策略”页签，进入授权策略页面。&lt;/li>
+&lt;li>在列表中选择一个或多个授权策略，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看存储桶监控">查看存储桶监控&lt;/h2>
+&lt;p>该功能用于查看存储桶的监控信息。目前仅支持对接阿里云、华为云的存储桶监控。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“监控”页签，进入监控页面。&lt;/li>
+&lt;li>查看存储桶GET类请求次数以及GET类请求首字节平均时延。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看存储桶操作日志">查看存储桶操作日志&lt;/h2>
+&lt;p>该功能用于查看针对于存储桶所做的操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击指定存储桶名称项，进入文件列表页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看存储桶多层级组织架构">查看存储桶多层级组织架构&lt;/h2>
+&lt;p>该功能用于通过项目标签进行多个层级的存储桶资源过滤及展示。&lt;/p>
+&lt;ol>
+&lt;li>在存储桶页面，单击搜索框左侧图标，展开层级项目。&lt;/li>
+&lt;li>单击右上角设置图标，进入配置层级页面。&lt;/li>
+&lt;li>单击“添加层级”，可添加多个层级，每个层级选择好项目标签后，单击“确定”按钮。&lt;/li>
+&lt;li>新建项目标签的具体操作方法请参考&lt;a href="../../iam/keystone/project">项目&lt;/a>。&lt;/li>
+&lt;/ol>
+&lt;h2 id="如何通过s3网关管理存储桶中文件">如何通过S3网关管理存储桶中文件？&lt;/h2>
+&lt;p>S3网关（S3gateway）是提供s3标准API的统一对象存储网关，网关后端对接云管平台的对象存储。用户可通过标准S3客户端和SDK访问S3网关，实现对多云对象存储的统一访问。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>获取存储桶的S3网关地址。&lt;/p>
+&lt;p>在Cloudpods控制台中，在指定bucket的详情页面的访问域名中可找到描述s3gateway的URL，该URL的主机地址即为s3gateway的接入地址。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/s3gateway.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在Cloudpods控制台创建AccessKey/AccessKey secret.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在Cloudpods控制台的个人信息区域中，单击右上角&lt;img src="../../images/intro/userinfo1.png" alt="">图标，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;访问凭证&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入AccessKey管理页面。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/AccessKey.png" alt="">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建AccessKey和AccessKey Secret，查看并复制AccessKey和AccessKey Secret信息，支持将Accesskey保存到本地。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/AK_AS.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>在标准S3客户端Cyberduck中填入网关地址和AccessKey ID、AccessKey Secret。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>请先在官网https://cyberduck.io/ 下载cyberduck客户端，并安装。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>安装后，打开Cyberduck客户端，单击 &lt;strong>&lt;em>&amp;ldquo;新建连接&amp;rdquo;&lt;/em>&lt;/strong> 按钮。配置以下参数。&lt;/p>
+&lt;ul>
+&lt;li>选择连接类型为“Amazon S3”。&lt;/li>
+&lt;li>在服务器端口中设置地址为S3网关地址。&lt;/li>
+&lt;li>访问密钥ID设置为AccessKey ID。&lt;/li>
+&lt;li>访问私钥设置为 AccessKey Secret。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;连接&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../../images/storage/s3connection.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ol>
+&lt;p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+由于s3gateway采用自签名证书，会提示不安全证书，选择“继续”和“总是信任”。
+&lt;/div>
+&lt;img src="../../images/storage/certificate.png" alt="">
+&lt;img src="../../images/storage/validcert1.png" alt="">&lt;/p>
+&lt;ol start="4">
+&lt;li>通过Cyberduck客户端管理S3文件目录，并且可以方便的上传、下载、移动、拷贝以及删除文件等。&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 表格存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/table/</link><pubDate>Thu, 29 Aug 2019 20:30:37 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/table/</guid><description>
+&lt;p>表格存储是一款用于存储海量非关系型（NoSQL）结构化数据的云原生表存储服务，目前仅支持阿里云、阿里飞天云。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;存储/表格存储/表格存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入表格存储页面。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/table.png" alt="">&lt;/p>
+&lt;h2 id="查看表格存储详情">查看表格存储详情&lt;/h2>
+&lt;p>该功能用于查看表格存储的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在表格存储页面，单击表格存储名称项，进入表格存储详情页面。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：云上ID、ID、名称、状态、域、项目、平台、区域、可用区、云账号、云订阅、创建时间、更新时间、备注。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看表格存储相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在表格存储页面，单击表格存储的名称项，进入表格存储详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示100条操作日志信息，如需查看更多操作日志，请单击 “加载更多” 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 “查看” 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表上方的搜索框中选择操作时间-范围选择，设置好开始时间和结束时间，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角图标，在弹出的导出数据对话框中，设置导出数据列，单击 “确定” 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 文件存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/nas/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/nas/</guid><description/></item><item><title>Docs: 备份存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/backup/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/web_ui/storage/backup/</guid><description>
+&lt;p>备份存储提供更加完整、安全、稳定的数据备份。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;存储/备份存储/备份存储&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入备份存储页面。&lt;/p>
+&lt;p>&lt;img src="../../images/storage/backup.png" alt="">&lt;/p>
+&lt;h2 id="新建备份存储">新建备份存储&lt;/h2>
+&lt;p>该功能用于新建备份存储。&lt;/p>
+&lt;ol>
+&lt;li>在备份存储页面，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出新建备份存储对话框。&lt;/li>
+&lt;li>设置以下参数：
+&lt;ul>
+&lt;li>指定域：管理员和域管理员在新建备份存储时需要指定备份存储的所属域。&lt;/li>
+&lt;li>名称：设置备份存储的名称。备份存储名称全局唯一，不建议使用常用名称如test等，以防创建失败。&lt;/li>
+&lt;li>备注：设置备份存储的备注。&lt;/li>
+&lt;li>存储类型：支持NFS。&lt;/li>
+&lt;li>NFS Host：必须输入指定NFS Host。&lt;/li>
+&lt;li>NFS Shared Dir：必须输入指定NFS Shared Dir。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建备份存储。&lt;/li>
+&lt;/ol>
+&lt;h2 id="同步状态">同步状态&lt;/h2>
+&lt;p>该功能用于获取备份存储的当前状态。&lt;/p>
+&lt;p>&lt;strong>单个同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在备份存储页面，单击备份存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 按钮，同步备份存储状态。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量同步状态&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在备份存储列表中勾选一个或多个备份存储，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;同步状态&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，批量同步备份存储状态。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置共享">设置共享&lt;/h2>
+&lt;p>该功能用于设置备份存储的共享范围。&lt;/p>
+&lt;p>&lt;strong>单个备份存储设置共享&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在备份存储页面，单击备份存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量设置共享&lt;/strong>&lt;/p>
+&lt;p>多个备份存储批量设置的共享范围必须相同。否则请单独为备份存储设置共享。&lt;/p>
+&lt;ol>
+&lt;li>在备份存储列表中选择一个或多个备份存储，单击列表上方 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置共享&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置共享对话框。&lt;/li>
+&lt;li>配置以下参数。
+&lt;ul>
+&lt;li>当共享范围选择为“不共享”时，即项目资源的共享范围为私有，仅本项目的用户可以使用。&lt;/li>
+&lt;li>当共享范围选择为“域共享”时，需要选择共享的域。
+&lt;ul>
+&lt;li>当域选择其中的一个或多个域时，即项目资源的共享范围为域共享-部分，只有项目资源所在域和共享域下的用户可以使用域资源。&lt;/li>
+&lt;li>当域选择全部时，即项目资源的共享范围为域共享-全部，系统中的所有用户都可以使用项目资源。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">说明&lt;/h4>
+&lt;p>设置域共享的条件：&lt;/p>
+&lt;ul>
+&lt;li>在Cloudpods平台已开启三级权限。&lt;/li>
+&lt;li>用户处于管理后台。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;h2 id="删除备份存储">删除备份存储&lt;/h2>
+&lt;p>该功能用于删除备份存储，当备份存储中不存在文件时，才可以删除。&lt;/p>
+&lt;p>&lt;strong>单个删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在备份存储页面，单击备份存储右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>批量删除&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>在备份存储列表中勾选一个或多个备份存储，单击 &lt;strong>&lt;em>&amp;ldquo;批量操作&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出操作确认对话框。&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看备份存储详情">查看备份存储详情&lt;/h2>
+&lt;p>该功能用于查看备份存储的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在备份存储页面，单击备份存储名称项，进入备份存储详情页面。&lt;/li>
+&lt;li>查看以下信息：
+&lt;ul>
+&lt;li>基本信息：云上ID、ID、名称、状态、域、标签、共享范围、存储类型、NFS Host、NFS Shared Dir、创建时间、更新时间、备注。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看操作日志">查看操作日志&lt;/h2>
+&lt;p>该功能用于查看备份存储相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在备份存储页面，单击备份存储的名称项，进入备份存储详情页面。&lt;/li>
+&lt;li>单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示100条操作日志信息，如需查看更多操作日志，请单击 “加载更多” 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 “查看” 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表上方的搜索框中选择操作时间-范围选择，设置好开始时间和结束时间，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角图标，在弹出的导出数据对话框中，设置导出数据列，单击 “确定” 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

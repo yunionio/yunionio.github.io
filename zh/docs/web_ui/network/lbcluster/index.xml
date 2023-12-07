@@ -1,0 +1,137 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+负载均衡集群</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lbcluster/</link><description>Recent content in 负载均衡集群 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org/zh/docs/web_ui/network/lbcluster/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 集群</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lbcluster/lbcluster/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lbcluster/lbcluster/</guid><description>
+&lt;p>负载均衡集群是一组转发节点LBAgent的集合，一般情况下一个集群下配置两个LBAgent节点互为主备即可，同一集群下的LBAgent节点的VRRP路由ID必须相同。&lt;/p>
+&lt;p>&lt;strong>入口&lt;/strong>：在云管平台单击左上角&lt;img src="../../../images/intro/nav.png" alt="">导航菜单，在弹出的左侧菜单栏中单击 &lt;strong>&lt;em>&amp;ldquo;网络/负载均衡集群/集群&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入集群页面。&lt;/p>
+&lt;p>&lt;img src="../../../images/network/lbcluster1.png" alt="">&lt;/p>
+&lt;h2 id="创建集群">创建集群&lt;/h2>
+&lt;p>该功能用于创建负载均衡集群。&lt;/p>
+&lt;ol>
+&lt;li>单击列表上方 &lt;strong>&lt;em>&amp;ldquo;新建&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出创建集群对话框。&lt;/li>
+&lt;li>选择区域、可用区，设置名称，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，创建集群。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改集群">修改集群&lt;/h2>
+&lt;p>该功能用于修改负载均衡集群。&lt;/p>
+&lt;p>1.单击负载均衡集群右侧操作列 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 按钮，进入修改集群页面。
+2. 修改以下参数：
+- 名称：负载均衡集群的名称。
+- 备注：负载均衡集群的备注。
+- 抢占模式：高优先级VRRP SLAVE实例见到低优先级的VRRP MASTER实例时，是否抢占完成MASTER角色切换，默认为关闭。
+- VRRP路由ID：设置VRRP路由ID的值，主备组的ID值必须相同。同一个二层网络中，不同集群的VRRP路由ID必须不同。
+- VRRP通告间隔：设置VRRP广播通告间隔，关系到故障时自动切换的灵敏度。
+- VRRP密码：设置VRRP的密码，主备组的VRRP密码必须相同，为空则密码默认为YunionLB。
+- 标签：支持负载均衡集群绑定标签。支持选择已有标签和新建标签，每个资源最多可绑定20个标签。&lt;/p>
+&lt;h2 id="删除集群">删除集群&lt;/h2>
+&lt;p>该功能用于删除负载均衡集群。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;ul>
+&lt;li>当集群下不存在负载均衡实例时才可以删除。&lt;/li>
+&lt;li>请提前将集群内的转发节点下线。&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;ol>
+&lt;li>单击负载均衡集群右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出删除确认对话框。&lt;/li>
+&lt;li>请确认集群内的转发节点已全部下线后再勾选“删除集群会同时删除集群中的转发节点，请确认集群内转发节点已全部下线？”&lt;/li>
+&lt;li>单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除集群。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看集群详情">查看集群详情&lt;/h2>
+&lt;p>该功能用于查看集群的详细信息。&lt;/p>
+&lt;ol>
+&lt;li>在负载均衡集群页面，单击集群名称项，进入集群详情页面。&lt;/li>
+&lt;li>查看集群的ID、状态、名称、标签、可用区、创建时间、更新时间、备注。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看集群下的节点信息">查看集群下的节点信息&lt;/h3>
+&lt;p>该功能用于查看集群下的节点信息。&lt;/p>
+&lt;ol>
+&lt;li>在集群详情页面，单击“节点”页签，进入节点页面。&lt;/li>
+&lt;li>查看以下信息。
+&lt;ul>
+&lt;li>基础信息：查看节点的ID、状态、名称、标签、集群、主备、上一次心跳、软件版本、可用区、转发实例心跳超时时间、部署机器、创建时间、更新时间、备注。&lt;/li>
+&lt;li>同步时间戳：表示数据库中负载均衡实例、监听、后端服务器组、后端服务器、转发策略、访问控制、证书等参数在某个特定时间之前已经存在、完整的、可验证的数据写入部署机器。&lt;/li>
+&lt;li>VRRP转发实例配置信息：包括通告间隔、网口、密码、抢占模式、优先级以及路由ID信息。&lt;/li>
+&lt;li>HAProxy配置信息：查看HAProxy配置信息，包括线程数、开启日志、开启HTTP日志、开启Normal日志、开启TCP日志、以及配置模板信息。&lt;/li>
+&lt;li>Telegraf（数据采集工具）配置信息：查看Telegraf配置信息，包括HAProxy上报间隔、数据库名称、地址、以及配置模板信息。&lt;/li>
+&lt;li>KeepAlived配置信息：查看KeepAlived配置模板信息。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>支持对节点进行关联集群、修改、设置心跳超时时间以及删除操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看集群下的实例信息">查看集群下的实例信息&lt;/h3>
+&lt;p>该功能用于查看集群下的负载均衡实例信息，并支持对实例进行管理操作。&lt;/p>
+&lt;ol>
+&lt;li>在集群详情页面，单击“实例”页签，进入实例页面。&lt;/li>
+&lt;li>查看属于集群的负载均衡实例信息，并支持对实例进行管理操作。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看操作日志">查看操作日志&lt;/h3>
+&lt;p>该功能用于查看集群相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在集群详情页面，单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 节点</title><link>https://www.cloudpods.org/zh/docs/web_ui/network/lbcluster/lbagent/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/web_ui/network/lbcluster/lbagent/</guid><description>
+&lt;p>负载均衡集群中的节点用于监听负载均衡实例，并将客户端的请求根据监听和转发规则转发给后端服务器。&lt;/p>
+&lt;p>同一个集群下可以有多个转发节点，但同一时刻只有一个节点作为Master节点提供转发服务。属于一个集群的节点的VRRP路由ID必须相同。节点的新建参考：&lt;a href="../../../../function_principle/onpremise/lb/lbagent/">Lbagent部署&lt;/a>&lt;/p>
+&lt;h2 id="关联集群">关联集群&lt;/h2>
+&lt;p>该功能用于关联负载均衡集群。&lt;/p>
+&lt;ol>
+&lt;li>单击节点右侧操作列 &lt;strong>&lt;em>&amp;ldquo;关联集群&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出关联集群对话框。&lt;/li>
+&lt;li>选择集群，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，关联集群。&lt;/li>
+&lt;/ol>
+&lt;h2 id="修改节点">修改节点&lt;/h2>
+&lt;p>该功能用于修改节点的配置信息。&lt;/p>
+&lt;ol>
+&lt;li>单击节点右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;修改&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，进入修改节点页面。&lt;/li>
+&lt;li>修改相关参数，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设置心跳超时时间">设置心跳超时时间&lt;/h2>
+&lt;p>该功能用于修改转发实例的心跳超时时间。当转发实例超过超时时间未收到心跳时，节点状态将变为UNKNOWN。&lt;/p>
+&lt;ol>
+&lt;li>单击节点右侧操作列 &lt;strong>&lt;em>&amp;ldquo;更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，选择下拉菜单 &lt;strong>&lt;em>&amp;ldquo;设置心跳超时时间&amp;rdquo;&lt;/em>&lt;/strong> 菜单项，弹出设置心跳超时时间对话框。&lt;/li>
+&lt;li>设置转发实例心跳超时时间，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，完成操作。&lt;/li>
+&lt;/ol>
+&lt;h2 id="删除节点">删除节点&lt;/h2>
+&lt;p>只有节点下线后才可以删除节点。&lt;/p>
+&lt;ol>
+&lt;li>单击节点右侧操作列 &lt;strong>&lt;em>&amp;ldquo;删除&amp;rdquo;&lt;/em>&lt;/strong> 按钮，弹出删除确认对话框。&lt;/li>
+&lt;li>勾选”确定已经实际操作下线“后，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，删除节点。&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看节点详情">查看节点详情&lt;/h2>
+&lt;p>该功能用于查看节点的配置信息等。&lt;/p>
+&lt;ol>
+&lt;li>在节点页面，单击节点名称项，进入节点详情页面。&lt;/li>
+&lt;li>详情页面顶部菜单项支持对节点进行管理操作。&lt;/li>
+&lt;li>查看以下信息。
+&lt;ul>
+&lt;li>基础信息：查看节点的ID、状态、名称、标签、集群、主备、上一次心跳、软件版本、可用区、转发实例心跳超时时间、部署机器、优先级、网口、创建时间、更新时间、备注。&lt;/li>
+&lt;li>同步时间戳：表示数据库中负载均衡实例、监听、后端服务器组、后端服务器、转发策略、访问控制、证书等参数在某个特定时间之前已经存在、完整的、可验证的数据写入部署机器。&lt;/li>
+&lt;li>VRRP转发实例配置信息：包括通告间隔、网口、密码、抢占模式、优先级以及路由ID信息。&lt;/li>
+&lt;li>HAProxy配置信息：查看HAProxy配置信息，包括线程数、开启日志、开启HTTP日志、开启Normal日志、开启TCP日志、以及配置模板信息。&lt;/li>
+&lt;li>Telegraf（数据采集工具）配置信息：查看Telegraf配置信息，包括HAProxy上报间隔、数据库名称、地址、以及配置模板信息。&lt;/li>
+&lt;li>KeepAlived配置信息：查看KeepAlived配置模板信息。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看部署详情">查看部署详情&lt;/h3>
+&lt;p>该功能用于查看节点的上次部署输出的日志信息，用于部署失败时通过输出日志进行排错等。部署详情仅在部署节点后才会出现。&lt;/p>
+&lt;ol>
+&lt;li>在节点详情页面，单击“部署详情”页签，进入部署详情页面。&lt;/li>
+&lt;li>查看节点的部署详情以及输出日志等。&lt;/li>
+&lt;li>支持重新执行或终止执行操作等。&lt;/li>
+&lt;/ol>
+&lt;h3 id="查看操作日志">查看操作日志&lt;/h3>
+&lt;p>该功能用于查看节点相关操作的日志信息。&lt;/p>
+&lt;ol>
+&lt;li>在节点详情页面，单击“操作日志”页签，进入操作日志页面。
+&lt;ul>
+&lt;li>加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 &lt;strong>&lt;em>&amp;ldquo;加载更多&amp;rdquo;&lt;/em>&lt;/strong> 按钮，获取更多日志信息。&lt;/li>
+&lt;li>查看日志详情：单击操作日志右侧操作列 &lt;strong>&lt;em>&amp;ldquo;查看&amp;rdquo;&lt;/em>&lt;/strong> 按钮，查看日志的详情信息。支持复制详情内容。&lt;/li>
+&lt;li>查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。&lt;/li>
+&lt;li>导出日志：目前仅支持导出本页显示的日志。单击右上角&lt;img src="../../../images/system/download.png" alt="">图标，在弹出的导出数据对话框中，设置导出数据列，单击 &lt;strong>&lt;em>&amp;ldquo;确定&amp;rdquo;&lt;/em>&lt;/strong> 按钮，导出日志。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

@@ -1,0 +1,48 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+私有云</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/</link><description>Recent content in 私有云 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Thu, 08 Jun 2023 17:55:36 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/onpremise/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 虚拟机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/</link><pubDate>Fri, 19 Jul 2019 10:26:40 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/vminstance/</guid><description/></item><item><title>Docs: 镜像</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/glance/</link><pubDate>Thu, 08 Jun 2023 17:55:36 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/glance/</guid><description>
+&lt;ul>
+&lt;li>
+&lt;p>镜像(image): 是用于新建云服务器(虚拟机)、裸金属(物理机)使用的模板文件，常用类型为 qcow2, vmdk, raw, vhd, iso。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>主机镜像：仅用于新建虚拟机，通过虚拟机操作保存镜像功能，将虚拟机整体保存为镜像等，后续可基于主机镜像创建虚拟机。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>镜像服务(glance): 云平台的镜像服务叫做 glance，用于存储转换用户上传或外部导入的镜像，提供下载功能。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>缓存镜像(cached-image): 创建公/私有云虚拟机时，可以直接使用各个云平台已有的镜像，这些镜像不会存储在 glance，云平台只是保存元信息，创建机器时会直接使用。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>image 和 cached-image 两种资源的区别如下：&lt;/p>
+&lt;ul>
+&lt;li>image: glance 管理的镜像，由用户上传或者外部导入;&lt;/li>
+&lt;li>cached-image:
+&lt;ul>
+&lt;li>包括公有云和其他私有云的镜像，不由 glance 管理，一般在创建 Cloudpods 之外的公/私有云主机的时候用到;&lt;/li>
+&lt;li>不提供创建接口，只能查询，刷新和删除;&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 宿主机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/</link><pubDate>Wed, 17 Jul 2019 11:35:12 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/host/</guid><description>
+&lt;p>Cloudpods 原生提供基于 kvm 的私有云虚拟机管理功能，运行 kvm 虚拟机的机器叫做宿主机，这种宿主机也叫作 &amp;ldquo;计算节点&amp;rdquo;，上面会运行管理虚拟机、网络和存储的一系列服务。&lt;/p></description></item><item><title>Docs: 物理机</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/</link><pubDate>Wed, 10 Jul 2019 10:16:53 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/baremetal/</guid><description/></item><item><title>Docs: 资源调度</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/</link><pubDate>Thu, 11 Jul 2019 20:50:28 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/scheduler/</guid><description>
+&lt;p>平台支持通过调度标签的功能进行资源调度，根据调度标签的偏好或调度策略以及系统默认选择底层基础资源等。&lt;/p></description></item><item><title>Docs: 网络</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/</link><pubDate>Fri, 25 Jun 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/network/</guid><description>
+&lt;h2 id="基本概念">基本概念&lt;/h2>
+&lt;p>Cloudpods 有三个基本的网络概念，按照从下往上的逻辑顺序，分别是VPC，二层网络和IP子网。&lt;/p>
+&lt;img src="./network.png" width="500">
+&lt;h3 id="vpc">VPC&lt;/h3>
+&lt;p>VPC（Virtual Private Cloud）指的是云平台内的一个虚拟的网络隔离区域，VPC之间网络流量隔离。VPC又分为经典网络和虚拟网络。&lt;/p>
+&lt;h4 id="经典网络">经典网络&lt;/h4>
+&lt;p>经典网络也叫扁平网络或者Underlay。指的是由物理交换机，路由器以及这些物理设备内的网络配置定义的物理网络。使用经典网络的虚拟机依赖物理的网络设备实现节点之间的网络通信。同一个IP子网下的虚拟机之间的通信依赖二层交换，不同IP子网下的虚拟机之间的通信依赖三层交换。经典网络中，位于不同宿主机的虚拟机之间的二层或者三层网络交换，或者任意虚拟机之间的三层交换，都需要依赖物理网络设备。&lt;/p>
+&lt;p>为了统一，把经典网络定义为一个特殊的缺省VPC（Default VPC），这个VPC天然存在，代表的是物理网络对应的网络隔离区域。&lt;/p>
+&lt;h4 id="虚拟网络">虚拟网络&lt;/h4>
+&lt;p>虚拟网络也叫Overlay网络，是构建在物理网络上，通过隧道技术（tunnel）互联的虚拟网元组成的虚拟网络。虚拟网络内的虚拟机之间通过软件模拟的虚拟二层交换机和虚拟路由器（三层）互通。可以创建任意多的虚拟网络。虚拟网络之间流量隔离。&lt;/p>
+&lt;p>Cloudpods 虚拟网络是基于开源ovn封装实现。&lt;/p>
+&lt;h3 id="二层网络wire">二层网络（wire）&lt;/h3>
+&lt;p>在经典网络中，一个二层网络对应一个广播域。同一个二层网络中的虚拟机之间可以直接点对点通信，不依赖三层网络设备的交换（但依赖二层网络设备，这个二层设备有可能是虚拟的ovs网桥或者是物理的交换机）。物理概念上，一个二层网络通常对应一个三层交换机或路由器下的网络区域。经典网络中可以有多个二层网络。&lt;/p>
+&lt;p>在虚拟网络中，由于任意设备之间都可以（通过隧道）直接通信，因此可以理解为整个VPC就是一个二层网络。为了模型上的统一，虚拟网络中还是保留了二层网络的概念，但是可以认为wire和VPC是等效。一个虚拟网络VPC内会默认创建一个二层网络。&lt;/p>
+&lt;h3 id="ip子网network">IP子网（network）&lt;/h3>
+&lt;p>IP子网对应一个子网，也就是一段有相同子网掩码的连续IP地址段。IP子网归属于二层网络。IP子网携带了网络配置信息，例如IP地址范围，子网掩码，网关，VLAN ID，DNS等。如果一台虚拟机对接了一个IP子网，则这台虚拟机的虚拟网卡必须使用从该IP子网的网段中分配的IP地址。该虚拟网卡的配置由该IP子网的属性来确定。&lt;/p>
+&lt;p>经典网络中，每个IP子网可以有自己的VLAN ID。对接该IP子网的虚拟机也必须采用对应的VLAN ID。&lt;/p>
+&lt;h2 id="网络的拓扑约束">网络的拓扑约束&lt;/h2>
+&lt;p>经典网络中，因为虚拟机之间的通信依赖物理设备，在特定宿主机上的虚拟机可以接入哪些IP子网是受到宿主机对接的物理网络约束的，也就是一台宿主机上的虚拟机只能接入该宿主机对接的二层网络内的IP子网。&lt;/p>
+&lt;p>虚拟网络中不存在网络拓扑约束，即任意宿主机上任意虚拟机都可以接入任意的VPC网络。&lt;/p></description></item><item><title>Docs: 负载均衡</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/lb/</link><pubDate>Fri, 19 Jul 2019 10:27:52 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/lb/</guid><description/></item><item><title>Docs: 存储</title><link>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/</link><pubDate>Fri, 25 Jun 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/onpremise/storage/</guid><description/></item></channel></rss>

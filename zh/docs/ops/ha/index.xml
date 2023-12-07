@@ -1,0 +1,493 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+高可用</title><link>https://www.cloudpods.org/zh/docs/ops/ha/</link><description>Recent content in 高可用 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Wed, 28 Jun 2023 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/ops/ha/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 高可用维护</title><link>https://www.cloudpods.org/zh/docs/ops/ha/ha/</link><pubDate>Tue, 08 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/ha/</guid><description>
+&lt;h2 id="高可用vip的主动切换">高可用VIP的主动切换&lt;/h2>
+&lt;p>高可用集群通过Keepalived来维护主从节点的切换，平时VIP在主节点，由主节点提供服务。在主节点宕机情况下，会自动切换到备节点，由备节点提供服务。&lt;/p>
+&lt;p>在平时运维工作中，存在需要主动切换主从节点的情况，例如要对主节点执行关机维护任务。&lt;/p>
+&lt;p>可以通过修改调低主节点的keepalived的优先级并重启keepalived实例的方式主动实现主从切换。&lt;/p>
+&lt;p>控制服务的VIP切换的keepavlied配置文件位于 /etc/kubernetes/manifests/keepalived.yaml&lt;/p>
+&lt;p>数据库服务的VIP切换的keepalived配置文件位于 /etc/keepalived/keepalived.conf&lt;/p>
+&lt;p>EIP网关的VIP切换的keepalvied配置文件位于 /etc/keepalived/eipgw.conf&lt;/p>
+&lt;h2 id="高可用节点下线维护步骤">高可用节点下线维护步骤&lt;/h2>
+&lt;ol>
+&lt;li>如果有VIP，将VIP主动切换到备节点&lt;/li>
+&lt;li>如果有虚拟机，迁移虚拟机到其他宿主机&lt;/li>
+&lt;li>将容器从该节点驱逐&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kubectl cordon &amp;lt;node&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>将kubelet，docker等服务设置为不自动启动&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl disable kubelet docker keepalived maraidb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>停止容器&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker stop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
+&lt;li>停止所有服务&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl stop kubelet docker keepalived maraidb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
+&lt;li>维护节点&lt;/li>
+&lt;/ol>
+&lt;h2 id="高可用节点恢复上线步骤">高可用节点恢复上线步骤&lt;/h2>
+&lt;ol>
+&lt;li>如果有数据库，先启动数据库&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl start mariadb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>检查数据库主从同步状态&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>show slave status&lt;span style="color:#4e9a06">\G&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果有问题，则需优先解决数据库主从同步问题。&lt;/p>
+&lt;ol start="3">
+&lt;li>启动docker&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl start docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>启动kubelet&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl start kubelet
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>如果修改了keepavlied的优先级，恢复keepalived的优先级。启动keepalived&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl start keepalived
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
+&lt;li>恢复Kubenetes调度&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kubectl uncordon &amp;lt;node&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
+&lt;li>恢复以上服务的开机自动启动&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl &lt;span style="color:#204a87">enable&lt;/span> kubelet docker keepalived maraidb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 系统自动备份</title><link>https://www.cloudpods.org/zh/docs/ops/ha/auto-backup/</link><pubDate>Fri, 14 Apr 2023 16:03:30 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/auto-backup/</guid><description>
+&lt;h2 id="自动备份云管系统的数据库k8s-配置etcd-快照">自动备份云管系统的数据库、K8s 配置、etcd 快照&lt;/h2>
+&lt;p>本命令为指定的系统增加自动备份云管系统的数据库、K8s 配置、etcd 快照的功能。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>usage: ocboot.py auto-backup &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>-h&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--user SSH_USER&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--key-file SSH_PRIVATE_FILE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--port SSH_PORT&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--backup-path BACKUP_PATH&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--light&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--max-backups MAX_BACKUPS&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>--max-disk-percentage MAX_DISK_PERCENTAGE&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> TARGET_NODE_HOSTS &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>TARGET_NODE_HOSTS ...&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>positional arguments:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> TARGET_NODE_HOSTS target nodes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>optional arguments:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -h, --help show this &lt;span style="color:#204a87">help&lt;/span> message and &lt;span style="color:#204a87">exit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --user SSH_USER, -u SSH_USER
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> target host ssh user &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: root&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --key-file SSH_PRIVATE_FILE, -k SSH_PRIVATE_FILE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> target host ssh private key file &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> /root/.ssh/id_rsa&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --port SSH_PORT, -p SSH_PORT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> target host host ssh port &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>default: 22&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --backup-path BACKUP_PATH
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> backup path, default: /opt/yunion/backup
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --light ignore yunionmeter and yunionlogger database&lt;span style="color:#000;font-weight:bold">;&lt;/span> ignore
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tables start with &lt;span style="color:#4e9a06">&amp;#39;opslog&amp;#39;&lt;/span> and &lt;span style="color:#4e9a06">&amp;#39;task&amp;#39;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --max-backups MAX_BACKUPS
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> how many backups to keep. default: &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --max-disk-percentage MAX_DISK_PERCENTAGE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> the max usage percentage of the disk on which the
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> backup will be &lt;span style="color:#204a87;font-weight:bold">done&lt;/span> allowed to perform backup. the
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> backup job will not work when the disk&lt;span style="color:#a40000">&amp;#39;&lt;/span>s usage is
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> above the threshold. default: 75&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>%&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面介绍各个参数的作用和注意事项&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>TARGET_NODE_HOSTS&lt;/code>，此处填写需要部署自动备份的&lt;strong>控制节点&lt;/strong>的IP。如果有多个控制节点，只需输入其中之一即可。&lt;/li>
+&lt;li>&lt;code>--user&lt;/code>, &lt;code>--key-file&lt;/code>, &lt;code>--port&lt;/code>这些参数是登录备份机器的ssh配置。一般默认用户名&lt;code>root&lt;/code>、端口号&lt;code>22&lt;/code>。如果自定义，可以在&lt;code>$HOME/.ssh/config&lt;/code>里配置。请确保当前机器可以免密登录到所输入的&lt;code>TARGET_NODE_HOSTS&lt;/code>。&lt;/li>
+&lt;li>&lt;code>--backup-path&lt;/code>，备份路径。默认为&lt;code>/opt/yunion/backup&lt;/code>。&lt;/li>
+&lt;li>&lt;code>--max-disk-percentage&lt;/code>允许的最大磁盘使用率。默认为&lt;code>75%&lt;/code>。备份过程会检测所输入的&lt;code>--backup-path&lt;/code>所在磁盘的使用率。如果已经达到允许的最大磁盘使用率，就会停止备份，以免备份文件打满磁盘。&lt;/li>
+&lt;li>&lt;code>--light&lt;/code>是否为轻量备份。默认为&lt;code>否&lt;/code>，即，全量备份。轻量备份与全量备份的区别是某些（通常可以自由删除的）业务日志。建议日常只选轻量备份，以节约磁盘、加速备份过程。&lt;/li>
+&lt;li>&lt;code>--max-backups&lt;/code>保留的备份次数。默认保留最新的10次备份。&lt;/li>
+&lt;/ul>
+&lt;h2 id="手工恢复备份的数据库和k8s配置">手工恢复备份的数据库和k8s配置&lt;/h2>
+&lt;p>ssh登陆控制节点，进入备份目录，以2023-05-28的备份为例，恢复命令如下&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cd /opt/yunion/backup/&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller backup&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># tar -xzvf onecloud.bkup.20230528-000001.tar.gz&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller backup&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># cd 20230528-000001/&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># ll&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>total &lt;span style="color:#0000cf;font-weight:bold">181548&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw------- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">185819168&lt;/span> May &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> 00:00 etcd_snapshot_20230528-000001.db
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">74493&lt;/span> May &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> 00:00 oc.20230528-000001.yml
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> root root &lt;span style="color:#0000cf;font-weight:bold">3241&lt;/span> May &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> 00:00 onecloud-operator.20230528-000001.yml
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 恢复数据库&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># pv onecloud.sql.20230528-000001.gz | gunzip | mysql -uroot -p$MYSQL_PASSWD -h $MYSQL_HOST&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 恢复k8s各组件服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl apply -f oc.20230528-000001.yml&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@controller 20230528-000001&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl apply -f onecloud-operator.20230528-000001.yml&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 控制节点替换流程</title><link>https://www.cloudpods.org/zh/docs/ops/ha/replace/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/ha/replace/</guid><description>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>即使是高可用部署的 3 节点 cloudpods over k8s 集群，在生产环境可能会出现任意 1 个节点挂掉的情况。
+一些普通的故障，比如更换内存，CPU 之类可以解决的问题，可以临时关机，恢复后再重启节点解决。&lt;/p>
+&lt;p>但如果发生硬盘之类的故障，比如数据无法恢复的情况，需要把该节点删除再重新加入新的节点，接下来描述该步骤以及注意事项。&lt;/p>
+&lt;h2 id="测试环境">测试环境&lt;/h2>
+&lt;ul>
+&lt;li>k8s_vip: 10.127.100.102
+&lt;ul>
+&lt;li>使用 staticpods keepalived 运行在 3 个 master 节点上&lt;/li>
+&lt;li>由 kubelet 直接启动，路径：/etc/kubernetes/manifests/keepalived.yaml&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>primary_master_node 第1个初始化的控制节点:
+ip: 10.127.100.234&lt;/li>
+&lt;li>master_node_1 第2个加入控制节点:
+ip: 10.127.100.229&lt;/li>
+&lt;li>master_node_2 第3个加入的控制节点:
+ip: 10.127.100.226&lt;/li>
+&lt;li>数据库: 数据库部署在集群之外，不在 3 个节点之上&lt;/li>
+&lt;li>CSI: 使用 local-path
+&lt;ul>
+&lt;li>local-path 的 CSI 会强绑定 pod 到指定的 node，这里需要特别注意&lt;/li>
+&lt;li>如果挂掉的节点有对应 local-path 的 pvc 绑定在上面，使用该 pvc 的 pod 就没办法漂移到其它 Ready 的 node ，这种 pod 叫有状态的 pod，可以通过命令 &lt;code>kubectl get pvc -A | grep local-path&lt;/code> 就可以看到所有的 local-path pvc&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl get nodes -o wide
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME STATUS ROLES AGE VERSION INTERNAL-IP EXTERNAL-IP OS-IMAGE KERNEL-VERSION CONTAINER-RUNTIME
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test Ready master 100m v1.15.12 10.127.100.234 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-2 Ready master 61m v1.15.12 10.127.100.229 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-3 Ready master 60m v1.15.12 10.127.100.226 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>minio:
+&lt;ul>
+&lt;li>高可用部署下使用 minio 作为 glance 的后端存储&lt;/li>
+&lt;li>statefulset&lt;/li>
+&lt;li>使用 local-path CSI 作为后端存储&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud-minio -o wide
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kubectl get pods -n onecloud-minio -o wide
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME READY STATUS RESTARTS AGE IP NODE NOMINATED NODE READINESS GATES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 46m 10.40.99.205 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-1 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 46m 10.40.158.215 lzx-ocboot-ha-test-3 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 46m 10.40.159.22 lzx-ocboot-ha-test-2 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-3 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 46m 10.40.99.206 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pvc -n onecloud-minio
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME STATUS VOLUME CAPACITY ACCESS MODES STORAGECLASS AGE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export-minio-0 Bound pvc-297ed5e5-66c8-4855-8031-c65a0ccfa4d0 1Ti RWO local-path 46m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export-minio-1 Bound pvc-4e8fe486-5b23-44a0-876c-df36d134957f 1Ti RWO local-path 46m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export-minio-2 Bound pvc-389b3c61-6000-4757-9949-db53e4e53776 1Ti RWO local-path 46m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export-minio-3 Bound pvc-3dd54509-7745-47dd-84ea-fbacfe1e2f5b 1Ti RWO local-path 46m
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;h3 id="目标">目标&lt;/h3>
+&lt;p>下线 primary_master_node 10.127.100.234 节点，加入新的节点替换该节点&lt;/p>
+&lt;h3 id="步骤">步骤&lt;/h3>
+&lt;h4 id="1-需要确认有哪些有状态的-pod-和-pvc-运行在该节点">1. 需要确认有哪些有状态的 pod 和 pvc 运行在该节点&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 根据 IP 找到节点在 k8s 集群中的名称&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get nodes -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 10.127.100.234
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test Ready master 4h15m v1.15.12 10.127.100.234 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看所有为 local-path 的 pvc&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pvc -A &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep local-path
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># onecloud-minio namespace 的 export-minio-x 负责存储 glance 的镜像，是关键组件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio export-minio-0 Bound pvc-297ed5e5-66c8-4855-8031-c65a0ccfa4d0 1Ti RWO local-path 3h11m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio export-minio-1 Bound pvc-4e8fe486-5b23-44a0-876c-df36d134957f 1Ti RWO local-path 3h11m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio export-minio-2 Bound pvc-389b3c61-6000-4757-9949-db53e4e53776 1Ti RWO local-path 3h11m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio export-minio-3 Bound pvc-3dd54509-7745-47dd-84ea-fbacfe1e2f5b 1Ti RWO local-path 3h11m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># onecloud-monitoring namespace 的 export-monitor-minio-x 负责存储服务的日志，不是关键组件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring export-monitor-minio-0 Bound pvc-b885605f-b5ca-40ff-b968-4d95b03e8bb8 1Ti RWO local-path 3h8m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring export-monitor-minio-1 Bound pvc-520a8262-5dad-48aa-9a0e-0e25f850faad 1Ti RWO local-path 3h8m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring export-monitor-minio-2 Bound pvc-6de1ff0f-3465-4a51-8124-880f1b3c6d7a 1Ti RWO local-path 3h8m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring export-monitor-minio-3 Bound pvc-364652ca-496e-4b29-82ea-ec7e768aa8f5 1Ti RWO local-path 3h8m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># onecloud namespace 下面的这些 pvc 都是系统服务依赖的&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># default-baremetal-agent 是存储物理机管理的存储，不开启 baremetal-agent 可以不用管，默认也是 Pending 待绑定状态&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-baremetal-agent Pending local-path 3h35m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># default-esxi-agent 负责存 esxi-agent 服务相关的本地数据&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-esxi-agent Bound pvc-b32adfcc-96e7-45e4-b8bd-b5318c954dca 30G RWO local-path 3h35m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># default-glance 负责存 glance 服务的镜像，在高可用部署环境下，deployment default-glance 不会挂载这个 pvc ，会使用 onecloud-minio 里面的 minio s3 存储镜像，可以不用管&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-glance Bound pvc-e6ee398e-2d84-46cf-9401-e94f438d87cd 100G RWO local-path 3h36m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># default-influxdb 负责存平台的监控数据，监控数据可以容忍丢失，如果所在节点挂了，可以删掉重建&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-influxdb Bound pvc-871b9441-c56f-4bb4-8b56-868e1df1a438 20G RWO local-path 3h35m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看该节点上有哪些 pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -A -o wide &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep &lt;span style="color:#4e9a06">&amp;#39;lzx-ocboot-ha-test &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio minio-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h10m 10.40.99.205 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio minio-3 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h10m 10.40.99.206 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-kube-state-metrics-6c97499758-w69tz 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h6m 10.40.99.214 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-loki-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h6m 10.40.99.213 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-minio-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h7m 10.40.99.211 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-minio-3 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h7m 10.40.99.212 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-monitor-stack-operator-54d8c46577-qknws 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h6m 10.40.99.216 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-promtail-4mx2s 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h6m 10.40.99.215 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-etcd-7brtldv78z 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h10m 10.40.99.207 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-glance-6fd697b7b9-nbk9t 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h7m 10.40.99.208 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-host-5rmg8 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> 3h34m 10.127.100.234 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-host-deployer-sf494 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> 3h34m 10.40.99.202 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-host-image-s6pwq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> 3h34m 10.127.100.234 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-region-dns-2hcpv 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 3h34m 10.127.100.234 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-telegraf-5jn4x 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h34m 10.127.100.234 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-influxdb-6bqgq 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 3h34m 10.127.99.218 lzx-ocboot-ha-test &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过上面命令的结果，可以筛选出 onecloud-minio/{minio-0,minio-3}，onecloud/default-influxdb，onecloud-monitoring/{monitor-minio-0,monitor-minio-3} 这些有状态的 pod 在 primary_master_node 上。&lt;/p>
+&lt;h4 id="2-接下来将-primary_master_node-关机踢出集群">2. 接下来将 primary_master_node 关机踢出集群&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 登录其它两个 master_node 节点，比如：10.127.100.229&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh root@10.127.100.229
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 设置 KUBECONFIG 配置&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ &lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">KUBECONFIG&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>/etc/kubernetes/admin.conf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看节点状态，发现 primary_master_node 已经变成 NotReady&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get nodes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME STATUS ROLES AGE VERSION
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test NotReady master 4h37m v1.15.12
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-2 Ready master 3h58m v1.15.12
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-3 Ready master 3h57m v1.15.12
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 删除 primary_master_node 节点：lzx-ocboot-ha-test&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl drain --delete-local-data --ignore-daemonsets lzx-ocboot-ha-test
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARNING: ignoring DaemonSet-managed Pods: kube-system/calico-node-fdzql, kube-system/kube-proxy-nfxvd, kube-system/traefik-ingress-controller-jms9v, onecloud-monitoring/monitor-promtail-4mx2s, onecloud/default-host-5rmg8, onecloud/default-host-deployer-sf494, onecloud/default-host-image-s6pwq, onecloud/default-region-dns-2hcpv, onecloud/default-telegraf-5jn4x
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;minio-0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;monitor-minio-3&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;default-etcd-7brtldv78z&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;monitor-kube-state-metrics-6c97499758-w69tz&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;default-influxdb-85945647d5-6bqgq&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;default-glance-6fd697b7b9-nbk9t&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;minio-3&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;monitor-monitor-stack-operator-54d8c46577-qknws&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;monitor-loki-0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>evicting pod &lt;span style="color:#4e9a06">&amp;#34;monitor-minio-0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 该命令会卡停住，因为 primary_master_node 已经关机了，无法删除 pod ，这个时候 &amp;#39;Ctrl-c&amp;#39; 取消命令&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>^C
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 使用 kubectl delete node 直接删除 primary_master_node 节点&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl delete node lzx-ocboot-ha-test
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 然后再查看处于 Pending 状态的 pod 全部都是之前 primary_master_node 上面有状态的 pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 因为这些 pod 使用了 local-path 的 pvc ，这些 pvc 是和节点强绑定的，还存在集群中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get pods -A &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep Pending
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio minio-0 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 61s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio minio-3 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 61s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-minio-0 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 61s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-minio-3 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 61s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-influxdb-85945647d5-x5sv5 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10m
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-删除旧的-primary_master_node-的-etcd-endpoint">3. 删除旧的 primary_master_node 的 etcd endpoint&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 kube-system 系统下的 etcd pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get pods -n kube-system &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep etcd
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>etcd-lzx-ocboot-ha-test-2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 4h52m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>etcd-lzx-ocboot-ha-test-3 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 4h51m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 进入 etcd-lzx-ocboot-ha-test-2 etcd pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl exec -ti -n kube-system etcd-lzx-ocboot-ha-test-2 sh&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 使用 etcdctl 查看 member list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ etcdctl --endpoints https://127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key member list
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 会发现旧的 primary_master_node member lzx-ocboot-ha-test 还在 etcd 集群&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>14da7b338b44eee0, started, lzx-ocboot-ha-test, https://10.127.100.234:2380, https://10.127.100.234:2379, &lt;span style="color:#204a87">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>454ae6f931376261, started, lzx-ocboot-ha-test-2, https://10.127.100.229:2380, https://10.127.100.229:2379, &lt;span style="color:#204a87">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>5afd19948b9009f6, started, lzx-ocboot-ha-test-3, https://10.127.100.226:2380, https://10.127.100.226:2379, &lt;span style="color:#204a87">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 删除 lzx-ocboot-ha-test member&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ etcdctl --endpoints https://127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key member remove 14da7b338b44eee0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="4-替换旧的-primary_master_node-节点加入新的-master_node">4. 替换旧的 primary_master_node 节点，加入新的 master_node&lt;/h4>
+&lt;p>旧的 primary_master_node 节点已经被删掉，会发现 keepalived 的 vip 也漂移到了 master_node_1 上：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 vip 为 10.127.100.102&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果该节点运行了云平台 host 服务，ip 会绑定到 br0 上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ ip addr show br0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>32: br0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span style="color:#0000cf;font-weight:bold">1500&lt;/span> qdisc noqueue state UNKNOWN group default qlen &lt;span style="color:#0000cf;font-weight:bold">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> link/ether 00:22:96:6f:6e:f1 brd ff:ff:ff:ff:ff:ff
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inet 10.127.100.229/24 brd 10.127.100.255 scope global br0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inet 10.127.100.102/32 scope global br0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inet6 fe80::222:96ff:fe6f:6ef1/64 scope link
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 /etc/kubernetes/manifests/keepalived.yaml env 配置&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ cat /etc/kubernetes/manifests/keepalived.yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">15&lt;/span> env
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> env:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 对应 keepalived 的权重，除了 primary_master_node 的 keepalived 会设置 100，其余 master_node 上面的都是 90&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_PRIORITY
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: &lt;span style="color:#4e9a06">&amp;#34;90&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 设置的 VIP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_VIRTUAL_IPS
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: &lt;span style="color:#4e9a06">&amp;#39;#PYTHON2BASH:[&amp;#39;&amp;#39;10.127.100.102&amp;#39;&amp;#39;]&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 是 BACKUP 角色&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_STATE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: BACKUP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 密码&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_PASSWORD
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: de17f785
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># router id&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_ROUTER_ID
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: &lt;span style="color:#4e9a06">&amp;#34;12&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 改节点网卡实际 ip&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_NODE_IP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: 10.127.100.229
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># keepalived 绑定的网卡&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_INTERFACE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: eth0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> image: registry.cn-beijing.aliyuncs.com/yunionio/keepalived:v2.0.25
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看集群当前只有 2 个节点&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ocboot&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get nodes -o wide
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME STATUS ROLES AGE VERSION INTERNAL-IP EXTERNAL-IP OS-IMAGE KERNEL-VERSION CONTAINER-RUNTIME
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-2 Ready master 4h29m v1.15.12 10.127.100.229 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-3 Ready master 4h28m v1.15.12 10.127.100.226 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在使用 ocboot 加入新的节点，编辑 ocboot yaml 配置：&lt;/p>
+&lt;ul>
+&lt;li>把当前的 lzx-ocboot-ha-test-2 这个节点当做 primary_master_node&lt;/li>
+&lt;li>需要新加入 master_node 节点信息：
+&lt;ul>
+&lt;li>IP: 10.127.100.224&lt;/li>
+&lt;li>Name: lzx-ocboot-ha-test-4&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>因为旧的 primary_master_node 已经被删除了，又把当前的 master_node_1 当做新集群的 primary_master_node，现在的配置变成下面这样:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">$ cat config-new-k8s-ha.yaml&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">primary_master_node&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 这里把之前的 master_node_1 10.127.100.229 当做 primary_master_node&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">hostname&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10.127.100.229&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">use_local&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">false&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">user&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">root&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">onecloud_version&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;v3.8.8&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 数据库连接信息，根据自己的环境填写&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">db_host&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10.127.100.101&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">db_user&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;root&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">db_password&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0neC1oudDB#&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">db_port&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;3306&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">image_repository&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">registry.cn-beijing.aliyuncs.com/yunionio&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">ha_using_local_registry&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">false&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">node_ip&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;10.127.100.229&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># keepalived 暴露出去的 vip&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">controlplane_host&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10.127.100.102&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">controlplane_port&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;6443&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">as_host&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 启用 ha ，默认部署 keepavlied&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">high_availability&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">use_ee&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">false&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 高可用使用 minio&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">enable_minio&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">host_networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0/br0/10.127.100.229&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">master_nodes&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 加入到 10.127.100.102 vip 的 k8s 集群&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">controlplane_host&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">10.127.100.102&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">controlplane_port&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;6443&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 运行云平台控制相关组件&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">as_controller&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 作为云平台私有云宿主机计算节点&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">as_host&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># 启用 keepavlied&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">high_availability&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">hosts&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">user&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">root&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">hostname&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;10.127.100.224&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">host_networks&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;eth0/br0/10.127.100.224&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>写好配置后，使用 ocboot 加入新节点：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 部署工具代码&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ocboot
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 开始加入节点&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py config-new-k8s-ha.yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>等到 ocboot 的 ./run.py 运行完成后，再查看 node 信息，发现新的节点 lzx-ocboot-ha-test-4(10.127.100.224) 已经加入进来：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get nodes -o wide
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME STATUS ROLES AGE VERSION INTERNAL-IP EXTERNAL-IP OS-IMAGE KERNEL-VERSION CONTAINER-RUNTIME
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-2 Ready master 5h13m v1.15.12 10.127.100.229 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-3 Ready master 5h12m v1.15.12 10.127.100.226 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lzx-ocboot-ha-test-4 Ready master 10m v1.15.12 10.127.100.224 &amp;lt;none&amp;gt; CentOS Linux &lt;span style="color:#0000cf;font-weight:bold">7&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>Core&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> 3.10.0-1160.6.1.el7.yn20201125.x86_64 docker://20.10.5
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改新的 primary_master_node keepalived 的权重和角色&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ vim /etc/kubernetes/manifests/keepalived.yaml
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 把权重改成 100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_PRIORITY
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: &lt;span style="color:#4e9a06">&amp;#34;100&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 把角色改成 MASTER&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: KEEPALIVED_STATE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: MASTER
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="5-恢复有状态的-pod">5. 恢复有状态的 pod&lt;/h4>
+&lt;p>新的 master 节点加入后，会发现原来的有状态 pod 还是 Pending，接下来就需要删除旧的 pvc ，把它们启动到新的 master 节点上。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 Pending 状态的 pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get pods -A &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep Pending
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio minio-0 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 74m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-minio minio-3 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 74m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-minio-0 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 74m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-monitoring monitor-minio-3 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 74m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud default-influxdb-85945647d5-x5sv5 0/1 Pending &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 84m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 把现在的 primary_master_node 和旧的 master_node 先禁止调度，这样可以保证后面的有状态 pod 创建到新的 master 节点上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 保证 minio 多副本打散到不同的 master 节点&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl cordon lzx-ocboot-ha-test-2 lzx-ocboot-ha-test-3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>首先恢复 onecloud-minio 里面的 minio statefulset 组件，因为里面存储了 glance 依赖的镜像，通过之前的命令发现 onecloud-minio namespace 里面的 minio-0 和 minio-3 是 Pending 状态，接下来删除它们依赖的 pvc ，然后 pod 就会重启到新的 master_node 节点上，操作如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 找到对应的 pvc&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get pvc -n onecloud-minio &lt;span style="color:#000;font-weight:bold">|&lt;/span> egrep &lt;span style="color:#4e9a06">&amp;#39;minio-0|minio-3&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export-minio-0 Bound pvc-297ed5e5-66c8-4855-8031-c65a0ccfa4d0 1Ti RWO local-path 4h55m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export-minio-3 Bound pvc-3dd54509-7745-47dd-84ea-fbacfe1e2f5b 1Ti RWO local-path 4h55m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 删除 pvc&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl delete pvc -n onecloud-minio export-minio-0 export-minio-3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 删除 pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl delete pods -n onecloud-minio minio-0 minio-3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看新创建启动 minio-0 和 minio-3 ，已经启动到新的 node lzx-ocboot-ha-test-4 上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get pods -n onecloud-minio -o wide
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME READY STATUS RESTARTS AGE IP NODE NOMINATED NODE READINESS GATES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 7s 10.40.103.200 lzx-ocboot-ha-test-4 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-1 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h1m 10.40.158.215 lzx-ocboot-ha-test-3 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h1m 10.40.159.22 lzx-ocboot-ha-test-2 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>minio-3 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 14s 10.40.103.199 lzx-ocboot-ha-test-4 &amp;lt;none&amp;gt; &amp;lt;none&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 minio-3 的日志，发现已经自愈完毕&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl logs -n onecloud-minio minio-3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Healing disk &lt;span style="color:#4e9a06">&amp;#39;/export&amp;#39;&lt;/span> on 1st pool
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Healing disk &lt;span style="color:#4e9a06">&amp;#39;/export&amp;#39;&lt;/span> on 1st pool &lt;span style="color:#204a87">complete&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Summary:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;ID&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;0e5c1947-44f0-4f8a-b7f0-e3a55f441d6f&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;PoolIndex&amp;#34;&lt;/span>: 0,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;SetIndex&amp;#34;&lt;/span>: 0,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;DiskIndex&amp;#34;&lt;/span>: 3,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;Path&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;/export&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;Endpoint&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;http://minio-3.minio-svc.onecloud-minio.svc.cluster.local:9000/export&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;Started&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2022-04-13T06:49:29.882069559Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;LastUpdate&amp;#34;&lt;/span>: &lt;span style="color:#4e9a06">&amp;#34;2022-04-13T06:49:59.564158167Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;ObjectsHealed&amp;#34;&lt;/span>: 10,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;ObjectsFailed&amp;#34;&lt;/span>: 0,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;BytesDone&amp;#34;&lt;/span>: 1756978429,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;BytesFailed&amp;#34;&lt;/span>: 0,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;QueuedBuckets&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[]&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;HealedBuckets&amp;#34;&lt;/span>: &lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;.minio.sys/config&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;.minio.sys/buckets&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;onecloud-images&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 也可以登录到 lzx-ocboot-ha-test-4 上，查看 local-path csi 里面的 minio onecloud-images bucket 里面有没有对应的镜像 parts&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh root@10.127.100.224
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 进入对应的 pvc 目录，目录名可以使用 kubectl get pvc -n onecloud-minio | grep minio-3 获得&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-4 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ &lt;span style="color:#204a87">cd&lt;/span> /opt/local-path-provisioner/pvc-352277cb-e69d-41bf-b58a-d65cb1e4e6f8/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-4 pvc-352277cb-e69d-41bf-b58a-d65cb1e4e6f8&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ du -smh onecloud-images/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>838M onecloud-images/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用恢复 onecloud-minio 相同的方法，恢复 monitor-minio 就可以，参考命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl delete pvc -n onecloud-monitoring export-monitor-minio-0 export-monitor-minio-3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>persistentvolumeclaim &lt;span style="color:#4e9a06">&amp;#34;export-monitor-minio-0&amp;#34;&lt;/span> deleted
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>persistentvolumeclaim &lt;span style="color:#4e9a06">&amp;#34;export-monitor-minio-3&amp;#34;&lt;/span> deleted
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl delete pods -n onecloud-monitoring monitor-minio-0 monitor-minio-3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pod &lt;span style="color:#4e9a06">&amp;#34;monitor-minio-0&amp;#34;&lt;/span> deleted
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pod &lt;span style="color:#4e9a06">&amp;#34;monitor-minio-3&amp;#34;&lt;/span> deleted
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl get pods -n onecloud-monitoring &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep minio
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>monitor-minio-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 24s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>monitor-minio-1 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h17m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>monitor-minio-2 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 5h17m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>monitor-minio-3 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 24s
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>恢复 influxdb deployment，influxdb 和 minio 不太一样，minio 使用的 statefulset 管理，删掉 pod 和 pvc 后，k8s 会自动创建对应序号的 pod 和 pvc ，但是 deployment 不会，所以恢复 influxdb 的步骤是删掉 pvc，然后同时删掉 default-influxdb 这个 deployment ，我们的 onecloud-operator 组件就会新建对应的资源，步骤如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 恢复 influxdb&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl delete pvc -n onecloud default-influxdb&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl delete deployment -n onecloud default-influxdb&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl get pods -n onecloud | grep influxdb&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-influxdb-85945647d5-mdd2z 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 7m44s
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在所有在旧的 primary_master_node 上的组件都恢复，接下来把禁止调度的节点启用调度：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@lzx-ocboot-ha-test-2 ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>$ kubectl uncordon lzx-ocboot-ha-test-2 lzx-ocboot-ha-test-3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

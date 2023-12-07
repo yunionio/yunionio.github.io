@@ -1,0 +1,319 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+快速开始</title><link>https://www.cloudpods.org/zh/docs/quickstart/</link><description>Recent content in 快速开始 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudpods.org/zh/docs/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 私有云安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/allinone-virt/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/allinone-virt/</guid><description>
+&lt;h2 id="前提">前提&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+本章内容是通过部署工具快速搭建 Cloudpods 服务，如果想在生产环境部署高可用集群请参考: &lt;a href="../../setup/ha-ce/">高可用安装&lt;/a> 。
+&lt;/div>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;h3 id="机器配置要求">机器配置要求&lt;/h3>
+&lt;ul>
+&lt;li>操作系统: 根据 CPU 架构不同，支持的发行版也不一样，目前支持的发行版情况如下：
+&lt;ul>
+&lt;li>&lt;a href="http://isoredirect.centos.org/centos/7/isos">CentOS 7.6~7.9 Minimal&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;li>&lt;a href="https://www.debian.org/distrib/">Debian 10/11&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;li>&lt;a href="https://releases.ubuntu.com/jammy/">Ubuntu 22.04&lt;/a>: 仅支持 x86_64&lt;/li>
+&lt;li>&lt;a href="https://www.kylinos.cn/scheme/server/1.html">银河麒麟V10 SP2&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;li>&lt;a href="https://www.chinauos.com/">统信 UOS kongzi&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>操作系统需要是干净的版本，因为部署工具会重头搭建指定版本的 kubernetes 集群，所以确保系统没有安装 kubernetes, docker 等容器管理工具，否则会出现冲突导致安装异常&lt;/li>
+&lt;li>最低配置要求: CPU 4核, 内存 8GiB, 存储 100GiB&lt;/li>
+&lt;li>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="安装ansible和git">安装ansible和git&lt;/h2>
+&lt;p>首先需要安装ansible和git，ansible版本要求最低2.9.27，其中2.11.12测试较多。&lt;/p>
+&lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Kylin V10&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">其它操作系统&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
+&lt;p>&lt;p>如果提示&lt;code>locale&lt;/code>相关的报错，请先执行：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale-gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>备注：已知在&lt;code>debian 11&lt;/code>环境，如果&lt;code>/proc/cmdline&lt;/code>里找不到启动选项 &lt;code>systemd.unified_cgroup_hierarchy=0&lt;/code>，ocboot会自动配置相关的&lt;code>GRUB&lt;/code>选项，重建启动参数，并重启操作系统，以便 &lt;code>k8s&lt;/code> 能够正常启动。&lt;/p>
+&lt;/div>
+&lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
+&lt;p>部署的工具在 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>，需要把该工具使用 &lt;code>git clone&lt;/code> 下来，然后运行 &lt;code>run.py&lt;/code> 脚本部署服务。操作步骤如下:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 run.py 部署服务。其中 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 为部署节点的 IP 地址，该参数为可选项。如果不指定则选择默认路由出去的那张网卡部署服务。如果你的节点有多张网卡，可以通过指定 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 选择对应网卡监听服务。&lt;/p>
+&lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">中国大陆&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">其他地区&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
+&lt;p>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py virt &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;h2 id="部署完成">部署完成&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216 ，该 ip 为之前设置 &amp;lt;host_ip&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
+&lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
+&lt;h2 id="开始使用cloudpods">开始使用Cloudpods&lt;/h2>
+&lt;h3 id="创建第一台虚拟机">创建第一台虚拟机&lt;/h3>
+&lt;p>通过如下三步创建出第一台虚拟机：&lt;/p>
+&lt;h4 id="1-导入镜像">1. 导入镜像&lt;/h4>
+&lt;p>浏览位于 &lt;a href="https://cloud.centos.org/centos/7/images/">CentOS 7云主机镜像&lt;/a> ，选择一个GenericCloud 镜像，拷贝镜像URL。&lt;/p>
+&lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>系统镜像&lt;/code>，选择 &lt;code>上传&lt;/code>。输入镜像名称，选择 &lt;code>输入镜像URL&lt;/code>，粘贴上述CentOS 7镜像URL，选择 &lt;code>确定&lt;/code>。&lt;/p>
+&lt;p>可以访问 &lt;a href="https://docs.openstack.org/image-guide/obtain-images.html">https://docs.openstack.org/image-guide/obtain-images.html&lt;/a> 获得更多的虚拟机镜像。&lt;/p>
+&lt;h4 id="2-创建网络vpc和ip子网">2. 创建网络（VPC和IP子网）&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>新建VPC]: 在 &lt;code>网络&lt;/code> 菜单，选择 &lt;code>VPC&lt;/code> 子菜单，选择 &lt;code>新建&lt;/code>。输入名称，例如 &lt;code>vpc0&lt;/code>，选择目标网段，例如 &lt;code>192.168.0.0/16&lt;/code>。点击 &lt;code>新建&lt;/code>。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>新建IP子网: VPC创建完成后，选择 &lt;code>IP子网&lt;/code> 子菜单，选择 &lt;code>新建&lt;/code>。输入名称，例如 &lt;code>vnet0&lt;/code>，选择VPC为刚才创建的VPC &lt;code>vpc0&lt;/code>，选择可用区，输入 &lt;code>子网网段&lt;/code>，例如 &lt;code>192.168.100.0/24&lt;/code>。点击 &lt;code>新建&lt;/code>。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a href="../../function_principle/onpremise/network/examples">典型网络配置&lt;/a>提供了几种常见的宿主机网络配置，请参考。&lt;/p>
+&lt;h4 id="3-创建虚拟机">3. 创建虚拟机&lt;/h4>
+&lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>虚拟机&lt;/code>，选择 &lt;code>新建&lt;/code>。在此界面输入主机名，选择镜像和IP子网，创建虚拟机。&lt;/p>
+&lt;h2 id="faq">FAQ&lt;/h2>
+&lt;h3 id="1-在-all-in-one-部署完成后宿主机列表没有宿主机">1. 在 All in One 部署完成后宿主机列表没有宿主机？&lt;/h3>
+&lt;p>如下图所示，若发现环境部署完成后宿主机列表中没有宿主机，可按照以下方式进行排查&lt;/p>
+&lt;p>&lt;img src="../images/nohost.png" alt="">&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在控制节点排查 host 问题，请参考：&lt;a href="../../function_principle/onpremise/host/troubleshooting/">Host服务问题排障技巧&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code># 创建包含宿主机网段的IP子网
+$ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
+&lt;ol start="2">
+&lt;li>若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="../images/hostnameerror.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="2-在-all-in-one-中找不到虚拟机界面">2. 在 All in One 中找不到虚拟机界面？&lt;/h3>
+&lt;p>All in One 部署的节点会部署 Cloudpods host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 Cloudpods 环境中没有启用宿主机。&lt;/p>
+&lt;p>请到 &lt;code>管理后台&lt;/code> 界面，点击 &lt;code>主机/基础资源/宿主机&lt;/code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;p>如果要使用 Cloudpods 私有云虚拟机，并且宿主机是 CentOS 7 的发行版。需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
+&lt;h3 id="3-为什么修改了节点的-hostname-服务启动不了了">3. 为什么修改了节点的 hostname ，服务启动不了了？&lt;/h3>
+&lt;p>Cloudpods 底层使用了 Kubernetes 管理节点，Kubernetes 节点名称依赖 hostname，改了 hostname 会导致节点无法注册到 Kubernetes 集群，所以不要修改 hostname ，如果修改了，请改之前的名称，服务就会自动恢复了。&lt;/p>
+&lt;h3 id="4-如何重装">4. 如何重装?&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>执行 &lt;code>kubeadm reset -f&lt;/code> 删除 kubernetes 集群&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重新运行 ocboot 的 run.py 脚本&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="5-其它问题">5. 其它问题？&lt;/h3>
+&lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item><item><title>Docs: 多云管理平台安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/cmp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/cmp/</guid><description/></item><item><title>Docs: 融合云安装</title><link>https://www.cloudpods.org/zh/docs/quickstart/allinone-full/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/quickstart/allinone-full/</guid><description>
+&lt;h2 id="前提">前提&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+本章内容是通过部署工具快速搭建 Cloudpods 服务，如果想在生产环境部署高可用集群请参考: &lt;a href="../../setup/ha-ce/">高可用安装&lt;/a> 。
+&lt;/div>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;h3 id="机器配置要求">机器配置要求&lt;/h3>
+&lt;ul>
+&lt;li>操作系统: 根据 CPU 架构不同，支持的发行版也不一样，目前支持的发行版情况如下：
+&lt;ul>
+&lt;li>&lt;a href="http://isoredirect.centos.org/centos/7/isos">CentOS 7.6~7.9 Minimal&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;li>&lt;a href="https://www.debian.org/distrib/">Debian 10/11&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;li>&lt;a href="https://releases.ubuntu.com/jammy/">Ubuntu 22.04&lt;/a>: 仅支持 x86_64&lt;/li>
+&lt;li>&lt;a href="https://www.kylinos.cn/scheme/server/1.html">银河麒麟V10 SP2&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;li>&lt;a href="https://www.chinauos.com/">统信 UOS kongzi&lt;/a>: 支持 x86_64 和 arm64&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>操作系统需要是干净的版本，因为部署工具会重头搭建指定版本的 kubernetes 集群，所以确保系统没有安装 kubernetes, docker 等容器管理工具，否则会出现冲突导致安装异常&lt;/li>
+&lt;li>最低配置要求: CPU 4核, 内存 8GiB, 存储 100GiB&lt;/li>
+&lt;li>虚拟机和服务使用的存储路径都在 &lt;strong>/opt&lt;/strong> 目录下，所以理想环境下建议单独给 &lt;strong>/opt&lt;/strong> 目录设置挂载点
+&lt;ul>
+&lt;li>比如把 /dev/sdb1 单独分区做 ext4 然后通过 /etc/fstab 挂载到 /opt 目录&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="安装ansible和git">安装ansible和git&lt;/h2>
+&lt;p>首先需要安装ansible和git，ansible版本要求最低2.9.27，其中2.11.12测试较多。&lt;/p>
+&lt;ul class="nav nav-tabs" id="ocboot_install" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install-0" role="tab" aria-controls="ocboot_install-0" aria-selected="true">CentOS 7&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-1" role="tab" aria-controls="ocboot_install-1">Kylin V10&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-2" role="tab" aria-controls="ocboot_install-2">Debian 10/11&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install-3" role="tab" aria-controls="ocboot_install-3">其它操作系统&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install">&lt;div id="ocboot_install-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install-0">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y epel-release git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-1">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ yum install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install-2" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-2">
+&lt;p>&lt;p>如果提示&lt;code>locale&lt;/code>相关的报错，请先执行：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">if&lt;/span> ! grep -q &lt;span style="color:#4e9a06">&amp;#39;^en_US.UTF-8&amp;#39;&lt;/span> /etc/locale.gen&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#204a87;font-weight:bold">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;en_US.UTF-8 UTF-8&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/locale.gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale-gen
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;LANG=&amp;#34;en_US.UTF-8&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87">source&lt;/span> /etc/default/locale
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible 和 git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ apt install -y git python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>备注：已知在&lt;code>debian 11&lt;/code>环境，如果&lt;code>/proc/cmdline&lt;/code>里找不到启动选项 &lt;code>systemd.unified_cgroup_hierarchy=0&lt;/code>，ocboot会自动配置相关的&lt;code>GRUB&lt;/code>选项，重建启动参数，并重启操作系统，以便 &lt;code>k8s&lt;/code> 能够正常启动。&lt;/p>
+&lt;/div>
+&lt;div id="ocboot_install-3" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install-3">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 本地安装 ansible&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade pip setuptools wheel
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ python3 -m pip install --upgrade ansible
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;h2 id="安装cloudpods">安装Cloudpods&lt;/h2>
+&lt;p>部署的工具在 &lt;a href="https://github.com/yunionio/ocboot">https://github.com/yunionio/ocboot&lt;/a>，需要把该工具使用 &lt;code>git clone&lt;/code> 下来，然后运行 &lt;code>run.py&lt;/code> 脚本部署服务。操作步骤如下:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 下载 ocboot 工具到本地&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ git clone -b release/3.10 https://github.com/yunionio/ocboot &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> ./ocboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 run.py 部署服务。其中 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 为部署节点的 IP 地址，该参数为可选项。如果不指定则选择默认路由出去的那张网卡部署服务。如果你的节点有多张网卡，可以通过指定 &lt;strong>&amp;lt;host_ip&amp;gt;&lt;/strong> 选择对应网卡监听服务。&lt;/p>
+&lt;ul class="nav nav-tabs" id="ocboot_install_region" role="tablist">&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link active" href="#ocboot_install_region-0" role="tab" aria-controls="ocboot_install_region-0" aria-selected="true">中国大陆&lt;/a>&lt;/li>
+&lt;li class="nav-item">&lt;a data-toggle="tab" class="nav-link" href="#ocboot_install_region-1" role="tab" aria-controls="ocboot_install_region-1">其他地区&lt;/a>&lt;/li>&lt;/ul>
+&lt;div class="tab-content" id="ocboot_install_region">&lt;div id="ocboot_install_region-0" class="tab-pane show active" role="tabpanel" aria-labelledby="ocboot_install_region-0">
+&lt;p>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 直接部署，会从 registry.cn-beijing.aliyuncs.com 拉取容器镜像&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果遇到 pip 安装包下载过慢的问题，可以用 -m 参数指定 pip 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如下面使用: https://mirrors.aliyun.com/pypi/simple/ 源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ./run.py -m https://mirrors.aliyun.com/pypi/simple/ full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;div id="ocboot_install_region-1" class="tab-pane" role="tabpanel" aria-labelledby="ocboot_install_region-1">
+&lt;p>&lt;p>对于某些网络环境，registry.cn-beijing.aliyuncs.com 访问缓慢或不可达，在版本 &lt;code>v3.9.5&lt;/code>之后（含），可指定镜像源：&lt;a href="http://docker.io">docker.io&lt;/a> 来安装。命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">IMAGE_REPOSITORY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>docker.io/yunion ./run.py full &amp;lt;host_ip&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>&lt;/div>
+&lt;p>&lt;strong>./run.py&lt;/strong> 脚本会调用 ansible 部署服务，如果部署过程中遇到问题导致脚本退出，可以重复执行该脚本进行重试。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+如果是基于 CentOS 7 发行版部署，会因为安装内核导致一次重启。./run.py 脚本会中断，请等待操作系统重启后，重新执行一次 ./run.py 脚本，进行后续步骤的安装。
+&lt;/div>
+&lt;h2 id="部署完成">部署完成&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>....
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 部署完成后会有如下输出，表示运行成功&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 浏览器打开 https://10.168.26.216 ，该 ip 为之前设置 &amp;lt;host_ip&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 使用 admin/admin@123 用户密码登录就能访问前端界面&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialized successfully!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Web page: https://10.168.26.216
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>User: admin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Password: admin@123
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后用浏览器访问 https://10.168.26.216 ，用户名输入 &lt;code>admin&lt;/code>，密码输入 &lt;code>admin@123&lt;/code> 就会进入 Cloudpods 的界面。&lt;/p>
+&lt;p>&lt;img src="../images/index.png" alt="登录页">&lt;/p>
+&lt;h2 id="开始使用cloudpods">开始使用Cloudpods&lt;/h2>
+&lt;h3 id="创建第一台虚拟机">创建第一台虚拟机&lt;/h3>
+&lt;p>通过如下三步创建出第一台虚拟机：&lt;/p>
+&lt;h4 id="1-导入镜像">1. 导入镜像&lt;/h4>
+&lt;p>浏览位于 &lt;a href="https://cloud.centos.org/centos/7/images/">CentOS 7云主机镜像&lt;/a> ，选择一个GenericCloud 镜像，拷贝镜像URL。&lt;/p>
+&lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>系统镜像&lt;/code>，选择 &lt;code>上传&lt;/code>。输入镜像名称，选择 &lt;code>输入镜像URL&lt;/code>，粘贴上述CentOS 7镜像URL，选择 &lt;code>确定&lt;/code>。&lt;/p>
+&lt;p>可以访问 &lt;a href="https://docs.openstack.org/image-guide/obtain-images.html">https://docs.openstack.org/image-guide/obtain-images.html&lt;/a> 获得更多的虚拟机镜像。&lt;/p>
+&lt;h4 id="2-创建网络vpc和ip子网">2. 创建网络（VPC和IP子网）&lt;/h4>
+&lt;p>[新建VPC] 在 &lt;code>网络&lt;/code> 菜单，选择 &lt;code>VPC&lt;/code> 子菜单，选择 &lt;code>新建&lt;/code>。输入名称，例如 &lt;code>vpc0&lt;/code>，选择目标网段，例如 &lt;code>192.168.0.0/16&lt;/code>。点击 &lt;code>新建&lt;/code>。&lt;/p>
+&lt;p>[新建IP子网] VPC创建完成后，选择 &lt;code>IP子网&lt;/code> 子菜单，选择 &lt;code>新建&lt;/code>。输入名称，例如 &lt;code>vnet0&lt;/code>，选择VPC为刚才创建的VPC &lt;code>vpc0&lt;/code>，选择可用区，输入 &lt;code>子网网段&lt;/code>，例如 &lt;code>192.168.100.0/24&lt;/code>。点击 &lt;code>新建&lt;/code>。&lt;/p>
+&lt;p>&lt;a href="../../function_principle/onpremise/network/examples">典型网络配置&lt;/a>提供了几种常见的宿主机网络配置，请参考。&lt;/p>
+&lt;h4 id="3-创建虚拟机">3. 创建虚拟机&lt;/h4>
+&lt;p>在 &lt;code>主机&lt;/code> 菜单，选择 &lt;code>虚拟机&lt;/code>，选择 &lt;code>新建&lt;/code>。在此界面输入主机名，选择镜像和IP子网，创建虚拟机。&lt;/p>
+&lt;h3 id="导入公有云或者其它私有云平台资源">导入公有云或者其它私有云平台资源&lt;/h3>
+&lt;p>Cloudpods自身是一个完整的私有云，同时也可以统一纳管其他云平台的资源。&lt;/p>
+&lt;p>在 &lt;code>多云管理&lt;/code> 菜单，选择 &lt;code>云账号&lt;/code> 并新建，根据自己的需求填写对应云平台的认证信息，配置完云账号后 Cloudpods 服务就会同步相应云平台的资源，同步完成后即可在前端查看。&lt;/p>
+&lt;p>&lt;img src="../images/cloudaccount.png" alt="多云管理">&lt;/p>
+&lt;h2 id="faq">FAQ&lt;/h2>
+&lt;h3 id="1-在-all-in-one-部署完成后宿主机列表没有宿主机">1. 在 All in One 部署完成后宿主机列表没有宿主机？&lt;/h3>
+&lt;p>如下图所示，若发现环境部署完成后宿主机列表中没有宿主机，可按照以下方式进行排查&lt;/p>
+&lt;p>&lt;img src="../images/nohost.png" alt="">&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在控制节点排查 host 问题，请参考：&lt;a href="../../function_principle/onpremise/host/troubleshooting/">Host服务问题排障技巧&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>若日志报错信息中包含“register failed: try create network: find_matched == false”，则表示未成功创建包含宿主机的IP子网，导致宿主机注册失败，请创建包含宿主机网段的IP子网。&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code># 创建包含宿主机网段的IP子网
+$ climc network-create bcast0 adm0 &amp;lt;start_ip&amp;gt; &amp;lt;end_ip&amp;gt; mask
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="../images/iperror.png" alt="">&lt;/p>
+&lt;ol start="2">
+&lt;li>若日志报错信息中包含“name starts with letter, and contains letter, number and - only”，则表示宿主机的主机名不合规，应改成以字母开头的hostname&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="../images/hostnameerror.png" alt="">&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="2-在-all-in-one-中找不到虚拟机界面">2. 在 All in One 中找不到虚拟机界面？&lt;/h3>
+&lt;p>All in One 部署的节点会部署 Cloudpods host 计算服务，作为宿主机，具有创建和管理私有云虚拟机的能力。没有虚拟机界面应该是 Cloudpods 环境中没有启用宿主机。&lt;/p>
+&lt;p>请到 &lt;code>管理后台&lt;/code> 界面，点击 &lt;code>主机/基础资源/宿主机&lt;/code> 查看宿主机列表，启用相应的宿主机，刷新界面就会出现虚拟机界面。&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">注意&lt;/h4>
+&lt;p>如果要使用 Cloudpods 私有云虚拟机，并且宿主机是 CentOS 7 的发行版。需要宿主机使用 Cloudpods 编译的内核，可使用以下命令查看宿主机是否使用 Cloudpods 内核(包含 yn 关键字)。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看是否使用 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ uname -a &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep yn
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Linux office-controller 3.10.0-1160.6.1.el7.yn20201125.x86_64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 如果内核不是带有 yn 关键字的版本，可能是第一次使用 ocboot 安装，重启即可进入 yn 内核&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>&lt;img src="../images/host.png" alt="宿主机">&lt;/p>
+&lt;h3 id="3-为什么修改了节点的-hostname-服务启动不了了">3. 为什么修改了节点的 hostname ，服务启动不了了？&lt;/h3>
+&lt;p>Cloudpods 底层使用了 Kubernetes 管理节点，Kubernetes 节点名称依赖 hostname，改了 hostname 会导致节点无法注册到 Kubernetes 集群，所以不要修改 hostname ，如果修改了，请改之前的名称，服务就会自动恢复了。&lt;/p>
+&lt;h3 id="4-如何重装">4. 如何重装?&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>执行 &lt;code>kubeadm reset -f&lt;/code> 删除 kubernetes 集群&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重新运行 ocboot 的 run.py 脚本&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="5-其它问题">5. 其它问题？&lt;/h3>
+&lt;p>其它问题欢迎在 Cloudpods github issues 界面提交: &lt;a href="https://github.com/yunionio/cloudpods/issues">https://github.com/yunionio/cloudpods/issues&lt;/a> , 我们会尽快回复。&lt;/p></description></item></channel></rss>

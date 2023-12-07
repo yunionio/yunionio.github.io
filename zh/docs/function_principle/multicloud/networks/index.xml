@@ -1,0 +1,88 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+网络</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/networks/</link><description>Recent content in 网络 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Thu, 31 Aug 2023 20:56:33 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/function_principle/multicloud/networks/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: DNS设计介绍</title><link>https://www.cloudpods.org/zh/docs/function_principle/multicloud/networks/dns/</link><pubDate>Thu, 31 Aug 2023 16:16:34 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/function_principle/multicloud/networks/dns/</guid><description>
+&lt;h1 id="dns设计说明">DNS设计说明&lt;/h1>
+&lt;p>3.10.4版本之前由于采用的是一对多模式，本地dns域会对应到多个云平台的dns域，因此会存在以下两个问题:&lt;/p>
+&lt;ol>
+&lt;li>若不同云平台的dns解析记录不一致，在往本地同步时会不断覆盖本地的解析记录&lt;/li>
+&lt;li>若云平台到本地同步不及时，再次从本地推送解析记录到云上，会导致未同步到本地的记录在云上删除&lt;/li>
+&lt;/ol>
+&lt;h1 id="新版本dns设计">新版本DNS设计&lt;/h1>
+&lt;p>3.10.4之后版本采用一对一模式，云上的dns域及解析记录会对应到本地的一条数据&lt;/p>
+&lt;p>因此增删改本地的一个dns解析，仅会影响到云上的一个确定的记录，即使有些记录未同步到本地，也不会被影响到&lt;/p>
+&lt;p>新版本采用新的表存储dns解析，因此在更新新版本之后公有云的dns解析会暂时置空，需要等待云账号完全同步后恢复&lt;/p>
+&lt;h1 id="region-dns服务">region-dns服务&lt;/h1>
+&lt;p>3.10.4 版本之前region-dns采用一张表存储dns解析，类似于如下&lt;/p>
+&lt;p>&lt;code>dnsrecord_tbl:&lt;/code>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>Records&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>hello.example.com&lt;/td>
+&lt;td>A: 1.1.1.1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>world.example.com&lt;/td>
+&lt;td>A: 2.2.2.2&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>新版本统一采用使用类似公有云设计，一张表存dns zone，一张表存解析记录，类似如下&lt;/p>
+&lt;p>&lt;code>dnszones_tbl:&lt;/code>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>ZoneType&lt;/th>
+&lt;th>Id&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>example.com&lt;/td>
+&lt;td>PrivateZone&lt;/td>
+&lt;td>1111-xxxx-xxxxx&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloud.org&lt;/td>
+&lt;td>PublicZone&lt;/td>
+&lt;td>2222-xxxx-xxxxx&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>dnsrecords_tbl:&lt;/code>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>DnsZoneId&lt;/th>
+&lt;th>Name&lt;/th>
+&lt;th>DnsType&lt;/th>
+&lt;th>DnsValue&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>1111-xxxx-xxxxx&lt;/td>
+&lt;td>*&lt;/td>
+&lt;td>A&lt;/td>
+&lt;td>1.1.1.1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1111-xxxx-xxxxx&lt;/td>
+&lt;td>hello&lt;/td>
+&lt;td>CNAME&lt;/td>
+&lt;td>world.example.com&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2222-xxxx-xxxxx&lt;/td>
+&lt;td>iso&lt;/td>
+&lt;td>A&lt;/td>
+&lt;td>2.2.2.2&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>因此新版本创建cloudpods本地dns解析将和公有云保持一致&lt;/p></description></item></channel></rss>

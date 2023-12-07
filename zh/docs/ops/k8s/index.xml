@@ -1,0 +1,599 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+Kubernetes运维</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/</link><description>Recent content in Kubernetes运维 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Wed, 28 Jun 2023 14:45:50 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org/zh/docs/ops/k8s/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 组件pod常用运维命令</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/commonops/</link><pubDate>Wed, 10 Nov 2021 18:54:59 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/k8s/commonops/</guid><description>
+&lt;h3 id="查看组件pod运行情况">查看组件pod运行情况&lt;/h3>
+&lt;p>系统组件都以 k8s pod的形式运行，通过以下命令查看平台的系统组件以及运行情况等。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># -n表示namespace的意思，目前我们的服务都部署在onecloud namespace下，查看所有组件的pod的运行情况&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># -o wide查看pod的更多详细信息，比如运行在哪个节点上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud -o wide
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看指定pod资源的详细信息，如查看region组件的pod的详细信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl describe pods -n onecloud default-region-759b4bff4c-hpmdd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看指定主机上运行的所有pod信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud -o wide --field-selector&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>spec.nodeName&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&amp;lt;host-name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="重启组件服务">重启组件服务&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启host服务，如删除所有host pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl -n onecloud delete pods default-host-xxxxx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl rollout restart daemonset -n onecloud default-host
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启web服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl rollout restart deployment -n onecloud default-web
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl delete pods -n onecloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启所有服务，平台服务都以default开头&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep default &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 重启onecloud命名空间下的所有pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get deployment -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span> awk &lt;span style="color:#4e9a06">&amp;#39;{print $1}&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">|&lt;/span> xargs kubectl rollout restart deployment -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新服务配置并重启服务">更新服务配置并重启服务&lt;/h3>
+&lt;p>平台所有组件服务都有对应的Configmaps文件保存服务配置，当配置信息需要更改时，可通过以下步骤更新服务配置并使其生效。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 以region服务为例更新其configmaps配置信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl edit configmaps default-region -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 修改完成后，重启服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl -n onecloud rollout restart deployment default-region
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看服务日志">查看服务日志&lt;/h3>
+&lt;p>查看持久化服务日志，请参考&lt;a href="../backendlogs">持久化后端日志&lt;/a>&lt;/p>
+&lt;p>以region组件为例介绍如何查看region组件的日志信息。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 首先需要找到region服务所在pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud &lt;span style="color:#000;font-weight:bold">|&lt;/span>grep region
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看region服务容器的日志，其中-f表示follow，即持续输出日志，类似于journalctl的 -f；--since 5m 表示查看近5分钟的日志信息。按CTRL+C退出日志输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> -f --since 5m
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看region容器日志，将最近5分钟的所有日志到region.log&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs -n onecloud &lt;span style="color:#000">$region_pod_name&lt;/span> --since 5m &amp;gt; region.log
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 若有些服务有两个容器，如host服务有名称为host和host-image的容器，此时查看容器命令时需要加&amp;#39;-c&amp;#39; 指定查看哪个容器的日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs -n onecloud &lt;span style="color:#000">$host_pod_name&lt;/span> -c host-image -f
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看平台版本信息">查看平台版本信息&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 其中onecloudcluster 可以简写成oc；default为OneCloudCluster的名称；-o yaml即以yaml形式输出onecloudcluster类型资源的API对象。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get onecloudcluster -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep version
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看mysql账户密码信息">查看MySQL账户密码信息&lt;/h3>
+&lt;p>采用默认部署数据库的方式，在平台部署完成后需要通过以下命令获取连接MySql的用户名和密码。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看MySQL的配置连接信息，其中oc为onecloudcluster；default为oc的名称；grep -A 4即属于匹配后4行数据。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get oc -n onecloud default -o yaml &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> mysql
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看oc的的api对象信息">查看OC的的API对象信息&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看OC的运行情况&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get onecloudcluster -n onecloud
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 以yaml文件的形式查看OC的API对象信息，该信息中包含集群的所有配置信息。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubeclt get oc -n onecloud -o yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="其它常用管理命令">其它常用管理命令&lt;/h3>
+&lt;p>kubectl更多命令请参考kubectl官方文档。
+&lt;a href="https://kubernetes.io/zh/docs/reference/kubectl/">https://kubernetes.io/zh/docs/reference/kubectl/&lt;/a>&lt;/p></description></item><item><title>Docs: 排查pod异常</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/poderror/</link><pubDate>Wed, 10 Nov 2021 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/k8s/poderror/</guid><description>
+&lt;h3 id="确认pod状态">确认Pod状态&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 设置默认命名空间，后续执行相关命令时可以不带“-n onecloud” &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl config set-context --current --namespace&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 pod 状态&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl get pod
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="检查pod相关事件">检查pod相关事件&lt;/h3>
+&lt;p>当查看到 pod 状态不是 running 状态时，可以通过 describe 命令查看更多信
+息。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 举例为查看 host 服务的 pod 的事件信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl describe pod default-host-z8j5r
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看日志">查看日志&lt;/h3>
+&lt;p>可以通过检查日志来查看应用程序是否正常运行。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看 host 服务的日志信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ kubectl logs default-host-z8j5r -c host -f
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="pod常见错误及处理方法">Pod常见错误及处理方法&lt;/h3>
+&lt;h4 id="pod---crashloopbackoff状态">Pod - CrashLoopBackOff状态&lt;/h4>
+&lt;p>CrashLoopBackOff 状态说明容器曾经启动了，但又异常退出。此时可以先查看
+一下容器的日志。通过 kubectl logs 命令可以发现一些容器退出的原因:&lt;/p>
+&lt;ul>
+&lt;li>通过查看日志发现是脏数据导致的&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@test ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic">#kubectl get pod | grep region&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-region-75bc7d474f-rjpkm 0/1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CrashLoopBackOff &lt;span style="color:#0000cf;font-weight:bold">12&lt;/span> 2d20h
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-region-dns-88s7z 1/1 Running
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 2d20h
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@test ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl logs default-region-75bc7d474f￾rjpkm | less&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>I &lt;span style="color:#0000cf;font-weight:bold">200618&lt;/span> 16:13:32
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>appsrv.&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>*Application&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.ServeHTTP&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>appsrv.go:237&lt;span style="color:#ce5c00;font-weight:bold">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hlgxXm4i2qF10tkBXu3rAVrCC-w&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">200&lt;/span> b5e0b2 GET
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/networks?admin&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">delete&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>all&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">details&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>true&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>filter.0&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>updated_at.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ge%28%272020-06-
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>03+07%3A56%3A04%27%29&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>filter.1&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>manager_id.isnullorempty%28%29&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>fil
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ter.2&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>external_id.isnullorempty%28%29&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">limit&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>1024&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">offset&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>0&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">order&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>a
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sc&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>order_by.0&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>updated_at&lt;span style="color:#000;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">pending_delete&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>all &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>10.105.232.12:55236&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>34.50ms
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>F &lt;span style="color:#0000cf;font-weight:bold">200618&lt;/span> 16:13:32 models.&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>*SGuest&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>.GetDriver&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>guests.go:557&lt;span style="color:#ce5c00;font-weight:bold">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Unsupported hypervisor Aliyun
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>pod 中对应的配置文件中格式不对&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="../images/configmaperror.png" alt="">&lt;/p>
+&lt;h4 id="pod---evicted状态">Pod - Evicted状态&lt;/h4>
+&lt;p>出现这种情况，多见于系统内存或硬盘资源不足。通过“kubectl describe命令”查看异常pod。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>root@test-interface ~&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>&lt;span style="color:#8f5902;font-style:italic"># kubectl describe -n onecloud pod default-ovn-north-7689f47894-tqp2g&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Name: default-ovn-north-7689f47894-tqp2g
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Namespace: onecloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Priority: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Node: test-interface/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Start Time: Fri, &lt;span style="color:#0000cf;font-weight:bold">20&lt;/span> Mar &lt;span style="color:#0000cf;font-weight:bold">2020&lt;/span> 18:38:27 +0800
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Labels: &lt;span style="color:#000">app&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ovn-north
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> app.kubernetes.io/component&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ovn-north
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> app.kubernetes.io/instance&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud-cluster-8p2p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> app.kubernetes.io/managed-by&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud-operator
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> app.kubernetes.io/name&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>onecloud-cluster
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pod-template-hash&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>7689f47894
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Annotations: cni.projectcalico.org/podIP: 10.40.180.212/32
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> onecloud.yunion.io/last-applied-configuration:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;volumes&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">[{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;certs&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;secret&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;secretName&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;default-certs&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;items&amp;#34;&lt;/span>:&lt;span style="color:#ce5c00;font-weight:bold">[{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;key&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;ca.crt&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;path&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;ca.crt&amp;#34;&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">}&lt;/span>,&lt;span style="color:#ce5c00;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;key&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;service.crt&amp;#34;&lt;/span>,&lt;span style="color:#4e9a06">&amp;#34;path&amp;#34;&lt;/span>:&lt;span style="color:#4e9a06">&amp;#34;...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">Status: Failed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">Reason: Evicted
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">Message: The node was low on resource: ephemeral-storage. Container ovn-north was using 109956Ki, which exceeds its request of 0.
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="pod---imagepullbackoff状态">Pod - ImagePullBackOff状态&lt;/h4>
+&lt;p>通常是镜像名称配置错误或者私有镜像的密钥配置错误导致。通过“kubectl describe命令”查看异常pod。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Events:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type Reason Age From Message
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ---- ------ ---- ---- -------
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal Scheduled 35s default-scheduler Successfully assigned onecloud/default-region-85ff9dcd5-mh8cl to yunion320
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal Pulling 34s kubelet, yunion320 Pulling image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal Pulled 33s kubelet, yunion320 Successfully pulled image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal Created 33s kubelet, yunion320 Created container init
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal Started 33s kubelet, yunion320 Started container init
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal Pulling 15s &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>x2 over 28s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> kubelet, yunion320 Pulling image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Warning Failed 15s &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>x2 over 28s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> kubelet, yunion320 Failed to pull image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;#34;&lt;/span>: rpc error: &lt;span style="color:#000">code&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> Unknown &lt;span style="color:#000">desc&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> Error response from daemon: manifest &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2 not found: manifest unknown: manifest unknown
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Warning Failed 15s &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>x2 over 28s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> kubelet, yunion320 Error: ErrImagePull
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Normal BackOff 3s kubelet, yunion320 Back-off pulling image &lt;span style="color:#4e9a06">&amp;#34;registry.cn-beijing.aliyuncs.com/yunionio/region:v3.2.2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Warning Failed 3s kubelet, yunion320 Error: ImagePullBackOff
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="pod---pending状态">Pod - Pending状态&lt;/h4>
+&lt;p>Pending状态，这个状态意味着，Pod的yaml文件已经提交给Kubernetes，API对象已经被创建并保存在Etcd 当中。但是，这个Pod里有些容器因为某种原因而不能被顺利创建。&lt;/p>
+&lt;ul>
+&lt;li>调度不成功（可以通过 kubectl describe pod 命令查看到当前 Pod 的事件，进而判断为什么没有调度）。&lt;/li>
+&lt;li>可能原因： 资源不足（集群内所有的 Node 都不满足该 Pod 请求的 CPU、内存、GPU 等资源）；&lt;/li>
+&lt;li>HostPort 已被占用（通常推荐使用 Service 对外开放服务端口）。&lt;/li>
+&lt;/ul>
+&lt;h4 id="pod---error状态">Pod - Error状态&lt;/h4>
+&lt;p>通常处于 Error 状态说明 Pod 启动过程中发生了错误。常见的原因包括：&lt;/p>
+&lt;ul>
+&lt;li>依赖的 ConfigMap、Secret 或者 PV 等不存在；&lt;/li>
+&lt;li>请求的资源超过了管理员设置的限制，比如超过了 LimitRange 等；&lt;/li>
+&lt;li>违反集群的安全策略，比如违反了 PodSecurityPolicy 等；&lt;/li>
+&lt;li>容器无权操作集群内的资源，比如开启 RBAC 后，需要为 ServiceAccount 配置角色绑定;&lt;/li>
+&lt;/ul></description></item><item><title>Docs: 排查Pod网络问题</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/dnserror/</link><pubDate>Fri, 02 Dec 2022 16:02:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/k8s/dnserror/</guid><description>
+&lt;p>经常遇到Pod内服务报DNSError的错误，例如：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;error&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;class&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;DNSError&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;code&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">499&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;details&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Post \&amp;#34;https://default-kevstone:30357/v3/auth/tokens\&amp;#34;: dial tcp: lookup default-kevstone: i/o timeout&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这类错误一般意味着Pod之间的网络通信有问题。因为Pod之间通信一般最先要进行对端的DNS解析，由于到达coredns的Pod网络不通，导致DNS解析错误，因此最先暴露出来的是DNSError的错误。&lt;/p>
+&lt;h2 id="基本原理">基本原理&lt;/h2>
+&lt;p>Pod内通过集群的coredns进行域名解析。CoreDNS配置了10.96.0.10的service IP。访问coredns时，首先由kubeproxy实现service IP到Pod IP的NAT转换，如果Pod在本节点，则直接访问Pod。否则通过tunl0以IP-in-IP或VXLAN隧道发送到对端Pod所在节点，进而解封装投递到目标Pod。&lt;/p>
+&lt;p>Cloudpods 在每个节点采用IPVS作为Service IP到Pod IP的NAT转换。需确保节点的IPVS规则表有对应10.96.0.10的NAT规则。&lt;/p>
+&lt;p>Cloudpods 采用calico作为容器网络的插件，采用IP-in-IP或VXLAN隧道作为Pod之间报文的封装协议。&lt;/p>
+&lt;p>如果采用IP-in-IP隧道，则在每个节点上都有一个 tunl0 的三层虚拟网络接口，该接口作为该节点IP-in-IP隧道的端点。&lt;/p>
+&lt;p>如果采用VXLAN隧道，则在每个节点上都有一个 vxlan.calico 的二层虚拟网络接口，该接口作为该节点 VXLAN 隧道的端点。&lt;/p>
+&lt;p>Pod的IP从10.40.0.0/16 (该网络前缀可以在ocboot初始化时配置) 随机分配。每个节点上都会为集群中其他节点的Pod所在的/26网段（含64个IP地址）配置通过tunl0且下一跳为该Pod所在节点IP的静态路由。如果缺少对应Pod的路由，则也会出现Pod之间网络不通。&lt;/p>
+&lt;h3 id="calico隧道协议的切换">Calico隧道协议的切换&lt;/h3>
+&lt;p>Cloudpods默认采用IP-in-IP隧道协议，可以在Kubernetes控制节点执行以下命令将Calico隧道协议切换为 VXLAN。常见切换原因为底层网络不支持IP-in-IP协议。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">DATASTORE_TYPE&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>kubernetes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>calicoctl patch felixconfig default -p &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;vxlanEnabled&amp;#34;:true}}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>calicoctl patch ippool default-ipv4-ippool -p &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;ipipMode&amp;#34;:&amp;#34;Never&amp;#34;, &amp;#34;vxlanMode&amp;#34;:&amp;#34;Always&amp;#34;}}&amp;#39;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">## wait for the vxlan.calico interface to be created and traffic to be routed through it&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>calicoctl patch felixconfig default -p &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;ipipEnabled&amp;#34;:false}}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果需要调整MTU，请用如下命令：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>calicoctl patch felixconfig default -p &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;ipipMtu&amp;#34;:1430}}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>calicoctl patch felixconfig default -p &lt;span style="color:#4e9a06">&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;vxlanMtu&amp;#34;:1430}}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="原因排查">原因排查&lt;/h2>
+&lt;h3 id="service-ip-nat问题">Service IP NAT问题&lt;/h3>
+&lt;p>在无法DNS解析Pod所在节点执行如下命令，确认IPVS的转发表内有相应的表项：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ipvsadm -Ln &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -A &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> 10.96.0.10
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>正常应该有三个表项：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>TCP 10.96.0.10:53 rr
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -&amp;gt; 10.40.52.149:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -&amp;gt; 10.40.52.171:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>TCP 10.96.0.10:9153 rr
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -&amp;gt; 10.40.52.149:9153 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -&amp;gt; 10.40.52.171:9153 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>UDP 10.96.0.10:53 rr
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -&amp;gt; 10.40.52.149:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">6930&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -&amp;gt; 10.40.52.171:53 Masq &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">6859&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="路由问题">路由问题&lt;/h3>
+&lt;p>如果上一步确认无误，在无法DNS解析Pod所在节点查看到达coredns的Pod IP的路由是否存在，假设coredns的节点IP为上述10.40.52.149和10.40.52.171，则执行如下命令确认相应路由是否存在：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip route &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep 10.40.52
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>正确输出如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>10.40.52.128/26 via 10.41.1.21 dev tunl0 proto bird onlink
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里 10.41.1.21 应该是coredns Pod所在节点的IP&lt;/p>
+&lt;h3 id="端口问题">端口问题&lt;/h3>
+&lt;p>如上一步确认无误，则Pod的报文能够正确通过tunl0经过ip-in-ip隧道发出，则需要确认calico使用哪个端口发送ip-in-ip报文。&lt;/p>
+&lt;p>执行如下命令，查看calico-node的配置&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kubectl -n kube-system edit daemonset calico-node
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意 IP_AUTODETECTION_METHOD，如果为can-reach=&lt;ip>，则calico选用可以访问该ip的端口来发送ip-in-ip报文，请确认该接口是正确的接口。并且calico从对端接口报文的接口和发送接口是一致的。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">containers&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">env&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">name&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">IP_AUTODETECTION_METHOD&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">value&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">can-reach=10.61.1.254&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>默认集群配置的 IP_AUTODETECTION_METHOD 为 can-reach=&amp;lt;primary_master_ip&amp;gt; ，比如上面例子中的 10.61.1.254 应该就是第一个 K8s 控制节点的 IP 。&lt;/p>
+&lt;p>IP_AUTODETECTION_METHOD 还可以配置为其他的值，可以参考 calico 官方文档：&lt;a href="https://projectcalico.docs.tigera.io/reference/node/configuration#ip-autodetection-methods">Configuring calico/node/Manifest&lt;/a>。&lt;/p>
+&lt;p>其中常用的配置可以设置成：&lt;code>IP_AUTODETECTION_METHOD=kubernetes-internal-ip&lt;/code>，这个就会使用 K8s 节点的 Status.Addresses 作为ip-in-ip 发送的端口。&lt;/p>
+&lt;h3 id="链路问题">链路问题&lt;/h3>
+&lt;p>如上一步确认无误，则需要确认calico的报文能够正常发送到对端节点，可通过tcpdump在源和目的节点抓包确认。&lt;/p>
+&lt;p>如果采用IP-in-IP隧道协议，则采用如下命令抓包：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 格式为&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># tcpdump -i &amp;lt;if_of_calico_node&amp;gt; -nnn &amp;#34;ip proto 4&amp;#34; and host &amp;lt;ip_of_dst_node&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如要在控制节点的 br0 上抓来自于计算节点(IP: 10.130.0.13) 的 ip-in-ip 包，命令如下：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ tcpdump -i br0 -nnn &lt;span style="color:#4e9a06">&amp;#34;ip proto 4&amp;#34;&lt;/span> and host 10.130.0.13
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果采用VXLAN隧道协议，则采用如下命令抓包：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 格式为&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># tcpdump -i &amp;lt;if_of_calico_node&amp;gt; -nnn udp and port 4789 and host &amp;lt;ip_of_dst_node&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 比如要在控制节点的 br0 上抓来自于计算节点(IP: 10.130.0.13) 的 VXLAN 包，命令如下：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ tcpdump -i br0 -nnn udp and port &lt;span style="color:#0000cf;font-weight:bold">4789&lt;/span> and host 10.130.0.13
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="常见故障原因">常见故障原因&lt;/h2>
+&lt;h3 id="节点路由问题">节点路由问题&lt;/h3>
+&lt;p>由于节点路由配置不一致，导致节点发送和接收ip-in-ip报文的端口IP不一致，导致双方无法通信&lt;/p>
+&lt;h3 id="内核问题">内核问题&lt;/h3>
+&lt;p>特定内核在开启GSO之后会导致ip-in-ip报文丢弃，可尝试通过下面的命令关闭网卡相关特性，看是否解决问题：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 假设 k8s 节点之间通过 eth0 网卡通信&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ethtool --offload eth0 rx off tx off
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ethtool -K eth0 gso off
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 修改OC更新集群状态</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/oc-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/k8s/oc-update/</guid><description>
+&lt;p>cloudpods-operator会在Kubernetes集群中注入CRD资源oc，该CRD定义了一个服务集群的状态，可以通过修改oc来更改集群的状态，达到IaC的效果。&lt;/p>
+&lt;h2 id="1修改集群整体状态">1、修改集群整体状态&lt;/h2>
+&lt;p>主要几个参数：&lt;/p>
+&lt;ul>
+&lt;li>disableResourceManagement: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否关闭cgroup v1的资源限制，该选项默认关闭。对于一些较新操作系统，如CentOS 8等，只能支持cgroup v2 API，如果开启了资源限制，会导致容器无法启动。此时需要关闭cgroup v1资源限制。&lt;/p>
+&lt;ul>
+&lt;li>disableLocalVpc: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否关闭内置私有云的VPC功能，该选项默认关闭。&lt;/p>
+&lt;ul>
+&lt;li>enableCloudNet: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否开启Cloudnet组件，该选项默认关闭&lt;/p>
+&lt;ul>
+&lt;li>enableS3Gateway: true|false&lt;/li>
+&lt;/ul>
+&lt;p>是否开启S3网关服务，该选项默认关闭&lt;/p>
+&lt;ul>
+&lt;li>productVersion: CMP|Edge|FullStack&lt;/li>
+&lt;/ul>
+&lt;p>集群的部署模式，三个选项：CMP(只部署云管相关功能组件)，Edge（是部署内置私有云相关功能组件），FullStack（部署云管和内置私有云所有功能组件）&lt;/p>
+&lt;ul>
+&lt;li>imageRepository: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>指定集群的镜像repo地址，默认是 registry.cn-beijing.aliyuncs.com/yunion&lt;/p>
+&lt;ul>
+&lt;li>loadBalancerEndpoint: &lt;ip>&lt;/li>
+&lt;/ul>
+&lt;p>访问集群控制服务的虚拟IP地址或者域名&lt;/p>
+&lt;ul>
+&lt;li>version: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>集群的主版本号，如v3.8.15。当组件的tag未指定时，默认用version作为镜像的tag。可以通过修该属性实现集群镜像版本的整体切换。&lt;/p>
+&lt;ul>
+&lt;li>region: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>当前区域，默认为 region0&lt;/p>
+&lt;ul>
+&lt;li>zone: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>当前可用区，默认为 zone0&lt;/p>
+&lt;h2 id="2-修改单个组件的属性">2. 修改单个组件的属性&lt;/h2>
+&lt;p>每个组件都可以设置如下属性：&lt;/p>
+&lt;ul>
+&lt;li>disable: true|false&lt;/li>
+&lt;/ul>
+&lt;p>该组件是否禁用，默认是false。如果设置为true，则operator不会更新对应的k8s资源（deployment或者daemonset)&lt;/p>
+&lt;ul>
+&lt;li>imageName: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>镜像的名称&lt;/p>
+&lt;ul>
+&lt;li>imagePullPolicy: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>镜像的拉取策略，默认为 IfNotPresent, 还可以设置为： Always&lt;/p>
+&lt;ul>
+&lt;li>repository: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>改组件的镜像地址，该属性override全局的 imageRepository 属性&lt;/p>
+&lt;ul>
+&lt;li>tag: &lt;string>&lt;/li>
+&lt;/ul>
+&lt;p>镜像的tag，该属性override全局的 version 属性&lt;/p>
+&lt;p>支持的组件列表如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>组件名称&lt;/th>
+&lt;th>功能&lt;/th>
+&lt;th>开源版&lt;/th>
+&lt;th>商业版&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>ansibleserver&lt;/td>
+&lt;td>ansible管理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>apiGateway&lt;/td>
+&lt;td>API网关服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>autoupdate&lt;/td>
+&lt;td>更新服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>baremetalagent&lt;/td>
+&lt;td>裸金属代理，负责裸金属服务器的API和操作&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>climc&lt;/td>
+&lt;td>提供climc的容器&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudevent&lt;/td>
+&lt;td>cloudevent服务，提供公有云日志收集&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudid&lt;/td>
+&lt;td>负责CloudSSO功能组件&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudmon&lt;/td>
+&lt;td>监控数据采集服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudnet&lt;/td>
+&lt;td>云间网络服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>cloudproxy&lt;/td>
+&lt;td>ssh代理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>devtool&lt;/td>
+&lt;td>应用部署服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>esxiagent&lt;/td>
+&lt;td>VMWare代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>glance&lt;/td>
+&lt;td>镜像服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>hostagent&lt;/td>
+&lt;td>宿主机代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>hostdeployer&lt;/td>
+&lt;td>磁盘数据部署服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>hostimage&lt;/td>
+&lt;td>磁盘数据下载服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>influxdb&lt;/td>
+&lt;td>开源监控数据库&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>itsm&lt;/td>
+&lt;td>工单流程服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>keystone&lt;/td>
+&lt;td>认证服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>kubeserver&lt;/td>
+&lt;td>Kubernetes集群管理代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>logger&lt;/td>
+&lt;td>操作日志服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>meter&lt;/td>
+&lt;td>计费计量服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>monitor&lt;/td>
+&lt;td>监控服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>notify&lt;/td>
+&lt;td>通知告警服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>onecloudServiceOperator&lt;/td>
+&lt;td>编排服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ovnNorth&lt;/td>
+&lt;td>OVN控制服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>regionDNS&lt;/td>
+&lt;td>DNS服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>regionServer&lt;/td>
+&lt;td>云资源管理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>report&lt;/td>
+&lt;td>报表服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>s3gateway&lt;/td>
+&lt;td>S3代理网关服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>scheduledtask&lt;/td>
+&lt;td>定时任务服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>scheduler&lt;/td>
+&lt;td>调度器&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>suggestion&lt;/td>
+&lt;td>费用优化服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>telegraf&lt;/td>
+&lt;td>监控Agent，开源telegraf&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>vpcAgent&lt;/td>
+&lt;td>VPC代理&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>web&lt;/td>
+&lt;td>前端nginx&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>webconsole&lt;/td>
+&lt;td>H5控制台服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>yunionagent&lt;/td>
+&lt;td>企业版授权服务&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>yunionconf&lt;/td>
+&lt;td>配置管理服务&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;td>(x)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>Docs: 调整驱逐的阈值</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/eviction_threshold/</link><pubDate>Mon, 05 Dec 2022 10:34:27 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/k8s/eviction_threshold/</guid><description>
+&lt;p>Kubernetes 有一个节点驱逐的机制，比如当节点的根分区使用空间大于 85% 就会把节点变成 NotReady 状态，然后驱逐上面的 Pod 。下面介绍如何调整节点的相关配置的阈值，可根据自己的环境适当调整。&lt;/p>
+&lt;h2 id="调整-kubelet-阈值配置">调整 kubelet 阈值配置&lt;/h2>
+&lt;p>kubelet 所有的配置参数写在了文件 &lt;code>/var/lib/kubelet/config.yaml&lt;/code>，阈值相关的参数如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-diff" data-lang="diff">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">@@ -34,10 +34,10 @@ enforceNodeAllocatable:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> eventBurst: 10
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> eventRecordQPS: 5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # 驱逐相关参数
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> evictionHard:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- imagefs.available: 15%
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- memory.available: 1024Mi
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- nodefs.available: 15%
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- nodefs.inodesFree: 15%
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ imagefs.available: 5% # 当容器镜像所在目录的空闲容量小于 5% 的时候触发，imagefs 为 docker 所在目录，配置为 `/opt/docker`
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">+ memory.available: 100Mi # 当内存不够 100Mi 的时候触发
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">+ nodefs.available: 5% # 当根分区可用容量不够 5% 的时候触发
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">+ nodefs.inodesFree: 5% # 当根分区 inodes 不够 5% 的时候触发
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span> evictionPressureTransitionPeriod: 5m0s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failSwapOn: true
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fileCheckFrequency: 20s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">@@ -45,8 +45,8 @@ hairpinMode: promiscuous-bridge
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> healthzBindAddress: 127.0.0.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> healthzPort: 10248
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> httpCheckFrequency: 20s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">-imageGCHighThresholdPercent: 85
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">-imageGCLowThresholdPercent: 80
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+imageGCHighThresholdPercent: 95 # 当硬盘存储使用率超过imageGCHighThresholdPercent时，会触发Image GC，直到硬盘存储使用率低于imageGCLowThresholdPercent
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">+imageGCLowThresholdPercent: 90
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span> imageMinimumGCAge: 2m0s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> iptablesDropBit: 15
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> iptablesMasqueradeBit: 14
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>调整完 &lt;code>/var/lib/kubelet/config.yaml&lt;/code> 后，重启 kubelet:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ systemctl restart kubelet
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: 暂停集群服务</title><link>https://www.cloudpods.org/zh/docs/ops/k8s/halt_cluster/</link><pubDate>Tue, 22 Nov 2022 18:38:00 +0800</pubDate><guid>https://www.cloudpods.org/zh/docs/ops/k8s/halt_cluster/</guid><description>
+&lt;p>在运维维护集群过程中，例如维护集群数据库等，需要暂停集群服务。本文介绍如何不影响虚拟机正常运行的前提下暂停 Cloudpods 服务的方法。&lt;/p>
+&lt;h2 id="停止服务">停止服务&lt;/h2>
+&lt;p>平台服务由 operator 管理，可以通过给 operator 添加 &amp;lsquo;-stop-services&amp;rsquo; 启动参数，停止大部分控制服务。为了不影响虚拟机的正常运行，部分控制服务应保持继续运行，比如：default-ovn-north、default-influxdb和default-host。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl edit deployment -n onecloud onecloud-operator
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metadata:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> creationTimestamp: null
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> labels:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> k8s-app: onecloud-operator
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> spec:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> containers:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - command:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - /bin/onecloud-controller-manager
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - -stop-services &lt;span style="color:#8f5902;font-style:italic"># 改这个地方，加上 &amp;#39;-stop-services&amp;#39; 参数&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后 operator 会重建，开始删除控制服务，最终还保留的 pod 如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl get pods -n onecloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME READY STATUS RESTARTS AGE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-etcd-swbzmncg2x 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 16d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-host-xqwr6 3/3 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 19h
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-influxdb-7476dbb84c-6qhqm 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>default-ovn-north-67b97ffcfd-54lvp 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 10d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>onecloud-operator-6967685b4-6p2qx 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 80s
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="恢复服务">恢复服务&lt;/h2>
+&lt;p>删除 onecloud-operator deployment command 里面的 &amp;lsquo;-stop-services&amp;rsquo; 启动参数，operator 会重建之前删除的服务。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl edit deployment -n onecloud onecloud-operator
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

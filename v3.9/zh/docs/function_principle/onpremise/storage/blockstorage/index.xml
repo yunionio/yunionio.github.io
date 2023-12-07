@@ -1,0 +1,58 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloudpods –
+块存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/</link><description>Recent content in 块存储 on Cloudpods</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Fri, 25 Jun 2021 10:53:20 +0800</lastBuildDate><atom:link href="https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: 如何添加和删除本地存储</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/add-storage/</guid><description>
+&lt;p>本地存储的虚拟机磁盘存储在本地目录里，跟该目录使用的文件系统无关，可以使ext4或者xfs。虚拟磁盘的文件格式采用qcow2格式。默认的存储位置是宿主机的目录 /opt/cloud/workspace/disks。&lt;/p>
+&lt;p>存储虚拟磁盘的本地目录需要在宿主机的配置文件里显示声明。host服务的配置项 local_image_path 指定本宿主机用来保存虚拟机磁盘的目录。&lt;/p>
+&lt;h2 id="如何添加本地存储目录">如何添加本地存储目录？&lt;/h2>
+&lt;ol>
+&lt;li>修改/etc/yunion/host.conf，则 local_image_path 的字符串数组中添加新的本地磁盘：&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">local_image_path&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">/opt/cloud/workspace/disks&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>- &lt;span style="color:#000">/new_image_path&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>重启host服务&lt;/li>
+&lt;/ol>
+&lt;p>host服务重启后，稍等片刻，查看宿主机的存储列表，就能看到这个新的存储注册上来了。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc storage-list --host &amp;lt;host_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何删除本地存储">如何删除本地存储？&lt;/h2>
+&lt;ol>
+&lt;li>需要确保所有的虚拟磁盘都被删除，特别需要留意被伪删除的磁盘，以及被标记为系统资源的磁盘:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看所有的磁盘，包括不再执行命令用户所在项目下的所有磁盘，以及被标记为系统资源的磁盘&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>climc disk-list --storage &amp;lt;storage_id&amp;gt; --scope system --system
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># 查看所有的未删除的磁盘&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>climc disk-list --storage &amp;lt;storage_id&amp;gt; --scope system --system --pending-delete
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>解除存储和宿主机的关联关系：&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc host-storage-detach &amp;lt;host_id&amp;gt; &amp;lt;storage_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>删除存储&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>climc storage-delete &amp;lt;storage_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>
+&lt;p>到宿主机，修改 /etc/yunion/host.conf，将该存储所在路径从 local_image_path 删除&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重启host服务&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Docs: 本地存储磁盘的迁移</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/migrate/</link><pubDate>Fri, 25 Jun 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/migrate/</guid><description>
+&lt;p>平台通过技术手段实现了本地存储的虚拟机磁盘文件的迁移。迁移分为冷迁移和热迁移。前者是在虚拟机关机状态下的迁移。后者是虚拟机在开机运行状态下的迁移。&lt;/p>
+&lt;h2 id="冷迁移">冷迁移&lt;/h2>
+&lt;p>TODO&lt;/p>
+&lt;h2 id="热迁移">热迁移&lt;/h2>
+&lt;p>TODO&lt;/p></description></item><item><title>Docs: 本地存储回收站</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/recycle/</link><pubDate>Fri, 25 Jun 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/recycle/</guid><description>
+&lt;p>除了磁盘伪删除的机制外，平台还另外提供了一层保护，用来确保虚拟机的磁盘文件不会被误删除。&lt;/p>
+&lt;p>在每个本地存储的目录下有一个 recycle_bin 的目录，当对本地磁盘进行删除操作时，不会执行真正的删除操作，而是将磁盘移动到这个目录下暂存，存储在一个删除时间命名的子目录下。宿主机上有周期性任务扫描扫描 recycle_bin 目录，把日期在约定清理时间之前的子目录真正清除。&lt;/p>
+&lt;p>host服务的配置项中有三个选项用来配置回收站，recycle_diskfile 是开启或关闭回收站功能，默认开启。recycle_diskfile_keep_days 用来指定回收站内磁盘文件的保留天数，默认是28天。always_recycle_diskfile 配置是否总是将删除的本地磁盘文件转移到回收站。如果为true，则迁移本地存储主机后，原宿主机上的本地磁盘将被移入回收站。否则，本地磁盘虚拟机迁移成功完成后，会将原宿主机上的本地磁盘文件立即删除。&lt;/p>
+&lt;pre tabindex="0">&lt;code>recycle_diskfile: true
+recycle_diskfile_keep_days: 28
+always_recycle_diskfile: true
+&lt;/code>&lt;/pre>&lt;p>由于回收站会占用磁盘空间，可能存在由于回收站磁盘文件过多，导致磁盘空间不足的情况。这个时候需要手动清理回收站。手动清理回收站只需要手动将 recycle_bin 下的子目录删除即可。&lt;/p>
+&lt;h2 id="使用回收站内磁盘文件恢复虚拟机">使用回收站内磁盘文件恢复虚拟机&lt;/h2>
+&lt;p>下面介绍使用本地存储回收站内的磁盘文件恢复虚拟机的步骤。&lt;/p>
+&lt;p>第一步：创建同配置虚拟机。根据虚拟磁盘文件删除前关联的本地磁盘的虚拟机的配置创建虚拟机。&lt;/p>
+&lt;p>第二步：定位新建虚拟机的本地磁盘文件路径，一般位于/opt/cloud/workspace/disks，也可能变化，需要查看对应磁盘的详情信息，查找存储路径。&lt;/p>
+&lt;p>第三步：拷贝待恢复磁盘文件，覆盖新建虚拟机的对应磁盘文件。检查磁盘文件是否带backing file，如果带，则也需要把backing file对应的文件也拷贝到指定的路径。&lt;/p></description></item><item><title>Docs: 本地存储快照</title><link>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/snapshot/</link><pubDate>Fri, 25 Jun 2021 10:53:20 +0800</pubDate><guid>https://www.cloudpods.org//v3.9/zh/docs/function_principle/onpremise/storage/blockstorage/snapshot/</guid><description>
+&lt;p>TODO&lt;/p></description></item></channel></rss>

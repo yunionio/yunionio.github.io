@@ -68,7 +68,7 @@
 </ol>
 <p>这些规范有助于提高 Bash 代码的可读性、可维护性和可靠性。</p>
 <p>然后我搜索 "bash script style guideline"，最上面的结果是：</p>
-<p><img loading="lazy" src="https://pic4.zhimg.com/v2-b4a917830a4156b60781d6c69243fe57_b.jpg" alt="image-20230430140433698" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic4.zhimg.com/v2-b4a917830a4156b60781d6c69243fe57_b.jpg" alt="image-20230430140433698" class="img_ev3q"></p>
 <p>即：代码规范：<a href="https://google.github.io/styleguide/shellguide.html" target="_blank" rel="noopener noreferrer">https://google.github.io/styleguide/shellguide.html</a></p>
 <p>我仔细阅读了这份风格指南，对其中的“局部变量”的章节很感兴趣。</p>
 <p>文中说：「最好把局部变量的定义与赋值，换行实现，不要写到同一行上」，以免掩盖报错状态码。</p>
@@ -85,7 +85,7 @@ assignment value is provided by a command substitution; as the
 command substitution.</p>
 </blockquote>
 <p>我动手验证这个细节，发现果然如此：</p>
-<p><img loading="lazy" src="https://pic1.zhimg.com/v2-bf484fe4d6b2b2e0f523afb5fdec4d00_b.jpg" alt="image-20230430103921020" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic1.zhimg.com/v2-bf484fe4d6b2b2e0f523afb5fdec4d00_b.jpg" alt="image-20230430103921020" class="img_ev3q"></p>
 <p>然后我开始自查当前的项目，寻找类似于如下风格的代码：</p>
 <div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">local my_var="$(my_func)"</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
 <p>优化后的预期结果：</p>
@@ -97,7 +97,7 @@ command substitution.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="生成的代码">生成的代码<a href="https://www.cloudpods.org/v3.10/en/blog/refactoring-bash-scripts-to-comply-with-the-google-coding-style#%E7%94%9F%E6%88%90%E7%9A%84%E4%BB%A3%E7%A0%81" class="hash-link" aria-label="Direct link to 生成的代码" title="Direct link to 生成的代码">​</a></h3>
 <div class="language-perl codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-perl codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">$re = '/^(\s*)local\s+(\w+)=("?\$\(.*)/m';</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">$str = '  local fn=$(echo $name_ver| tr \':\' \'-\').tar.xzt</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    local fn=$(echo $name_ver| tr \':\' \'-\').tar.xzt</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">	local fn=$(echo $name_ver| tr \':\' \'-\').tar.xz</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">	local fn="$(echo $name_ver| tr \':\' \'-\').tar.xz"';</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">$subst = "$1local $2\n$1$2=$3";</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">$result = preg_replace($re, $subst, $str);</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">echo "The result of the substitution is ".$result;</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
 <p>精简为 perl_oneliner:</p>
-<p><img loading="lazy" src="https://pic4.zhimg.com/v2-c0abdb849eb637368f747f99bc4abbff_b.jpg" alt="image-20230430103045113" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic4.zhimg.com/v2-c0abdb849eb637368f747f99bc4abbff_b.jpg" alt="image-20230430103045113" class="img_ev3q"></p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">perl </span><span class="token parameter variable" style="color:#36acaa">-pe</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'s/^(\s*)local\s+(\w+)=("?\$\(.*)/$1local $2\n$1$2=$3/g'</span><span class="token plain"> </span><span class="token parameter variable" style="color:#36acaa">-i</span><span class="token plain"> file.txt</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
 <p>测试的场景：</p>
 <p>搜索代码</p>
@@ -149,11 +149,11 @@ command substitution.</p>
 <p>以下为详细内容。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="skypilot-项目介绍">SkyPilot 项目介绍<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#skypilot-%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D" class="hash-link" aria-label="Direct link to SkyPilot 项目介绍" title="Direct link to SkyPilot 项目介绍">​</a></h2>
 <p>SkyPilot，由加州大学伯克利分校的 Sky Computing 实验室主导研发的一个开源框架，用于在任何云上无缝且经济高效地运行 ML 和数据科学批处理作业。它的目标是让云比以往任何时候都更容易使用，成本更低，并且全程不需要云计算相关的专业知识。</p>
-<p><img loading="lazy" src="https://pic2.zhimg.com/v2-7f5fe6f9e99f998630929da9e8739591_b.gif" alt="SkyPilot 项目介绍" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic2.zhimg.com/v2-7f5fe6f9e99f998630929da9e8739591_b.gif" alt="SkyPilot 项目介绍" class="img_ev3q"></p>
 <p>近一年多来，SkyPilot 一直在加州大学伯克利分校的天空计算实验室积极开发。它被 10 多个组织用于各种用例，包括：GPU/TPU 模型训练（成本节省 3 倍）、分布式超参数调优以及 100 多个 CPU 抢占实例上的生物信息学批处理作业（在持续使用的基础上成本节省 6.5 倍）。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="skypilot-工作原理">SkyPilot 工作原理<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#skypilot-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86" class="hash-link" aria-label="Direct link to SkyPilot 工作原理" title="Direct link to SkyPilot 工作原理">​</a></h2>
 <p>给定一个作业及其资源需求（CPU/GPU/TPU），SkyPilot 会自动找出哪些位置（可用区/区域/云厂商）具有运行该作业的计算能力，然后将其发送到成本最低的位置执行。</p>
-<p><img loading="lazy" src="https://pic3.zhimg.com/v2-535dd856b0af5ad19b26aaa68914a54a_b.jpg" alt="SkyPilot 工作原理" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic3.zhimg.com/v2-535dd856b0af5ad19b26aaa68914a54a_b.jpg" alt="SkyPilot 工作原理" class="img_ev3q"></p>
 <p>SkyPilot 自动执行云上正在运行的作业的繁重工作：</p>
 <ul>
 <li>可靠地配置集群，如果发生容量或配额错误，自动故障转移到其他位置</li>
@@ -166,14 +166,14 @@ command substitution.</p>
 <li>Managed Spot，通过使用抢占实例节省约 3-6 倍的成本，并自动从抢占中恢复</li>
 <li>Autostop，自动清理空闲集群——可避免的云超支的最大贡献者</li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="skypilot-的使用场景">SkyPilot 的使用场景<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#skypilot-%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF" class="hash-link" aria-label="Direct link to SkyPilot 的使用场景" title="Direct link to SkyPilot 的使用场景">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="skypilot-的使用场景">SkyPilot 的使用场景<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#skypilot-%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF" class="hash-link" aria-label="Direct link to SkyPilot 的使用场景" title="Direct link to SkyPilot ��的使用场景">​</a></h2>
 <p>在过去的几个月里，逐渐向来自 10 多个组织的数十名 ML/数据科学从业者和研究人员推荐了 SkyPilot。从用户反馈中，看到该系统确实解决了他们遇到的常见痛点。</p>
 <p>出现了几种使用场景，从交互式开发到跨区域或跨云厂商运行许多的项目，再到横向扩展：</p>
-<p><img loading="lazy" src="https://pic1.zhimg.com/v2-d0c9a2e505bc9255d62b3127d85901f0_b.jpg" alt="SkyPilot 的使用场景" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic1.zhimg.com/v2-d0c9a2e505bc9255d62b3127d85901f0_b.jpg" alt="SkyPilot 的使用场景" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="在-gpu-和-tpu-上进行-ml-训练和超参数调整">在 GPU 和 TPU 上进行 ML 训练和超参数调整<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E5%9C%A8-gpu-%E5%92%8C-tpu-%E4%B8%8A%E8%BF%9B%E8%A1%8C-ml-%E8%AE%AD%E7%BB%83%E5%92%8C%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4" class="hash-link" aria-label="Direct link to 在 GPU 和 TPU 上进行 ML 训练和超参数调整" title="Direct link to 在 GPU 和 TPU 上进行 ML 训练和超参数调整">​</a></h3>
 <p>伯克利人工智能研究所 ( BAIR ) 和斯坦福大学的领先机器学习团队一直在使用 SkyPilot 在云端运行机器学习训练。用户通常在不更改代码的情况下启动他们现有的 ML 项目。可靠地配置 GPU 实例、在集群上排队许多作业以及同时运行约 100 个超参数试验是用户反馈的主要优点。此外，用户在 AWS 上运行的相同作业只需更改一个参数就可以在 GCP/Azure 上运行。</p>
 <p>用户还使用 SkyPilot 在谷歌的 TPU 上训练大模型。研究人员可以通过 TRC 程序申请免费的 TPU 访问权限，然后使用 SkyPilot 快速上手 TPU。</p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="cpu-抢占实例上的生物信息学批处理作业成本节省-65-倍">CPU 抢占实例上的生物信息学批处理作业，成本节省 6.5 倍<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#cpu-%E6%8A%A2%E5%8D%A0%E5%AE%9E%E4%BE%8B%E4%B8%8A%E7%9A%84%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%89%B9%E5%A4%84%E7%90%86%E4%BD%9C%E4%B8%9A%E6%88%90%E6%9C%AC%E8%8A%82%E7%9C%81-65-%E5%80%8D" class="hash-link" aria-label="Direct link to CPU 抢占实例上的生物信息学批处理作业，成本节省 6.5 倍" title="Direct link to CPU 抢占实例上的生物信息学批处理作业，成本节省 6.5 倍">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="cpu-抢占实例上的生物信息学批处理作业成本节省-65-倍">CPU 抢占实例上的生物信息学批处理作业，成本节省 6.5 倍<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#cpu-%E6%8A%A2%E5%8D%A0%E5%AE%9E%E4%BE%8B%E4%B8%8A%E7%9A%84%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%89%B9%E5%A4%84%E7%90%86%E4%BD%9C%E4%B8%9A%E6%88%90%E6%9C%AC%E8%8A%82%E7%9C%81-65-%E5%80%8D" class="hash-link" aria-label="Direct link to CPU 抢占实例上的生物信息学批处理作业，成本节省 6.5 倍" title="Direct link to CPU 抢占�实例上的生物信息学批处理作业，成本节省 6.5 倍">​</a></h3>
 <p>生物研究所 Salk 的科学家们一直在使用 SkyPilot 在抢占实例上运行每周定期执行的批处理作业任务。这些作业分别操作序列的不同部分，之前一直以一种令人尴尬的情况并行。使用 SkyPilot 的 Managed Spot 功能之后，Salk 的科学家们可以在数百个 CPU 抢占实例上进行计算，与使用按需实例相比成本降低了 6.5 倍，并且与使用繁忙的本地集群相比显著缩短了任务处理时间。Salk 用户反馈到，通过抽象化云计算技术，SkyPilot 让他们能够更专注于科学研究而非云端技术细节问题。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="使用-skypilot-构建基于多云的应用">使用 SkyPilot 构建基于多云的应用<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E4%BD%BF%E7%94%A8-skypilot-%E6%9E%84%E5%BB%BA%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BA%91%E7%9A%84%E5%BA%94%E7%94%A8" class="hash-link" aria-label="Direct link to 使用 SkyPilot 构建基于多云的应用" title="Direct link to 使用 SkyPilot 构建基于多云的应用">​</a></h3>
 <p>一些行业合作伙伴已经在 SkyPilot 的 API 之上构建了更多云厂商的 lib 库。SkyPilot 使更多应用从第一天起就可以使用与云厂商无关的界面在不同的云上运行（这与 Terraform 等工具形成对比，后者虽然功能强大，但专注于较低级别的基础设施而不是作业，并且需要特定于云厂商的模板）。开发人员喜欢开箱即用地在不同云厂商可靠地配置和运行作业的能力，这样他们就可以专注于应用的业务逻辑，而不是熟悉各个云厂商的功能操作。</p>
@@ -182,7 +182,7 @@ command substitution.</p>
 <p>即使从用户（例如，机器学习工程师或数据科学家）的角度来看，也有很多理由可以根据工作负载使用多云：</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="减少开支">减少开支<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E5%87%8F%E5%B0%91%E5%BC%80%E6%94%AF" class="hash-link" aria-label="Direct link to 减少开支" title="Direct link to 减少开支">​</a></h3>
 <p>使用相同/相似硬件的最优惠价格的云厂商可以自动节省大量成本。以 GPU 为例。在 2022 年底时，Azure 拥有最便宜的 NVIDIA A100 GPU 实例，GCP 和 AWS 分别收取 8% 和 20% 的溢价。</p>
-<p><img loading="lazy" src="https://pic2.zhimg.com/v2-d7865ffc53f8bb870ccd7e6460bcc7b9_b.jpg" alt="减少开支" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic2.zhimg.com/v2-d7865ffc53f8bb870ccd7e6460bcc7b9_b.jpg" alt="减少开支" class="img_ev3q"></p>
 <p>CPU 也存在价格差异。对于最新的通用实例（相同的 vCPU/内存），差异可能超过 50%（见上图）。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="利用一流的硬件">利用一流的硬件<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E5%88%A9%E7%94%A8%E4%B8%80%E6%B5%81%E7%9A%84%E7%A1%AC%E4%BB%B6" class="hash-link" aria-label="Direct link to 利用一流的硬件" title="Direct link to 利用一流的硬件">​</a></h3>
 <p>正处于计算机体系结构的新黄金时代，专用硬件正在推动性能和效率的大幅提升。毫不奇怪，云厂商越来越多地提供定制硬件以从竞争中脱颖而出。例子包括：</p>
@@ -192,13 +192,13 @@ command substitution.</p>
 <li>用于机密计算的 Azure 英特尔 SGX</li>
 </ul>
 <p>使用更适合工作负载的硬件，可以显著的降低成本或提高性能，一般这些硬件位于不同的云厂商那里。</p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="增加稀缺资源的可用性">增加稀缺资源的可用性<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E5%A2%9E%E5%8A%A0%E7%A8%80%E7%BC%BA%E8%B5%84%E6%BA%90%E7%9A%84%E5%8F%AF%E7%94%A8%E6%80%A7" class="hash-link" aria-label="Direct link to 增加稀缺资源的可用性" title="Direct link to 增加稀缺资源的可用性">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="增加稀缺资源的可用性">增加稀缺资源的可用性<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E5%A2%9E%E5%8A%A0%E7%A8%80%E7%BC%BA%E8%B5%84%E6%BA%90%E7%9A%84%E5%8F%AF%E7%94%A8%E6%80%A7" class="hash-link" aria-label="Direct link to 增加稀�缺资源的可用性" title="Direct link to 增加稀缺资源的可用性">​</a></h3>
 <p>理想的云实例很难获得。使用 NVIDIA V100 和 A100 等高端 GPU 的按需实例经常售罄。具有 GPU 或大量 CPU 的抢占实例甚至几乎不可能获得。根据经验，一般需要等待几小时或者几天的时间才能获取这些稀缺资源。</p>
 <p>为了提高成功获取此类资源的机会，一种自然的方法是使用多云。（假设每个云有 40% 的机会提供资源；使用 3 个云将机会增加到 1–0.6³ = 78%。）</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="单云用户也想要多个区域">单云用户也想要多个区域<a href="https://www.cloudpods.org/v3.10/en/blog/introduction-to-the-skypilot-open-source-project#%E5%8D%95%E4%BA%91%E7%94%A8%E6%88%B7%E4%B9%9F%E6%83%B3%E8%A6%81%E5%A4%9A%E4%B8%AA%E5%8C%BA%E5%9F%9F" class="hash-link" aria-label="Direct link to 单云用户也想要多个区域" title="Direct link to 单云用户也想要多个区域">​</a></h3>
 <p>有趣的是，上述所有好处也都适用于单云的多个区域：</p>
 <p>(1) 不同可用区/区域的价格差异也很大。对于普通的 GPU/CPU，跨区按需价格差异可能高达20%（见下图）。对于现货实例，价格差异很容易超过 3 倍。简单地说：用户可以通过在同一个云厂商跨多个可用区/区域购买来降低成本。</p>
-<p><img loading="lazy" src="https://pic4.zhimg.com/v2-dcc7ff73648d99e0600ba8e8114981e3_b.jpg" alt="不同可用区/区域的价格差异也很大" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://pic4.zhimg.com/v2-dcc7ff73648d99e0600ba8e8114981e3_b.jpg" alt="不同可用区/区域的价格差异也很大" class="img_ev3q"></p>
 <p>(2) 硬件/服务产品因云区域而异。例如，GCP 的 TPU V3 仅在其 35 个全球区域中的 2 个区域可用。</p>
 <p>(3) 分散从多个区域获取稀缺资源更容易成功。</p>]]></content>
     </entry>
@@ -289,7 +289,7 @@ command substitution.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="背景介绍">背景介绍<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D" class="hash-link" aria-label="Direct link to 背景介绍" title="Direct link to 背景介绍">​</a></h2>
 <p>Cloudpods从2017年开始迭代开发。当时企业的IT环境已经不仅仅是本地的虚拟机以及裸金属，不少企业已经逐步采纳多云。所以Cloudpods平台作为新一代的云平台，需要不仅能管理本地IT环境中的虚拟机和裸金属，还能管理其他的云平台的资源，特别是公有云。实现所有的资源在一个平台上统一运维，操作，起到降低运维复杂度并提高企业IT运维效率的目的。</p>
 <p>为了实现一个统一的多云平台，我们采用了最适合开发云原生应用的 Golang作为后端开发语言。前端则采用Vue框架。整个平台基于微服务框架。服务之间的认证鉴权基于OpenStack Keystone的框架（我们用Golang重新实现了Keystone）。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/01-cloudpods-arch-95ff0ee4a28c89a93227b06c5f0575dc.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/01-cloudpods-arch-95ff0ee4a28c89a93227b06c5f0575dc.png" width="4480" height="2520" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="cloudpods-golang技术栈">Cloudpods Golang技术栈<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#cloudpods-golang%E6%8A%80%E6%9C%AF%E6%A0%88" class="hash-link" aria-label="Direct link to Cloudpods Golang技术栈" title="Direct link to Cloudpods Golang技术栈">​</a></h2>
 <p>云联壹云的Golang技术栈包含两部分：</p>
 <p>首先是一个Golang的服务框架，所有的服务组件都基于同一套服务框架来开发，这个服务框架针对云平台的特点做出优化，适合快速开发云服务的API和异步任务逻辑。</p>
@@ -310,24 +310,24 @@ command substitution.</p>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="golang框架">Golang框架<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#golang%E6%A1%86%E6%9E%B6" class="hash-link" aria-label="Direct link to Golang框架" title="Direct link to Golang框架">​</a></h2>
 <p>大部分Cloudpods服务都基于同一套服务框架开发，此框架的特点是针对云服务开发进行了适配和优化。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-golang-framework-69adc6b096201ce9a1ad362b9c5632b6.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-golang-framework-69adc6b096201ce9a1ad362b9c5632b6.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>Cloudpods的服务框架可以简单地认为是一套方便CRUD的脚手架。云服务主要是对云资源的操作，比如云资源的创建、删除、更新等。服务框架内置了云资源的CRUD API的基础框架，再加上异步任务机制实现对云资源的复杂操作以及资源模型的修改。</p>
 <p>除CRUD脚手架外，服务框架把认证，权限、配额等云平台特有的功能内置集成，使得认证和权限成为云平台默认的标配，同时简化相应功能的实现。</p>
 <p>首先，服务组件之间的通信基于OpenStack Keystone认证，我们将keystone认证加到框架中，使得服务组件开发者不需关注keystone认证流程如何实现，就能天然支持keystone认证。其次，每一个API请求都受到权限的控制，因此把权限控制也集成到框架中。开发者在实现REST API时，基本不必为权限控制实现相应的代码，就能够天然地将权限控制集成到API中。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-keystone-8cbb296ffa9edfbd49227bfac91abadc.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-keystone-8cbb296ffa9edfbd49227bfac91abadc.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>与此同时，每一个服务都有相应的配置参数，如何方便地管理各个服务的配置，允许对配置更新并同步到相应的组件使其生效，此过程相对复杂。我们将服务配置的功能集成到框架中，开发者采用框架不必考虑配置的存储、更新、服务器读取更新并使配置生效，这些复杂事宜已在框架中解决。</p>
 <p>另外，还有异步任务的管理功能。平台是一个分布式的系统，云控制器需要去操作和管理数据计算节点、裸金属的管理节点。协调组件之间的复杂操作，例如将虚拟机、裸金属创建起来，这些都是分布式的任务管理，在平台中也嵌入了异步任务管理框架。如此即可较为方便地实现异步任务。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="crud脚手架原理">CRUD脚手架原理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#crud%E8%84%9A%E6%89%8B%E6%9E%B6%E5%8E%9F%E7%90%86" class="hash-link" aria-label="Direct link to CRUD脚手架原理" title="Direct link to CRUD脚手架原理">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-crud-6a1598162d0e280ab5bf30f4a5846c77.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-crud-6a1598162d0e280ab5bf30f4a5846c77.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>在平台中，每一种资源，例如主机，在底层对应到数据库MySQL表，资源的状态、相应的属性都记录到了MySQL表中。</p>
 <p>用户通过调用API对数据进行操作，在数据操作的同时也能调用异步的任务去实现相应功能。落到底层代码中就是一种资源对应到一张MySQL表。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-model-manager-cdcd2db142b305552994369f5662ed87.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-model-manager-cdcd2db142b305552994369f5662ed87.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>为了比较方便地实现对数据库MySQL记录的操作，针对每一个资源，都会对应到一对ModelManager和Model的数据结构。ModelManager数据结构对实现一类资源的集合操作，例如创建资源或者列表，而针对单个资源的操作，则通过Model来实现，实现对单个具体资源的更新、删除的操作。</p>
 <p>每个资源的Model对应到Golang的一个结构体，该结构体有若干字段，每个字段代表资源的属性，例如有一个用户的资源包含用户的id、extra属性,用户是否enabled，用户何时创建，归属的域等。一个属性就是Golang结构体的一个字段，通过结构体字段的Tag属性定义每个字段在MySQL的数据库中对应的schema的定义。</p>
 <p>例如Id这个字段，属性中有</p>
 <div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">width:"64" charset:"ascii" nullable:"false" primary:"true"</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
 <p>这些tags定义了Id这个字段是数据库里面的一个VARCHAR(64)的字段，并且他的字符集是ascii码，不能为空，并且是主键。所以通过tag将结构体的字段映射到了MySQL的schema的字段中，如此，每一个model通过字段的定义就能够清晰地映射到MySQL的数据表中。这样实现了Model的字段和MySQL的数据表定义的严格同步，每次程序启动时都会进行schema的同步检查，如果Model 的定义和数据表的定义不一致，就会执行相应的SQL的变更操作，将表的schema定义和Model的定义变更为一致。例如我们将Id的宽度从64改成80，在程序重启时就能够发现这个变化，然后将数据表该知道的宽度变更成80。如此实现通过代码定义的Model 和数据库中的表定义的严格同步。（另外，也支持离线变更数据库Schema，即只检测数据库Schema的变更，并且输出对应的SQL语句，通过专门的离线数据库schema变更工具实现数据库的变更。）</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-api-model-methods-34d2c45a6f1d3b158e529c0752d88778.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-api-model-methods-34d2c45a6f1d3b158e529c0752d88778.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>与此同时，每类资源都会提供一系列的API，此处列出了对一个资源会实现的九类API，包括创建、删除、更新、执行操作、获取详情、列表等操作。</p>
 <p>每一个操作对应一个REST API，每一个REST API对应到后端代码中就对应到了每一个资源对应的ModalManager或者Model的方法。</p>
 <p>例如获取资源详情的REST API是:</p>
@@ -339,9 +339,9 @@ command substitution.</p>
 <p>下面介绍在Cloudpods开发过程中积累的Golang工具库。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="jsonutils">jsonutils<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#jsonutils" class="hash-link" aria-label="Direct link to jsonutils" title="Direct link to jsonutils">​</a></h3>
 <p>jsonutils是一个JSON序列化和反序列的工具库。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-encoding-json-ee397b271a7d3a8693aef6ac0f00f808.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-encoding-json-ee397b271a7d3a8693aef6ac0f00f808.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>Golang 的标准库中带的JSON库是encoding/json，encoding/json是一个非常强大、非常高效的JSON序列化和反序列的工具库。encoding/json实现的是Golang的数据结构和对应json的字符串之间的相互转换。可以把Golang中的结构体通过Marshal的方式生成一个Json的字符串，或者把Json的字符串通过Unmarshal放到相应的结构体中的各个字段，这样即可访问结构体去获得json中的这些值。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-jsonutils-de4f2ceaa80c595621680f9673512433.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-jsonutils-de4f2ceaa80c595621680f9673512433.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>jsonutils与encoding/json相比的明显区别是中间增加了一个中间态，在jsonutils库里面实现一个中间态的通用类型的数据类型JSONObject。我们可以把数据结构Marshal（s）成JSONObject，JSONObject是Golang的interface，该interface可以进一步地序列化成json字符串。</p>
 <p>这个中间态就是使用jsonutils的重要原因，通过通用类型的JSONObject就可以实现任意的结构体都可以Marshal（s）成JSONObject然后可以把JSONObject作为函数参数进行传递。</p>
 <p>Golang是一个严格类型检查的静态语言，它的每一个变量都有相应的类型，我们的框架能够处理任意API的输入输出，如果没有中间的结构体，在处理API的输入输出时，输入是json字符串， 为了在程序上访问它， 就必须把它反序列化成严格的有类型结构体，这样一来就无法将框架变成通用框架。</p>
@@ -350,7 +350,7 @@ command substitution.</p>
 <p>这样可以实现更方便的功能，比如对于列表 GET这种读取的这种API，它的参数通常作为QueryString 嵌入到URL中。如此我们可以将QueryString参数在框架中反序列化成JSONObject，把它作为JSONObject输入参数传入到框架中。</p>
 <p>对于其他类型的请求，可以把请求参数放在HTTP请求的body中的JSON字符串，我们同样可以把请求参数解析成JSONObject。这样，可以以同样的逻辑去处理嵌入到URL中的QueryString的参数以及嵌入到body 中的JSON的参数，可以做到统一处理出入参数的逻辑。</p>
 <p>另外jsonutils 还有还有一些针对云平台API做的一些特别的一些处理。较为特别的一点是支持结构体字段的版本变更。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-jsonutils-deprecated-c1f28502e12e79d63f3c1e2bf8c47c0a.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-jsonutils-deprecated-c1f28502e12e79d63f3c1e2bf8c47c0a.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>以下为举例说明：</p>
 <p>例如有一个输入参数的结构体称为Input，有一个字段是TenantId，用来标识用户的租户ID。</p>
 <p>随着版本的升级，希望将TenantId统一改名为ProjectId，这种升级如果不做任何处理，将可能出现接口兼容性的问题，在变更之前这个字段是TenantId，变更之后这个字段就只能是ProjectId。升级后，使用TenantId的客户端就不能正确访问这个接口。</p>
@@ -360,18 +360,18 @@ command substitution.</p>
 <p>这样，如果旧的客户端去访问新的接口，在新的接口中同样可以用ProjectId这个字段去获取这个值。这样保证了旧的客户端可以访问升级后的接口。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="sqlchemy">sqlchemy<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#sqlchemy" class="hash-link" aria-label="Direct link to sqlchemy" title="Direct link to sqlchemy">​</a></h3>
 <p>Sqlchemy是前文介绍的Golang服务框架中实现Model和数据库表映射的底层实现。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-sqlchemy-a299e00660a79ae4feb06207a9dba93c.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-sqlchemy-a299e00660a79ae4feb06207a9dba93c.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>Sqlchemy实现了Golang的数据结构到MySQL表单向同步，能够根据结构体字段的定义以及字段中tag的定义，生成精确的MySQL的schema。</p>
 <p>Sqlchemy能保证数据库中schema总是严格地和结构体定义保持一致，如果不一致，能够自动地变更数据库，将数据库Schema和结构体的定义变更为一致。</p>
 <p>Sqlchemy另一个重要特性是能够实现结构化的数据库查询语句。</p>
 <p>这里举一个简单的例子。如上图所示，我们要对UserTable表进行一个查询。首先实例化UserTable实例，然后调用它的Query接口返回一个SQuery实例，再调用Equals方法，进行过滤。这样就表示在查询user表，并且要求domain_id 这个字段要等于指定的值。Sqlchemy在执行时会把结构体的结构化查询变成SQL的查询语句，并送到MySQL进行执行。</p>
 <p>使用这种代码化的数据库查询方式的优点是避免了人工拼凑SQL容易出现的问题,并且Golang是一个严格的静态语言。可以通过Golang的语法检查保证查询语句的正确性。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-sqlchemy-query-253a5ed781b79fd214f5d094698b7656.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-sqlchemy-query-253a5ed781b79fd214f5d094698b7656.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>另一个好处是因为把SQL的查询代码化，这样就可以把数据库查询的逻辑进行一定程度的代码复用，这样就不用重复同样的查询语句，而是调用一个方法，这个方法中就嵌入了SQL的查询逻辑。</p>
 <p>框架中所有数据库的操作查询都用到sqlchemy，在一定程度上保证框架代码中SQL语句的正确性以及执行效率。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="structarg">structarg<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#structarg" class="hash-link" aria-label="Direct link to structarg" title="Direct link to structarg">​</a></h3>
 <p>还有一个比较重要一个库是structarg，这个库的作用是将程序的命令行参数或者配置文件信息和代码中的结构体做严格的映射。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-structarg-ef03ed8c58445eabeb0cdaa00ec22f8d.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-structarg-ef03ed8c58445eabeb0cdaa00ec22f8d.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>这样可以基于结构体自动生成程序输入参数的提示，并且能够根据命令行参数将参数中的值反序列化放到结构体中， 或者是将对应配置文件中的参数反序列化到结构体中，在程序中就可以通过访问结构体的字段去访问相应参数的值。</p>
 <p>如此即可比较方便地在程序中使用配置的信息，这里举个例子。
 假设定义了UserOption的结构体，这个结构体tag中包含一个help的tag，这个tag的定义了结构体的每个字段的帮助信息。将其初始化并进行程序编译之后，如果命令行中执行带help的参数的话，其将会把这些帮助信息展现出来。</p>
@@ -380,7 +380,7 @@ command substitution.</p>
 <p>这样可以将程序的配置文件的配置信息通过结构体定义下来，程序就能够自动地识别配置文件的信息，然后将信息放到结构体中访问。</p>
 <p>框架中对配置管理的基础就是structarg的功能，利用该功能将每一个服务的配置用结构体来定义，并且配置的信息会存到数据库中，在数据库的信息进行修改之后，框架会把数据库中的配置信息拉取下来，然后把它反序列化到结构体中，程序中能够感知到配置的变更，并做出相应的配置变更处理。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="pkg">pkg<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-golang#pkg" class="hash-link" aria-label="Direct link to pkg" title="Direct link to pkg">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-pkg-699c85da56447ea31ce82d4a729e1165.png" width="4480" height="2520" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-pkg-699c85da56447ea31ce82d4a729e1165.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>除去三个比较重要的库之外， 还有一些其他辅助的工具库在pkg这个库中。包括模仿python的prettytable的格式化输出数据的库，错误处理库，保证key顺序的map的实现等。这里就不一一介绍，感兴趣的读者可以阅读相关源码。</p>]]></content>
         <author>
             <name>Jian Qiu</name>
@@ -400,19 +400,19 @@ command substitution.</p>
 <p>当时，亚马逊网络服务刚刚成立几年，谷歌唯一的云产品是 App Engine，微软的 Azure 尚未正式发布。2009 年的论文得出的结论是，“梦想已久的计算作为一种实用工具的愿景终于出现了。”</p>
 <p>尽管云计算确实在 2010 年代从根本上改变了 IT 行业以及应用程序的构建和部署方式，但也存在一个明显的问题——云计算并没有像互联网或网络那样成为一种公用事业。</p>
 <p>到 2021 年，没有一个单一的底层云平台具有一套任何人都可以使用的开放标准。取而代之的是，云计算已经演变成一系列在很大程度上彼此不兼容的专有平台：亚马逊网络服务(AWS)、微软 Azure、谷歌云等。因此 Stoica 教授的论文中出现了“一个更加商品化的云计算版本，称之为天空计算”的愿景。</p>
-<p><img loading="lazy" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/52a8e1e113284a4a9cb06d2001ac876f~tplv-k3u1fbpfcp-zoom-1.image" alt="图片" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/52a8e1e113284a4a9cb06d2001ac876f~tplv-k3u1fbpfcp-zoom-1.image" alt="图片" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="实施多云平台">实施多云平台<a href="https://www.cloudpods.org/v3.10/en/blog/skycomputing#%E5%AE%9E%E6%96%BD%E5%A4%9A%E4%BA%91%E5%B9%B3%E5%8F%B0" class="hash-link" aria-label="Direct link to 实施多云平台" title="Direct link to 实施多云平台">​</a></h2>
 <p>从本质上讲，这是关于启用多云应用程序开发。“为了实现效用计算的愿景，应用程序应该能够在任何云提供商上运行（即，一次编写，随处运行），” Stoica 教授的论文断言。</p>
 <p>本质上，天空计算支持多云应用程序开发。</p>
 <p>开发人员为何要为多云环境构建应用程序？传统观点认为，选择一个云提供商并使用该公司提供的服务套件会更容易。然而，该论文拒绝了这一观点，而是建议具有“计算密集型工作负载”的应用程序更适合多云环境。</p>
 <p>因为计算更简单，不需要处理出口费用，将数据放入云中无需花钱，但将数据从云中取出需要花费很多，特别是正在进行训练或高参数调整的机器学习中。这些都是计算密集型的工作，因此将这些工作转移到可以更快、更便宜地完成的地方是很有意义的。当然，如果移动计算，还需要移动训练数据——但总的来说，与训练或调整模型的成本相比，移动这些数据的成本相形见绌。”</p>
 <p>该论文建议天空计算由三层组成：“一个用于掩盖低级技术差异的兼容层，一个将作业路由到正确云的云间层，以及一个允许云之间就有关问题达成一致的对等层。”&nbsp;这三层反映了互联网本身的设计方式——例如，互联网协议 (IP) 提供了网络间兼容性。</p>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="天空计算由三层组成兼容性云间和对等">天空计算由三层组成：兼容性、云间和对等<a href="https://www.cloudpods.org/v3.10/en/blog/skycomputing#%E5%A4%A9%E7%A9%BA%E8%AE%A1%E7%AE%97%E7%94%B1%E4%B8%89%E5%B1%82%E7%BB%84%E6%88%90%E5%85%BC%E5%AE%B9%E6%80%A7%E4%BA%91%E9%97%B4%E5%92%8C%E5%AF%B9%E7%AD%89" class="hash-link" aria-label="Direct link to 天空计算由三层组成：兼容性、云间和对等" title="Direct link to 天空计算由三层组成：兼容性、�云间和对等">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="天空计算由三层组成兼容性云间和对等">天空计算由三层组成：兼容性、云间和对等<a href="https://www.cloudpods.org/v3.10/en/blog/skycomputing#%E5%A4%A9%E7%A9%BA%E8%AE%A1%E7%AE%97%E7%94%B1%E4%B8%89%E5%B1%82%E7%BB%84%E6%88%90%E5%85%BC%E5%AE%B9%E6%80%A7%E4%BA%91%E9%97%B4%E5%92%8C%E5%AF%B9%E7%AD%89" class="hash-link" aria-label="Direct link to 天空计算由三层组成：兼容性、云间和对等" title="Direct link to 天空计算由三层组��成：兼容性、云间和对等">​</a></h2>
 <p>兼容层将使应用程序开发人员能够轻松地选择他们的应用程序并将其从AWS 迁移到 Google Cloud。多云的用武之地是云间层，因为它将允许应用程序跨多个云提供商运行——这取决于用户的需求。以下是 Stoica 教授的解释：</p>
 <p>理想情况下，通过云间层，用户可以为其工作指定首选项——比如想最小化成本，或最小化时间，或者需要在本地处理这些数据——云间层将决定在何处运行客户工作以满足这些偏好。</p>
 <p>关于数据本地性示例，应用程序必须使用特定地理位置的原因可能是地缘政治或其他原因。如果一个应用程序想要处理一些不得离开某个国家/地区边界的数据，并且该国家/地区只有一个云数据中心。在这种情况下，云间层会自动将该应用程序路由到该云数据中心。但所有其他应用程序可能使用不同的云平台，具体取决于应用程序开发人员定义的云间规则。</p>
 <p>谁来提供这个云间层？Stoica 教授认为它可以由现有的云平台提供，或者可能会出现一种新型的“虚拟云”公司来专门从事这种路由功能。他建议使用“无基础设施云”这一术语，因为云间层不需要基础设施（服务器、数据库等）。</p>
-<p><img loading="lazy" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec2a28b8d15144c9ba795e0213e224cb~tplv-k3u1fbpfcp-zoom-1.image" alt="图片" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec2a28b8d15144c9ba795e0213e224cb~tplv-k3u1fbpfcp-zoom-1.image" alt="图片" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="云计算头部企业如何应对">云计算头部企业如何应对？<a href="https://www.cloudpods.org/v3.10/en/blog/skycomputing#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%A4%B4%E9%83%A8%E4%BC%81%E4%B8%9A%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9" class="hash-link" aria-label="Direct link to 云计算头部企业如何应对？" title="Direct link to 云计算头部企业如何应对？">​</a></h2>
 <p>随着多云成为天空计算的优先事项，一个关键的挑战将是购买当今市场领先的云平台——尤其是 AWS、微软和谷歌。</p>
 <p>那么哪些主要平台会率先迈向天空计算，他们的动机是什么？</p>
@@ -519,23 +519,23 @@ command substitution.</p>
 <ol>
 <li>创建名为 rook-ceph 的块存储，填入上面的信息：</li>
 </ol>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/create-ceph-storage-ddc0f4174ac0860d59194f45f89a7397.png" width="1990" height="1223" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/create-ceph-storage-ddc0f4174ac0860d59194f45f89a7397.png" width="1990" height="1223" class="img_ev3q"></p>
 <ol start="2">
 <li>默认创建好的 rook-ceph 块存储为离线状态，需要关联平台的私有云宿主机，宿主机会探测 ceph 集群的连通性，并且获取对应的 pool 容量信息：</li>
 </ol>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/attach-storage-host-e6fb10e6755e1f9ef19046834338de65.png" width="2264" height="1045" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/attach-storage-host-e6fb10e6755e1f9ef19046834338de65.png" width="2264" height="1045" class="img_ev3q"></p>
 <ol start="3">
 <li>rook-ceph 块存储关联好宿主机后，状态就会变为“在线”，并且获取到了 20T 的容量：</li>
 </ol>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/rook-ceph-status-69a1e71545f0eef5414feb3ba6861e29.png" width="2280" height="834" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/rook-ceph-status-69a1e71545f0eef5414feb3ba6861e29.png" width="2280" height="834" class="img_ev3q"></p>
 <ol start="4">
 <li>创建虚拟机使用 <code>rook-ceph</code> 存储，这里主要是在虚拟机创建页面添加磁盘，选择存储类型为 <strong>Ceph RBD</strong>：</li>
 </ol>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/vm-with-ceph-ec90c2558b448214e4de3b07c941cb74.png" width="2251" height="799" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/vm-with-ceph-ec90c2558b448214e4de3b07c941cb74.png" width="2251" height="799" class="img_ev3q"></p>
 <ol start="5">
 <li>等待虚拟机创建完成，通过 vnc 或者 ssh 登录虚拟机：</li>
 </ol>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/vm-running-2f5b9b9830c49e367f73421674747c96.png" width="1580" height="538" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/vm-running-2f5b9b9830c49e367f73421674747c96.png" width="1580" height="538" class="img_ev3q"></p>
 <p>可以发现虚拟机里面挂载了 /dev/sda(系统盘) 和 /dev/sdb(数据盘)，底层都为 ceph 的 RBD 块设备，因为 ceph 底层块设备用的机械盘，用 dd 简单测试速度在 99 MB/s ，符合预期。</p>
 <ol start="6">
 <li>然后使用平台的 climc 命令查看虚拟机所在的宿主机，发现虚拟机 ceph-test-vm 运行在 node-1 计算节点上，同时改节点也是 Ceph 集群的存储节点，实现了超融合的架构：</li>
@@ -661,9 +661,9 @@ command substitution.</p>
 <p>在Cloudpods中，通过OCFS2挂载的共享文件系统可以作为GPFS类型的共享存储类型进行管理。通过以下步骤将OCFS2的共享存储注册到Cloudpods，并且用来存储虚拟机用的虚拟磁盘文件。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="注册ocfs2块存储">注册OCFS2块存储<a href="https://www.cloudpods.org/v3.10/en/blog/ocfs2-as-san-filesystem#%E6%B3%A8%E5%86%8Cocfs2%E5%9D%97%E5%AD%98%E5%82%A8" class="hash-link" aria-label="Direct link to 注册OCFS2块存储" title="Direct link to 注册OCFS2块存储">​</a></h3>
 <p>在【存储-块存储】界面，新建一个GPFS类型的共享存储。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/ocfs2-create-8ab1a7535ef997b7abb16695b2ef1b62.png" width="800" height="501" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/ocfs2-create-8ab1a7535ef997b7abb16695b2ef1b62.png" width="800" height="501" class="img_ev3q"></p>
 <p>存储记录创建成功后，选择该存储的“管理宿主机”菜单按钮，在关联存储的宿主机列表，选择“关联宿主机”，将挂载该存储的宿主机节点都注册关联，让Cloudpods平台知道这个共享存储挂载到哪些宿主机的哪个目录下。</p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="使用ocfs2创建主机虚拟磁盘">使用OCFS2创建主机虚拟磁盘<a href="https://www.cloudpods.org/v3.10/en/blog/ocfs2-as-san-filesystem#%E4%BD%BF%E7%94%A8ocfs2%E5%88%9B%E5%BB%BA%E4%B8%BB%E6%9C%BA%E8%99%9A%E6%8B%9F%E7%A3%81%E7%9B%98" class="hash-link" aria-label="Direct link to 使�用OCFS2创建主机虚拟磁盘" title="Direct link to 使用OCFS2创建主机虚拟磁盘">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="使用ocfs2创建主机虚拟磁盘">使用OCFS2创建主机虚拟磁盘<a href="https://www.cloudpods.org/v3.10/en/blog/ocfs2-as-san-filesystem#%E4%BD%BF%E7%94%A8ocfs2%E5%88%9B%E5%BB%BA%E4%B8%BB%E6%9C%BA%E8%99%9A%E6%8B%9F%E7%A3%81%E7%9B%98" class="hash-link" aria-label="Direct link to 使用OCFS2创建主机虚拟磁盘" title="Direct link to 使用OCFS2创建主机虚拟磁盘">​</a></h3>
 <p>以上配置完成后，在新建虚拟机时，就可以选择新建的OCFS2存储作为虚拟磁盘的存储。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="ocfs2文件系统的扩容">OCFS2文件系统的扩容<a href="https://www.cloudpods.org/v3.10/en/blog/ocfs2-as-san-filesystem#ocfs2%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%89%A9%E5%AE%B9" class="hash-link" aria-label="Direct link to OCFS2文件系统的扩容" title="Direct link to OCFS2文件系统的扩容">​</a></h2>
 <p>首先需要将OCFS2只挂载在第一个节点，将其他节点都卸载。以下操作都只在第一个节点上执行。</p>
@@ -698,7 +698,7 @@ command substitution.</p>
 <p>然后把profile数据文件拷贝到本地，用本地go tool打开一个http服务，查看profile的内容。</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">go tool pprof </span><span class="token parameter variable" style="color:#36acaa">-http</span><span class="token operator" style="color:#393A34">=</span><span class="token number" style="color:#36acaa">0.0</span><span class="token plain">.0.0:8081 ~/profile</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
 <p>用浏览打开看，得到如下的调用图：</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/goprofile-90364e1ac68260b993159f60438e4189.png" width="1648" height="1329" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/goprofile-90364e1ac68260b993159f60438e4189.png" width="1648" height="1329" class="img_ev3q"></p>
 <p>发现整个profile时间约130秒，调用blowfish encryptBlock的时间花了约101秒。查看代码发现这个是密码校验调用的方法bcrypt.CompareHashAndPassword。也就是说，70%的时间都花在验证本地用户的密码上了。</p>
 <p>为什么这个bcrypt.CompareHashAndPassword方法这么慢呢？搜索google发现这个问答：</p>
 <p><a href="https://stackoverflow.com/questions/49437359/why-bcrypt-library-comparehashandpassword-method-is-slow" target="_blank" rel="noopener noreferrer">https://stackoverflow.com/questions/49437359/why-bcrypt-library-comparehashandpassword-method-is-slow</a></p>
@@ -841,10 +841,10 @@ command substitution.</p>
 <li>CTO/CIO-如何提高IT资源的ROI（投资回报率）？</li>
 </ul>
 <p>我们早在2017年就关注到多云带来客户的问题，开始做云联壹云这款产品，希望能够帮助企业很好的解决这些问题。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/01-a96592b11b32ad0bd8ca8cb852d02f14.png" width="867" height="382" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/01-a96592b11b32ad0bd8ca8cb852d02f14.png" width="867" height="382" class="img_ev3q"></p>
 <p>云联壹云是一站式管理云计算资源的解决方案，希望帮助客户在一个地方管理本地IDC、私有云、公有云等IT资源，整体提高企业IT基础设施的管理效率。</p>
 <p>从产品架构图上，我们可以看出，底层是一些异构资源，上层是一些应用或服务，云联壹云处于承上启下的作用，向下屏蔽异构的差异，向上提供一致的资源管理能力。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-bff3e3b9ca336f36812ffe35864e7a63.png" width="812" height="427" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-bff3e3b9ca336f36812ffe35864e7a63.png" width="812" height="427" class="img_ev3q"></p>
 <p>以上是我们最新版本也就是3.7版本的功能概览。</p>
 <p>最底层是异构资源，中层就是我们云管理平台的功能概览，上层应用和服务。云管理平台的底层是多云的适配层，往上是基础的资源管理，包括计算、存储、网络、PaaS服务等，再往上是针对企业客户做的三大块的功能，依次是权限管理、统一监控和报警、成本管理包括私有云的计量计费公有云的账单分析和成本优化等等，面向用户层，我们针对不同的用户有不同的用户界面，包括管理员的系统管理视图，租户的租户管理视图，普通用户的项目视图，针对运维人员的climc命令行工具，针对开发人员，我们也有丰富的REST API以及各个开发语言的SDK。</p>
 <p>这款产品能够带给客户3种价值：</p>
@@ -854,7 +854,7 @@ command substitution.</p>
 <li>安全-统一认证、统一授权、免密登录</li>
 </ul>
 <p>总而言之，云联壹云希望帮助用户解决异构IT基础设施带来的问题，充分发挥异构IT基础设施的优势。</p>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="二37版本新功能介绍">二、3.7版本新功能介绍<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%BA%8C37%E7%89%88%E6%9C%AC%E6%96%B0%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" class="hash-link" aria-label="Direct link to 二、3.7版本新功能介绍" title="Direct link to 二、3.7版本新功能介绍">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="二37版本新功能介绍">二、3.7版本新功能介绍<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%BA%8C37%E7%89%88%E6%9C%AC%E6%96%B0%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" class="hash-link" aria-label="Direct link to 二、3.7版本新功能介绍" title="Direct link to 二、3.7版本新��功能介绍">​</a></h2>
 <p>3.7版本增加了不下30多项功能或更新，由于时间关系，今天我主要给大家介绍这5个方面的功能：</p>
 <ul>
 <li>多云资源对接</li>
@@ -874,42 +874,42 @@ command substitution.</p>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-多云账单管理">2. 多云账单管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#2-%E5%A4%9A%E4%BA%91%E8%B4%A6%E5%8D%95%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 2. 多云账单管理" title="Direct link to 2. 多云账单管理">​</a></h3>
 <p>2.1 支持AWS的预留实例分析，包括RI推荐及RI覆盖率，帮助客户用好RI，节约成本</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-28bb0c9569ccb19fa52552af9b77104a.png" width="918" height="215" class="img_ev3q"></p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-75c971925144da2d8ff2656253770e26.png" width="828" height="317" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-28bb0c9569ccb19fa52552af9b77104a.png" width="918" height="215" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-75c971925144da2d8ff2656253770e26.png" width="828" height="317" class="img_ev3q"></p>
 <p>2.2 支持价格对比功能，同配置全网比价，帮助客户发现便宜资源</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-c7453fb75e117fde92d8a48713f313c1.png" width="892" height="255" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-c7453fb75e117fde92d8a48713f313c1.png" width="892" height="255" class="img_ev3q"></p>
 <p>2.3 支持所有平台费用报告及定期发送</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-68d123e244defb999bfdc96683d0274c.png" width="879" height="458" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-68d123e244defb999bfdc96683d0274c.png" width="879" height="458" class="img_ev3q"></p>
 <p>2.4 支持预算管理功能，并且可以配置预算告警，防止费用超支</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-f189c7d0fca34f82220a1764404d6308.png" width="780" height="316" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-f189c7d0fca34f82220a1764404d6308.png" width="780" height="316" class="img_ev3q"></p>
 <p>2.5 费用优化迭代，更多纬度节省费用，帮助用户发现更多可以优化成本的途径</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-2db6d2219821fa0fdcc3c44d96dfc9b1.png" width="795" height="249" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-2db6d2219821fa0fdcc3c44d96dfc9b1.png" width="795" height="249" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-多云监控告警">3. 多云监控告警<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#3-%E5%A4%9A%E4%BA%91%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6" class="hash-link" aria-label="Direct link to 3. 多云监控告警" title="Direct link to 3. 多云监控告警">​</a></h3>
 <p>3.1 支持自定义监控面板，一次定义，随时查看</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-1fac754083ab7891c76c02e7f1a8e405.png" width="744" height="342" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-1fac754083ab7891c76c02e7f1a8e405.png" width="744" height="342" class="img_ev3q"></p>
 <p>3.2 报警策略支持函数及静默期设置，有效避免毛刺、报警泛滥等问题</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-3633c580941c379a1a42f9212c8319c4.png" width="926" height="246" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-3633c580941c379a1a42f9212c8319c4.png" width="926" height="246" class="img_ev3q"></p>
 <p>3.3 支持自动化安装监控插件，可显示内存使用率等更多监控指标</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-963d57d813f75349aa268fa0ce7b559b.png" width="798" height="467" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-963d57d813f75349aa268fa0ce7b559b.png" width="798" height="467" class="img_ev3q"></p>
 <p>3.4 大屏增加地图，可根据资源城市进行分布</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-6971f13a1067417c78ce0d88d91ee093.png" width="823" height="467" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-6971f13a1067417c78ce0d88d91ee093.png" width="823" height="467" class="img_ev3q"></p>
 <p>3.5 增加监控总览，可以查看告警情况及平台各纬度使用情况</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-6a6cc1f96af9b935bdf904a49cfe077f.png" width="772" height="497" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-6a6cc1f96af9b935bdf904a49cfe077f.png" width="772" height="497" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-多云权限管理">4. 多云权限管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#4-%E5%A4%9A%E4%BA%91%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 4. 多云权限管理" title="Direct link to 4. 多云权限管理">​</a></h3>
 <ul>
 <li>在一个地方创建及管理所有云平台的子账号，并分配权限</li>
 <li>通过云管壹云控制台可一键跳转免密登录公有云控制台</li>
 <li>员工离职，自动注销对应的公有云账号</li>
 </ul>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/14-95e8decec9a00b8b37a383377ac012aa.png" width="623" height="359" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/14-95e8decec9a00b8b37a383377ac012aa.png" width="623" height="359" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="5-标签管理">5. 标签管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#5-%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 5. 标签管理" title="Direct link to 5. 标签管理">​</a></h3>
 <ul>
 <li>标签支持CMP与公有云平台双向同步</li>
 <li>标签搜索增强，支持特殊符号复杂搜索</li>
 </ul>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/15-5c074395b31fa0d6a0ba7657dcfb6f93.png" width="597" height="456" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/15-5c074395b31fa0d6a0ba7657dcfb6f93.png" width="597" height="456" class="img_ev3q"></p>
 <p>除以上5大功能的更新外，我们其实还有很多细节更新，在这里就不在展开给大家介绍，感兴趣的同学可以看一下以下总结</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/16-40c26c30bff035096f252627fad4e379.png" width="901" height="488" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/16-40c26c30bff035096f252627fad4e379.png" width="901" height="488" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="三功能规划">三、功能规划<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%B8%89%E5%8A%9F%E8%83%BD%E8%A7%84%E5%88%92" class="hash-link" aria-label="Direct link to 三、功能规划" title="Direct link to 三、功能规划">​</a></h2>
 <p>我们近期的功能规划主要是以下6个方面</p>
 <ul>
@@ -948,19 +948,19 @@ command substitution.</p>
 <li>它解决了什么样的问题</li>
 <li>它适合什么样的应用场景</li>
 </ul>
-<p><img loading="lazy" alt="Nginx example" src="https://www.cloudpods.org/v3.10/en/assets/images/01-e2999ff3e26df18372a5f00ab0304895.png" width="606" height="355" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Nginx example" src="https://www.cloudpods.org/v3.10/en/assets/images/01-e2999ff3e26df18372a5f00ab0304895.png" width="606" height="355" class="img_ev3q"></p>
 <p>在加入了NGINX之后，客户端（Client IP）首先与NGINX建立连接（Virtual IP+Virtual Port），请求也先发给NGINX，再由NGINX从多个后端服务器中选择一台，建立连接后把请求转发给后端服务器（Real IP）。</p>
 <p>NGINX作为网络转发节点，不参与后端服务的业务逻辑处理。而相比客户端直连后端，多个后端服务器可同时处理业务请求，应用的服务能力得到水平扩展。同时，转发节点上可以对后端做健康检查，自动屏蔽掉不健康的后端服务器，保障业务的高可用，使得单个后端服务器在故障、升级、过载时依然对用户连续可用。</p>
 <p>因此，我们说水平扩展、高可用是负载均衡解决的最基本的两个问题。从另外一方面来说，使用负载均衡的业务，在架构设计上应该是能够水平扩展的。比如，一个应用的多个实例之间不需要通信，相互之间没有复杂的状态维护。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-业务词汇">2. 业务词汇<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#2-%E4%B8%9A%E5%8A%A1%E8%AF%8D%E6%B1%87" class="hash-link" aria-label="Direct link to 2. 业务词汇" title="Direct link to 2. 业务词汇">​</a></h3>
 <p>在使用云上负载均衡的时候，不管哪个厂商的产品，我们会遇到一些常用的业务词汇。我们围绕一张图来简要介绍。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-9b852ffbde75366a7c0d8fccbcf627aa.png" width="615" height="261" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-9b852ffbde75366a7c0d8fccbcf627aa.png" width="615" height="261" class="img_ev3q"></p>
 <p>负载均衡实例，除了区域、可用区之外，每个实例至少有一个IP地址。同一个负载均衡实例下可以有多个监听，每个监听一般至少有协议、端口两个属性。后面还会介绍监听的其它属性，比如调度算法、健康检查、转发策略等。</p>
 <p>实例和监听对应到NGINX上，其实是Virtual IP和Virtual Port的组合。每个监听有一个后端服务器组，组内可以有多个后端服务器，监听将来自客户端的请求转发给后端服务器（Real IP、Real Port）。</p>
 <p>对于HTTPS协议的监听，我们还会遇到TLS证书的概念。</p>
 <p>通常每个监听还可以绑定一个访问控制列表，用来设置黑名单、白名单，限定业务的服务范围。</p>
 <p>将业务词汇放到转发模型上，我们可以得到这样一张图。在壹云的负载均衡实现中，转发节点使用HAProxy负责具体的流量转发。实例和监听的配置被转换为HAProxy的配置应用到转发节点上。HAProxy据此将流量转发到后端服务器组。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-1-99edc5d46cc850363d4ecad956d06aa0.png" width="607" height="383" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-1-99edc5d46cc850363d4ecad956d06aa0.png" width="607" height="383" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="二功能与应用场景">二、功能与应用场景<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#%E4%BA%8C%E5%8A%9F%E8%83%BD%E4%B8%8E%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF" class="hash-link" aria-label="Direct link to 二、功能与应用场景" title="Direct link to 二、功能与应用场景">​</a></h2>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-监听协议">1. 监听协议<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#1-%E7%9B%91%E5%90%AC%E5%8D%8F%E8%AE%AE" class="hash-link" aria-label="Direct link to 1. 监听协议" title="Direct link to 1. 监听协议">​</a></h3>
 <p>一般来说，负载均衡监听支持的传输层协议为TCP、UDP，应用层一般支持HTTP、HTTPS。其中对HTTP协议的支持一般包括HTTP/1.0，HTTP/1.1，HTTP/2，以及WS（WebSocket），WSS（WebSocket Secure）等。</p>
@@ -969,16 +969,16 @@ command substitution.</p>
 <p>从开销来说，HTTPS因为涉及到TLS协商和传输加解密，开销最大。HTTP其次，相比TCP协议转发节点需要对传输的数据做内容解析。TCP作为有状态的连接，相比UDP开销又要大一些。</p>
 <p>图中展示的是壹云控制台中负载均衡监听创建的第1步。其中，端口对所有协议类型都是必选的项。创建HTTPS监听时，要求必须关联相应的TLS证书。对于WS、WSS的支持是默认就有的。</p>
 <p>主流的浏览器要求HTTP/2必须运行在加密信道上，一般来说，负载均衡产品对于HTTPS监听默认开启HTTP/2的支持。极个别情况下，某些应用的客户端遇到HTTP/2时会有兼容性问题，所以负载均衡产品通常也会提供开关，允许显式将HTTP/2支持关闭。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-f611528c870ff76340c009d0a915059f.png" width="499" height="421" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-f611528c870ff76340c009d0a915059f.png" width="499" height="421" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-调度算法">2. 调度算法<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#2-%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95" class="hash-link" aria-label="Direct link to 2. 调度算法" title="Direct link to 2. 调度算法">​</a></h3>
 <p>监听收到客户端的请求后，从后端服务器组中选出一个后端做转发。这个算法通常就叫“调度算法”。一般来说我们常用的有3种：</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-8ec52c8913245f20ed943cc039333bf3.png" width="269" height="200" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-8ec52c8913245f20ed943cc039333bf3.png" width="269" height="200" class="img_ev3q"></p>
 <ul>
 <li>轮询，round robin。这种策略比较适用于短连接、短生命周期的业务，比如网页浏览。每打开一个网页，通常需要下载HTML、CSS、JS、字体等文档，每个请求大约秒级、毫秒级即可完成。这种场景下，轮询作为一种简单的算法，能够实现较好的均衡效果。</li>
 <li>最小连接数，least connected。转发节点会记录它与每个监听的后端服务器的当前活跃的连接数，在转发请求时，从中选择一个活跃连接数最少的后端。这种算法较适合长连接、生命周期较长的业务，比如大文件上传下载、长时的交互会话如SSH等。</li>
 <li>源一致性哈希。在这类算法中，转发节点通常会对请求来源标记一个身份，比如源IP地址、请求中的某个HTTP cookie值等。对于来自同一个标记的请求，将其转发到上次选择的后端服务器。这种算法较适合需要维护会话缓存、关联状态的业务。例如，某些业务后端收到请求后，需要从别处获取并缓存该请求相关的信息，比如订单详情、关联的用户详情等等，如果来自同一个用户的请求依然送到同一个后端，使得缓存使中率提高。这种对Locality的利用对应用的体验提升较好。</li>
 </ul>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-4d003b8f391d4f541fec1c0b1e7dbadb.png" width="593" height="443" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-4d003b8f391d4f541fec1c0b1e7dbadb.png" width="593" height="443" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="3健康检查">3.健康检查<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#3%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5" class="hash-link" aria-label="Direct link to 3.健康检查" title="Direct link to 3.健康检查">​</a></h3>
 <p>健康检查是一种负载均衡服务实现高可用，保障业务连续性的机制。通过健康检查结果，转发节点将不健康的后端向用户屏蔽，实现故障、升级等行为对用户的无感知。</p>
 <p>云上负载均衡的健康检查通常有以下几种：</p>
@@ -988,36 +988,36 @@ command substitution.</p>
 <li>HTTP检查。通常通过向后端发送HEAD请求，对响应的状态码做检查来判断健康与否。默认的配置一般是2xx、3xx的响应判定为健康，4xx、5xx判定为故障。对状态码的归类一般也是可配置的。</li>
 </ul>
 <p>云上负载均衡产品一般会某个后端的检查结果，作为一个初步诊断。一般会有连接超时、连接错误、响应错误等。当所有后端都被判定为不可用时，对于HTTP/HTTPS类型的监听，转发节点通常会直接返回503 Service Unavailable。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-f11ec79cc7680cf06517867daa36f846.png" width="652" height="445" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-f11ec79cc7680cf06517867daa36f846.png" width="652" height="445" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-http转发策略">4. HTTP转发策略<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#4-http%E8%BD%AC%E5%8F%91%E7%AD%96%E7%95%A5" class="hash-link" aria-label="Direct link to 4. HTTP转发策略" title="Direct link to 4. HTTP转发策略">​</a></h3>
 <p>转发策略是针对HTTP/HTTPS监听为言的。简单来说，它通过匹配用户请求中的Host、Path字段来决定将请求转发到哪个后端服务器组。</p>
 <p>首先，同一监听下的多个转发策略共用一个IP、端口组合，实现了复用，并且业务的域名和路径统一管理，无需配置到每一台后端服务器上。例如，我们可以将wiki.example.com, task.example.com解析到同负载均衡实例的IP地址，然后创建一个HTTPS监听，再创建2个转发策略，分别匹配这两个域名，实现不同的转发路径。也可以通过共用域名解析，分配不同URL路径（/wiki，/task）的方式实现相同的效果。</p>
 <p>另外，同一监听下的转发策略可以共用监听自身的ACL规则，共享监听的带单和速率控制，因此管理、配置会明晰简单。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-ae8f308cc63160c4da183b2112e28ec1.png" width="720" height="438" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-ae8f308cc63160c4da183b2112e28ec1.png" width="720" height="438" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="5-会话保持">5. 会话保持<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#5-%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81" class="hash-link" aria-label="Direct link to 5. 会话保持" title="Direct link to 5. 会话保持">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-584a8b3d7a21d288e8c516f1457527ee.png" width="724" height="262" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-584a8b3d7a21d288e8c516f1457527ee.png" width="724" height="262" class="img_ev3q"></p>
 <p>会话保持也叫Sticky Session，适用于HTTP/HTTPS类型的监听。它是一种通过在HTTP cookie中嵌入后端标识的方式指定请求的转发路径。根据Set-Cookie的时间不同，通常有两个选项：</p>
 <p>Server模式。后端服务器知道自己的标识，在返回响应的时候给出Set-Cookie，经过转发节点交给浏览器后，记录在浏览器。转发请求下次收到该浏览器的请求时会看到相应的Cookie值，将其转发到上次的后端服务器。</p>
 <p>Insert模式。转发节点收到后端服务器的响应后，再转发给浏览器前会加入Set-Cookie头部，这个值之后会记录在浏览器中。转发节点下次收到浏览器的请求时，若其中包含此cookie，它会将其去除之后再转发给后端服务器。因此，在Insert模式下，后端服务器感知不到此cookie的存在。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="6-跳转">6. 跳转<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#6-%E8%B7%B3%E8%BD%AC" class="hash-link" aria-label="Direct link to 6. 跳转" title="Direct link to 6. 跳转">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-89d0a19afe47a87e78a5e4b4f942b4dc.png" width="921" height="319" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-89d0a19afe47a87e78a5e4b4f942b4dc.png" width="921" height="319" class="img_ev3q"></p>
 <p>HTTP/HTTPS协议的监听可以指定跳转目标。这种情况下，监听无需绑定后端服务器组。</p>
 <p>跳转类型的监听通常用来实现HTTP到HTTPS的跳转，实现全站加密访问。例如，在明文HTTP协议下，有些宽带运营商可能会篡改应用的响应，在其中插入广告等信息，某些情况下还可能导致信息安全问题。强制HTTPS跳转作为一种应对措施，可以帮助实现用户到站点的端到端保密信道。</p>
 <p>另外，跳转还可以用来实现站点的迁移、应用的升级场景里。当迁移、升级完成后，通过跳转将用户请求转移到新站点，旧的URL依然可用，迁移升级过程对用户无感知，回滚也非常便捷。</p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="7-访问控制">7. 访问控制<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#7-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6" class="hash-link" aria-label="Direct link to 7. 访问控制" title="Direct link to 7. 访问控制">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-6b38a243df7b2af6753ac84c6fb6b4a5.png" width="441" height="245" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="7-访问控制">7. 访问控制<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#7-%E8%AE%BF%E9%97%AE%EF%BF%BD%E6%8E%A7%E5%88%B6" class="hash-link" aria-label="Direct link to 7. 访问控制" title="Direct link to 7. 访问控制">​</a></h3>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-6b38a243df7b2af6753ac84c6fb6b4a5.png" width="441" height="245" class="img_ev3q"></p>
 <p>监听可以指定访问控制列表（ACL），并指定该列表的类型是黑名单还是白名单。</p>
 <p>有时我们有一些内部接口、服务需要只能够有限开放，比如同公司另外一个机房，或者不同公司的合作伙伴等。此时通过访问控制列表实现就非常方便，在界面上统一管理、备注。</p>
 <p>另外一种情况下，有些应用我们需要限定服务区域，比如版权、监管的原因等。此时我们可以将服务区域的来源地址做成白名单，仅开放应用给这些区域。网络控制在负载均衡一处完成，整个过程应用本身无需配置变更。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-ed45ae17ecb211b6688640952ada5199.png" width="610" height="219" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-ed45ae17ecb211b6688640952ada5199.png" width="610" height="219" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="8-获取客户端真实ip">8. 获取客户端真实IP<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#8-%E8%8E%B7%E5%8F%96%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9C%9F%E5%AE%9Eip" class="hash-link" aria-label="Direct link to 8. 获取客户端真实IP" title="Direct link to 8. 获取客户端真实IP">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-4f04ef5666aed19d53184f64430f60e1.png" width="708" height="202" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-4f04ef5666aed19d53184f64430f60e1.png" width="708" height="202" class="img_ev3q"></p>
 <p>从产品简介中我们可以看到，客户端的连接和请求终结在转发节点上，后端服务器看到的连接都来自转发节点。此时，后端看到的网络层源IP也都是转发节点的地址。负载均衡产品一般提供提供了以下几种方式让后端服务器能够获取客户端的源IP地址：</p>
 <p>对于HTTP/HTTPS协议，转发节点可以通过HTTP头部来传递客户端的源地址，头部的名称一般为X-Forwarded-For。</p>
 <p>对于其它协议，一般通过PROXY协议来向后端服务器传递此信息。PROXY协议由HAProxy项目制订，AWS的负载均衡即支持此规范，另外还有NGINX、LightHTTPd也是支持此协议的。举例来说，对于TCP连接，PROXY协议会在连接建立后先进行连接信息传递，之后才是正常的数据交换。因此，如果PROXY协议直接对接应用服务，需要对应用服务的连接入口进行微小的修改。</p>
 <p>一部分云厂商在整个负载均衡转发面实施会话记录、地址转换，使得虚机作为后端服务器时看到源地址即为客户请求的源地址，此时无需额外机制获得客户端的真实IP地址。需要注意的是，对于内网负载均衡，服务器在访问自身作为后端监听时，会出现因为源、目的IP地址都是自己而造成路径不通，这是这种机制的一个小限制。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="9-请求速率控制">9. 请求速率控制<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#9-%E8%AF%B7%E6%B1%82%E9%80%9F%E7%8E%87%E6%8E%A7%E5%88%B6" class="hash-link" aria-label="Direct link to 9. 请求速率控制" title="Direct link to 9. 请求速率控制">​</a></h3>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-08545915a1b1502790fc577dc36cc07d.png" width="756" height="184" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-08545915a1b1502790fc577dc36cc07d.png" width="756" height="184" class="img_ev3q"></p>
 <p>壹云的负载均衡对于HTTP/HTTPS类型的监听可以实施请求速率控制。分为两个方面：</p>
 <p>一是对监听整体进行速率控制。例如，某个应用现在的服务能力是每秒3000个请求，为了保护后端服务器，避免过载造成雪崩效应等，我们可以设定整体的速率控制。</p>
 <p>二是对每个来源IP地址进行控制。这个可以用于阻止来自单个客户的高频异常请求，比如刷单、爬虫类请求等</p>
@@ -1026,11 +1026,11 @@ command substitution.</p>
 <p>首先，从非对称加密算法的类型来说，证书一般分别为RSA、EC证书两类。其中EC证书也叫椭圆曲线证书，相对较新一些，大部分平台也是支持的。</p>
 <p>上传证书时，一般要求同时上传证书、私钥两个文件或文件的内容。这两者是成对出现的。云平台一般支持PEM格式的证书和私钥，为base64编码带标识头的文本格式。与之对应通常叫DER格式，它是ASN.1编码的二进制格式。如果用文本编辑器打开证书和私钥文件，看到的是规整的ASCII字符串，那么应该是PEM格式，如果是乱码状态，很可能就是DER格式了。</p>
 <p>图中是常见的3种私钥PEM文件头。PKCS是RSA Laboratory制定的一系列标准。其中PKCS#8支持封装多种加密算法的私钥，因此此种格式的PEM私钥有可能是RSA或者EC格式的私钥。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/14-b94d7f47e560b9ce740d5ed1aebfa21a.png" width="538" height="138" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/14-b94d7f47e560b9ce740d5ed1aebfa21a.png" width="538" height="138" class="img_ev3q"></p>
 <p>图中展示了壹云控制台中证书列表的菜单位置。从中可以看到证书上传后，可以直接看到证书的CN（Common Name）。SAN（Subject Alternative Name），以及过期时间。在“操作”列中，若“删除”操作为灰色禁用状态，一般表示该证书正被HTTPS监听关联使用</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/15-59cfbf9a078e034ffb39bcf5003d44ca.png" width="920" height="352" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/15-59cfbf9a078e034ffb39bcf5003d44ca.png" width="920" height="352" class="img_ev3q"></p>
 <p>我们可以从证书的详情中，找到与它关联的监听列表，实现对所有监听批量更新证书。</p>
-<p><img loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/16-b627ca86fea920cb77777ceb3e7c8a1c.png" width="868" height="417" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/16-b627ca86fea920cb77777ceb3e7c8a1c.png" width="868" height="417" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="三总结">三、总结<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-lb-application-intro#%E4%B8%89%E6%80%BB%E7%BB%93" class="hash-link" aria-label="Direct link to 三、总结" title="Direct link to 三、总结">​</a></h2>
 <p>以上结合实际的场景对负载均衡产品做了一个简略的介绍，我们经常被问到，这些功能特性都可以通过自己搭建NGINX一步一步配置出来，为什么还要花钱用云上的产品呢？</p>
 <p>首先，作为一种模块化封装的产品，负载均衡的主要优势在于简便、高效。自建NGINX时，我们需要自己配置集群高可用，考虑集群的水平扩展和扩容。在生产环境时还需要配置自己的监控、告警策略。在管理层面，权限管理和操作过程审计也必不可少，然而NGINX作为基础组件与这些上层概念距离较远，需要较复杂的过程才可实现相等效果。</p>
@@ -1075,7 +1075,7 @@ command substitution.</p>
 <p>最后，融合云全面拥抱开源技术。</p>
 <p>软件发展的历程表明PaaS的未来是开源。供应商都无法仅凭一己之力满足企业客户所有的PaaS需求。因此，融合云聚焦于企业分布在本地IDC和公有云的计算、网络和存储IaaS资源的统一管理，为多云Kubernetes提供可靠的底层基础设施，Kubernetes之上的软件和应用需求则依赖开源生态来提供解决方案。融合云用户对PaaS的需求通过Kubernetes应用市场，通过整合开源PaaS应用向用户提供服务。这一方面降低用户使用开源PaaS的技术门槛，另一方面则依赖强大的开源社区给用户提供开放灵活丰富的软件产品，避免私有PaaS软件对用户的锁定。</p>
 <p>基于以上的设想，融合云的架构如下所示。</p>
-<p><img loading="lazy" alt="Architecture of Unified IaaS" src="https://www.cloudpods.org/v3.10/en/assets/images/unified_iaas-b6aab0c813d11d38d1378dd5a3eaf833.jpg" width="553" height="361" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Architecture of Unified IaaS" src="https://www.cloudpods.org/v3.10/en/assets/images/unified_iaas-b6aab0c813d11d38d1378dd5a3eaf833.jpg" width="553" height="361" class="img_ev3q"></p>
 <p>向下：融合云统一管理多云基础设施，主要实现多云环境下计算、网络、存储等IaaS资源的统一管理。对于本地IDC的未云化资源，主要是裸机，KVM虚拟机（Libvirt），VMware ESXi虚拟机（vSphere），通过内置的私有云方案实现云化管理。对于私有云和公有云资源，则通过API实现统一管理。</p>
 <p>向上：融合云一方面通过虚拟机、裸机等形式为传统应用提供完整操作系统运行时环境，另一方面则给Kubernetes提供多云运行环境，统一管理多云Kubernetes。在Kubernetes之上则提供云原生应用的容器运行时环境。同时，基于Kubernetes和开源组件提供PaaS中间件服务。</p>
 <p>总之，融合云向下统一管理多云IaaS资源；向上为Kubernetes提供多云支持，通过开源生态满足企业PaaS需求；用户其他需求则可以通过访问公有云的原生服务获得，从而全方位满足未来企业对IT基础设施的多层次需求。</p>

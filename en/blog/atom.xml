@@ -393,7 +393,7 @@ command substitution.</p>
         <link href="https://www.cloudpods.org/en/blog/skycomputing"/>
         <updated>2022-01-21T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[背景介绍]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="背景介绍">背景介绍<a class="hash-link" aria-label="Direct link to 背景介绍" title="Direct link to 背景介绍" href="https://www.cloudpods.org/en/blog/skycomputing#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D">​</a></h2>
+        <content type="html"><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="背景介�绍">背景介绍<a class="hash-link" aria-label="Direct link to 背景介绍" title="Direct link to 背景介绍" href="https://www.cloudpods.org/en/blog/skycomputing#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D">​</a></h2>
 <p>根据加州大学伯克利分校的两位杰出计算机科学教授Ion Stoica和 Scott Shenker 的说法，我们即将从云计算时代过渡到“天空计算”时代。</p>
 <p>顾名思义，天空计算是云平台之上的一层——其目标是实现云之间的互操作性。</p>
 <p>Stoica 教授曾正确预测云计算的未来，早在 2009 年 2 月，他和伯克利的一群学者发表了一篇关于当时新兴的云行业的有影响力的论文。</p>
@@ -726,7 +726,7 @@ command substitution.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="场景介绍">场景介绍<a class="hash-link" aria-label="Direct link to 场景介绍" title="Direct link to 场景介绍" href="https://www.cloudpods.org/en/blog/cgroups-kubernetes-pid-limits#%E5%9C%BA%E6%99%AF%E4%BB%8B%E7%BB%8D">​</a></h2>
 <p>之前遇到过这样一个问题，我们的服务会调用执行外部的命令，每调用一次外部命令就会 fork 产生子进程。但是由于代码上的 bug ，没有及时对子进程回收，然后这个容器不断 fork 产生子进程，耗尽了宿主机的进程表空间，最终导致整个系统不响应，影响了其它的服务。</p>
 <p>这种问题除了让开发人员修复 bug 外，也需要在系统层面对进程数量进行限制。所以，如果一个容器里面运行的服务会 fork 产生子进程，就很有必要使用 Cgroups 的 pids 控制器限制这个容器能运行的最大进程数量。</p>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="解决方法">解决方法<a class="hash-link" aria-label="Direct link to 解决方法" title="Direct link to 解决方法" href="https://www.cloudpods.org/en/blog/cgroups-kubernetes-pid-limits#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="解决方法">解决方法<a class="hash-link" aria-label="Direct link to 解决方法" title="Direct link to 解决方��法" href="https://www.cloudpods.org/en/blog/cgroups-kubernetes-pid-limits#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">​</a></h2>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="kubelet-开启-podpidslimit-功能">Kubelet 开启 PodPidsLimit 功能<a class="hash-link" aria-label="Direct link to Kubelet 开启 PodPidsLimit 功能" title="Direct link to Kubelet 开启 PodPidsLimit 功能" href="https://www.cloudpods.org/en/blog/cgroups-kubernetes-pid-limits#kubelet-%E5%BC%80%E5%90%AF-podpidslimit-%E5%8A%9F%E8%83%BD">​</a></h3>
 <p>Kubernetes 里面的每个节点都会运行一个叫做 Kubelet 的服务，负责节点上容器的状态和生命周期，比如创建和删除容器。根据 Kubernetes 的官方文档 <a href="https://kubernetes.io/docs/concepts/policy/pid-limiting/" target="_blank" rel="noopener noreferrer">Process ID Limits And Reservations</a> 内容，可以设置 Kubelet 服务的 <strong>--pod-max-pids</strong> 配置选项，之后在该节点上创建的容器，最终都会使用 Cgroups pid 控制器限制容器的进程数量。</p>
 <p>我们 Kubernetes 是在 CentOS 7 上使用 kubeadm 部署的 v1.15.9 版本，需要额外设置 <strong>SupportPodPidsLimit</strong> 的 feature-gate，对应操作如下（其它发行版应该也类似）：</p>
@@ -1025,7 +1025,7 @@ command substitution.</p>
 <p>壹云的负载均衡对于HTTP/HTTPS类型的监听可以实施请求速率控制。分为两个方面：</p>
 <p>一是对监听整体进行速率控制。例如，某个应用现在的服务能力是每秒3000个请求，为了保护后端服务器，避免过载造成雪崩效应等，我们可以设定整体的速率控制。</p>
 <p>二是对每个来源IP地址进行控制。这个可以用于阻止来自单个客户的高频异常请求，比如刷单、爬虫类请求等</p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="10-tls证书">10. TLS证书<a class="hash-link" aria-label="Direct link to 10. TLS证书" title="Direct link to 10. TLS证书" href="https://www.cloudpods.org/en/blog/cloudpods-lb-application-intro#10-tls%E8%AF%81%E4%B9%A6">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="10-tls证书">10. TLS证书<a class="hash-link" aria-label="Direct link to 10. TLS证书" title="Direct link to 10. TLS��证书" href="https://www.cloudpods.org/en/blog/cloudpods-lb-application-intro#10-tls%E8%AF%81%E4%B9%A6">​</a></h3>
 <p>最后，我们简单介绍一下TLS证书。用户在使用负载均衡时，经常反馈在证书上传这一步产生困惑。</p>
 <p>首先，从非对称加密算法的类型来说，证书一般分别为RSA、EC证书两类。其中EC证书也叫椭圆曲线证书，相对较新一些，大部分平台也是支持的。</p>
 <p>上传证书时，一般要求同时上传证书、私钥两个文件或文件的内容。这两者是成对出现的。云平台一般支持PEM格式的证书和私钥，为base64编码带标识头的文本格式。与之对应通常叫DER格式，它是ASN.1编码的二进制格式。如果用文本编辑器打开证书和私钥文件，看到的是规整的ASCII字符串，那么应该是PEM格式，如果是乱码状态，很可能就是DER格式了。</p>

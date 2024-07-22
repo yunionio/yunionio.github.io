@@ -14,7 +14,7 @@
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-999X9XX9XX",{anonymize_ip:!0})</script>
 
 <script src="https://hm.baidu.com/hm.js?3c5253cd6530122d0f774cab69e3c07f" async></script><link rel="stylesheet" href="/en/assets/css/styles.953a534f.css">
-<script src="/en/assets/js/runtime~main.97eaed84.js" defer="defer"></script>
+<script src="/en/assets/js/runtime~main.2b865b17.js" defer="defer"></script>
 <script src="/en/assets/js/main.86fbfb33.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -94,15 +94,15 @@
 </ul>
 </li>
 </ul></div></div>
-<p><img decoding="async" loading="lazy" alt="Create Baremetal Net" src="/en/assets/images/create-bm-net-75e623b1d6dbbfcd6ef99b4d886823a8.png" width="2952" height="1686" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Create Baremetal Net" src="/en/assets/images/create-bm-net-f8e3ea5750824b1acfda75047ed03e0d.png" width="2952" height="1686" class="img_ev3q"></p>
 <ol start="2">
 <li>创建一个 IPMI 类型的子网，该网段需要包含物理机的 ipmi ip，假设为 192.168.222.200 到 192.168.222.210，网关为 192.168.222.1，名称为 ipmi-0。</li>
 </ol>
-<p><img decoding="async" loading="lazy" alt="Create IPMI Net" src="/en/assets/images/create-ipmi-net-281d0cd628e1871bf0b26f5aa23857e2.png" width="3022" height="1644" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Create IPMI Net" src="/en/assets/images/create-ipmi-net-6bf5bcd8c5e325568b7e3062ee05ef7b.png" width="3022" height="1644" class="img_ev3q"></p>
 <ol start="4">
 <li>查看创建好的2个网段。</li>
 </ol>
-<p><img decoding="async" loading="lazy" alt="List baremetal and IPMI networks" src="/en/assets/images/list-nets-5e35eb80487158c752c3d0c49ded0a46.png" width="2732" height="818" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="List baremetal and IPMI networks" src="/en/assets/images/list-nets-3645e826b089c8f13b43c539ad42475d.png" width="2732" height="818" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-纳管物理机">2. 纳管物理机<a class="hash-link" aria-label="Direct link to 2. 纳管物理机" title="Direct link to 2. 纳管物理机" href="/en/docs/getting-started/baremetal/docker-compose#2-纳管物理机">​</a></h3>
 <p>在前端添加物理机，点击”主机/物理机/添加”，选择 “PXE 注册引导”，输入对应的物理机纳管信息。</p>
 <ul>
@@ -121,24 +121,24 @@
 </li>
 <li>管理口 IP: 选择刚才创建的 bmnet-0 子网</li>
 </ul>
-<p><img decoding="async" loading="lazy" alt="Create baremetal host" src="/en/assets/images/create-baremetal-e4a9d848c8d70c5bf7f23d7b43671c7b.png" width="2728" height="1522" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Create baremetal host" src="/en/assets/images/create-baremetal-b84e1278f5c02404296e97189eb9c743.png" width="2728" height="1522" class="img_ev3q"></p>
 <p>创建完成后，在物理机列表可以看到机器处于“准备中”的状态，并且探测到了品牌为 Lenovo 。</p>
-<p><img decoding="async" loading="lazy" alt="Baremetal List" src="/en/assets/images/baremetal-list-21e1a7883270f38b2a7c0bb5de21fadc.png" width="2734" height="534" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Baremetal List" src="/en/assets/images/baremetal-list-df67b0fc8740fcf1e496066dac260b70.png" width="2734" height="534" class="img_ev3q"></p>
 <p>可以通过访问物理机的带外控制台，会看到物理机开始 PXE 引导，如果网络配置没有问题，物理机会获得物理机管理服务下发的 grub 引导配置。</p>
 <p>获取 grub 配置后，物理机会从管理服务的 PUBLIC_IP 下载内核和 initramfs。</p>
-<p><img decoding="async" loading="lazy" alt="Loading kernel and initramfs" src="/en/assets/images/load-kernel-initramfs-bce0804f0fadc4357945b26ee9b81b31.png" width="1440" height="944" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Loading kernel and initramfs" src="/en/assets/images/load-kernel-initramfs-b5572beaad909244be6fbb93b24b73a0.png" width="1440" height="944" class="img_ev3q"></p>
 <p>下载完成后，就会进入 yunionos 内存系统。</p>
-<p><img decoding="async" loading="lazy" alt="Boot into initramfs" src="/en/assets/images/boot-into-initramfs-1f557970f53c2da521f533293ba4050c.png" width="1440" height="944" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Boot into initramfs" src="/en/assets/images/boot-into-initramfs-cde326b77fd0f9b59b710fa82bcc4f33.png" width="1440" height="944" class="img_ev3q"></p>
 <p>之后平台的服务会通过 ssh 远程探测收集物理机的硬件信息，等物理机变成“运行中”的状态，就算纳管成功了。</p>
 <p>勾选对应的物理机，点击启用，就可以进行后续的安装操作系统等操作。</p>
-<p><img decoding="async" loading="lazy" alt="List running baremetal" src="/en/assets/images/list-running-baremetal-53a2fd2b5d143c103ae88d9c3469946d.png" width="2740" height="604" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="List running baremetal" src="/en/assets/images/list-running-baremetal-c0fed3d34fb7c304ada3717597964eb0.png" width="2740" height="604" class="img_ev3q"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-导入装机镜像">3. 导入装机镜像<a class="hash-link" aria-label="Direct link to 3. 导入装机镜像" title="Direct link to 3. 导入装机镜像" href="/en/docs/getting-started/baremetal/docker-compose#3-导入装机镜像">​</a></h3>
 <p>点击“主机/系统镜像/上传”按钮，导入需要装机的镜像。</p>
 <ul>
 <li>名称：CentOS-7.6.1810-20190430.qcow2</li>
 <li>输入镜像 URL：<a href="https://iso.yunion.cn/vm-images/CentOS-7.6.1810-20190430.qcow2" target="_blank" rel="noopener noreferrer">https://iso.yunion.cn/vm-images/CentOS-7.6.1810-20190430.qcow2</a></li>
 </ul>
-<p><img decoding="async" loading="lazy" alt="Import centos image" src="/en/assets/images/import-centos-img-ca7680fbe80ec8d27e75331a13dfa7b7.png" width="1442" height="1004" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="Import centos image" src="/en/assets/images/import-centos-img-683beb4575166a4110cb6d1b9e8dda2a.png" width="1442" height="1004" class="img_ev3q"></p>
 <p>等待镜像状态变成“可用”，就可以将此镜像用于安装操作系统了。</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-创建裸金属安装操作系统">4. 创建裸金属(安装操作系统)<a class="hash-link" aria-label="Direct link to 4. 创建裸金属(安装操作系统)" title="Direct link to 4. 创建裸金属(安装操作系统)" href="/en/docs/getting-started/baremetal/docker-compose#4-创建裸金属安装操作系统">​</a></h3>
 <p>点击“主机/裸金属/新建”按钮，填入以下的信息，安装操作系统。</p>
@@ -147,29 +147,29 @@
 <li>镜像: 选择刚才导入的 CentOS-7.6.1810-20190430.qcow2</li>
 <li>规格: 纳管物理机的硬件规格，比如下面截图里面的 <strong>40C64G_HDD838Gx8</strong> 表示物理机CPU有40核，64G内存，8块838G的HDD机械盘</li>
 </ul>
-<p><img decoding="async" loading="lazy" src="/en/assets/images/create-bm-step1-5790e1ba08acd30c74850f74ed763fb0.png" width="2530" height="1346" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="/en/assets/images/create-bm-step1-fcdc2b37eaf6e323bec0416ce2201ef1.png" width="2530" height="1346" class="img_ev3q"></p>
 <ul>
 <li>
 <p>硬盘配置:</p>
 <ul>
 <li>选择4块做RAID10给系统盘
-<img decoding="async" loading="lazy" src="/en/assets/images/raid10-root-1a9b986c6e4c393f5ea5f97ad4331340.png" width="2242" height="934" class="img_ev3q"></li>
+<img decoding="async" loading="lazy" src="/en/assets/images/raid10-root-d949c31be1d79c24944e4ed07bdf9deb.png" width="2242" height="934" class="img_ev3q"></li>
 <li>剩下4块做RAID5作为数据盘，格式化ext4文件系统挂载到/data目录
-<img decoding="async" loading="lazy" src="/en/assets/images/raid5-data-1-bd0fdc60496f2e3e97a5880a6825c486.png" width="2300" height="796" class="img_ev3q">
-<img decoding="async" loading="lazy" src="/en/assets/images/raid5-data-2-c561021ebc0ff13f7cec1756c2f6f9ef.png" width="2170" height="954" class="img_ev3q"></li>
+<img decoding="async" loading="lazy" src="/en/assets/images/raid5-data-1-9f7511f418e76775fd48fdc597df3c1e.png" width="2300" height="796" class="img_ev3q">
+<img decoding="async" loading="lazy" src="/en/assets/images/raid5-data-2-c3e2f3c394105cfa3b0176ddad81e6f4.png" width="2170" height="954" class="img_ev3q"></li>
 <li>查看分区结果
-<img decoding="async" loading="lazy" src="/en/assets/images/disks-ce5eb5c95b9c1e3c42dcf72f84da42e5.png" width="2074" height="812" class="img_ev3q"></li>
+<img decoding="async" loading="lazy" src="/en/assets/images/disks-03fe2829a54c12ba54805bfc816707c8.png" width="2074" height="812" class="img_ev3q"></li>
 </ul>
 </li>
 <li>
 <p>网络：选择 bmnet-0
-<img decoding="async" loading="lazy" src="/en/assets/images/network-selection-51be0d0d16e8f0447405f8eebec739a6.png" width="2264" height="570" class="img_ev3q"></p>
+<img decoding="async" loading="lazy" src="/en/assets/images/network-selection-d5cbcccd38b3ba6666b9b2bb7406c0fb.png" width="2264" height="570" class="img_ev3q"></p>
 </li>
 </ul>
 <p>配置完成后，点击新建，回到裸金属列表，就能看到一条叫作&quot;bm-test&quot;的裸金属记录。等部署完成后，裸金属的状态会变成“运行中”。</p>
-<p><img decoding="async" loading="lazy" src="/en/assets/images/running-baremetal-27d1408313cab1db10b95642307f577c.png" width="2706" height="888" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="/en/assets/images/running-baremetal-09f9ec05c9a9b0cadb5f4529d9319a81.png" width="2706" height="888" class="img_ev3q"></p>
 <p>然后就可以通过 ssh 或者带外控制登录到装好的系统里面，查看主机名，磁盘分区和网络设置都符合预期。</p>
-<p><img decoding="async" loading="lazy" src="/en/assets/images/ssh-login-fd35947004a81efc710fe74deb7f3c02.png" width="3022" height="1198" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="/en/assets/images/ssh-login-b56abe3e53ccb2a86539871de6366fb9.png" width="3022" height="1198" class="img_ev3q"></p>
 <p>更多物理机相关原理和使用介绍，请参考文档：<a href="/en/docs/guides/onpremise/baremetal">用户手册/私有云/物理机</a>。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="操作说明">操作说明<a class="hash-link" aria-label="Direct link to 操作说明" title="Direct link to 操作说明" href="/en/docs/getting-started/baremetal/docker-compose#操作说明">​</a></h2>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-将服务放到后台运行">1. 将服务放到后台运行<a class="hash-link" aria-label="Direct link to 1. 将服务放到后台运行" title="Direct link to 1. 将服务放到后台运行" href="/en/docs/getting-started/baremetal/docker-compose#1-将服务放到后台运行">​</a></h3>

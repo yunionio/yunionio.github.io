@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdocs_new=globalThis.webpackChunkdocs_new||[]).push([[81903],{1912:o=>{o.exports=JSON.parse('{"blogBasePath":"/blog","blogTitle":"Cloudpods blog","authorsListPath":"/blog/authors"}')}}]);

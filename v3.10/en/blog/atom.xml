@@ -777,7 +777,7 @@ command substitution.</p>
 <p>qemu 直接使用物理设备本身命令行是很简单的，关键在于事先在主机上对系统、内核和物理设备的一些配置。</p>
 <p>单纯从 qemu 的命令行来看，其实和普通虚拟机启动就差了最后那个 <code>-device</code> 的选项。这个选项也比较容易理解，就是把主机上的设备 0000:00:01.0 传给了虚拟机使用。</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">$ qemu-system-x86_64 </span><span class="token parameter variable" style="color:#36acaa">-m</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">4096</span><span class="token plain"> </span><span class="token parameter variable" style="color:#36acaa">-smp</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">4</span><span class="token plain"> --enable-kvm </span><span class="token punctuation" style="color:#393A34">\</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token parameter variable" style="color:#36acaa">-drive</span><span class="token plain"> </span><span class="token assign-left variable" style="color:#36acaa">file</span><span class="token operator" style="color:#393A34">=~</span><span class="token plain">/guest/fedora.img </span><span class="token punctuation" style="color:#393A34">\</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token parameter variable" style="color:#36acaa">-device</span><span class="token plain"> vfio-pci,host</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">0000:00:01.0</span><br></span></code></pre></div></div>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="系统及硬件准备">系统及硬件准备<a href="https://www.cloudpods.org/v3.10/en/blog/nvidia-gpu-passthrough-record#%E7%B3%BB%E7%BB%9F%E5%8F%8A%E7%A1%AC%E4%BB%B6%E5%87%86%E5%A4%87" class="hash-link" aria-label="Direct link to 系统及硬件准备" title="Direct link to 系统及�硬件准备" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="系统及硬件准备">系统及硬件准备<a href="https://www.cloudpods.org/v3.10/en/blog/nvidia-gpu-passthrough-record#%E7%B3%BB%E7%BB%9F%E5%8F%8A%E7%A1%AC%E4%BB%B6%E5%87%86%E5%A4%87" class="hash-link" aria-label="Direct link to 系统及硬件准备" title="Direct link to 系统�及硬件准备" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bios中打开iommu">BIOS中打开IOMMU<a href="https://www.cloudpods.org/v3.10/en/blog/nvidia-gpu-passthrough-record#bios%E4%B8%AD%E6%89%93%E5%BC%80iommu" class="hash-link" aria-label="Direct link to BIOS中打开IOMMU" title="Direct link to BIOS中打开IOMMU" translate="no">​</a></h3>
 <p>设备直通在 x86 平台上需要打开 iommu 功能。这是 Intel 虚拟技术 VT-d(Virtualization Technology for Device IO) 中的一个部分。有时候这部分的功能没有被打开。</p>
 <p>打开的方式在 BIOS 设置中 Security-&gt;Virtualization-&gt;VT-d 这个位置。当然不同的 BIOS 位置可能会略有不同。记得在使用直通设备前要将这个选项打开。</p>
@@ -816,116 +816,6 @@ command substitution.</p>
             <name>Zexi Li</name>
             <uri>https://github.com/zexi</uri>
         </author>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Cloudpods 3.7版本新功能介绍]]></title>
-        <id>https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction</id>
-        <link href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction"/>
-        <updated>2021-05-31T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[作者: 高现起]]></summary>
-        <content type="html"><![CDATA[<p><strong>作者:</strong> 高现起</p>
-<p>今天围绕以下目录展开要讲的内容：</p>
-<ul>
-<li class="">产品简介</li>
-<li class="">3.7版本新功能介绍</li>
-<li class="">功能规划</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="一产品简介">一、产品简介<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%B8%80%E4%BA%A7%E5%93%81%E7%AE%80%E4%BB%8B" class="hash-link" aria-label="Direct link to 一、产品简介" title="Direct link to 一、产品简介" translate="no">​</a></h2>
-<p>目前，企业的IT资源属于无处不在的状态，根据 Flexera 2020 云状态（原 RightScale 云状态报告）报告，93%的企业实施了多云战略。虽然这一调查的依据是全球750家企业的云决策者，但是从国内的实际情况来说，数字可能没有那么大，趋势还是有的，就是多云已经是更多企业的选择了。</p>
-<p>多云环境，我们又统称为异构IT基础设施，那么这种异构IT基础设施在给客户带来更优性能更优成本的同时，也会带来一些新的问题，例如我下边列举的5种不同角色的用户所遇到的问题：</p>
-<ul>
-<li class="">运维工程师/开发工程师-如何统一管理所有的云计算资源？</li>
-<li class="">财务专员-如何获取统一易读的公有云账单？</li>
-<li class="">运维主管/开发主管-如何及时获取资源整体的使用情况？</li>
-<li class="">财务主管-如何及时获取IT资源成本的使用结构？</li>
-<li class="">CTO/CIO-如何提高IT资源的ROI（投资回报率）？</li>
-</ul>
-<p>我们早在2017年就关注到多云带来客户的问题，开始做云联壹云这款产品，希望能够帮助企业很好的解决这些问题。</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/01-a96592b11b32ad0bd8ca8cb852d02f14.png" width="867" height="382" class="img_ev3q"></p>
-<p>云联壹云是一站式管理云计算资源的解决方案，希望帮助客户在一个地方管理本地IDC、私有云、公有云等IT资源，整体提高企业IT基础设施的管理效率。</p>
-<p>从产品架构图上，我们可以看出，底层是一些异构资源，上层是一些应用或服务，云联壹云处于承上启下的作用，向下屏蔽异构的差异，向上提供一致的资源管理能力。</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-bff3e3b9ca336f36812ffe35864e7a63.png" width="812" height="427" class="img_ev3q"></p>
-<p>以上是我们最新版本也就是3.7版本的功能概览。</p>
-<p>最底层是异构资源，中层就是我们云管理平台的功能概览，上层应用和服务。云管理平台的底层是多云的适配层，往上是基础的资源管理，包括计算、存储、网络、PaaS服务等，再往上是针对企业客户做的三大块的功能，依次是权限管理、统一监控和报警、成本管理包括私有云的计量计费公有云的账单分析和成本优化等等，面向用户层，我们针对不同的用户有不同的用户界面，包括管理员的系统管理视图，租户的租户管理视图，普通用户的项目视图，针对运维人员的climc命令行工具，针对开发人员，我们也有丰富的REST API以及各个开发语言的SDK。</p>
-<p>这款产品能够带给客户3种价值：</p>
-<ul>
-<li class="">省人省事-一站式采买、批量操作、一次配置，全网生效、统一获取易读账单</li>
-<li class="">省钱-算好账、摊好钱、节成本</li>
-<li class="">安全-统一认证、统一授权、免密登录</li>
-</ul>
-<p>总而言之，云联壹云希望帮助用户解决异构IT基础设施带来的问题，充分发挥异构IT基础设施的优势。</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="二37版本新功能介绍">二、3.7版本新功能介绍<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%BA%8C37%E7%89%88%E6%9C%AC%E6%96%B0%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" class="hash-link" aria-label="Direct link to 二、3.7版本新功能介绍" title="Direct link to 二、3.7版本新功能介绍" translate="no">​</a></h2>
-<p>3.7版本增加了不下30多项功能或更新，由于时间关系，今天我主要给大家介绍这5个方面的功能：</p>
-<ul>
-<li class="">多云资源对接</li>
-<li class="">多云账单管理</li>
-<li class="">多云监控告警</li>
-<li class="">多云权限管理</li>
-<li class="">标签管理</li>
-</ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-多云资源对接">1. 多云资源对接<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#1-%E5%A4%9A%E4%BA%91%E8%B5%84%E6%BA%90%E5%AF%B9%E6%8E%A5" class="hash-link" aria-label="Direct link to 1. 多云资源对接" title="Direct link to 1. 多云资源对接" translate="no">​</a></h3>
-<p>在3.7版本，我们不断围绕客户需求，支持更多公有云资源的纳管：</p>
-<ul>
-<li class="">AWS平台对接Redis</li>
-<li class="">Azure平台对接RDS</li>
-<li class="">阿里云和华为云NAS文件存储对接</li>
-<li class="">移动云对接</li>
-<li class="">阿里云、华为云NAT网关支持</li>
-</ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-多云账单管理">2. 多云账单管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#2-%E5%A4%9A%E4%BA%91%E8%B4%A6%E5%8D%95%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 2. 多云账单管理" title="Direct link to 2. 多云账单管理" translate="no">​</a></h3>
-<p>2.1 支持AWS的预留实例分析，包括RI推荐及RI覆盖率，帮助客户用好RI，节约成本</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-28bb0c9569ccb19fa52552af9b77104a.png" width="918" height="215" class="img_ev3q"></p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-75c971925144da2d8ff2656253770e26.png" width="828" height="317" class="img_ev3q"></p>
-<p>2.2 支持价格对比功能，同配置全网比价，帮助客户发现便宜资源</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-c7453fb75e117fde92d8a48713f313c1.png" width="892" height="255" class="img_ev3q"></p>
-<p>2.3 支持所有平台费用报告及定期发送</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-68d123e244defb999bfdc96683d0274c.png" width="879" height="458" class="img_ev3q"></p>
-<p>2.4 支持预算管理功能，并且可以配置预算告警，防止费用超支</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-f189c7d0fca34f82220a1764404d6308.png" width="780" height="316" class="img_ev3q"></p>
-<p>2.5 费用优化迭代，更多纬度节省费用，帮助用户发现更多可以优化成本的途径</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-2db6d2219821fa0fdcc3c44d96dfc9b1.png" width="795" height="249" class="img_ev3q"></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-多云监控告警">3. 多云监控告警<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#3-%E5%A4%9A%E4%BA%91%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6" class="hash-link" aria-label="Direct link to 3. 多云监控告警" title="Direct link to 3. 多云监控告警" translate="no">​</a></h3>
-<p>3.1 支持自定义监控面板，一次定义，随时查看</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-1fac754083ab7891c76c02e7f1a8e405.png" width="744" height="342" class="img_ev3q"></p>
-<p>3.2 报警策略支持函数及静默期设置，有效避免毛刺、报警泛滥等问题</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-3633c580941c379a1a42f9212c8319c4.png" width="926" height="246" class="img_ev3q"></p>
-<p>3.3 支持自动化安装监控插件，可显示内存使用率等更多监控指标</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-963d57d813f75349aa268fa0ce7b559b.png" width="798" height="467" class="img_ev3q"></p>
-<p>3.4 大屏增加地图，可根据资源城市进行分布</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-6971f13a1067417c78ce0d88d91ee093.png" width="823" height="467" class="img_ev3q"></p>
-<p>3.5 增加监控总览，可以查看告警情况及平台各纬度使用情况</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-6a6cc1f96af9b935bdf904a49cfe077f.png" width="772" height="497" class="img_ev3q"></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-多云权限管理">4. 多云权限管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#4-%E5%A4%9A%E4%BA%91%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 4. 多云权限管理" title="Direct link to 4. 多云权限管理" translate="no">​</a></h3>
-<ul>
-<li class="">在一个地方创建及管理所有云平台的子账号，并分配权限</li>
-<li class="">通过云管壹云控制台可一键跳转免密登录公有云控制台</li>
-<li class="">员工离职，自动注销对应的公有云账号</li>
-</ul>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/14-95e8decec9a00b8b37a383377ac012aa.png" width="623" height="359" class="img_ev3q"></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-标签管理">5. 标签管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#5-%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 5. 标签管理" title="Direct link to 5. 标签管理" translate="no">​</a></h3>
-<ul>
-<li class="">标签支持CMP与公有云平台双向同步</li>
-<li class="">标签搜索增强，支持特殊符号复杂搜索</li>
-</ul>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/15-5c074395b31fa0d6a0ba7657dcfb6f93.png" width="597" height="456" class="img_ev3q"></p>
-<p>除以上5大功能的更新外，我们其实还有很多细节更新，在这里就不在展开给大家介绍，感兴趣的同学可以看一下以下总结</p>
-<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/16-40c26c30bff035096f252627fad4e379.png" width="901" height="488" class="img_ev3q"></p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="三功能规划">三、功能规划<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%B8%89%E5%8A%9F%E8%83%BD%E8%A7%84%E5%88%92" class="hash-link" aria-label="Direct link to 三、功能规划" title="Direct link to 三、功能规划" translate="no">​</a></h2>
-<p>我们近期的功能规划主要是以下6个方面</p>
-<ul>
-<li class="">京东云对接，我们有客户对京东云资源的纳管有需求</li>
-<li class="">Azure RI&amp;CPP使用率、覆盖率以及推荐</li>
-<li class="">产品内置负载均衡支持VPC网络（这个是我们私有云的功能）</li>
-<li class="">公有云账单的二次定价，我们很多MSP厂商的需求</li>
-<li class="">公有云WAF产品对接</li>
-<li class="">监控报警的迭代，后期也会增加监控数据报表的功能</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="总结">总结<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E6%80%BB%E7%BB%93" class="hash-link" aria-label="Direct link to 总结" title="Direct link to 总结" translate="no">​</a></h2>
-<p>好的，今天直播咱们就到这里，咱们简单的总结一下今天的内容：</p>
-<p>产品简介，在多云趋势的背景下，云联壹云产品希望帮助用户解决异构资源管理问题，提升企业IT基础设施管理效率，以及云联壹云带给客户省人省事、省钱、安全三大产品价值；</p>
-<p>3.7版本新功能介绍，主要给大家介绍了多云对接、多云账单管理、多云监控告警、多云权限管理以及标签管理5大模块的功能或更新；</p>
-<p>功能规划，我们近期将会围绕京东云对接、AzureCPP、内置负载均衡支持VPC、公有云账单二次定价、公有云WAF对接、监控迭代5大方面展开产品的功能设计与实现。</p>
-<p>感谢大家百忙之中参加我们的Meetup，下次直播再见。</p>]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[Cloudpods负载均衡的功能介绍]]></title>
@@ -1036,6 +926,116 @@ command substitution.</p>
 <p>首先，作为一种模块化封装的产品，负载均衡的主要优势在于简便、高效。自建NGINX时，我们需要自己配置集群高可用，考虑集群的水平扩展和扩容。在生产环境时还需要配置自己的监控、告警策略。在管理层面，权限管理和操作过程审计也必不可少，然而NGINX作为基础组件与这些上层概念距离较远，需要较复杂的过程才可实现相等效果。</p>
 <p>其次，云上负载均衡通常都有开放的API，可通过编程与周边系统对接，灵活应对需求。</p>
 <p>从企业IT资产管理的角度来说，负载均衡代表着更先进的生产力。壹云控制台上的信息呈现相比命令行中单字符控制来说，更加一目了然，操作也更加简便，使得对于操作结果的可预期性更强。</p>]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Cloudpods 3.7版本新功能介绍]]></title>
+        <id>https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction</id>
+        <link href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction"/>
+        <updated>2021-05-31T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[作者: 高现起]]></summary>
+        <content type="html"><![CDATA[<p><strong>作者:</strong> 高现起</p>
+<p>今天围绕以下目录展开要讲的内容：</p>
+<ul>
+<li class="">产品简介</li>
+<li class="">3.7版本新功能介绍</li>
+<li class="">功能规划</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="一产品简介">一、产品简介<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%B8%80%E4%BA%A7%E5%93%81%E7%AE%80%E4%BB%8B" class="hash-link" aria-label="Direct link to 一、产品简介" title="Direct link to 一、产品简介" translate="no">​</a></h2>
+<p>目前，企业的IT资源属于无处不在的状态，根据 Flexera 2020 云状态（原 RightScale 云状态报告）报告，93%的企业实施了多云战略。虽然这一调查的依据是全球750家企业的云决策者，但是从国内的实际情况来说，数字可能没有那么大，趋势还是有的，就是多云已经是更多企业的选择了。</p>
+<p>多云环境，我们又统称为异构IT基础设施，那么这种异构IT基础设施在给客户带来更优性能更优成本的同时，也会带来一些新的问题，例如我下边列举的5种不同角色的用户所遇到的问题：</p>
+<ul>
+<li class="">运维工程师/开发工程师-如何统一管理所有的云计算资源？</li>
+<li class="">财务专员-如何获取统一易读的公有云账单？</li>
+<li class="">运维主管/开发主管-如何及时获取资源整体的使用情况？</li>
+<li class="">财务主管-如何及时获取IT资源成本的使用结构？</li>
+<li class="">CTO/CIO-如何提高IT资源的ROI（投资回报率）？</li>
+</ul>
+<p>我们早在2017年就关注到多云带来客户的问题，开始做云联壹云这款产品，希望能够帮助企业很好的解决这些问题。</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/01-a96592b11b32ad0bd8ca8cb852d02f14.png" width="867" height="382" class="img_ev3q"></p>
+<p>云联壹云是一站式管理云计算资源的解决方案，希望帮助客户在一个地方管理本地IDC、私有云、公有云等IT资源，整体提高企业IT基础设施的管理效率。</p>
+<p>从产品架构图上，我们可以看出，底层是一些异构资源，上层是一些应用或服务，云联壹云处于承上启下的作用，向下屏蔽异构的差异，向上提供一致的资源管理能力。</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/02-bff3e3b9ca336f36812ffe35864e7a63.png" width="812" height="427" class="img_ev3q"></p>
+<p>以上是我们最新版本也就是3.7版本的功能概览。</p>
+<p>最底层是异构资源，中层就是我们云管理平台的功能概览，上层应用和服务。云管理平台的底层是多云的适配层，往上是基础的资源管理，包括计算、存储、网络、PaaS服务等，再往上是针对企业客户做的三大块的功能，依次是权限管理、统一监控和报警、成本管理包括私有云的计量计费公有云的账单分析和成本优化等等，面向用户层，我们针对不同的用户有不同的用户界面，包括管理员的系统管理视图，租户的租户管理视图，普通用户的项目视图，针对运维人员的climc命令行工具，针对开发人员，我们也有丰富的REST API以及各个开发语言的SDK。</p>
+<p>这款产品能够带给客户3种价值：</p>
+<ul>
+<li class="">省人省事-一站式采买、批量操作、一次配置，全网生效、统一获取易读账单</li>
+<li class="">省钱-算好账、摊好钱、节成本</li>
+<li class="">安全-统一认证、统一授权、免密登录</li>
+</ul>
+<p>总而言之，云联壹云希望帮助用户解决异构IT基础设施带来的问题，充分发挥异构IT基础设施的优势。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="二37版本新功能介绍">二、3.7版本新功能介绍<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%BA%8C37%E7%89%88%E6%9C%AC%E6%96%B0%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" class="hash-link" aria-label="Direct link to 二、3.7版本新功能介绍" title="Direct link to 二、3.7版本新功能介绍" translate="no">​</a></h2>
+<p>3.7版本增加了不下30多项功能或更新，由于时间关系，今天我主要给大家介绍这5个方面的功能：</p>
+<ul>
+<li class="">多云资源对接</li>
+<li class="">多云账单管理</li>
+<li class="">多云监控告警</li>
+<li class="">多云权限管理</li>
+<li class="">标签管理</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-多云资源对接">1. 多云资源对接<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#1-%E5%A4%9A%E4%BA%91%E8%B5%84%E6%BA%90%E5%AF%B9%E6%8E%A5" class="hash-link" aria-label="Direct link to 1. 多云资源对接" title="Direct link to 1. 多云资源对接" translate="no">​</a></h3>
+<p>在3.7版本，我们不断围绕客户需求，支持更多公有云资源的纳管：</p>
+<ul>
+<li class="">AWS平台对接Redis</li>
+<li class="">Azure平台对接RDS</li>
+<li class="">阿里云和华为云NAS文件存储对接</li>
+<li class="">移动云对接</li>
+<li class="">阿里云、华为云NAT网关支持</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-多云账单管理">2. 多云账单管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#2-%E5%A4%9A%E4%BA%91%E8%B4%A6%E5%8D%95%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 2. 多云账单管理" title="Direct link to 2. 多云账单管理" translate="no">​</a></h3>
+<p>2.1 支持AWS的预留实例分析，包括RI推荐及RI覆盖率，帮助客户用好RI，节约成本</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/03-28bb0c9569ccb19fa52552af9b77104a.png" width="918" height="215" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/04-75c971925144da2d8ff2656253770e26.png" width="828" height="317" class="img_ev3q"></p>
+<p>2.2 支持价格对比功能，同配置全网比价，帮助客户发现便宜资源</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/05-c7453fb75e117fde92d8a48713f313c1.png" width="892" height="255" class="img_ev3q"></p>
+<p>2.3 支持所有平台费用报告及定期发送</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/06-68d123e244defb999bfdc96683d0274c.png" width="879" height="458" class="img_ev3q"></p>
+<p>2.4 支持预算管理功能，并且可以配置预算告警，防止费用超支</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/07-f189c7d0fca34f82220a1764404d6308.png" width="780" height="316" class="img_ev3q"></p>
+<p>2.5 费用优化迭代，更多纬度节省费用，帮助用户发现更多可以优化成本的途径</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/08-2db6d2219821fa0fdcc3c44d96dfc9b1.png" width="795" height="249" class="img_ev3q"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-多云监控告警">3. 多云监控告警<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#3-%E5%A4%9A%E4%BA%91%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6" class="hash-link" aria-label="Direct link to 3. 多云监控告警" title="Direct link to 3. 多云监控告警" translate="no">​</a></h3>
+<p>3.1 支持自定义监控面板，一次定义，随时查看</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/09-1fac754083ab7891c76c02e7f1a8e405.png" width="744" height="342" class="img_ev3q"></p>
+<p>3.2 报警策略支持函数及静默期设置，有效避免毛刺、报警泛滥等问题</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/10-3633c580941c379a1a42f9212c8319c4.png" width="926" height="246" class="img_ev3q"></p>
+<p>3.3 支持自动化安装监控插件，可显示内存使用率等更多监控指标</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/11-963d57d813f75349aa268fa0ce7b559b.png" width="798" height="467" class="img_ev3q"></p>
+<p>3.4 大屏增加地图，可根据资源城市进行分布</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/12-6971f13a1067417c78ce0d88d91ee093.png" width="823" height="467" class="img_ev3q"></p>
+<p>3.5 增加监控总览，可以查看告警情况及平台各纬度使用情况</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/13-6a6cc1f96af9b935bdf904a49cfe077f.png" width="772" height="497" class="img_ev3q"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-多云权限管理">4. 多云权限管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#4-%E5%A4%9A%E4%BA%91%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 4. 多云权限管理" title="Direct link to 4. 多云权限管理" translate="no">​</a></h3>
+<ul>
+<li class="">在一个地方创建及管理所有云平台的子账号，并分配权限</li>
+<li class="">通过云管壹云控制台可一键跳转免密登录公有云控制台</li>
+<li class="">员工离职，自动注销对应的公有云账号</li>
+</ul>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/14-95e8decec9a00b8b37a383377ac012aa.png" width="623" height="359" class="img_ev3q"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-标签管理">5. 标签管理<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#5-%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86" class="hash-link" aria-label="Direct link to 5. 标签管理" title="Direct link to 5. 标签管理" translate="no">​</a></h3>
+<ul>
+<li class="">标签支持CMP与公有云平台双向同步</li>
+<li class="">标签搜索增强，支持特殊符号复杂搜索</li>
+</ul>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/15-5c074395b31fa0d6a0ba7657dcfb6f93.png" width="597" height="456" class="img_ev3q"></p>
+<p>除以上5大功能的更新外，我们其实还有很多细节更新，在这里就不在展开给大家介绍，感兴趣的同学可以看一下以下总结</p>
+<p><img decoding="async" loading="lazy" src="https://www.cloudpods.org/v3.10/en/assets/images/16-40c26c30bff035096f252627fad4e379.png" width="901" height="488" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="三功能规划">三、功能规划<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E4%B8%89%E5%8A%9F%E8%83%BD%E8%A7%84%E5%88%92" class="hash-link" aria-label="Direct link to 三、功能规划" title="Direct link to 三、功能规划" translate="no">​</a></h2>
+<p>我们近期的功能规划主要是以下6个方面</p>
+<ul>
+<li class="">京东云对接，我们有客户对京东云资源的纳管有需求</li>
+<li class="">Azure RI&amp;CPP使用率、覆盖率以及推荐</li>
+<li class="">产品内置负载均衡支持VPC网络（这个是我们私有云的功能）</li>
+<li class="">公有云账单的二次定价，我们很多MSP厂商的需求</li>
+<li class="">公有云WAF产品对接</li>
+<li class="">监控报警的迭代，后期也会增加监控数据报表的功能</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="总结">总结<a href="https://www.cloudpods.org/v3.10/en/blog/cloudpods-3.7-new-feature-introduction#%E6%80%BB%E7%BB%93" class="hash-link" aria-label="Direct link to 总结" title="Direct link to 总结" translate="no">​</a></h2>
+<p>好的，今天直播咱们就到这里，咱们简单的总结一下今天的内容：</p>
+<p>产品简介，在多云趋势的背景下，云联壹云产品希望帮助用户解决异构资源管理问题，提升企业IT基础设施管理效率，以及云联壹云带给客户省人省事、省钱、安全三大产品价值；</p>
+<p>3.7版本新功能介绍，主要给大家介绍了多云对接、多云账单管理、多云监控告警、多云权限管理以及标签管理5大模块的功能或更新；</p>
+<p>功能规划，我们近期将会围绕京东云对接、AzureCPP、内置负载均衡支持VPC、公有云账单二次定价、公有云WAF对接、监控迭代5大方面展开产品的功能设计与实现。</p>
+<p>感谢大家百忙之中参加我们的Meetup，下次直播再见。</p>]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[面向未来的 IT 基础设施管理架构——融合云（Unified IaaS）]]></title>

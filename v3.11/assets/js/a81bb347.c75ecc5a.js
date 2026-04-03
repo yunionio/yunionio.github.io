@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdocs_new=globalThis.webpackChunkdocs_new||[]).push([[86759],{71427:s=>{s.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"baremetal"}')}}]);

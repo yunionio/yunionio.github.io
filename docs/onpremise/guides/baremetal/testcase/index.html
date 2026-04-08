@@ -2,7 +2,7 @@
 <html lang="zh-Hans" dir="ltr" class="docs-wrapper plugin-docs plugin-id-onpremise docs-version-current docs-doc-page docs-doc-id-guides/baremetal/testcase" data-has-hydrated="false">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="Docusaurus v3.9.2">
+<meta name="generator" content="Docusaurus v3.10.0">
 <title data-rh="true">物理机测试流程 | Cloudpods</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://www.cloudpods.org/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://www.cloudpods.org/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://www.cloudpods.org/docs/onpremise/guides/baremetal/testcase"><meta data-rh="true" property="og:locale" content="zh_Hans"><meta data-rh="true" property="og:locale:alternate" content="en"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-onpremise-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-onpremise-current"><meta data-rh="true" property="og:title" content="物理机测试流程 | Cloudpods"><meta data-rh="true" name="description" content="描述物理机功能的测试流程和大概步骤。"><meta data-rh="true" property="og:description" content="描述物理机功能的测试流程和大概步骤。"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://www.cloudpods.org/docs/onpremise/guides/baremetal/testcase"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/docs/onpremise/guides/baremetal/testcase" hreflang="zh-Hans"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/en/docs/onpremise/guides/baremetal/testcase" hreflang="en"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/docs/onpremise/guides/baremetal/testcase" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"用户手册","item":"https://www.cloudpods.org/docs/onpremise/guides/"},{"@type":"ListItem","position":2,"name":"物理机","item":"https://www.cloudpods.org/docs/onpremise/guides/baremetal/"},{"@type":"ListItem","position":3,"name":"物理机测试流程","item":"https://www.cloudpods.org/docs/onpremise/guides/baremetal/testcase"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Cloudpods RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Cloudpods Atom Feed">
 
@@ -21,11 +21,11 @@
 
 
 <script src="https://hm.baidu.com/hm.js?3c5253cd6530122d0f774cab69e3c07f" async></script>
-<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/assets/css/styles.6df73d39.css">
-<script src="/assets/js/runtime~main.549db40d.js" defer="defer"></script>
-<script src="/assets/js/main.62fcf260.js" defer="defer"></script>
+<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/assets/css/styles.2871c09a.css">
+<script src="/assets/js/runtime~main.3f5dc460.js" defer="defer"></script>
+<script src="/assets/js/main.d610e334.js" defer="defer"></script>
 </head>
-<body class="navigation-with-keyboard">
+<body>
 <svg style="display: none;"><defs>
 <symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
 </defs></svg>
@@ -69,10 +69,10 @@
 </li>
 </ul>
 <div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>注意</div><div class="admonitionContent_BuS1"><p>如果使用 docker compose 部署的环境，就不用设置 /etc/yunion/host.conf，这种部署方式默认打开了 dhcp_relay 服务。</p></div></div>
-<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">dhcp_relay</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> 192.168.222.101</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">67</span><br></span></code></pre></div></div>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">dhcp_relay</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> 192.168.222.101</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">67</span><br></div></code></pre></div></div>
 <div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>注意</div><div class="admonitionContent_BuS1"><p>待管理物理机所在网络内不能有其他DHCP服务器！</p></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="15-物理机硬件信息要求">1.5 物理机硬件信息要求<a href="#15-物理机硬件信息要求" class="hash-link" aria-label="1.5 物理机硬件信息要求的直接链接" title="1.5 物理机硬件信息要求的直接链接" translate="no">​</a></h3>
-<p>需要提前准备好物理机的如下  信息：</p>
+<p>需要提前准备好物理机的如下信息  ：</p>
 <ol>
 <li class="">如果采用PXE引导注册或预注册的物理服务器，需要第一个网络PXE启动的物理机 NIC的mac地址</li>
 <li class="">如果采用PXE引导注册或ISO引导注册，需要物理机的BMC NIC的IP地址和BMC 账号，密码。</li>
@@ -84,7 +84,7 @@
 <h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="211-pxe引导注册推荐方式">2.1.1 PXE引导注册(推荐方式)<a href="#211-pxe引导注册推荐方式" class="hash-link" aria-label="2.1.1 PXE引导注册(推荐方式)的直接链接" title="2.1.1 PXE引导注册(推荐方式)的直接链接" translate="no">​</a></h4>
 <p>物理机已经配置BMC NIC的IP，通过BMC控制物理服务器通过PXE协议引导物理机网络启动进入内存Linux系统。这种方式依赖PXE网络启动，因此要求设置交换机1的dhcp_relay。</p>
 <h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="212-iso引导注">2.1.2 ISO引导注<a href="#212-iso引导注" class="hash-link" aria-label="2.1.2 ISO引导注的直接链接" title="2.1.2 ISO引导注的直接链接" translate="no">​</a></h4>
-<p>物理机已经配置BMC NIC的IP，通过物理机的虚拟ISO介质引导物理机启动进入内存Linux系统。这种方式不依赖PXE启动，因此不要  求设置交换机1的dhcp_relay。但是要求物理机支持设置BMC的虚拟机ISO介质，一般只有最新的少数物理服务器支持，例如HPE Gen10。</p>
+<p>物理机已经配置BMC NIC的IP，通过物理机的虚拟ISO介质引导物理机启动进入内存Linux系统。这种方式不依赖PXE启动，因此不要求设  置交换机1的dhcp_relay。但是要求物理机支持设置BMC的虚拟机ISO介质，一般只有最新的少数物理服务器支持，例如HPE Gen10。</p>
 <h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="213-预注册">2.1.3 预注册<a href="#213-预注册" class="hash-link" aria-label="2.1.3 预注册的直接链接" title="2.1.3 预注册的直接链接" translate="no">​</a></h4>
 <p>和PXE引导注册类似，但是物理机未配置BMC NIC的IP。这种方式会自动设置BMC NIC的IP，需要探测BMC NIC的连通性，因此需要设置交换机2的dhcp_relay。</p>
 <h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="214-托管">2.1.4 托管<a href="#214-托管" class="hash-link" aria-label="2.1.4 托管的直接链接" title="2.1.4 托管的直接链接" translate="no">​</a></h4>

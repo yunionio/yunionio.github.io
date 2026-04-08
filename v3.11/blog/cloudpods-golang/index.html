@@ -2,7 +2,7 @@
 <html lang="zh-Hans" dir="ltr" class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated="false">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="Docusaurus v3.9.2">
+<meta name="generator" content="Docusaurus v3.10.0">
 <title data-rh="true">Cloudpods Golang实践 | Cloudpods</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://www.cloudpods.org/v3.11/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://www.cloudpods.org/v3.11/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://www.cloudpods.org/v3.11/blog/cloudpods-golang"><meta data-rh="true" property="og:locale" content="zh_Hans"><meta data-rh="true" property="og:locale:alternate" content="en"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="Cloudpods Golang实践 | Cloudpods"><meta data-rh="true" name="description" content="Cloudpods是完全自研的一套云平台，Golang是该平台的主要后端开发语言。本文介绍我们在平台开发迭代过程中关于Golang的经验以及在Golang上积累的框架和库，包括积累的Golang工具库，以及基于这些工具库实现的开发框架。"><meta data-rh="true" property="og:description" content="Cloudpods是完全自研的一套云平台，Golang是该平台的主要后端开发语言。本文介绍我们在平台开发迭代过程中关于Golang的经验以及在Golang上积累的框架和库，包括积累的Golang工具库，以及基于这些工具库实现的开发框架。"><meta data-rh="true" property="og:type" content="article"><meta data-rh="true" property="article:published_time" content="2022-02-02T00:00:00.000Z"><meta data-rh="true" property="article:author" content="https://github.com/swordqiu"><link data-rh="true" rel="icon" href="/v3.11/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://www.cloudpods.org/v3.11/blog/cloudpods-golang"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/blog/cloudpods-golang" hreflang="zh-Hans"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/en/blog/cloudpods-golang" hreflang="en"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/blog/cloudpods-golang" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://www.cloudpods.org/v3.11/blog/cloudpods-golang","mainEntityOfPage":"https://www.cloudpods.org/v3.11/blog/cloudpods-golang","url":"https://www.cloudpods.org/v3.11/blog/cloudpods-golang","headline":"Cloudpods Golang实践","name":"Cloudpods Golang实践","description":"Cloudpods是完全自研的一套云平台，Golang是该平台的主要后端开发语言。本文介绍我们在平台开发迭代过程中关于Golang的经验以及在Golang上积累的框架和库，包括积累的Golang工具库，以及基于这些工具库实现的开发框架。","datePublished":"2022-02-02T00:00:00.000Z","author":{"@type":"Person","name":"Jian Qiu","description":"Cloudpods maintainer","url":"https://github.com/swordqiu","image":"https://github.com/swordqiu.png"},"keywords":[],"isPartOf":{"@type":"Blog","@id":"https://www.cloudpods.org/v3.11/blog","name":"Cloudpods blog"}}</script><link rel="alternate" type="application/rss+xml" href="/v3.11/blog/rss.xml" title="Cloudpods RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/v3.11/blog/atom.xml" title="Cloudpods Atom Feed">
 
@@ -20,11 +20,11 @@
 
 
 <script src="https://hm.baidu.com/hm.js?3c5253cd6530122d0f774cab69e3c07f" async></script>
-<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/v3.11/assets/css/styles.5f753b55.css">
-<script src="/v3.11/assets/js/runtime~main.d5d77171.js" defer="defer"></script>
-<script src="/v3.11/assets/js/main.6c48dc15.js" defer="defer"></script>
+<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/v3.11/assets/css/styles.627befb0.css">
+<script src="/v3.11/assets/js/runtime~main.02129f82.js" defer="defer"></script>
+<script src="/v3.11/assets/js/main.d6c651af.js" defer="defer"></script>
 </head>
-<body class="navigation-with-keyboard">
+<body>
 <svg style="display: none;"><defs>
 <symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
 </defs></svg>
@@ -68,13 +68,13 @@
 <p>为了比较方便地实现对数据库MySQL记录的操作，针对每一个资源，都会对应到一对ModelManager和Model的数据结构。ModelManager数据结构对实现一类资源的集合操作，例如创建资源或者列表，而针对单个资源的操作，则通过Model来实现，实现对单个具体资源的更新、删除的操作。</p>
 <p>每个资源的Model对应到Golang的一个结构体，该结构体有若干字段，每个字段代表资源的属性，例如有一个用户的资源包含用户的id、extra属性,用户是否enabled，用户何时创建，归属的域等。一个属性就是Golang结构体的一个字段，通过结构体字段的Tag属性定义每个字段在MySQL的数据库中对应的schema的定义。</p>
 <p>例如Id这个字段，属性中有</p>
-<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">width:&quot;64&quot; charset:&quot;ascii&quot; nullable:&quot;false&quot; primary:&quot;true&quot;</span><br></span></code></pre></div></div>
-<p>这些tags定义了Id这个字段是数据库里面的一个VARCHAR(64)的字段，并且他的字符集是ascii码，不能为空，并且是主键。所以通过tag将结构体的字段映射到了MySQL的schema的字段中，如此，每一个model通过字段的定义就能够清晰地映射到MySQL的数据表中。这样实现了Model的字段和MySQL的数据表定义的严格同步，每次程序启动时都会进行schema的同步检查，如果Model 的定义和数据表的定义不一致，就会执行相应的SQL的变更操作，将表的schema定义和Model的定义变更为一致。例如我们将Id的宽度从64改成80，在程序重启时就能够发现这个变化，然后将数据表该知道的宽度变更成80。如此实现通过代码定义的Model 和数据库中的表定义的严格同步。（另外，也支持离线变更数据库Schema，即只检测数据库Schema的变更，并且输出对应的SQL语句，通过专门的离线数据库schema变更工具实现数据 库的变更。）</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">width:&quot;64&quot; charset:&quot;ascii&quot; nullable:&quot;false&quot; primary:&quot;true&quot;</span><br></div></code></pre></div></div>
+<p>这些tags定义了Id这个字段是数据库里面的一个VARCHAR(64)的字段，并且他的字符集是ascii码，不能为空，并且是主键。所以通过tag将结构体的字段映射到了MySQL的schema的字段中，如此，每一个model通过字段的定义就能够清晰地映射到MySQL的数据表中。这样实现了Model的字段和MySQL的数据表定义的严格同步，每次程序启动时都会进行schema的同步检查，如果Model 的定义和数据表的定义不一致，就会执行相应的SQL的变更操作，将表的schema定义和Model的定义变更为一致。例如我们将Id的宽度从64改成80，在程序重启时就能够发现这个变化，然后将数据表该知道的宽度变更成80。如此实现通过代码定义的Model 和数据库中的表定义的严格同步。（另外，也支持离线变更数据库Schema，即只检测数据库Schema的变更，并且输出对应的SQL语句，通过专门的离线数据库schema变更工具实现数据库的变更。）</p>
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/06-api-model-methods-34d2c45a6f1d3b158e529c0752d88778.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>与此同时，每类资源都会提供一系列的API，此处列出了对一个资源会实现的九类API，包括创建、删除、更新、执行操作、获取详情、列表等操作。</p>
 <p>每一个操作对应一个REST API，每一个REST API对应到后端代码中就对应到了每一个资源对应的ModalManager或者Model的方法。</p>
 <p>例如获取资源详情的REST API是:</p>
-<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /resources/&lt;res_id&gt;</span><br></span></code></pre></div></div>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">GET /resources/&lt;res_id&gt;</span><br></div></code></pre></div></div>
 <p>调用这个REST API其实就映射到相应的Model的GetDetails方法。为了实现获取资源的详情只需要去实现Model中的GetDetails的方法。</p>
 <p>通过框架简化了实现云资源REST API的流程，只需要把相应的Model和ModelManager的方法根据输入实现相应逻辑，然后把正确的输出返回回去，这个REST API的功能即可实现。</p>
 <p>如此诸如鉴权 、认证、配置同步等周边的工作在框架中实现，从而大大提升了开发效率并降低在开发过程中犯错的几率。</p>
@@ -88,7 +88,7 @@
 <p>jsonutils与encoding/json相比的明显区别是中间增加了一个中间态，在jsonutils库里面实现一个中间态的通用类型的数据类型JSONObject。我们可以把数据结构Marshal（s）成JSONObject，JSONObject是Golang的interface，该interface可以进一步地序列化成json字符串。</p>
 <p>这个中间态就是使用jsonutils的重要原因，通过通用类型的JSONObject就可以实现任意的结构体都可以Marshal（s）成JSONObject然后可以把JSONObject作为函数参数进行传递。</p>
 <p>Golang是一个严格类型检查的静态语言，它的每一个变量都有相应的类型，我们的框架能够处理任意API的输入输出，如果没有中间的结构体，在处理API的输入输出时，输入是json字符串， 为了在程序上访问它， 就必须把它反序列化成严格的有类型结构体，这样一来就无法将框架变成通用框架。</p>
-<p>如果引入通用的JSONObject，在框架中输入了json字符串， 先把它反序列化成JSONObject  ，这个JSONObject是通用类型的，这样就可以将JSONObject作为参数再进一步的向下传递，直到传递到具体相应的Model或者ModelManager相应的方法中，然后进一步把它转换成相应的结构体。这样就允许框架中使用已经反序列化好的JSONObject 并进行操作，可以实现比较通用的框架。</p>
+<p>如果引入通用的JSONObject，在框架中输入了json字符串， 先把它反序列化成JSONObject，这 个JSONObject是通用类型的，这样就可以将JSONObject作为参数再进一步的向下传递，直到传递到具体相应的Model或者ModelManager相应的方法中，然后进一步把它转换成相应的结构体。这样就允许框架中使用已经反序列化好的JSONObject 并进行操作，可以实现比较通用的框架。</p>
 <p>平台采用jsonutils最主要的原因是方便实现通用的框架。同时jsonutils还有其它特别之处，JSONObject 不仅能够转换成JSON字符串，也可以转换成QueryString 或者是把QueryString 反序列化成JSONObject 或者可以序列化成YAML的字符串。</p>
 <p>这样可以实现更方便的功能，比如对于列表 GET这种读取的这种API，它的参数通常作为QueryString 嵌入到URL中。如此我们可以将QueryString参数在框架中反序列化成JSONObject，把它作为JSONObject输入参数传入到框架中。</p>
 <p>对于其他类型的请求，可以把请求参数放在HTTP请求的body中的JSON字符串，我们同样可以把请求参数解析成JSONObject。这样，可以以同样的逻辑去处理嵌入到URL中的QueryString的参数以及嵌入到body 中的JSON的参数，可以做到统一处理出入参数的逻辑。</p>
@@ -96,7 +96,7 @@
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/09-jsonutils-deprecated-c1f28502e12e79d63f3c1e2bf8c47c0a.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>以下为举例说明：</p>
 <p>例如有一个输入参数的结构体称为Input，有一个字段是TenantId，用来标识用户的租户ID。</p>
-<p>随着版本的升级，希望将TenantId统一改名为ProjectId，这种升级如果不做任何处理，将可能出现接口兼容性的问题，在变更之前这个字段是TenantId，变更之后这个字段就只能是ProjectId。升级后，使用TenantId的客户端就不能正  确访问这个接口。</p>
+<p>随着版本的升级，希望将TenantId统一改名为ProjectId，这种升级如果不做任何处理，将可能出现接口兼容性的问题，在变更之前这个字段是TenantId，变更之后这个字段就只能是ProjectId。升级后，使用TenantId的客户端就不能正确访  问这个接口。</p>
 <p>在这个结构体中，我们增加了特别的tag：yunion-deprecated-by，把这个结构体input升级为新的input的结构之后，增加了ProjectId的字段，用它来代表新的TenantId的属性。</p>
 <p>旧的TenantId仍然保留，但是在结构体的tag中加了名称为yunion-deprecated-by的tag，这个Tag的值是ProjectId。表明TenantId的字段已经被ProjectId这个字段deprecated。</p>
 <p>代码在处理时，如果旧客户端的参数中只有TenantId，此时框架就会将TenantId的值根据yunion-deprecated-by这个tag 指引同时copy到ProjectId的字段中。</p>
@@ -117,7 +117,7 @@
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/12-structarg-ef03ed8c58445eabeb0cdaa00ec22f8d.png" width="4480" height="2520" class="img_ev3q"></p>
 <p>这样可以基于结构体自动生成程序输入参数的提示，并且能够根据命令行参数将参数中的值反序列化放到结构体中， 或者是将对应配置文件中的参数反序列化到结构体中，在程序中就可以通过访问结构体的字段去访问相应参数的值。</p>
 <p>如此即可比较方便地在程序中使用配置的信息，这里举个例子。
-假设定义了UserOption的结构体，这个结构体tag中包含一个help的tag，这个tag的定义了结构体的每个字段的  帮助信息。将其初始化并进行程序编译之后，如果命令行中执行带help的参数的话，其将会把这些帮助信息展现出来。</p>
+假设定义了UserOption的结构体，这个结构体tag中包含一个help的tag，这个tag的定义了结构体的每个字段的帮助  信息。将其初始化并进行程序编译之后，如果命令行中执行带help的参数的话，其将会把这些帮助信息展现出来。</p>
 <p>同时，用户也可以在命令行参数中去用这些参数把值传递到程序中，在程序代码中即可通过访问结构体去访问这些参数。</p>
 <p>同时，也支持配置文件的输入，而且配置文件同时支持Key=Value格式和YAML格式。</p>
 <p>这样可以将程序的配置文件的配置信息通过结构体定义下来，程序就能够自动地识别配置文件的信息，然后将信息放到结构体中访问。</p>

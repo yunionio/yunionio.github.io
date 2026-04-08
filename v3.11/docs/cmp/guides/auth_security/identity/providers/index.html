@@ -2,7 +2,7 @@
 <html lang="zh-Hans" dir="ltr" class="docs-wrapper plugin-docs plugin-id-cmp docs-version-current docs-doc-page docs-doc-id-guides/auth_security/identity/providers/index" data-has-hydrated="false">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="Docusaurus v3.9.2">
+<meta name="generator" content="Docusaurus v3.10.0">
 <title data-rh="true">认证源 | Cloudpods</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://www.cloudpods.org/v3.11/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://www.cloudpods.org/v3.11/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/identity/providers/"><meta data-rh="true" property="og:locale" content="zh_Hans"><meta data-rh="true" property="og:locale:alternate" content="en"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-cmp-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-cmp-current"><meta data-rh="true" property="og:title" content="认证源 | Cloudpods"><meta data-rh="true" name="description" content="认证源定义了用户信息的来源。每个认证源有driver和template两个属性，说明这个认证源的工作机制。目前，driver支持如下多种认证源："><meta data-rh="true" property="og:description" content="认证源定义了用户信息的来源。每个认证源有driver和template两个属性，说明这个认证源的工作机制。目前，driver支持如下多种认证源："><link data-rh="true" rel="icon" href="/v3.11/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/identity/providers/"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/identity/providers/" hreflang="zh-Hans"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/en/docs/cmp/guides/auth_security/identity/providers/" hreflang="en"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/identity/providers/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"用户手册","item":"https://www.cloudpods.org/v3.11/docs/cmp/guides/"},{"@type":"ListItem","position":2,"name":"认证与权限","item":"https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/"},{"@type":"ListItem","position":3,"name":"认证体系","item":"https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/identity/"},{"@type":"ListItem","position":4,"name":"认证源","item":"https://www.cloudpods.org/v3.11/docs/cmp/guides/auth_security/identity/providers/"}]}</script><link rel="alternate" type="application/rss+xml" href="/v3.11/blog/rss.xml" title="Cloudpods RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/v3.11/blog/atom.xml" title="Cloudpods Atom Feed">
 
@@ -20,11 +20,11 @@
 
 
 <script src="https://hm.baidu.com/hm.js?3c5253cd6530122d0f774cab69e3c07f" async></script>
-<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/v3.11/assets/css/styles.5f753b55.css">
-<script src="/v3.11/assets/js/runtime~main.d5d77171.js" defer="defer"></script>
-<script src="/v3.11/assets/js/main.6c48dc15.js" defer="defer"></script>
+<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/v3.11/assets/css/styles.627befb0.css">
+<script src="/v3.11/assets/js/runtime~main.02129f82.js" defer="defer"></script>
+<script src="/v3.11/assets/js/main.d6c651af.js" defer="defer"></script>
 </head>
-<body class="navigation-with-keyboard">
+<body>
 <svg style="display: none;"><defs>
 <symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
 </defs></svg>
@@ -33,18 +33,18 @@
 <table><thead><tr><th>Driver</th><th>Template</th><th>说明</th><th>用户或组归属域</th><th>导入行为</th></tr></thead><tbody><tr><td>sql</td><td>-</td><td>用户和组的定义来自于本地的sql数据库</td><td>任意多个域</td><td>不需要导入</td></tr><tr><td>ldap</td><td>msad_one_domain</td><td>用户和组的定义来自于本地的Microsoft Active Diectoy Domain</td><td>单个域</td><td>自动导入一个域以及用户和组</td></tr><tr><td>ldap</td><td>msad_multi_domain</td><td>用户和组以及域的定义来自于本地的Microsoft Active Directory Domain</td><td>多个域</td><td>自动导入多个域，一个域对应domain_dn下的一个OU，OU下的用户和组导入对应的域。</td></tr><tr><td>ldap</td><td>openldap_one_domain</td><td>用户和组的定义来自于本地openldap或者freeIPA</td><td>单个域</td><td>自动导入一个域，user_dn和group_dn下的</td></tr><tr><td>ldap</td><td>-</td><td>用户和组的定义来自于任意的ldap数据源</td><td>单个或多个域</td><td></td></tr><tr><td>cas</td><td>-</td><td>Java CAS Server</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oauth2</td><td>dingtalk</td><td>钉钉企业认证</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oauth2</td><td>feishu</td><td>飞书企业认证</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oauth2</td><td>wecom</td><td>企业微信SSO认证</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oidc</td><td>GitHub</td><td>GitHub SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oidc</td><td>Azure</td><td>Azure OpenID Connect SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oidc</td><td>dex</td><td>Dex OpenID Connect SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>saml</td><td>Azure</td><td>Azure SAML 2.0 SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr></tbody></table>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="常用命令">常用命令<a href="#常用命令" class="hash-link" aria-label="常用命令的直接链接" title="常用命令的直接链接" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="查看认证源">查看认证源<a href="#查看认证源" class="hash-link" aria-label="查看认证源的直接链接" title="查看认证源的直接链接" translate="no">​</a></h3>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">climc idp-list </span><span class="token parameter variable" style="color:#36acaa">--scope</span><span class="token plain"> system</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">climc idp-list </span><span class="token parameter variable" style="color:#36acaa">--scope</span><span class="token plain"> system</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="查看认证源的配置">查看认证源的配置<a href="#查看认证源的配置" class="hash-link" aria-label="查看认证源的配置的直接链接" title="查看认证源的配置的直接链接" translate="no">​</a></h3>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-show </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-show </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="编辑认证源的配置">编辑认证源的配置<a href="#编辑认证源的配置" class="hash-link" aria-label="编辑认证源的配置的直接链接" title="编辑认证源的配置的直接链接" translate="no">​</a></h3>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-edit </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-edit </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></div></code></pre></div></div>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="企业用户使用流程">企业用户使用流程<a href="#企业用户使用流程" class="hash-link" aria-label="企业用户使用流程的直接链接" title="企业用户使用流程的直接链接" translate="no">​</a></h2>
 <ol>
 <li class="">向平台导入用户：<!-- -->
 <ul>
 <li class="">本地用户（SQL源）：平台内置SQL源，在认证源处无需任何配置，只需要在用户列表中新建或导入用户。</li>
 <li class="">LDAP用户：新建LDAP认证协议的认证源，设置完成后将会同步LDAP服务器上的用户到平台。</li>
-<li class="">其他认证源（除LDAP、SQL认证协议之外的认证源）：新建除LDAP认证协议之外的  认证源，并需要勾选自动创建用户。该方式不会立即创建用户，当用户通过对应认证源方式认证登录平台时，将会自动在平台上创建同名用户。</li>
+<li class="">其他认证源（除LDAP、SQL认证协议之外的认证源）：新建除LDAP认证协议之外的认证  源，并需要勾选自动创建用户。该方式不会立即创建用户，当用户通过对应认证源方式认证登录平台时，将会自动在平台上创建同名用户。</li>
 </ul>
 </li>
 <li class="">登录平台：<!-- -->
@@ -60,7 +60,7 @@
 </li>
 </ol>
 <div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>提示</div><div class="admonitionContent_BuS1"><ul>
-<li class="">主认证源：即该认证源定义了用户的来源，sql和LDAP认证源默认为主认证源。其他认证源在添加时启用了“自动创建用户”即可作  为主认证源使用。</li>
+<li class="">主认证源：即该认证源定义了用户的来源，sql和LDAP认证源默认为主认证源。其他认证源在添加时启用了“自动创建用户”即可作为主  认证源使用。</li>
 <li class="">辅助认证源：即该认证源仅作为认证登录的方式使用，主认证源的用户需要先关联辅助认证源，关联成功后，即可使用该认证源登录平台。</li>
 </ul></div></div>
 <p><strong>入口</strong>：在云管平台单击左上角导航菜单，在弹出的左侧菜单栏中单击 <strong><em>&quot;认证与安全/认证体系/认证源&quot;</em></strong> 菜单项，进入认证源页面。</p>
@@ -87,7 +87,7 @@
 <li class="">密码：连接AD域控服务器的用户对应密码。</li>
 <li class="">用户DN：用户DN为LDAP目录中查找用户的根路径，将会在该根路径下递归查找用户，格式为”CN=users,OU=xx,DC=xx,DC=com“。</li>
 <li class="">组DN：组DN为LDAP目录中查找组的根路径，将会在该根路径下递归查找组，格式”CN=groups,OU=xx,DC=xx,DC=com“。</li>
-<li class="">用户启用状态：设置从认证源导入的用户的状态，当设置为启用时，则用户可以登录 本系统，禁用则无法登录系统。</li>
+<li class="">用户启用状态：设置从认证源导入的用户的状态，当设置为启用时，则用户可以登录本系 统，禁用则无法登录系统。</li>
 </ul>
 </li>
 <li class="">当认证类型是Microsoft Active Diretory导入多个域时（当认证源归属于域时，不支持设置该项）：<!-- -->
@@ -113,7 +113,7 @@
 </li>
 <li class="">单击 <strong><em>&quot;确定&quot;</em></strong> 按钮，新建认证源。</li>
 </ol>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="新建cas认证协议的认证源">新建CAS认证  协议的认证源<a href="#新建cas认证协议的认证源" class="hash-link" aria-label="新建CAS认证协议的认证源的直接链接" title="新建CAS认证协议的认证源的直接链接" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="新建cas认证协议的认证源">新建CAS认证协议  的认证源<a href="#新建cas认证协议的认证源" class="hash-link" aria-label="新建CAS认证协议的认证源的直接链接" title="新建CAS认证协议的认证源的直接链接" translate="no">​</a></h3>
 <ol>
 <li class="">
 <p>在认证源页面，单击列表上方 <strong><em>&quot;新建&quot;</em></strong> 按钮，进入新建认证源页面。</p>
@@ -174,7 +174,7 @@
 </li>
 </ol>
 <h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="通用saml相关参数获取方式">通用SAML相关参数获取方式<a href="#通用saml相关参数获取方式" class="hash-link" aria-label="通用SAML相关参数获取方式的直接链接" title="通用SAML相关参数获取方式的直接链接" translate="no">​</a></h4>
-<p>以AWS SSO作为平台 的SAML IDP。目前仅AWS国际区支持AWS SSO。</p>
+<p>以AWS SSO作为平台的SAML IDP。目前仅AWS国际区支持AWS SSO。</p>
 <ol>
 <li class="">
 <p>在<a href="https://console.aws.amazon.com/" target="_blank" rel="noopener noreferrer" class="">AWS</a>平台搜索“AWS SSO”并进入“AWS Single Sign-On”页面。</p>
@@ -201,7 +201,7 @@
 <li class="">在平台上新建认证源，认证协议选择“SAML”、认证类型选择“通用SAML”。</li>
 <li class="">SAML录入方式选择“上传SAML IDP metadata”，上传在AWS下载的AWS SSO SAML元数据文件。</li>
 <li class="">用户ID、用户名：设置用户ID和用户名的用户属性，如user_id，user_name，同时需要在AWS的SAML应用程序的属性映射页签中，将应用程序的应用属性映射到AWS SSO中的用户属性。</li>
-<li class="">建议勾选“自动创建用户”，并选择用户所属的域、项目、角色等。</li>
+<li class="">建议勾选“自动创建用户”，并选择用户所属的域、 项目、角色等。</li>
 </ul>
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/commonsamlconfig-bd78c4c3f239efd496093fcdf91649f8.png" width="1647" height="1178" class="img_ev3q"></p>
 <ul>
@@ -351,7 +351,7 @@
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/azuressoappsecret-8afb058171517169348498b62d4fae1c.png" width="1411" height="660" class="img_ev3q"></p>
 </li>
 </ol>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="新建oauth2认证协议的认证源">新建OAuth2认证协议的认  证源<a href="#新建oauth2认证协议的认证源" class="hash-link" aria-label="新建OAuth2认证协议的认证源的直接链接" title="新建OAuth2认证协议的认证源的直接链接" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="新建oauth2认证协议的认证源">新建OAuth2认证协议的认证源<a href="#新建oauth2认证协议的认证源" class="hash-link" aria-label="新建OAuth2认证协议的认证源的直接链接" title="新建OAuth2认证协议的认证源的直接链接" translate="no">​</a></h3>
 <ol>
 <li class="">
 <p>在认证源页面，单击列表上方 <strong><em>&quot;新建&quot;</em></strong> 按钮，进入新建认证源页面。</p>
@@ -378,7 +378,7 @@
 <li class="">当认证类型是企业微信时：<!-- -->
 <ul>
 <li class="">企业ID：用于标识企业。获取方式请参考<a href="#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F" class="">企业微信相关参数获取方式</a></li>
-<li class="">AgentID：应用的id标识。</li>
+<li class="">AgentID：应用的id标识 。</li>
 <li class="">Secret：应用的密钥。</li>
 </ul>
 </li>
@@ -429,7 +429,7 @@
 </li>
 </ol>
 <h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="钉钉相关参数获取方式">钉钉相关参数获取方式<a href="#钉钉相关参数获取方式" class="hash-link" aria-label="钉钉相关参数获取方式的直接链接" title="钉钉相关参数获取方式的直接链接" translate="no">​</a></h4>
-<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>提示</div><div class="admonitionContent_BuS1"><p> 更多内容请参考<a href="https://ding-doc.dingtalk.com/doc#/bgb96b/ok9au2" target="_blank" rel="noopener noreferrer" class="">钉钉官网文档</a></p></div></div>
+<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>提示</div><div class="admonitionContent_BuS1"><p>更多  内容请参考<a href="https://ding-doc.dingtalk.com/doc#/bgb96b/ok9au2" target="_blank" rel="noopener noreferrer" class="">钉钉官网文档</a></p></div></div>
 <ol>
 <li class="">
 <p>以管理员登录<a href="https://open.dingtalk.com/" target="_blank" rel="noopener noreferrer" class="">钉订开放平台</a>。</p>
@@ -452,7 +452,7 @@
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/dingdingssoappkey-2ec3a5fb1337e9c96e891c96d50a863e.png" width="1841" height="761" class="img_ev3q"></p>
 </li>
 </ol>
-<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="企业微信相关参数获取方式"> 企业微信相关参数获取方式<a href="#企业微信相关参数获取方式" class="hash-link" aria-label="企业微信相关参数获取方式的直接链接" title="企业微信相关参数获取方式的直接链接" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="企业微信相关参数获取方式">企业 微信相关参数获取方式<a href="#企业微信相关参数获取方式" class="hash-link" aria-label="企业微信相关参数获取方式的直接链接" title="企业微信相关参数获取方式的直接链接" translate="no">​</a></h4>
 <ol>
 <li class="">
 <p>以管理员用户登录<a href="https://work.weixin.qq.com/wework_admin/loginpage_wx?from=myhome_baidu" target="_blank" rel="noopener noreferrer" class="">企业微信管理后台</a></p>
@@ -470,7 +470,7 @@
 </li>
 </ol>
 <div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>提示</div><div class="admonitionContent_BuS1"><ul>
-<li class="">将平台设置为域名访问，在全局  设置-控制台地址中设置访问域名为https://&lt;域名&gt;。</li>
+<li class="">将平台设置为域名访问，在全局设置- 控制台地址中设置访问域名为https://&lt;域名&gt;。</li>
 <li class="">在平台认证源页面可查看平台的回调地址，在企业微信中只需要填写域名即可。</li>
 </ul></div></div>
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/workweixinssoauth-5e723dd9f7e85db942ee266577c860ce.png" width="924" height="249" class="img_ev3q">
@@ -487,7 +487,7 @@
 <li class="">SQL认证协议的认证源不支持修改配置。</li>
 </ul></div></div>
 <ol>
-<li class="">在认证源页面，单击&quot;禁用&quot;状态的认证源右侧操作列 <strong><em>&quot;修改配置&quot;</em></strong> 按钮，进入修改配置页  面。</li>
+<li class="">在认证源页面，单击&quot;禁用&quot;状态的认证源右侧操作列 <strong><em>&quot;修改配置&quot;</em></strong> 按钮，进入修改配置页面。</li>
 <li class="">修改不同认证类型的认证源的参数，修改完成后，单击 <strong><em>&quot;确定&quot;</em></strong> 按钮。</li>
 </ol>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="启用认证源">启用认证源<a href="#启用认证源" class="hash-link" aria-label="启用认证源的直接链接" title="启用认证源的直接链接" translate="no">​</a></h2>
@@ -505,7 +505,7 @@
 <li class="">在认证源列表中勾选一个或多个认证源，单击列表上方的 <strong><em>&quot;批量操作&quot;</em></strong> 按钮，选择下拉菜单 <strong><em>&quot;启用&quot;</em></strong> 菜单项，弹出操作确认对话框。</li>
 <li class="">单击 <strong><em>&quot;确定&quot;</em></strong> 按钮，启用认证源。</li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="禁用认证源">禁用认证源<a href="#禁用认证源" class="hash-link" aria-label="禁 用认证源的直接链接" title="禁用认证源的直接链接" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="禁用认证源">禁用认证源<a href="#禁用认证源" class="hash-link" aria-label="禁用认证 源的直接链接" title="禁用认证源的直接链接" translate="no">​</a></h2>
 <p>该功能用于禁用”启用“状态的认证源。</p>
 <div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>注意</div><div class="admonitionContent_BuS1"><ul>
 <li class="">SQL认证协议的认证源不支持禁用。</li>

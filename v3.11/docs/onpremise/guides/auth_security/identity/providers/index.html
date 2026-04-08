@@ -2,7 +2,7 @@
 <html lang="zh-Hans" dir="ltr" class="docs-wrapper plugin-docs plugin-id-onpremise docs-version-current docs-doc-page docs-doc-id-guides/auth_security/identity/providers/index" data-has-hydrated="false">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="Docusaurus v3.9.2">
+<meta name="generator" content="Docusaurus v3.10.0">
 <title data-rh="true">认证源 | Cloudpods</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://www.cloudpods.org/v3.11/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://www.cloudpods.org/v3.11/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/identity/providers/"><meta data-rh="true" property="og:locale" content="zh_Hans"><meta data-rh="true" property="og:locale:alternate" content="en"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-onpremise-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-onpremise-current"><meta data-rh="true" property="og:title" content="认证源 | Cloudpods"><meta data-rh="true" name="description" content="认证源定义了用户信息的来源。每个认证源有driver和template两个属性，说明这个认证源的工作机制。目前，driver支持如下多种认证源："><meta data-rh="true" property="og:description" content="认证源定义了用户信息的来源。每个认证源有driver和template两个属性，说明这个认证源的工作机制。目前，driver支持如下多种认证源："><link data-rh="true" rel="icon" href="/v3.11/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/identity/providers/"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/identity/providers/" hreflang="zh-Hans"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/en/docs/onpremise/guides/auth_security/identity/providers/" hreflang="en"><link data-rh="true" rel="alternate" href="https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/identity/providers/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"用户手册","item":"https://www.cloudpods.org/v3.11/docs/onpremise/guides/"},{"@type":"ListItem","position":2,"name":"认证与权限","item":"https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/"},{"@type":"ListItem","position":3,"name":"认证体系","item":"https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/identity/"},{"@type":"ListItem","position":4,"name":"认证源","item":"https://www.cloudpods.org/v3.11/docs/onpremise/guides/auth_security/identity/providers/"}]}</script><link rel="alternate" type="application/rss+xml" href="/v3.11/blog/rss.xml" title="Cloudpods RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/v3.11/blog/atom.xml" title="Cloudpods Atom Feed">
 
@@ -20,11 +20,11 @@
 
 
 <script src="https://hm.baidu.com/hm.js?3c5253cd6530122d0f774cab69e3c07f" async></script>
-<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/v3.11/assets/css/styles.5f753b55.css">
-<script src="/v3.11/assets/js/runtime~main.d5d77171.js" defer="defer"></script>
-<script src="/v3.11/assets/js/main.6c48dc15.js" defer="defer"></script>
+<script src="/js/github-star.js" async></script><link rel="stylesheet" href="/v3.11/assets/css/styles.627befb0.css">
+<script src="/v3.11/assets/js/runtime~main.02129f82.js" defer="defer"></script>
+<script src="/v3.11/assets/js/main.d6c651af.js" defer="defer"></script>
 </head>
-<body class="navigation-with-keyboard">
+<body>
 <svg style="display: none;"><defs>
 <symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
 </defs></svg>
@@ -33,11 +33,11 @@
 <table><thead><tr><th>Driver</th><th>Template</th><th>说明</th><th>用户或组归属域</th><th>导入行为</th></tr></thead><tbody><tr><td>sql</td><td>-</td><td>用户和组的定义来自于本地的sql数据库</td><td>任意多个域</td><td>不需要导入</td></tr><tr><td>ldap</td><td>msad_one_domain</td><td>用户和组的定义来自于本地的Microsoft Active Diectoy Domain</td><td>单个域</td><td>自动导入一个域以及用户和组</td></tr><tr><td>ldap</td><td>msad_multi_domain</td><td>用户和组以及域的定义来自于本地的Microsoft Active Directory Domain</td><td>多个域</td><td>自动导入多个域，一个域对应domain_dn下的一个OU，OU下的用户和组导入对应的域。</td></tr><tr><td>ldap</td><td>openldap_one_domain</td><td>用户和组的定义来自于本地openldap或者freeIPA</td><td>单个域</td><td>自动导入一个域，user_dn和group_dn下的</td></tr><tr><td>ldap</td><td>-</td><td>用户和组的定义来自于任意的ldap数据源</td><td>单个或多个域</td><td></td></tr><tr><td>cas</td><td>-</td><td>Java CAS Server</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oauth2</td><td>dingtalk</td><td>钉钉企业认证</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oauth2</td><td>feishu</td><td>飞书企业认证</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oauth2</td><td>wecom</td><td>企业微信SSO认证</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oidc</td><td>GitHub</td><td>GitHub SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oidc</td><td>Azure</td><td>Azure OpenID Connect SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>oidc</td><td>dex</td><td>Dex OpenID Connect SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr><tr><td>saml</td><td>Azure</td><td>Azure SAML 2.0 SSO</td><td>单个域</td><td>每次用户登录时导入</td></tr></tbody></table>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="常用命令">常用命令<a href="#常用命令" class="hash-link" aria-label="常用命令的直接链接" title="常用命令的直接链接" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="查看认证源">查看认证源<a href="#查看认证源" class="hash-link" aria-label="查看认证源的直接链接" title="查看认证源的直接链接" translate="no">​</a></h3>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">climc idp-list </span><span class="token parameter variable" style="color:#36acaa">--scope</span><span class="token plain"> system</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">climc idp-list </span><span class="token parameter variable" style="color:#36acaa">--scope</span><span class="token plain"> system</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="查看认证源的配置">查看认证源的配置<a href="#查看认证源的配置" class="hash-link" aria-label="查看认证源的配置的直接链接" title="查看认证源的配置的直接链接" translate="no">​</a></h3>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-show </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-show </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="编辑认证源的配置">编辑认证源的配置<a href="#编辑认证源的配置" class="hash-link" aria-label="编辑认证源的配置的直接链接" title="编辑认证源的配置的直接链接" translate="no">​</a></h3>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-edit </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">climc idp-config-edit </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">idp_id</span><span class="token operator" style="color:#393A34">&gt;</span><br></div></code></pre></div></div>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="企业用户使用流程">企业用户使用流程<a href="#企业用户使用流程" class="hash-link" aria-label="企业用户使用流程的直接链接" title="企业用户使用流程的直接链接" translate="no">​</a></h2>
 <ol>
 <li class="">向平台导入用户：<!-- -->
@@ -80,7 +80,7 @@
 <li class="">认证类型：支持从Microsoft Active Diretory导入单域、Microsoft Active Diretory导入多个域、OpenLDAP/FreeIPA导入单域。不同认证类型配置参数略有不同。</li>
 <li class="">当认证类型是Microsoft Active Diretory导入单域时：<!-- -->
 <ul>
-<li class="">用户归属目标域：可选项，选择LDAP服务器上用户在  云管平台的所属域。</li>
+<li class="">用户归属目标域：可选项，选择LDAP服务器上用户在云管  平台的所属域。</li>
 <li class="">服务器地址：搭建AD域控服务器的URL地址，格式为ldap(s)://服务器IP地址，必须以ldap://或者ldaps://开头。</li>
 <li class="">基本DN：DN即Distinguished Name，基本DN是条目在整个目录树的唯一名称标识。格式为”DC=xx,DC=com“</li>
 <li class="">用户名：连接AD域控服务器的用户名。</li>
@@ -126,7 +126,7 @@
 <li class="">认证协议：选择“CAS”。</li>
 <li class="">认证类型：支持通用CAS。</li>
 <li class="">CAS服务地址：CAS单点登录服务器的URL地址，如<a href="http://cas.example.io/cas" target="_blank" rel="noopener noreferrer" class="">http://cas.example.io/cas</a>。</li>
-<li class="">用 户ID：设置通用CAS中对应的用户ID属性，一般为cas<!-- -->:user<!-- -->，如有变化请更改该项。</li>
+<li class="">用户ID  ：设置通用CAS中对应的用户ID属性，一般为cas<!-- -->:user<!-- -->，如有变化请更改该项。</li>
 <li class="">用户名：设置通用CAS中对应的用户名属性，一般为cas<!-- -->:user<!-- -->，如有变化请更改该项。</li>
 <li class="">自动创建用户：勾选自动创建用户后，通过认证源首次登录的用户将会自动在系统中创建一个本地用户。不勾选该项时，该认证源作为辅助认证源，需要将用户关联到该认证源，才可以通过该认证源登录平台。</li>
 <li class="">用户归属目标域：勾选自动创建用户后才需要设置该参数。选择通过该认证方式登录自动创建的用户所属的域，当认证源归属于域时，用户归属目标域与认证源归属域一致，不可更改。</li>
@@ -164,7 +164,7 @@
 </ul>
 </li>
 <li class="">当认证类型为Azure AD SAML2.0时仅需要配置TenantId。参数获取方式具体请参考<a href="#azure-ad-saml20%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F" class="">Azure AD SAML2.0相关参数获取方式</a></li>
-<li class="">用户归属目标域：勾选自动创建用户后才需要设置该参数 。选择通过该认证方式登录自动创建的用户所属的域，当认证源归属于域时，用户归属目标域与认证源归属域一致，不可更改。</li>
+<li class="">用户归属目标域：勾选自动创建用户后才需要设置该参数。选择通过该认证方式登录自动创建的用户所属的域，当认证源归属于域时，用户归属目标域与认证源归属域一致，不可更改。</li>
 </ul>
 <p><strong>高级配置</strong>：默认隐藏，可根据需求进行配置。</p>
 <ul>
@@ -189,7 +189,7 @@
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/awssaml-f82fb770edb6c698b653776d0445f565.png" width="1389" height="754" class="img_ev3q"></p>
 </li>
 <li class="">
-<p>下载AWS SSO SAML元数据文件，该文件即为在平台配置通用SAML时所需的“SAML IDP metadata”的XML文件。</p>
+<p>下载AWS SSO SAML元数据文件，该文件即为在平台配置通用SAML时所需的“SAML IDP metadata”的XML文 件。</p>
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/awsdownloadidp1-4abf7463bae9eec31ac4f368c5db0eba.png" width="1085" height="1171" class="img_ev3q"></p>
 </li>
 <li class="">
@@ -428,7 +428,7 @@
 <p><img decoding="async" loading="lazy" src="/v3.11/assets/images/feishuapp-6039d19c14fe362cbe44a752bfb98969.png" width="1254" height="850" class="img_ev3q"></p>
 </li>
 </ol>
-<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="钉钉相关参数获取方式">钉钉相关参数获取方式<a href="#钉钉相关参数获取方式" class="hash-link" aria-label="钉钉相关参数获取方式的直接链接" title="钉钉相关参数获取方式的直接链接" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="钉钉相关参数获取方式">钉钉相关参数获取方式<a href="#钉钉相  关参数获取方式" class="hash-link" aria-label="钉钉相关参数获取方式的直接链接" title="钉钉相关参数获取方式的直接链接" translate="no">​</a></h4>
 <div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>提示</div><div class="admonitionContent_BuS1"><p>更多内容请参考<a href="https://ding-doc.dingtalk.com/doc#/bgb96b/ok9au2" target="_blank" rel="noopener noreferrer" class="">钉钉官网文档</a></p></div></div>
 <ol>
 <li class="">
@@ -550,7 +550,7 @@
 <li class="">在认证源列表中勾选一个或多个认证源，单击列表上方的 <strong><em>&quot;批量操作&quot;</em></strong> 按钮，选择下拉菜单 <strong><em>&quot;删除&quot;</em></strong> 菜单项，弹出操作确认对话框。</li>
 <li class="">单击 <strong><em>&quot;确定&quot;</em></strong> 按钮，完成操作。</li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="查看认证源详情">查看认证源详情<a href="#查看认证源详情" class="hash-link" aria-label="查看认证源详情的直接链 接" title="查看认证源详情的直接链接" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="查看认证源详情">查看认证源详情<a href="#查看认证源详情" class="hash-link" aria-label="查看认证源详情的直接链接" title="查看认证源详情的直接链接" translate="no">​</a></h2>
 <p>该功能用于查看认证源的详细信息。</p>
 <ol>
 <li class="">在认证源页面，单击认证源名称项，进入认证源详情页面。</li>
@@ -573,7 +573,7 @@
 <li class="">加载更多日志：列表默认显示20条操作日志信息，如需查看更多操作日志，请单击 <strong><em>&quot;加载更多&quot;</em></strong> 按钮，获取更多日志信息。</li>
 <li class="">查看日志详情：单击操作日志右侧操作列 <strong><em>&quot;查看&quot;</em></strong> 按钮，查看日志的详情信息。支持复制详情内容。</li>
 <li class="">查看指定时间段的日志：如需查看某个时间段的操作日志，在列表右上方的开始日期和结束日期中设置具体的日期，查询指定时间段的日志信息。</li>
-<li class="">导出日志：目前仅支持导出本页显示的日志。单击右上角下载图标，在弹出的导出数据对话框中，设置导出数据列，单击 <strong><em>&quot;确定&quot;</em></strong> 按钮，导出日志。</li>
+<li class="">导出 日志：目前仅支持导出本页显示的日志。单击右上角下载图标，在弹出的导出数据对话框中，设置导出数据列，单击 <strong><em>&quot;确定&quot;</em></strong> 按钮，导出日志。</li>
 </ul>
 </li>
 </ol></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/yunionio/website/tree/master/docs/shared/guides/auth_security/identity/providers/index.mdx" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>编辑此页</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="文件选项卡"><a class="pagination-nav__link pagination-nav__link--prev" href="/v3.11/docs/shared/guides/auth_security/identity/"><div class="pagination-nav__sublabel">上一页</div><div class="pagination-nav__label">认证体系</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/v3.11/docs/shared/guides/auth_security/identity/providers/sql"><div class="pagination-nav__sublabel">下一页</div><div class="pagination-nav__label">SQL认证源</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#常用命令" class="table-of-contents__link toc-highlight">常用命令</a><ul><li><a href="#查看认证源" class="table-of-contents__link toc-highlight">查看认证源</a></li><li><a href="#查看认证源的配置" class="table-of-contents__link toc-highlight">查看认证源的配置</a></li><li><a href="#编辑认证源的配置" class="table-of-contents__link toc-highlight">编辑认证源的配置</a></li></ul></li><li><a href="#企业用户使用流程" class="table-of-contents__link toc-highlight">企业用户使用流程</a></li><li><a href="#新建认证源" class="table-of-contents__link toc-highlight">新建认证源</a><ul><li><a href="#新建ldap协议的认证源" class="table-of-contents__link toc-highlight">新建LDAP协议的认证源</a></li><li><a href="#新建cas认证协议的认证源" class="table-of-contents__link toc-highlight">新建CAS认证协议的认证源</a></li><li><a href="#新建saml认证协议的认证源" class="table-of-contents__link toc-highlight">新建SAML认证协议的认证源</a><ul><li><a href="#通用saml相关参数获取方式" class="table-of-contents__link toc-highlight">通用SAML相关参数获取方式</a></li><li><a href="#azure-ad-saml20相关参数获取方式" class="table-of-contents__link toc-highlight">Azure AD SAML2.0相关参数获取方式</a></li></ul></li><li><a href="#新建oidc认证协议的认证源" class="table-of-contents__link toc-highlight">新建OIDC认证协议的认证源</a><ul><li><a href="#github相关参数获取方式" class="table-of-contents__link toc-highlight">Github相关参数获取方式</a></li><li><a href="#azure-ad-oauth2相关参数获取方式" class="table-of-contents__link toc-highlight">Azure AD OAuth2相关参数获取方式</a></li></ul></li><li><a href="#新建oauth2认证协议的认证源" class="table-of-contents__link toc-highlight">新建OAuth2认证协议的认证源</a><ul><li><a href="#飞书相关参数获取方式" class="table-of-contents__link toc-highlight">飞书相关参数获取方式</a></li><li><a href="#钉钉相关参数获取方式" class="table-of-contents__link toc-highlight">钉钉相关参数获取方式</a></li><li><a href="#企业微信相关参数获取方式" class="table-of-contents__link toc-highlight">企业微信相关参数获取方式</a></li></ul></li></ul></li><li><a href="#修改配置" class="table-of-contents__link toc-highlight">修改配置</a></li><li><a href="#启用认证源" class="table-of-contents__link toc-highlight">启用认证源</a></li><li><a href="#禁用认证源" class="table-of-contents__link toc-highlight">禁用认证源</a></li><li><a href="#同步认证源" class="table-of-contents__link toc-highlight">同步认证源</a></li><li><a href="#删除认证源" class="table-of-contents__link toc-highlight">删除认证源</a></li><li><a href="#查看认证源详情" class="table-of-contents__link toc-highlight">查看认证源详情</a></li><li><a href="#查看操作日志" class="table-of-contents__link toc-highlight">查看操作日志</a></li></ul></div></div></div></div></main></div></div></div></div>
